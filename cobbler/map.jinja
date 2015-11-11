@@ -1,0 +1,36 @@
+{% set map = {
+    'Ubuntu': {
+        'pkgs': ['dnsmasq',
+                 'syslinux',
+                 'fence-agents',
+                 'xinetd',
+                 'genisoimage',
+                 'yum-utils',
+                 'qemu',
+                 'virtinst',
+                 'tftpd',
+                 'tftp',
+                 'python-augeas',
+                 'libpython2.7']
+    },
+    'Debian': {
+        'pkgs': ['dnsmasq',
+                 'syslinux',
+                 'fence-agents',
+                 'xinetd',
+                 'genisoimage',
+                 'yum-utils',
+                 'qemu',
+                 'virtinst',
+                 'tftpd',
+                 'tftp',
+                 'python-augeas',
+                 'libpython2.7']
+    }
+} %}
+
+{% if grains.get('saltversion', '').startswith('0.17') %}
+{% set cobbler = salt['grains.filter_by'](map, merge=salt['pillar.get']('cobbler:lookup'), base='default') %}
+{% else %}
+{% set cobbler = map.get(grains.os) %}
+{% endif %}

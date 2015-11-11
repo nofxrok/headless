@@ -1,0 +1,45 @@
+{% from "cobbler/map.jinja" import cobbler with context %}
+
+{% set cfg_cobbler = pillar.get('cobbler', {}) -%}
+{%- macro get_config(configname, default_value) -%}
+{%- if configname in cfg_cobbler -%}
+{{ cfg_cobbler[configname] }}
+{%- else -%}
+{{ default_value }}
+{%- endif -%}
+{%- endmacro -%}
+
+# Cobbler generated configuration file for dnsmasq
+# $date 
+#
+
+# resolve.conf .. ?
+
+# Setup TFTP Settings
+tftp-root=/var/lib/tftpboot
+enable-tftp
+
+# Set DHCP Options
+dhcp-range={{ get_config('dnsmasq-dhcp-range') }}
+dhcp-option=vendor:PXEClient,6,2b
+dhcp-ignore=#known
+dhcp-lease-max=1000
+dhcp-authoritative
+dhcp-boot=pxelinux.0
+dhcp-no-override
+
+
+interface=em1
+interface=lo
+
+
+
+pxe-prompt="Press F8 for boot menu", 30
+
+pxe-service=x86PC, "Boot from local disk"
+pxe-service=X86-64_EFI, "Boot PXELinux (=Cobbler controlled)", grub/grub-x86_64.efi , $next_server
+pxe-service=x86PC, "Boot PXELinux (=Cobbler controlled)", pxelinux , $next_server
+	
+
+
+$insert_cobbler_system_definitions
