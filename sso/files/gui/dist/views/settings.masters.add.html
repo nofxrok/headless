@@ -1,0 +1,55 @@
+<div class="views-forms">
+<div class="modal-header">
+    <h3 class="modal-title">Add Master</h3>
+</div>
+
+<div class="modal-body">
+    <form name="addMasterForm" id="add-master-form" class="form-horizontal" role="form" ng-submit="addMaster(master)" novalidate>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Host Name</label>
+            <div class="col-xs-9" ng-class="{'has-error': addMasterForm.hostname.$error.required}">
+                <input name="hostname" class="form-control" ng-model="master.hostname" required salt-form-focus ng-click="addMasterForm.hostname.$touched = false">
+                <div class="validation-error" ng-show="addMasterForm.hostname.$touched && !addMasterForm.hostname.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="addMasterForm.hostname.$viewValue && !addMasterForm.hostname.$valid">Hostname invalid</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">NetAPI Port</label>
+            <div class="col-xs-9" ng-class="{'has-error': addMasterForm.netapi.$error.required}">
+                <input name="netapi" class="form-control" ng-model="master.netapi_port" required ng-click="addMasterForm.netapi.$touched = false">
+                <div class="validation-error" ng-show="addMasterForm.netapi.$touched && !addMasterForm.netapi.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="addMasterForm.netapi.$viewValue && !addMasterForm.netapi.$valid">Port invalid</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Auth Mode</label>
+            <div class="col-xs-9" ng-class="{'has-error': addMasterForm.authmode.$error.required}">
+                <select  name="authmode" class="form-control" ng-model="master.auth_mode" required ng-click="addMasterForm.authmode.$touched = false">
+                    <option value="pam" selected>pam</option>
+                </select>
+                <div class="validation-error" ng-show="addMasterForm.authmode.$touched && !addMasterForm.authmode.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="addMasterForm.authmode.$viewValue && !addMasterForm.authmode.$valid">Authmode invalid</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Master Username</label>
+            <div class="col-xs-9" ng-class="{'has-error': addMasterForm.username.$error.required}">
+                <input name="username" class="form-control" ng-model="master.master_username" required ng-click="addMasterForm.username.$touched = false">
+                <div class="validation-error" ng-show="addMasterForm.username.$touched && !addMasterForm.username.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="addMasterForm.username.$viewValue && !addMasterForm.username.$valid">Username invalid</div>    
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-3 control-label">Master
+                Password</label>
+            <div class="col-xs-9" ng-class="{'has-error': addMasterForm.password.$error.required}">
+                <input name="password" type="password" class="form-control" id="inputPassword3" ng-model="master.master_password" required ng-click="addMasterForm.password.$touched = false">
+                <div class="validation-error" ng-show="addMasterForm.password.$touched && !addMasterForm.password.$viewValue">Required field</div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary site-btn-form" ng-click="addMaster(master)" ng-disabled="addMasterForm.$invalid">Add</button>
+    <button class="btn btn-primary site-btn-form" ui-sref="salt.dashboard.settings.masters.list" ui-sref-opts="{reload: true}">Cancel</button>
+</div>

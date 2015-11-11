@@ -1,0 +1,387 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.fileserver.svnfs</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.fileserver.svnfs">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../fileserver.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-fileserver-svnfs">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-fileserver-svnfs">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.fileserver.svnfs</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-fileserver-svnfs__module-salt.fileserver.svnfs"></span></p>
+                              
+                              <p class="p">Subversion Fileserver Backend</p>
+                              
+                              <p class="p">After enabling this backend, branches, and tags in a remote subversion
+                                 repository are exposed to salt as different environments. To enable this
+                                 backend, add <tt class="ph tt">svn</tt> to the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../configuration/master.html#configuration-salt-master__fileserver_backend">fileserver_backend</a> option in the
+                                 Master config file.
+                              </p>
+                              <pre class="pre codeblock language-yaml">fileserver_backend:
+  - svn</pre>
+                              <p class="p">This backend assumes a standard svn layout with directories for <tt class="ph tt">branches</tt>,
+                                 <tt class="ph tt">tags</tt>, and <tt class="ph tt">trunk</tt>, at the repository root.
+                              </p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">subversion</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">pysvn</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><span class="keyword versionmodified">Changed in version 2014.7.0: </span>The paths to the trunk, branches, and tags have been made configurable, via
+                                 the config options 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../configuration/master.html#configuration-salt-master__svnfs_trunk">svnfs_trunk</a>,
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../configuration/master.html#configuration-salt-master__svnfs_branches">svnfs_branches</a>, and 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../configuration/master.html#configuration-salt-master__svnfs_tags">svnfs_tags</a>.
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../configuration/master.html#configuration-salt-master__svnfs_mountpoint">svnfs_mountpoint</a> was also added. Finally, support for
+                                 per-remote configuration parameters was added. See the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../configuration/master.html#configuration-salt-master__svnfs_remotes">documentation</a> for more information.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.fileserver.svnfs.clear_cache">
+                           <h2 class="title topictitle2">clear_cache</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.svnfs.clear_cache( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Completely clear svnfs cache</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.fileserver.svnfs.clear_lock">
+                           <h2 class="title topictitle2">clear_lock</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.svnfs.clear_lock(
+								remote=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Clear update.lk</p>
+                                 
+                                 <p class="p"><tt class="ph tt">remote</tt> can either be a dictionary containing repo configuration
+                                    information, or a pattern. If the latter, then remotes for which the URL
+                                    matches the pattern will be locked.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.fileserver.svnfs.dir_list">
+                           <h2 class="title topictitle2">dir_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.svnfs.dir_list(
+								load
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of all directories on the master</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.fileserver.svnfs.envs">
+                           <h2 class="title topictitle2">envs</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.svnfs.envs(
+								ignore_cache=False
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of refs that can be used as environments</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.fileserver.svnfs.file_hash">
+                           <h2 class="title topictitle2">file_hash</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.svnfs.file_hash(
+								load,
+								fnd
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a file hash, the hash type is set in the master config file</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.fileserver.svnfs.file_list">
+                           <h2 class="title topictitle2">file_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.svnfs.file_list(
+								load
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of all files on the file server in a specified
+                                    environment
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.fileserver.svnfs.file_list_emptydirs">
+                           <h2 class="title topictitle2">file_list_emptydirs</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.svnfs.file_list_emptydirs(
+								load
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of all empty directories on the master</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.fileserver.svnfs.find_file">
+                           <h2 class="title topictitle2">find_file</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.svnfs.find_file(
+								path,
+								tgt_env='base',
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Find the first file to match the path and ref. This operates similarly to
+                                    the roots file sever but with assumptions of the directory structure
+                                    based on svn standard practices.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.fileserver.svnfs.init">
+                           <h2 class="title topictitle2">init</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.svnfs.init( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the list of svn remotes and their configuration information</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.fileserver.svnfs.lock">
+                           <h2 class="title topictitle2">lock</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.svnfs.lock(
+								remote=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Place an update.lk</p>
+                                 
+                                 <p class="p"><tt class="ph tt">remote</tt> can either be a dictionary containing repo configuration
+                                    information, or a pattern. If the latter, then remotes for which the URL
+                                    matches the pattern will be locked.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.fileserver.svnfs.serve_file">
+                           <h2 class="title topictitle2">serve_file</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.svnfs.serve_file(
+								load,
+								fnd
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a chunk from a file based on the data received</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.fileserver.svnfs.update">
+                           <h2 class="title topictitle2">update</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.svnfs.update( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Execute an svn update on all of the repos</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

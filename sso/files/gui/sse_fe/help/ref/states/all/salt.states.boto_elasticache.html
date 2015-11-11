@@ -1,0 +1,543 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.boto_elasticache</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.boto_elasticache">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-boto-elasticache">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-boto-elasticache">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.boto_elasticache</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-boto-elasticache__module-salt.states.boto_elasticache"></span></p>
+                              
+                              <p class="p">Manage Elasticache</p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Create, destroy and update Elasticache clusters. Be aware that this interacts
+                                 with Amazon's services, and so may incur charges.
+                              </p>
+                              
+                              <p class="p">Note: This module currently only supports creation and deletion of
+                                 elasticache resources and will not modify clusters when their configuration
+                                 changes in your state files.
+                              </p>
+                              
+                              <p class="p">This module uses <tt class="ph tt">boto</tt>, which can be installed via package, or pip.
+                              </p>
+                              
+                              <p class="p">This module accepts explicit elasticache credentials but can also utilize
+                                 IAM roles assigned to the instance through Instance Profiles. Dynamic
+                                 credentials are then automatically obtained from AWS API and no further
+                                 configuration is necessary. More information available <a class="xref" href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html" target="_blank">here</a>.
+                              </p>
+                              
+                              <p class="p">If IAM roles are not used you need to specify them either in a pillar file or
+                                 in the minion's config file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">elasticache.keyid: GKTADJGHEIQSXMKKRBJ08H
+elasticache.key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs</pre>
+                              <p class="p">It's also possible to specify <tt class="ph tt">key</tt>, <tt class="ph tt">keyid</tt> and <tt class="ph tt">region</tt> via a profile, either
+                                 passed in as a dict, or as a string to pull from pillars or minion config:
+                              </p>
+                              <pre class="pre codeblock language-yaml">myprofile:
+  keyid: GKTADJGHEIQSXMKKRBJ08H
+  key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs
+    region: us-east-1</pre>
+                              <pre class="pre codeblock language-yaml">Ensure myelasticache exists:
+  boto_elasticache.present:
+    - name: myelasticache
+    - engine: redis
+    - cache_node_type: cache.t1.micro
+    - num_cache_nodes: 1
+    - notification_topic_arn: arn:aws:sns:us-east-1:879879:my-sns-topic
+    - region: us-east-1
+    - keyid: GKTADJGHEIQSXMKKRBJ08H
+    - key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs
+
+# Using a profile from pillars
+Ensure myelasticache exists:
+  boto_elasticache.present:
+    - name: myelasticache
+    - engine: redis
+    - cache_node_type: cache.t1.micro
+    - num_cache_nodes: 1
+    - notification_topic_arn: arn:aws:sns:us-east-1:879879:my-sns-topic
+    - region: us-east-1
+    - profile: myprofile
+
+# Passing in a profile
+Ensure myelasticache exists:
+  boto_elasticache.present:
+    - name: myelasticache
+    - engine: redis
+    - cache_node_type: cache.t1.micro
+    - num_cache_nodes: 1
+    - notification_topic_arn: arn:aws:sns:us-east-1:879879:my-sns-topic
+    - region: us-east-1
+    - profile:
+        keyid: GKTADJGHEIQSXMKKRBJ08H
+        key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.states.boto_elasticache.absent">
+                           <h2 class="title topictitle2">absent</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.boto_elasticache.absent(
+								name,
+								wait=True,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Ensure the named elasticache cluster is deleted.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d357016e85" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d357016e87" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e85" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d357016e87" class="stentry propdesc">
+                                       <p class="p">Name of the cache cluster.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e85" class="stentry propvalue">wait</td>
+                                    
+                                    <td valign="top" headers="d357016e87" class="stentry propdesc">
+                                       <p class="p">Boolean. Wait for confirmation from boto that the cluster is in the
+                                          deleting state.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e85" class="stentry propvalue">region</td>
+                                    
+                                    <td valign="top" headers="d357016e87" class="stentry propdesc">
+                                       <p class="p">Region to connect to.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e85" class="stentry propvalue">key</td>
+                                    
+                                    <td valign="top" headers="d357016e87" class="stentry propdesc">
+                                       <p class="p">Secret key to be used.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e85" class="stentry propvalue">keyid</td>
+                                    
+                                    <td valign="top" headers="d357016e87" class="stentry propdesc">
+                                       <p class="p">Access key to be used.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e85" class="stentry propvalue">profile</td>
+                                    
+                                    <td valign="top" headers="d357016e87" class="stentry propdesc">
+                                       <p class="p">A dict with region, key and keyid, or a pillar key (string)
+                                          that contains a dict with region, key and keyid.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.boto_elasticache.present">
+                           <h2 class="title topictitle2">present</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.boto_elasticache.present(
+								name,
+								engine,
+								cache_node_type,
+								num_cache_nodes=1,
+								preferred_availability_zone=None,
+								port=None,
+								cache_parameter_group_name=None,
+								cache_security_group_names=None,
+								replication_group_id=None,
+								auto_minor_version_upgrade=True,
+								security_group_ids=None,
+								cache_subnet_group_name=None,
+								engine_version=None,
+								notification_topic_arn=None,
+								preferred_maintenance_window=None,
+								wait=True,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Ensure the cache cluster exists.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d357016e153" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d357016e155" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">Name of the cache cluster (cache cluster id).</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">engine</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">The name of the cache engine to be used for this cache cluster. Valid
+                                          values are memcached or redis.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">cache_node_type</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">The compute and memory capacity of the nodes in the cache cluster.
+                                          cache.t1.micro, cache.m1.small, etc. See: <a class="xref" href="http://boto.readthedocs.org/en/latest/ref/elasticache.html#boto.elasticache.layer1.ElastiCacheConnection.create_cache_cluster" target="_blank">http://boto.readthedocs.org/en/latest/ref/elasticache.html#boto.elasticache.layer1.ElastiCacheConnection.create_cache_cluster</a></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">num_cache_nodes</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">The number of cache nodes that the cache cluster will have.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">preferred_availability_zone</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">The EC2 Availability Zone in which the cache cluster will be created.
+                                          All cache nodes belonging to a cache cluster are placed in the
+                                          preferred availability zone.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">port</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">The port number on which each of the cache nodes will accept
+                                          connections.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">cache_parameter_group_name</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">The name of the cache parameter group to associate with this cache
+                                          cluster. If this argument is omitted, the default cache parameter group
+                                          for the specified engine will be used.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">cache_security_group_names</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">A list of cache security group names to associate with this cache
+                                          cluster. Use this parameter only when you are creating a cluster
+                                          outside of a VPC.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">replication_group_id</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">The replication group to which this cache cluster should belong. If
+                                          this parameter is specified, the cache cluster will be added to the
+                                          specified replication group as a read replica; otherwise, the cache
+                                          cluster will be a standalone primary that is not part of any
+                                          replication group.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">auto_minor_version_upgrade</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">Determines whether minor engine upgrades will be applied automatically
+                                          to the cache cluster during the maintenance window. A value of True
+                                          allows these upgrades to occur; False disables automatic upgrades.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">security_group_ids</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">One or more VPC security groups associated with the cache cluster. Use
+                                          this parameter only when you are creating a cluster in a VPC.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">cache_subnet_group_name</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">The name of the cache subnet group to be used for the cache cluster.
+                                          Use this parameter only when you are creating a cluster in a VPC.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">engine_version</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">The version number of the cache engine to be used for this cluster.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">notification_topic_arn</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">The Amazon Resource Name (ARN) of the Amazon Simple Notification
+                                          Service (SNS) topic to which notifications will be sent. The Amazon SNS
+                                          topic owner must be the same as the cache cluster owner.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">preferred_maintenance_window</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">The weekly time range (in UTC) during which system maintenance can
+                                          occur. Example: sun:05:00-sun:09:00
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">wait</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">Boolean. Wait for confirmation from boto that the cluster is in the
+                                          creating state.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">region</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">Region to connect to.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">key</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">Secret key to be used.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">keyid</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">Access key to be used.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357016e153" class="stentry propvalue">profile</td>
+                                    
+                                    <td valign="top" headers="d357016e155" class="stentry propdesc">
+                                       <p class="p">A dict with region, key and keyid, or a pillar key (string)
+                                          that contains a dict with region, key and keyid.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

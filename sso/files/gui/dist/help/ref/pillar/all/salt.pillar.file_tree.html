@@ -1,0 +1,172 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.pillar.file_tree</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.pillar.file_tree">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../pillar-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-pillar-file-tree">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-pillar-file-tree">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.pillar.file_tree</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-pillar-file-tree__module-salt.pillar.file_tree"></span></p>
+                              
+                              <p class="p">Recursively iterate over directories and add all files as Pillar data.</p>
+                              
+                              <p class="p">Example configuration:</p>
+                              <pre class="pre codeblock language-yaml">ext_pillar:
+  - file_tree:
+      root_dir: /path/to/root/directory
+      follow_dir_links: False
+      raw_data: False</pre>
+                              <p class="p">The <tt class="ph tt">root_dir</tt> parameter is required and points to the directory where files
+                                 for each host are stored. The <tt class="ph tt">follow_dir_links</tt> parameter is optional
+                                 and defaults to False. If <tt class="ph tt">follow_dir_links</tt> is set to True, file_tree will
+                                 follow symbolic links to other directories. Be careful when using
+                                 <tt class="ph tt">follow_dir_links</tt>, the current implementation is dumb and will run into
+                                 infinite recursion if a recursive symlink chain exists in the root_dir!
+                              </p>
+                              
+                              <p class="p">If <tt class="ph tt">raw_data</tt> is set to True, it will revert the behavior of the python
+                                 open() function, which adds a line break character at the end of the file,
+                                 in this case, the pillar data.
+                              </p>
+                              
+                              <p class="p">To fill pillar data for each host, file_tree recursively iterates over
+                                 <tt class="ph tt">root_dir</tt>/hosts/<tt class="ph tt">id</tt> (where <tt class="ph tt">id</tt> is a minion ID), and constructs
+                                 the same directory tree with contents of all the files inside the pillar tree.
+                              </p>
+                              
+                              <p class="p">For example, the following <tt class="ph tt">root_dir</tt> tree:
+                              </p>
+                              <pre class="pre codeblock language-">./hosts/
+./hosts/test-host/
+./hosts/test-host/files/
+./hosts/test-host/files/testdir/
+./hosts/test-host/files/testdir/file1.txt
+./hosts/test-host/files/testdir/file2.txt
+./hosts/test-host/files/another-testdir/
+./hosts/test-host/files/another-testdir/symlink-to-file1.txt</pre>
+                              <p class="p">will result in the following pillar tree for minion with ID "test-host":</p>
+                              <pre class="pre codeblock language-">test-host:
+    ----------
+    files:
+        ----------
+        another-testdir:
+            ----------
+            symlink-to-file1.txt:
+                Contents of file #1.
+
+        testdir:
+            ----------
+            file1.txt:
+                Contents of file #1.
+
+            file2.txt:
+                Contents of file #2.</pre>
+                              <p class="p">To fill pillar data for minion in a node group, file_tree recursively
+                                 iterates over <tt class="ph tt">root_dir</tt>/nodegroups/<tt class="ph tt">nodegroup</tt> (where <tt class="ph tt">nodegroup</tt> is a
+                                 minion node group), and constructs the same directory tree with contents of all
+                                 the files inside the pillar tree.
+                                 <strong class="ph b">IMPORTANT</strong>: The host data take precedence over the node group data
+                              </p>
+                              
+                              <p class="p">For example, the following <tt class="ph tt">root_dir</tt> tree:
+                              </p>
+                              <pre class="pre codeblock language-">./nodegroups/
+./nodegroups/test-group/
+./nodegroups/test-group/files/
+./nodegroups/test-group/files/testdir/
+./nodegroups/test-group/files/testdir/file1.txt
+./nodegroups/test-group/files/testdir/file2.txt
+./nodegroups/test-group/files/another-testdir/
+./nodegroups/test-group/files/another-testdir/symlink-to-file1.txt</pre>
+                              <p class="p">will result in the following pillar tree for minion in the node group
+                                 "test-group":
+                              </p>
+                              <pre class="pre codeblock language-">test-host:
+    ----------
+    files:
+        ----------
+        another-testdir:
+            ----------
+            symlink-to-file1.txt:
+                Contents of file #1.
+
+        testdir:
+            ----------
+            file1.txt:
+                Contents of file #1.
+
+            file2.txt:
+                Contents of file #2.</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.pillar.file_tree.ext_pillar">
+                           <h2 class="title topictitle2">ext_pillar</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.pillar.file_tree.ext_pillar(
+								minion_id,
+								pillar,
+								root_dir=None,
+								follow_dir_links=False,
+								debug=False,
+								raw_data=False
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Find pillar data for specified ID.</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

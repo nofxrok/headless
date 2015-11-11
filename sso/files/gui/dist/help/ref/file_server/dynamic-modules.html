@@ -1,0 +1,134 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Dynamic Module Distribution</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Dynamic Module Distribution">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="module-sync">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="module-sync">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Dynamic Module Distribution</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="module-sync__dynamic-module-distribution"></span></p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 0.9.5.</span></p>
+                              
+                              <p class="p">Salt Python modules can be distributed automatically via the Salt file server.
+                                 Under the root of any environment defined via the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__file_roots">file_roots</a>
+                                 option on the master server directories corresponding to the type of module can
+                                 be used.
+                              </p>
+                              
+                              <p class="p">The directories are prepended with an underscore:</p>
+                              
+                              <blockquote class="lq">
+                                 <ol class="ol">
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">_modules</tt></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">_grains</tt></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">_renderers</tt></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">_returners</tt></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">_states</tt></p>
+                                       
+                                    </li>
+                                    
+                                 </ol>
+                                 
+                              </blockquote>
+                              
+                              <p class="p">The contents of these directories need to be synced over to the minions after
+                                 Python modules have been created in them. There are a number of ways to sync
+                                 the modules.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="module-sync__sync-via-states">
+                              <h2 class="title sectiontitle">Sync Via States</h2>
+                              <p class="p">The minion configuration contains an option <tt class="ph tt">autoload_dynamic_modules</tt>
+                                 which defaults to True. This option makes the state system refresh all
+                                 dynamic modules when states are run. To disable this behavior set
+                                 <tt class="ph tt">autoload_dynamic_modules</tt> to False in the minion config.
+                              </p>
+                              
+                              <p class="p">When dynamic modules are autoloaded via states, modules only pertinent to
+                                 the environments matched in the master's top file are downloaded.
+                              </p>
+                              
+                              <p class="p">This is important to remember, because modules can be manually loaded from
+                                 any specific environment that environment specific modules will be loaded
+                                 when a state run is executed.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="module-sync__sync-via-the-saltutil-module">
+                              <h2 class="title sectiontitle">Sync Via the saltutil Module</h2>
+                              <p class="p">The saltutil module has a number of functions that can be used to sync all
+                                 or specific dynamic modules. The saltutil module function <tt class="ph tt">saltutil.sync_all</tt>
+                                 will sync all module types over to a minion. For more information see:
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../modules/all/salt.modules.saltutil.html#salt.modules.saltutil">salt.modules.saltutil</a></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

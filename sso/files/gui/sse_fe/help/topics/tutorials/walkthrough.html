@@ -1,0 +1,872 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>SaltStack Walk-through</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="SaltStack Walk-through">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/fundamentals.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="saltstack-walk-through">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="saltstack-walk-through">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">SaltStack Walk-through</h1>
+                        <div class="body conbody">
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">Welcome to SaltStack! I am excited that you are interested in Salt and
+                                 starting down the path to better infrastructure management. I developed
+                                 (and am continuing to develop) Salt with the goal of making the best
+                                 software available to manage computers of almost any kind. I hope you enjoy
+                                 working with Salt and that the software can solve your real world needs!
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Thomas S Hatch</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Salt creator and Chief Developer</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">CTO of SaltStack, Inc.</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </aside>
+                           
+                           <div class="section" id="saltstack-walk-through__getting-started">
+                              <h2 class="title sectiontitle">Getting Started</h2>
+                           </div>
+                           
+                           <div class="section head3" id="saltstack-walk-through__what-is-salt">
+                              <h2 class="title sectiontitle">What is Salt?</h2>
+                              <p class="p">Salt is a different approach to infrastructure management, founded on
+                                 the idea that high-speed communication with large numbers of systems can open
+                                 up new capabilities. This approach makes Salt a powerful multitasking system
+                                 that can solve many specific problems in an infrastructure.
+                              </p>
+                              
+                              <p class="p">The backbone of Salt is the remote execution engine, which creates a high-speed,
+                                 secure and bi-directional communication net for groups of systems. On top of this
+                                 communication system, Salt provides an extremely fast, flexible, and easy-to-use
+                                 configuration management system called <tt class="ph tt">Salt States</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="saltstack-walk-through__installing-salt">
+                              <h2 class="title sectiontitle">Installing Salt</h2>
+                              <p class="p">SaltStack has been made to be very easy to install and get started. Setting up
+                                 Salt should be as easy as installing Salt via distribution packages on Linux or
+                                 via the Windows installer. The 
+                                 		
+                                 			&nbsp;<a class="xref" href="../installation/index.html#id1">installation documents</a> cover platform-specific installation in depth.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="saltstack-walk-through__starting-salt">
+                              <h2 class="title sectiontitle">Starting Salt</h2>
+                              <p class="p">Salt functions on a master/minion topology. A master server acts as a
+                                 central control bus for the clients, which are called <tt class="ph tt">minions</tt>. The minions
+                                 connect back to the master.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="saltstack-walk-through__setting-up-the-salt-master">
+                              <h2 class="title sectiontitle">Setting Up the Salt Master</h2>
+                              <p class="p">Turning on the Salt Master is easy -- just turn it on! The default configuration
+                                 is suitable for the vast majority of installations. The Salt Master can be
+                                 controlled by the local Linux/Unix service manager:
+                              </p>
+                              
+                              <p class="p">On Systemd based platforms (OpenSuse, Fedora):</p>
+                              <pre class="pre codeblock language-bash">systemctl start salt-master</pre>
+                              <p class="p">On Upstart based systems (Ubuntu, older Fedora/RHEL):</p>
+                              <pre class="pre codeblock language-bash">service salt-master start</pre>
+                              <p class="p">On SysV Init systems (Debian, Gentoo etc.):</p>
+                              <pre class="pre codeblock language-bash">/etc/init.d/salt-master start</pre>
+                              <p class="p">Alternatively, the Master can be started directly on the command-line:</p>
+                              <pre class="pre codeblock language-bash">salt-master -d</pre>
+                              <p class="p">The Salt Master can also be started in the foreground in debug mode, thus
+                                 greatly increasing the command output:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-master -l debug</pre>
+                              <p class="p">The Salt Master needs to bind to two TCP network ports on the system. These ports
+                                 are <tt class="ph tt">4505</tt> and <tt class="ph tt">4506</tt>. For more in depth information on firewalling these ports,
+                                 the firewall tutorial is available 
+                                 		
+                                 			&nbsp;<a class="xref" href="firewall.html#opening-the-firewall-up-for-salt">here</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="saltstack-walk-through__setting-up-a-salt-minion">
+                              <h2 class="title sectiontitle">Setting up a Salt Minion</h2>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The Salt Minion can operate with or without a Salt Master. This walk-through
+                                    assumes that the minion will be connected to the master, for information on
+                                    how to run a master-less minion please see the master-less quick-start guide:
+                                 </p>
+                                 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="quickstart.html#salt-masterless-quickstart">Masterless Minion Quickstart</a></p>
+                                 
+                              </aside>
+                              
+                              <p class="p">The Salt Minion only needs to be aware of one piece of information to run, the
+                                 network location of the master.
+                              </p>
+                              
+                              <p class="p">By default the minion will look for the DNS name <tt class="ph tt">salt</tt> for the master,
+                                 making the easiest approach to set internal DNS to resolve the name <tt class="ph tt">salt</tt>
+                                 back to the Salt Master IP.
+                              </p>
+                              
+                              <p class="p">Otherwise, the minion configuration file will need to be edited so that the
+                                 configuration option <tt class="ph tt">master</tt> points to the DNS name or the IP of the Salt Master:
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The default location of the configuration files is <tt class="ph tt">/etc/salt</tt>. Most
+                                    platforms adhere to this convention, but platforms such as FreeBSD and
+                                    Microsoft Windows place this file in different locations.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p"><tt class="ph tt">/etc/salt/minion:</tt></p>
+                              <pre class="pre codeblock language-yaml">master: saltmaster.example.com</pre>
+                              <p class="p">Now that the master can be found, start the minion in the same way as the
+                                 master; with the platform init system or via the command line directly:
+                              </p>
+                              
+                              <p class="p">As a daemon:</p>
+                              <pre class="pre codeblock language-bash">salt-minion -d</pre>
+                              <p class="p">In the foreground in debug mode:</p>
+                              <pre class="pre codeblock language-bash">salt-minion -l debug</pre>
+                              <p class="p">When the minion is started, it will generate an <tt class="ph tt">id</tt> value, unless it has
+                                 been generated on a previous run and cached in the configuration directory, which
+                                 is <tt class="ph tt">/etc/salt</tt> by default. This is the name by which the minion will attempt
+                                 to authenticate to the master. The following steps are attempted, in order to
+                                 try to find a value that is not <tt class="ph tt">localhost</tt>:
+                              </p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">The Python function <tt class="ph tt">socket.getfqdn()</tt> is run
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">/etc/hostname</tt> is checked (non-Windows only)
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">/etc/hosts</tt> (<tt class="ph tt">%WINDIR%\system32\drivers\etc\hosts</tt> on Windows hosts) is
+                                       checked for hostnames that map to anything within <strong class="ph b">127.0.0.0/8</strong>.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                              <p class="p">If none of the above are able to produce an id which is not <tt class="ph tt">localhost</tt>, then
+                                 a sorted list of IP addresses on the minion (excluding any within
+                                 <strong class="ph b">127.0.0.0/8</strong>) is inspected. The first publicly-routable IP address is
+                                 used, if there is one. Otherwise, the first privately-routable IP address is
+                                 used.
+                              </p>
+                              
+                              <p class="p">If all else fails, then <tt class="ph tt">localhost</tt> is used as a fallback.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Overriding the <tt class="ph tt">id</tt></p>
+                                 
+                                 <p class="p">The minion id can be manually specified using the 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/configuration/minion.html#configuration-salt-minion__id">id</a>
+                                    parameter in the minion config file.  If this configuration value is
+                                    specified, it will override all other sources for the <tt class="ph tt">id</tt>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Now that the minion is started, it will generate cryptographic keys and attempt
+                                 to connect to the master. The next step is to venture back to the master server
+                                 and accept the new minion's public key.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="saltstack-walk-through__using-salt-key">
+                              <h2 class="title sectiontitle">Using salt-key</h2>
+                              <p class="p">Salt authenticates minions using public-key encryption and authentication. For
+                                 a minion to start accepting commands from the master, the minion keys need to be
+                                 accepted by the master.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">salt-key</tt> command is used to manage all of the keys on the
+                                 master. To list the keys that are on the master:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-key -L</pre>
+                              <p class="p">The keys that have been rejected, accepted, and pending acceptance are listed.
+                                 The easiest way to accept the minion key is to accept all pending keys:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-key -A</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Keys should be verified! The secure thing to do before accepting a key is
+                                    to run <tt class="ph tt">salt-key -f minion-id</tt> to print the fingerprint of the minion's
+                                    public key. This fingerprint can then be compared against the fingerprint
+                                    generated on the minion.
+                                 </p>
+                                 
+                                 <p class="p">On the master:</p>
+                                 <pre class="pre codeblock language-bash"># salt-key -f foo.domain.com
+Unaccepted Keys:
+foo.domain.com:  39:f9:e4:8a:aa:74:8d:52:1a:ec:92:03:82:09:c8:f9</pre>
+                                 <p class="p">On the minion:</p>
+                                 <pre class="pre codeblock language-bash"># salt-call key.finger --local
+local:
+    39:f9:e4:8a:aa:74:8d:52:1a:ec:92:03:82:09:c8:f9</pre>
+                                 <p class="p">If they match, approve the key with <tt class="ph tt">salt-key -a foo.domain.com</tt>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="saltstack-walk-through__sending-the-first-commands">
+                              <h2 class="title sectiontitle">Sending the First Commands</h2>
+                              <p class="p">Now that the minion is connected to the master and authenticated, the master
+                                 can start to command the minion.
+                              </p>
+                              
+                              <p class="p">Salt commands allow for a vast set of functions to be executed and for
+                                 specific minions and groups of minions to be targeted for execution.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">salt</tt> command is comprised of command options, target specification,
+                                 the function to execute, and arguments to the function.
+                              </p>
+                              
+                              <p class="p">A simple command to
+                                 start with looks like this:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' test.ping</pre>
+                              <p class="p">The <tt class="ph tt">*</tt> is the target, which specifies all minions.
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">test.ping</tt> tells the minion to run the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.test.html#salt.modules.test.ping">test.ping</a> function.
+                              </p>
+                              
+                              <p class="p">In the case of <tt class="ph tt">test.ping</tt>, <tt class="ph tt">test</tt> refers to a 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/index.html#execution-modules">execution module</a>.  <tt class="ph tt">ping</tt> refers to the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.test.html#salt.modules.test.ping">ping</a> function contained in the aforementioned <tt class="ph tt">test</tt>
+                                 module.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Execution modules are the workhorses of Salt. They do the work on the
+                                    system to perform various tasks, such as manipulating files and restarting
+                                    services.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">The result of running this command will be the master instructing all of the
+                                 minions to execute 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.test.html#salt.modules.test.ping">test.ping</a> in parallel
+                                 and return the result.
+                              </p>
+                              
+                              <p class="p">This is not an actual ICMP ping, but rather a simple function which returns <tt class="ph tt">True</tt>.
+                                 Using 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.test.html#salt.modules.test.ping">test.ping</a> is a good way of confirming that a minion is
+                                 connected.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Each minion registers itself with a unique minion ID. This ID defaults to
+                                    the minion's hostname, but can be explicitly defined in the minion config as
+                                    well by using the 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/configuration/minion.html#configuration-salt-minion__id">id</a> parameter.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Of course, there are hundreds of other modules that can be called just as
+                                 <tt class="ph tt">test.ping</tt> can.  For example, the following would return disk usage on all
+                                 targeted minions:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' disk.usage</pre>
+                              </div>
+                           
+                           <div class="section head4" id="saltstack-walk-through__getting-to-know-the-functions">
+                              <h2 class="title sectiontitle">Getting to Know the Functions</h2>
+                              <p class="p">Salt comes with a vast library of functions available for execution, and Salt
+                                 functions are self-documenting. To see what functions are available on the
+                                 minions execute the <tt class="ph tt">sys.doc</tt> function:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' sys.doc</pre>
+                              <p class="p">This will display a very large list of available functions and documentation on
+                                 them.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Module documentation is also available 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/modules/all/index.html#all-salt-modules">on the web</a>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">These functions cover everything from shelling out to package management to
+                                 manipulating database servers. They comprise a powerful system management API
+                                 which is the backbone to Salt configuration management and many other aspects
+                                 of Salt.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Salt comes with many plugin systems. The functions that are available via
+                                    the <tt class="ph tt">salt</tt> command are called 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/modules/all/index.html#all-salt-modules">Execution Modules</a>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="saltstack-walk-through__helpful-functions-to-know">
+                              <h2 class="title sectiontitle">Helpful Functions to Know</h2>
+                              <p class="p">The 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.cmdmod.html#salt-modules-cmdmod">cmd</a> module contains
+                                 functions to shell out on minions, such as 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.cmdmod.html#salt.modules.cmdmod.run">cmd.run</a> and 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.cmdmod.html#salt.modules.cmdmod.run_all">cmd.run_all</a>:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' cmd.run 'ls -l /etc'</pre>
+                              <p class="p">The <tt class="ph tt">pkg</tt> functions automatically map local system package managers to the
+                                 same salt functions. This means that <tt class="ph tt">pkg.install</tt> will install packages via
+                                 <tt class="ph tt">yum</tt> on Red Hat based systems, <tt class="ph tt">apt</tt> on Debian systems, etc.:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' pkg.install vim</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Some custom Linux spins and derivatives of other distributions are not properly
+                                    detected by Salt. If the above command returns an error message saying that
+                                    <tt class="ph tt">pkg.install</tt> is not available, then you may need to override the pkg
+                                    provider. This process is explained 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/states/providers.html#state-providers">here</a>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">The 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.network.html#salt.modules.network.interfaces">network.interfaces</a> function will
+                                 list all interfaces on a minion, along with their IP addresses, netmasks, MAC
+                                 addresses, etc:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' network.interfaces</pre>
+                              </div>
+                           
+                           <div class="section head4" id="saltstack-walk-through__changing-the-output-format">
+                              <h2 class="title sectiontitle">Changing the Output Format</h2>
+                              <p class="p">The default output format used for most Salt commands is called the <tt class="ph tt">nested</tt>
+                                 outputter, but there are several other outputters that can be used to change
+                                 the way the output is displayed. For instance, the <tt class="ph tt">pprint</tt> outputter can be
+                                 used to display the return data using Python's <tt class="ph tt">pprint</tt> module:
+                              </p>
+                              <pre class="pre codeblock language-bash">root@saltmaster:~# salt myminion grains.item pythonpath --out=pprint
+{'myminion': {'pythonpath': ['/usr/lib64/python2.7',
+                             '/usr/lib/python2.7/plat-linux2',
+                             '/usr/lib64/python2.7/lib-tk',
+                             '/usr/lib/python2.7/lib-tk',
+                             '/usr/lib/python2.7/site-packages',
+                             '/usr/lib/python2.7/site-packages/gst-0.10',
+                             '/usr/lib/python2.7/site-packages/gtk-2.0']}}</pre>
+                              <p class="p">The full list of Salt outputters, as well as example output, can be found
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/output/all/index.html#all-salt-output">here</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="saltstack-walk-through__salt-call">
+                              <h2 class="title sectiontitle">salt-call</h2>
+                              <p class="p">The examples so far have described running commands from the Master using the
+                                 <tt class="ph tt">salt</tt> command, but when troubleshooting it can be more beneficial to login
+                                 to the minion directly and use <tt class="ph tt">salt-call</tt>.
+                              </p>
+                              
+                              <p class="p">Doing so allows you to see the minion log messages specific to the command you
+                                 are running (which are <em class="ph i">not</em> part of the return data you see when running the
+                                 command from the Master using <tt class="ph tt">salt</tt>), making it unnecessary to tail the
+                                 minion log. More information on <tt class="ph tt">salt-call</tt> and how to use it can be found
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../troubleshooting/index.html#troubleshooting__using-salt-call">here</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="saltstack-walk-through__grains">
+                              <h2 class="title sectiontitle">Grains</h2>
+                              <p class="p">Salt uses a system called 
+                                 		
+                                 			&nbsp;<a class="xref" href="../targeting/grains.html#targeting-grains">Grains</a> to build up
+                                 static data about minions. This data includes information about the operating
+                                 system that is running, CPU architecture and much more. The grains system is
+                                 used throughout Salt to deliver platform data to many components and to users.
+                              </p>
+                              
+                              <p class="p">Grains can also be statically set, this makes it easy to assign values to
+                                 minions for grouping and managing.
+                              </p>
+                              
+                              <p class="p">A common practice is to assign grains to minions to specify what the role or
+                                 roles a minion might be. These static grains can be set in the minion
+                                 configuration file or via the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.grains.html#salt.modules.grains.setval">grains.setval</a>
+                                 function.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="saltstack-walk-through__targeting">
+                              <h2 class="title sectiontitle">Targeting</h2>
+                              <p class="p">Salt allows for minions to be targeted based on a wide range of criteria.  The
+                                 default targeting system uses globular expressions to match minions, hence if
+                                 there are minions named <tt class="ph tt">larry1</tt>, <tt class="ph tt">larry2</tt>, <tt class="ph tt">curly1</tt>, and <tt class="ph tt">curly2</tt>, a
+                                 glob of <tt class="ph tt">larry*</tt> will match <tt class="ph tt">larry1</tt> and <tt class="ph tt">larry2</tt>, and a glob of <tt class="ph tt">*1</tt>
+                                 will match <tt class="ph tt">larry1</tt> and <tt class="ph tt">curly1</tt>.
+                              </p>
+                              
+                              <p class="p">Many other targeting systems can be used other than globs, these systems
+                                 include:
+                              </p>
+                              
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm">Regular Expressions</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Target using PCRE-compliant regular expressions</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">Grains</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Target based on grains data:
+                                       
+                                       		
+                                       			&nbsp;<a class="xref" href="../targeting/grains.html#targeting-grains">Targeting with Grains</a></p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">Pillar</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Target based on pillar data:
+                                       
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/pillar/index.html#salt-pillars">Targeting with Pillar</a></p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">IP</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Target based on IP address/subnet/range</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">Compound</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Create logic to target based on multiple targets:
+                                       
+                                       		
+                                       			&nbsp;<a class="xref" href="../targeting/compound.html#targeting-compound">Targeting with Compound</a></p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">Nodegroup</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Target with nodegroups:
+                                       
+                                       		
+                                       			&nbsp;<a class="xref" href="../targeting/nodegroups.html#targeting-nodegroups">Targeting with Nodegroup</a></p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">The concepts of targets are used on the command line with Salt, but also
+                                 function in many other areas as well, including the state system and the
+                                 systems used for ACLs and user permissions.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="saltstack-walk-through__passing-in-arguments">
+                              <h2 class="title sectiontitle">Passing in Arguments</h2>
+                              <p class="p">Many of the functions available accept arguments which can be passed in on
+                                 the command line:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' pkg.install vim</pre>
+                              <p class="p">This example passes the argument <tt class="ph tt">vim</tt> to the pkg.install function. Since
+                                 many functions can accept more complex input then just a string, the arguments
+                                 are parsed through YAML, allowing for more complex data to be sent on the
+                                 command line:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' test.echo 'foo: bar'</pre>
+                              <p class="p">In this case Salt translates the string 'foo: bar' into the dictionary
+                                 "{'foo': 'bar'}"
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Any line that contains a newline will not be parsed by YAML.</p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="saltstack-walk-through__salt-states">
+                              <h2 class="title sectiontitle">Salt States</h2>
+                              <p class="p">Now that the basics are covered the time has come to evaluate <tt class="ph tt">States</tt>.  Salt
+                                 <tt class="ph tt">States</tt>, or the <tt class="ph tt">State System</tt> is the component of Salt made for
+                                 configuration management.
+                              </p>
+                              
+                              <p class="p">The state system is already available with a basic Salt setup, no additional
+                                 configuration is required. States can be set up immediately.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Before diving into the state system, a brief overview of how states are
+                                    constructed will make many of the concepts clearer. Salt states are based
+                                    on data modeling and build on a low level data structure that is used to
+                                    execute each state function. Then more logical layers are built on top of
+                                    each other.
+                                 </p>
+                                 
+                                 <p class="p">The high layers of the state system which this tutorial will
+                                    cover consists of everything that needs to be known to use states, the two
+                                    high layers covered here are the <span class="keyword title_reference">sls</span> layer and the highest layer
+                                    <span class="keyword title_reference">highstate</span>.
+                                 </p>
+                                 
+                                 <p class="p">Understanding the layers of data management in the State System will help with
+                                    understanding states, but they never need to be used. Just as understanding
+                                    how a compiler functions assists when learning a programming language,
+                                    understanding what is going on under the hood of a configuration management
+                                    system will also prove to be a valuable asset.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="saltstack-walk-through__the-first-sls-formula">
+                              <h2 class="title sectiontitle">The First SLS Formula</h2>
+                              <p class="p">The state system is built on SLS formulas. These formulas are built out in
+                                 files on Salt's file server. To make a very basic SLS formula open up a file
+                                 under /srv/salt named vim.sls. The following state ensures that vim is installed
+                                 on a system to which that state has been applied.
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/vim.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">vim:
+  pkg.installed</pre>
+                              <p class="p">Now install vim on the minions by calling the SLS directly:</p>
+                              <pre class="pre codeblock language-bash">salt '*' state.sls vim</pre>
+                              <p class="p">This command will invoke the state system and run the <tt class="ph tt">vim</tt> SLS.
+                              </p>
+                              
+                              <p class="p">Now, to beef up the vim SLS formula, a <tt class="ph tt">vimrc</tt> can be added:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/vim.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">vim:
+  pkg.installed: []
+
+/etc/vimrc:
+  file.managed:
+    - source: salt://vimrc
+    - mode: 644
+    - user: root
+    - group: root</pre>
+                              <p class="p">Now the desired <tt class="ph tt">vimrc</tt> needs to be copied into the Salt file server to
+                                 <tt class="ph tt">/srv/salt/vimrc</tt>. In Salt, everything is a file, so no path redirection needs
+                                 to be accounted for. The <tt class="ph tt">vimrc</tt> file is placed right next to the <tt class="ph tt">vim.sls</tt> file.
+                                 The same command as above can be executed to all the vim SLS formulas and now
+                                 include managing the file.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Salt does not need to be restarted/reloaded or have the master manipulated
+                                    in any way when changing SLS formulas. They are instantly available.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="saltstack-walk-through__adding-some-depth">
+                              <h2 class="title sectiontitle">Adding Some Depth</h2>
+                              <p class="p">Obviously maintaining SLS formulas right in a single directory at the root of
+                                 the file server will not scale out to reasonably sized deployments. This is
+                                 why more depth is required. Start by making an nginx formula a better way,
+                                 make an nginx subdirectory and add an init.sls file:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/nginx/init.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">nginx:
+  pkg.installed: []
+  service.running:
+    - require:
+      - pkg: nginx</pre>
+                              <p class="p">A few concepts are introduced in this SLS formula.</p>
+                              
+                              <p class="p">First is the service statement which ensures that the <tt class="ph tt">nginx</tt> service is running.
+                              </p>
+                              
+                              <p class="p">Of course, the nginx service can't be started unless the package is installed --
+                                 hence the <tt class="ph tt">require</tt> statement which sets up a dependency between the two.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">require</tt> statement makes sure that the required component is executed before
+                                 and that it results in success.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The <span class="keyword title_reference">require</span> option belongs to a family of options called <span class="keyword title_reference">requisites</span>.
+                                    Requisites are a powerful component of Salt States, for more information
+                                    on how requisites work and what is available see:
+                                    
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/states/requisites.html#requisites">Requisites</a></p>
+                                 
+                                 <p class="p">Also evaluation ordering is available in Salt as well:
+                                    
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/states/ordering.html#ordering">Ordering States</a></p>
+                                 
+                              </aside>
+                              
+                              <p class="p">This new sls formula has a special name --  <tt class="ph tt">init.sls</tt>. When an SLS formula is
+                                 named <tt class="ph tt">init.sls</tt> it inherits the name of the directory path that contains it.
+                                 This formula can be referenced via the following command:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' state.sls nginx</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Reminder!</p>
+                                 
+                                 <p class="p">Just as one could call the <tt class="ph tt">test.ping</tt> or <tt class="ph tt">disk.usage</tt> execution modules,
+                                    <tt class="ph tt">state.sls</tt> is simply another execution module. It simply takes the name of an
+                                    SLS file as an argument.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Now that subdirectories can be used, the <tt class="ph tt">vim.sls</tt> formula can be cleaned up.
+                                 To make things more flexible, move the <tt class="ph tt">vim.sls</tt> and vimrc into a new subdirectory
+                                 called <tt class="ph tt">edit</tt> and change the <tt class="ph tt">vim.sls</tt> file to reflect the change:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/edit/vim.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">vim:
+  pkg.installed
+
+/etc/vimrc:
+  file.managed:
+    - source: salt://edit/vimrc
+    - mode: 644
+    - user: root
+    - group: root</pre>
+                              <p class="p">Only the source path to the vimrc file has changed. Now the formula is
+                                 referenced as <tt class="ph tt">edit.vim</tt> because it resides in the edit subdirectory.
+                                 Now the edit subdirectory can contain formulas for emacs, nano, joe or any other
+                                 editor that may need to be deployed.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="saltstack-walk-through__next-reading">
+                              <h2 class="title sectiontitle">Next Reading</h2>
+                              <p class="p">Two walk-throughs are specifically recommended at this point. First, a deeper
+                                 run through States, followed by an explanation of Pillar.
+                              </p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="starting_states.html#how-do-i-use-salt-states">Starting States</a></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="pillar.html#pillar-walkthrough">Pillar Walkthrough</a></p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                              <p class="p">An understanding of Pillar is extremely helpful in using States.</p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="saltstack-walk-through__getting-deeper-into-states">
+                              <h2 class="title sectiontitle">Getting Deeper Into States</h2>
+                              <p class="p">Two more in-depth States tutorials exist, which delve much more deeply into States
+                                 functionality.
+                              </p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">Thomas' original states tutorial, 
+                                       		
+                                       			&nbsp;<a class="xref" href="starting_states.html#how-do-i-use-salt-states">How Do I Use Salt
+                                          States?</a>, covers much more to get off the
+                                       ground with States.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">The 
+                                       		
+                                       			&nbsp;<a class="xref" href="states_pt1.html#states-tutorial-part-1-basic-usage">States Tutorial</a> also provides a
+                                       fantastic introduction.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                              <p class="p">These tutorials include much more in-depth information including templating
+                                 SLS formulas etc.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="saltstack-walk-through__so-much-more">
+                              <h2 class="title sectiontitle">So Much More!</h2>
+                              <p class="p">This concludes the initial Salt walk-through, but there are many more things still
+                                 to learn! These documents will cover important core aspects of Salt:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="../pillar/index.html#pillar">Pillar</a></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="../jobs/index.html#job-management">Job Management</a></p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <p class="p">A few more tutorials are also available:</p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="modules.html#remote-execution-tutorial">Remote Execution Tutorial</a></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="standalone_minion.html#standalone-minion">Standalone Minion</a></p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <p class="p">This still is only scratching the surface, many components such as the reactor
+                                 and event systems, extending Salt, modular components and more are not covered
+                                 here. For an overview of all Salt features and documentation, look at the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../contents.html#salt-table-of-contents">Table of Contents</a>.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

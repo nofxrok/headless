@@ -1,0 +1,1056 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.pkg</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.pkg">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-pkg">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-pkg">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.pkg</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-pkg__module-salt.states.pkg"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="installation-of-packages-using-os-package-managers-such-as-yum-or-apt-get">
+                           <h2 class="title topictitle2">Installation of packages using OS package managers such as yum or apt-get</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">Salt can manage software packages via the pkg state module, packages can be
+                                    set up to be installed, latest, removed and purged. Package management
+                                    declarations are typically rather simple:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">vim:
+  pkg.installed</pre>
+                                 <p class="p">A more involved example involves pulling from a custom repository.
+                                    Note that the pkgrepo has a require_in clause.
+                                    This is necessary and can not be replaced by a require clause in the pkg.
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">base:
+  pkgrepo.managed:
+    - humanname: Logstash PPA
+    - name: ppa:wolfnet/logstash
+    - dist: precise
+    - file: /etc/apt/sources.list.d/logstash.list
+    - keyid: 28B04E4A
+    - keyserver: keyserver.ubuntu.com
+    - require_in:
+      - pkg: logstash
+
+logstash:
+  pkg.installed</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.pkg.installed">
+                              <h3 class="title topictitle3">installed</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.pkg.installed(
+								name,
+								version=None,
+								refresh=None,
+								fromrepo=None,
+								skip_verify=False,
+								skip_suggestions=False,
+								pkgs=None,
+								sources=None,
+								allow_updates=False,
+								pkg_verify=False,
+								normalize=True,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure that the package is installed, and that it is the correct version
+                                       (if specified).
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d404879e61" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d404879e63" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e61" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d404879e63" class="stentry propdesc">
+                                          <p class="p">The name of the package to be installed. This parameter is ignored if
+                                             either "pkgs" or "sources" is used. Additionally, please note that this
+                                             option can only be used to install packages from a software repository.
+                                             To install a package file manually, use the "sources" option detailed
+                                             below.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e61" class="stentry propvalue">fromrepo</td>
+                                       
+                                       <td valign="top" headers="d404879e63" class="stentry propdesc">
+                                          <p class="p">Specify a repository from which to install</p>
+                                          
+                                          <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                             <p class="p">Distros which use APT (Debian, Ubuntu, etc.) do not have a concept
+                                                of repositories, in the same way as YUM-based distros do. When a
+                                                source is added, it is assigned to a given release. Consider the
+                                                following source configuration:
+                                             </p>
+                                             <pre class="pre codeblock language-text">deb http://ppa.launchpad.net/saltstack/salt/ubuntu precise main</pre>
+                                             <p class="p">The packages provided by this source would be made available via
+                                                the <tt class="ph tt">precise</tt> release, therefore <tt class="ph tt">fromrepo</tt> would need to be
+                                                set to <tt class="ph tt">precise</tt> for Salt to install the package from this
+                                                source.
+                                             </p>
+                                             
+                                             <p class="p">Having multiple sources in the same release may result in the
+                                                default install candidate being newer than what is desired. If this
+                                                is the case, the desired version must be specified using the
+                                                <tt class="ph tt">version</tt> parameter.
+                                             </p>
+                                             
+                                             <p class="p">If the <tt class="ph tt">pkgs</tt> parameter is being used to install multiple
+                                                packages in the same state, then instead of using <tt class="ph tt">version</tt>,
+                                                use the method of version specification described in the <strong class="ph b">Multiple
+                                                   Package Installation Options</strong> section below.
+                                             </p>
+                                             
+                                             <p class="p">Running the shell command <tt class="ph tt">apt-cache policy pkgname</tt> on a minion
+                                                can help elucidate the APT configuration and aid in properly
+                                                configuring states:
+                                             </p>
+                                             <pre class="pre codeblock language-bash">root@saltmaster:~# salt ubuntu01 cmd.run 'apt-cache policy ffmpeg'
+ubuntu01:
+    ffmpeg:
+    Installed: (none)
+    Candidate: 7:0.10.11-1~precise1
+    Version table:
+        7:0.10.11-1~precise1 0
+            500 http://ppa.launchpad.net/jon-severinsson/ffmpeg/ubuntu/ precise/main amd64 Packages
+        4:0.8.10-0ubuntu0.12.04.1 0
+            500 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main amd64 Packages
+            500 http://security.ubuntu.com/ubuntu/ precise-security/main amd64 Packages
+        4:0.8.1-0ubuntu1 0
+            500 http://us.archive.ubuntu.com/ubuntu/ precise/main amd64 Packages</pre>
+                                             <p class="p">The release is located directly after the source's URL. The actual
+                                                release name is the part before the slash, so to install version
+                                                <strong class="ph b">4:0.8.10-0ubuntu0.12.04.1</strong> either <tt class="ph tt">precise-updates</tt> or
+                                                <tt class="ph tt">precise-security</tt> could be used for the <tt class="ph tt">fromrepo</tt> value.
+                                             </p>
+                                             
+                                          </aside>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e61" class="stentry propvalue">skip_verify</td>
+                                       
+                                       <td valign="top" headers="d404879e63" class="stentry propdesc">
+                                          <p class="p">Skip the GPG verification check for the package to be installed</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e61" class="stentry propvalue">skip_suggestions</td>
+                                       
+                                       <td valign="top" headers="d404879e63" class="stentry propdesc">
+                                          <p class="p">Force strict package naming. Disables lookup of package alternatives.</p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 2014.1.1.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e61" class="stentry propvalue">version</td>
+                                       
+                                       <td valign="top" headers="d404879e63" class="stentry propdesc">
+                                          <p class="p">Install a specific version of a package. This option is ignored if
+                                             either "pkgs" or "sources" is used. Currently, this option is supported
+                                             for the following pkg providers: 
+                                             		
+                                             			&nbsp;<a class="xref" href="../../modules/all/salt.modules.aptpkg.html#salt.modules.aptpkg">apt</a>,
+                                             
+                                             		
+                                             			&nbsp;<a class="xref" href="../../modules/all/salt.modules.ebuild.html#salt.modules.ebuild">ebuild</a>,
+                                             
+                                             		
+                                             			&nbsp;<a class="xref" href="../../modules/all/salt.modules.pacman.html#salt.modules.pacman">pacman</a>,
+                                             
+                                             		
+                                             			&nbsp;<a class="xref" href="../../modules/all/salt.modules.yumpkg.html#salt.modules.yumpkg">yumpkg</a>, and
+                                             
+                                             		
+                                             			&nbsp;<a class="xref" href="../../modules/all/salt.modules.zypper.html#salt.modules.zypper">zypper</a>. The version number includes the
+                                             release designation where applicable, to allow Salt to target a
+                                             specific release of a given version. When in doubt, using the
+                                             <tt class="ph tt">pkg.latest_version</tt> function for an uninstalled package will tell
+                                             you the version available.
+                                          </p>
+                                          <pre class="pre codeblock language-bash"># salt myminion pkg.latest_version httpd
+myminion:
+    2.2.15-30.el6.centos</pre>
+                                          <p class="p">Also, while this function is not yet implemented for all pkg frontends,
+                                             
+                                             		
+                                             			&nbsp;<a class="xref" href="../../modules/all/salt.modules.yumpkg.html#salt.modules.yumpkg.list_repo_pkgs">pkg.list_repo_pkgs</a> will
+                                             show all versions available in the various repositories for a given
+                                             package, irrespective of whether or not it is installed.
+                                          </p>
+                                          <pre class="pre codeblock language-bash"># salt myminion pkg.list_repo_pkgs httpd
+myminion:
+    ----------
+    base:
+        |_
+          ----------
+          httpd:
+              2.2.15-29.el6.centos
+    updates:
+        |_
+          ----------
+          httpd:
+              2.2.15-30.el6.centos</pre>
+                                          <p class="p">The version strings returned by either of these functions can be used
+                                             as version specifiers in pkg states.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e61" class="stentry propvalue">refresh</td>
+                                       
+                                       <td valign="top" headers="d404879e63" class="stentry propdesc">
+                                          <p class="p">Update the repo database of available packages prior to installing the
+                                             requested package.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e61" class="stentry propvalue">hold</td>
+                                       
+                                       <td valign="top" headers="d404879e63" class="stentry propdesc">
+                                          <p class="p">Force the package to be held at the current installed version.
+                                             Currently works with YUM &amp; APT based systems.
+                                          </p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e61" class="stentry propvalue">allow_updates</td>
+                                       
+                                       <td valign="top" headers="d404879e63" class="stentry propdesc">
+                                          <p class="p">Allow the package to be updated outside Salt's control (e.g. auto updates on Windows).
+                                             This means a package on the Minion can have a newer version than the latest available
+                                             in the repository without enforcing a re-installation of the package.
+                                          </p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">Example:</p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d404879e216" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d404879e218" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e216" class="stentry propvalue">pkg_verify</td>
+                                       
+                                       <td valign="top" headers="d404879e218" class="stentry propdesc">
+                                          <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                          
+                                          <p class="p">For requested packages that are already installed and would not be targeted for
+                                             upgrade or downgrade, use pkg.verify to determine if any of the files installed
+                                             by the package have been altered. If files have been altered, the reinstall
+                                             option of pkg.install is used to force a reinstall.  Types to ignore can be
+                                             passed to pkg.verify (see example below).  Currently, this option is supported
+                                             for the following pkg providers: 
+                                             		
+                                             			&nbsp;<a class="xref" href="../../modules/all/salt.modules.yumpkg.html#salt.modules.yumpkg">yumpkg</a>.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">Examples:</p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d404879e238" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d404879e240" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e238" class="stentry propvalue">normalize</td>
+                                       
+                                       <td valign="top" headers="d404879e240" class="stentry propdesc">
+                                          <p class="p">Normalize the package name by removing the architecture.  Default is True.
+                                             This is useful for poorly created packages which might include the
+                                             architecture as an actual part of the name such as kernel modules
+                                             which match a specific kernel version.
+                                          </p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p"><strong class="ph b">Multiple Package Installation Options: (not supported in Windows or
+                                          pkgng)</strong></p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d404879e258" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d404879e260" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e258" class="stentry propvalue">pkgs</td>
+                                       
+                                       <td valign="top" headers="d404879e260" class="stentry propdesc">
+                                          <p class="p">A list of packages to install from a software repository. All packages
+                                             listed under <tt class="ph tt">pkgs</tt> will be installed via a single command.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">With 
+                                       		
+                                       			&nbsp;<a class="xref" href="../../modules/all/salt.modules.ebuild.html#salt.modules.ebuild">ebuild</a> is also possible to specify a use
+                                       flag list and/or if the given packages should be in package.accept_keywords
+                                       file and/or the overlay from which you want the package to be installed.
+                                       For example:
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d404879e280" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d404879e282" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e280" class="stentry propvalue">names</td>
+                                       
+                                       <td valign="top" headers="d404879e282" class="stentry propdesc">
+                                          <p class="p">A list of packages to install from a software repository. Each package
+                                             will be installed individually by the package manager.
+                                          </p>
+                                          
+                                          <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                             <p class="p">Unlike <tt class="ph tt">pkgs</tt>, the <tt class="ph tt">names</tt> parameter cannot specify a version.
+                                                In addition, it makes a separate call to the package management
+                                                frontend to install each package, whereas <tt class="ph tt">pkgs</tt> makes just a
+                                                single call. It is therefore recommended to use <tt class="ph tt">pkgs</tt> instead of
+                                                <tt class="ph tt">names</tt> to install multiple packages, both for the additional
+                                                features and the performance improvement that it brings.
+                                             </p>
+                                             
+                                          </aside>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e280" class="stentry propvalue">sources</td>
+                                       
+                                       <td valign="top" headers="d404879e282" class="stentry propdesc">
+                                          <p class="p">A list of packages to install, along with the source URI or local path
+                                             from which to install each package. In the example below, <tt class="ph tt">foo</tt>,
+                                             <tt class="ph tt">bar</tt>, <tt class="ph tt">baz</tt>, etc. refer to the name of the package, as it would
+                                             appear in the output of the <tt class="ph tt">pkg.version</tt> or <tt class="ph tt">pkg.list_pkgs</tt> salt
+                                             CLI commands.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">With 
+                                       		
+                                       			&nbsp;<a class="xref" href="../../modules/all/salt.modules.ebuild.html#salt.modules.ebuild">ebuild</a> is also possible to specify a use
+                                       flag list and/or if the given packages should be in package.accept_keywords
+                                       file and/or the overlay from which you want the package to be installed.
+                                       For example:
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d404879e338" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d404879e340" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e338" class="stentry propvalue">install_recommends</td>
+                                       
+                                       <td valign="top" headers="d404879e340" class="stentry propdesc">
+                                          <p class="p">Whether to install the packages marked as recommended.  Default is True.
+                                             Currently only works with APT based systems.
+                                          </p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">With 
+                                       		
+                                       			&nbsp;<a class="xref" href="../../modules/all/salt.modules.ebuild.html#salt.modules.ebuild">ebuild</a> is also possible to specify a use
+                                       flag list and/or if the given packages should be in package.accept_keywords
+                                       file and/or the overlay from which you want the package to be installed.
+                                       For example:
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d404879e360" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d404879e362" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e360" class="stentry propvalue">only_upgrade</td>
+                                       
+                                       <td valign="top" headers="d404879e362" class="stentry propdesc">
+                                          <p class="p">Only upgrade the packages, if they are already installed. Default is False.
+                                             Currently only works with APT based systems.
+                                          </p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4><pre class="pre codeblock language-yaml">httpd:
+  pkg.installed:
+    - only_upgrade: True</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.pkg.latest">
+                              <h3 class="title topictitle3">latest</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.pkg.latest(
+								name,
+								refresh=None,
+								fromrepo=None,
+								skip_verify=False,
+								pkgs=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure that the named package is installed and the latest available
+                                       package. If the package can be updated, this state function will update
+                                       the package. Generally it is better for the
+                                       <a class="xref" href="salt.states.pkg.html#salt.states.pkg.installed">installed</a> function to be
+                                       used, as <a class="xref" href="salt.states.pkg.html#salt.states.pkg.latest">latest</a> will update the package
+                                       whenever a new package is available.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d404879e414" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d404879e416" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e414" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d404879e416" class="stentry propdesc">
+                                          <p class="p">The name of the package to maintain at the latest available version.
+                                             This parameter is ignored if "pkgs" is used.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e414" class="stentry propvalue">fromrepo</td>
+                                       
+                                       <td valign="top" headers="d404879e416" class="stentry propdesc">
+                                          <p class="p">Specify a repository from which to install</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e414" class="stentry propvalue">skip_verify</td>
+                                       
+                                       <td valign="top" headers="d404879e416" class="stentry propdesc">
+                                          <p class="p">Skip the GPG verification check for the package to be installed</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">(Not yet supported for: Windows, FreeBSD, OpenBSD, MacOS, and Solaris
+                                       pkgutil)
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d404879e441" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d404879e443" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e441" class="stentry propvalue">pkgs</td>
+                                       
+                                       <td valign="top" headers="d404879e443" class="stentry propdesc">
+                                          <p class="p">A list of packages to maintain at the latest available version.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">(Not yet supported for: Windows, FreeBSD, OpenBSD, MacOS, and Solaris
+                                       pkgutil)
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d404879e456" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d404879e458" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e456" class="stentry propvalue">install_recommends</td>
+                                       
+                                       <td valign="top" headers="d404879e458" class="stentry propdesc">
+                                          <p class="p">Whether to install the packages marked as recommended.  Default is True.
+                                             Currently only works with APT based systems.
+                                          </p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">(Not yet supported for: Windows, FreeBSD, OpenBSD, MacOS, and Solaris
+                                       pkgutil)
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d404879e475" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d404879e477" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e475" class="stentry propvalue">only_upgrade</td>
+                                       
+                                       <td valign="top" headers="d404879e477" class="stentry propdesc">
+                                          <p class="p">Only upgrade the packages, if they are already installed. Default is False.
+                                             Currently only works with APT based systems.
+                                          </p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4><pre class="pre codeblock language-yaml">httpd:
+  pkg.latest:
+    - only_upgrade: True</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.pkg.mod_aggregate">
+                              <h3 class="title topictitle3">mod_aggregate</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.pkg.mod_aggregate(
+								low,
+								chunks,
+								running
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">The mod_aggregate function which looks up all packages in the available
+                                       low chunks and merges them into a single pkgs ref in the present low data
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.pkg.purged">
+                              <h3 class="title topictitle3">purged</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.pkg.purged(
+								name,
+								version=None,
+								pkgs=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Verify that a package is not installed, calling <tt class="ph tt">pkg.purge</tt> if necessary
+                                       to purge the package. All configuration files are also removed.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d404879e549" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d404879e551" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e549" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d404879e551" class="stentry propdesc">
+                                          <p class="p">The name of the package to be purged.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e549" class="stentry propvalue">version</td>
+                                       
+                                       <td valign="top" headers="d404879e551" class="stentry propdesc">
+                                          <p class="p">The version of the package that should be removed. Don't do anything if
+                                             the package is installed with an unmatching version.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">Multiple Package Options:</p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d404879e570" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d404879e572" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e570" class="stentry propvalue">pkgs</td>
+                                       
+                                       <td valign="top" headers="d404879e572" class="stentry propdesc">
+                                          <p class="p">A list of packages to purge. Must be passed as a python list. The
+                                             <tt class="ph tt">name</tt> parameter will be ignored if this option is passed. It accepts
+                                             version numbers as well.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p"><span class="keyword versionmodified">New in version 0.16.0.</span></p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.pkg.removed">
+                              <h3 class="title topictitle3">removed</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.pkg.removed(
+								name,
+								version=None,
+								pkgs=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Verify that a package is not installed, calling <tt class="ph tt">pkg.remove</tt> if necessary
+                                       to remove the package.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d404879e620" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d404879e622" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e620" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d404879e622" class="stentry propdesc">
+                                          <p class="p">The name of the package to be removed.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e620" class="stentry propvalue">version</td>
+                                       
+                                       <td valign="top" headers="d404879e622" class="stentry propdesc">
+                                          <p class="p">The version of the package that should be removed. Don't do anything if
+                                             the package is installed with an unmatching version.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">Multiple Package Options:</p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d404879e641" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d404879e643" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e641" class="stentry propvalue">pkgs</td>
+                                       
+                                       <td valign="top" headers="d404879e643" class="stentry propdesc">
+                                          <p class="p">A list of packages to remove. Must be passed as a python list. The
+                                             <tt class="ph tt">name</tt> parameter will be ignored if this option is passed. It accepts
+                                             version numbers as well.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p"><span class="keyword versionmodified">New in version 0.16.0.</span></p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.pkg.uptodate">
+                              <h3 class="title topictitle3">uptodate</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.pkg.uptodate(
+								name,
+								refresh=False,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                    
+                                    <p class="p">Verify that the system is completely up to date.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d404879e691" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d404879e693" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e691" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d404879e693" class="stentry propdesc">
+                                          <p class="p">The name has no functional value and is only used as a tracking
+                                             reference
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e691" class="stentry propvalue">refresh</td>
+                                       
+                                       <td valign="top" headers="d404879e693" class="stentry propdesc">
+                                          <p class="p">refresh the package database before checking for new upgrades</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d404879e691" class="stentry propvalue">kwargs</td>
+                                       
+                                       <td valign="top" headers="d404879e693" class="stentry propdesc">
+                                          <p class="p">Any keyword arguments to pass through to <tt class="ph tt">pkg.upgrade</tt>.
+                                          </p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 2015.2.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

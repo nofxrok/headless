@@ -1,0 +1,302 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.returners.couchdb_return</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.returners.couchdb_return">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../returners.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-returners-couchdb-return">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-returners-couchdb-return">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.returners.couchdb_return</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-returners-couchdb-return__module-salt.returners.couchdb_return"></span></p>
+                              
+                              <p class="p">Simple returner for CouchDB. Optional configuration
+                                 settings are listed below, along with sane defaults:
+                              </p>
+                              <pre class="pre codeblock language-yaml">couchdb.db: 'salt'
+couchdb.url: 'http://salt:5984/'</pre>
+                              <p class="p">Alternative configuration values can be used by prefacing the configuration.
+                                 Any values not found in the alternative configuration will be pulled from
+                                 the default location:
+                              </p>
+                              <pre class="pre codeblock language-yaml">alternative.couchdb.db: 'salt'
+alternative.couchdb.url: 'http://salt:5984/'</pre>
+                              <p class="p">To use the couchdb returner, append <tt class="ph tt">--return couchdb</tt> to the salt command. Example:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' test.ping --return couchdb</pre>
+                              <p class="p">To use the alternative configuration, append <tt class="ph tt">--return_config alternative</tt> to the salt command.
+                              </p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                              <pre class="pre codeblock language-bash">salt '*' test.ping --return couchdb --return_config alternative</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="on-concurrent-database-access">
+                           <h2 class="title topictitle2">On concurrent database access</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">As this returner creates a couchdb document whith the salt job id as document id
+                                    and as only one document with a given id can exist in a given couchdb database,
+                                    it is advised for most setups that every minion be configured to write to it own
+                                    database (the value of <tt class="ph tt">couchdb.db</tt> may be suffixed with the minion id),
+                                    otherwise multi-minion targetting can lead to losing output:
+                                 </p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">the first returning minion is able to create a document in the database</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">other minions fail with <tt class="ph tt">{'error': 'HTTP Error 409: Conflict'}</tt></p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.returners.couchdb_return.ensure_views">
+                              <h3 class="title topictitle3">ensure_views</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.couchdb_return.ensure_views( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">This function makes sure that all the views that should
+                                       exist in the design document do exist.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.returners.couchdb_return.get_fun">
+                              <h3 class="title topictitle3">get_fun</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.couchdb_return.get_fun(
+								fun
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a dict with key being minion and value
+                                       being the job details of the last run of function 'fun'.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.returners.couchdb_return.get_jid">
+                              <h3 class="title topictitle3">get_jid</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.couchdb_return.get_jid(
+								jid
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Get the document with a given JID.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.returners.couchdb_return.get_jids">
+                              <h3 class="title topictitle3">get_jids</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.couchdb_return.get_jids( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">List all the jobs that we have..</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.returners.couchdb_return.get_minions">
+                              <h3 class="title topictitle3">get_minions</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.couchdb_return.get_minions( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a list of minion identifiers from a request of the view.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.returners.couchdb_return.get_valid_salt_views">
+                              <h3 class="title topictitle3">get_valid_salt_views</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.couchdb_return.get_valid_salt_views( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Returns a dict object of views that should be
+                                       part of the salt design document.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.returners.couchdb_return.prep_jid">
+                              <h3 class="title topictitle3">prep_jid</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.couchdb_return.prep_jid(
+								nocache=False,
+								passed_jid=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Do any work necessary to prepare a JID, including sending a custom id</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.returners.couchdb_return.returner">
+                              <h3 class="title topictitle3">returner</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.couchdb_return.returner(
+								ret
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Take in the return and shove it into the couchdb database.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.returners.couchdb_return.set_salt_view">
+                              <h3 class="title topictitle3">set_salt_view</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.couchdb_return.set_salt_view( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Helper function that sets the salt design
+                                       document. Uses get_valid_salt_views and some hardcoded values.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,1 @@
+from master.tests.crud_master_tests import MasterSerializerTest

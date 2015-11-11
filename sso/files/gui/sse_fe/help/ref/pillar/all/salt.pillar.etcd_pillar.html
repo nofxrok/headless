@@ -1,0 +1,134 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.pillar.etcd_pillar</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.pillar.etcd_pillar">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../pillar-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-pillar-etcd-pillar">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-pillar-etcd-pillar">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.pillar.etcd_pillar</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-pillar-etcd-pillar__module-salt.pillar.etcd_pillar"></span></p>
+                              
+                              <p class="p">Use etcd data as a Pillar source</p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">python-etcd</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">In order to use an etcd server, a profile must be created in the master
+                                 configuration file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">my_etcd_config:
+  etcd.host: 127.0.0.1
+  etcd.port: 4001</pre>
+                              <p class="p">After the profile is created, configure the external pillar system to use it.
+                                 Optionally, a root may be specified.
+                              </p>
+                              <pre class="pre codeblock language-yaml">ext_pillar:
+  - etcd: my_etcd_config
+
+ext_pillar:
+  - etcd: my_etcd_config root=/salt</pre>
+                              <p class="p">Using these configuration profiles, multiple etcd sources may also be used:</p>
+                              <pre class="pre codeblock language-yaml">ext_pillar:
+  - etcd: my_etcd_config
+  - etcd: my_other_etcd_config</pre>
+                              <p class="p">The <tt class="ph tt">minion_id</tt> may be used in the <tt class="ph tt">root</tt> path to expose minion-specific
+                                 information stored in etcd.
+                              </p>
+                              <pre class="pre codeblock language-yaml">ext_pillar:
+  - etcd: my_etcd_config root=/salt/%(minion_id)s</pre>
+                              <p class="p">Minion-specific values may override shared values when the minion-specific root
+                                 appears after the shared root:
+                              </p>
+                              <pre class="pre codeblock language-yaml">ext_pillar:
+  - etcd: my_etcd_config root=/salt-shared
+  - etcd: my_other_etcd_config root=/salt-private/%(minion_id)s</pre>
+                              <p class="p">Using the configuration above, the following commands could be used to share a
+                                 key with all minions but override its value for a specific minion:
+                              </p>
+                              <pre class="pre codeblock language-">etcdctl set /salt-shared/mykey my_value
+etcdctl set /salt-private/special_minion_id/mykey my_other_value</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.pillar.etcd_pillar.ext_pillar">
+                           <h2 class="title topictitle2">ext_pillar</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.pillar.etcd_pillar.ext_pillar(
+								minion_id,
+								pillar,
+								conf
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check etcd for all data</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.boto_elb</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.boto_elb">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-boto-elb">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-boto-elb">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.boto_elb</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-boto-elb__module-salt.states.boto_elb"></span></p>
+                              
+                              <p class="p">Manage ELBs</p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Create and destroy ELBs. Be aware that this interacts with Amazon's
+                                 services, and so may incur charges.
+                              </p>
+                              
+                              <p class="p">This module uses <tt class="ph tt">boto</tt>, which can be installed via package, or pip.
+                              </p>
+                              
+                              <p class="p">This module accepts explicit elb credentials but can also utilize
+                                 IAM roles assigned to the instance through Instance Profiles. Dynamic
+                                 credentials are then automatically obtained from AWS API and no further
+                                 configuration is necessary. More information available <a class="xref" href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html" target="_blank">here</a>.
+                              </p>
+                              
+                              <p class="p">If IAM roles are not used you need to specify them either in a pillar file or
+                                 in the minion's config file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">elb.keyid: GKTADJGHEIQSXMKKRBJ08H
+elb.key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs</pre>
+                              <p class="p">It's also possible to specify <tt class="ph tt">key</tt>, <tt class="ph tt">keyid</tt> and <tt class="ph tt">region</tt> via a profile, either
+                                 passed in as a dict, or as a string to pull from pillars or minion config:
+                              </p>
+                              <pre class="pre codeblock language-yaml">myprofile:
+    keyid: GKTADJGHEIQSXMKKRBJ08H
+    key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs
+    region: us-east-1</pre>
+                              <pre class="pre codeblock language-yaml">Ensure myelb ELB exists:
+    boto_elb.present:
+        - name: myelb
+        - region: us-east-1
+        - availability_zones:
+            - us-east-1a
+            - us-east-1c
+            - us-east-1d
+        - keyid: GKTADJGHEIQSXMKKRBJ08H
+        - key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs
+        - listeners:
+            - elb_port: 443
+              instance_port: 80
+              elb_protocol: HTTPS
+              instance_protocol: HTTP
+              certificate: 'arn:aws:iam::1111111:server-certificate/mycert'
+            - elb_port: 8210
+              instance_port: 8210
+              elb_protocol: TCP
+        - health_check:
+            target: 'HTTP:80/'
+        - attributes:
+            cross_zone_load_balancing:
+              enabled: true
+            access_log:
+              enabled: true
+              s3_bucket_name: 'mybucket'
+              s3_bucket_prefix: 'my-logs'
+              emit_interval: 5
+        - cnames:
+            - name: mycname.example.com.
+              zone: example.com.
+              ttl: 60
+            - name: myothercname.example.com.
+              zone: example.com.
+
+# Using a profile from pillars
+Ensure myelb ELB exists:
+    boto_elb.present:
+        - name: myelb
+        - region: us-east-1
+        - profile: myelbprofile
+
+# Passing in a profile
+Ensure myelb ELB exists:
+    boto_elb.present:
+        - name: myelb
+        - region: us-east-1
+        - profile:
+            keyid: GKTADJGHEIQSXMKKRBJ08H
+            key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs</pre>
+                              <p class="p">It's possible to specify attributes from pillars by specifying a pillar. You
+                                 can override the values defined in the pillard by setting the attributes on the
+                                 resource. The module will use the default pillar key 'boto_elb_attributes',
+                                 which allows you to set default attributes for all ELB resources.
+                              </p>
+                              
+                              <p class="p">Setting the attributes pillar:</p>
+                              <pre class="pre codeblock language-yaml">my_elb_attributes:
+  cross_zone_load_balancing:
+    enabled: true
+  connection_draining:
+    enabled: true
+    timeout: 20
+  access_log:
+    enabled: true
+    s3_bucket_name: 'mybucket'
+    s3_bucket_prefix: 'my-logs'
+    emit_interval: 5</pre>
+                              <p class="p">Overriding the attribute values on the resource:</p>
+                              <pre class="pre codeblock language-yaml">Ensure myelb ELB exists:
+    boto_elb.present:
+        - name: myelb
+        - region: us-east-1
+        - attributes_from_pillar: my_elb_attributes
+        # override cross_zone_load_balancing:enabled
+        - attributes:
+            cross_zone_load_balancing:
+              enabled: false
+        - profile: myelbprofile</pre>
+                              <p class="p">It's possible to specify cloudwatch alarms that will be setup along with the
+                                 ELB. Note the alarm name will be defined by the name attribute provided, plus
+                                 the ELB resource name.
+                              </p>
+                              <pre class="pre codeblock language-yaml">Ensure myelb ELB exists:
+    boto_elb.present:
+        - name: myelb
+        - region: us-east-1
+        - profile: myelbprofile
+        - alarms:
+            UnHealthyHostCount:
+              name: 'ELB UnHealthyHostCount **MANAGED BY SALT**'
+              attributes:
+                metric: UnHealthyHostCount
+                namespace: AWS/ELB
+                statistic: Average
+                comparison: '&gt;='
+                threshold: 1.0
+                period: 600
+                evaluation_periods: 6
+                unit: null
+                description: ELB UnHealthyHostCount
+                alarm_actions: ['arn:aws:sns:us-east-1:12345:myalarm']
+                insufficient_data_actions: []
+                ok_actions: ['arn:aws:sns:us-east-1:12345:myalarm']</pre>
+                              <p class="p">You can also use alarms from pillars, and override values from the pillar
+                                 alarms by setting overrides on the resource. Note that 'boto_elb_alarms'
+                                 will be used as a default value for all resources, if defined and can be
+                                 used to ensure alarms are always set for a resource.
+                              </p>
+                              
+                              <p class="p">Setting the alarms in a pillar:</p>
+                              <pre class="pre codeblock language-yaml">my_elb_alarm:
+  UnHealthyHostCount:
+    name: 'ELB UnHealthyHostCount **MANAGED BY SALT**'
+    attributes:
+      metric: UnHealthyHostCount
+      namespace: AWS/ELB
+      statistic: Average
+      comparison: '&gt;='
+      threshold: 1.0
+      period: 600
+      evaluation_periods: 6
+      unit: null
+      description: ELB UnHealthyHostCount
+      alarm_actions: ['arn:aws:sns:us-east-1:12345:myalarm']
+      insufficient_data_actions: []
+      ok_actions: ['arn:aws:sns:us-east-1:12345:myalarm']</pre>
+                              <p class="p">Overriding the alarm values on the resource:</p>
+                              <pre class="pre codeblock language-yaml">Ensure myelb ELB exists:
+    boto_elb.present:
+        - name: myelb
+        - region: us-east-1
+        - profile: myelbprofile
+        - alarms_from_pillar: my_elb_alarm
+        # override UnHealthyHostCount:attributes:threshold
+        - alarms:
+            UnHealthyHostCount:
+              attributes:
+                threshold: 2.0</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.states.boto_elb.absent">
+                           <h2 class="title topictitle2">absent</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.boto_elb.absent(
+								name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.boto_elb.present">
+                           <h2 class="title topictitle2">present</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.boto_elb.present(
+								name,
+								listeners,
+								availability_zones=None,
+								subnets=None,
+								security_groups=None,
+								scheme='internet-facing',
+								health_check=None,
+								attributes=None,
+								attributes_from_pillar='boto_elb_attributes',
+								cnames=None,
+								alarms=None,
+								alarms_from_pillar='boto_elb_alarms',
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Ensure the IAM role exists.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d357458e128" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d357458e130" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357458e128" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d357458e130" class="stentry propdesc">
+                                       <p class="p">Name of the IAM role.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357458e128" class="stentry propvalue">availability_zones</td>
+                                    
+                                    <td valign="top" headers="d357458e130" class="stentry propdesc">
+                                       <p class="p">A list of availability zones for this ELB.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357458e128" class="stentry propvalue">listeners</td>
+                                    
+                                    <td valign="top" headers="d357458e130" class="stentry propdesc">
+                                       <dl class="dl definition_list">
+                                          <dt class="dt dlterm">A list of listener lists; example:</dt>
+                                          
+                                          <dd class="dd">
+                                             <dl class="dl definition_list">
+                                                <dt class="dt dlterm">[</dt>
+                                                
+                                                <dd class="dd">
+                                                   <p class="p">['443', 'HTTPS', 'arn:aws:iam::1111111:server-certificate/mycert'],
+                                                      ['8443', '80', 'HTTPS', 'HTTP', 'arn:aws:iam::1111111:server-certificate/mycert']
+                                                   </p>
+                                                   
+                                                </dd>
+                                                
+                                             </dl>
+                                             
+                                             <p class="p">]</p>
+                                             
+                                          </dd>
+                                          
+                                       </dl>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357458e128" class="stentry propvalue">subnets</td>
+                                    
+                                    <td valign="top" headers="d357458e130" class="stentry propdesc">
+                                       <p class="p">A list of subnet IDs in your VPC to attach to your LoadBalancer.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357458e128" class="stentry propvalue">security_groups</td>
+                                    
+                                    <td valign="top" headers="d357458e130" class="stentry propdesc">
+                                       <p class="p">The security groups assigned to your LoadBalancer within your VPC.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357458e128" class="stentry propvalue">scheme</td>
+                                    
+                                    <td valign="top" headers="d357458e130" class="stentry propdesc">
+                                       <p class="p">The type of a LoadBalancer. internet-facing or internal. Once set, can not be modified.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357458e128" class="stentry propvalue">health_check</td>
+                                    
+                                    <td valign="top" headers="d357458e130" class="stentry propdesc">
+                                       <p class="p">A dict defining the health check for this ELB.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357458e128" class="stentry propvalue">attributes</td>
+                                    
+                                    <td valign="top" headers="d357458e130" class="stentry propdesc">
+                                       <p class="p">A dict defining the attributes to set on this ELB.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357458e128" class="stentry propvalue">attributes_from_pillar</td>
+                                    
+                                    <td valign="top" headers="d357458e130" class="stentry propdesc">
+                                       <p class="p">name of pillar dict that contains attributes.   Attributes defined for this specific
+                                          state will override those from pillar.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357458e128" class="stentry propvalue">cnames</td>
+                                    
+                                    <td valign="top" headers="d357458e130" class="stentry propdesc">
+                                       <p class="p">A list of cname dicts with attributes: name, zone, ttl, and identifier.
+                                          See the boto_route53 state for information about these attributes.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357458e128" class="stentry propvalue">alarms:</td>
+                                    
+                                    <td valign="top" headers="d357458e130" class="stentry propdesc">
+                                       <p class="p">a dictionary of name-&gt;boto_cloudwatch_alarm sections to be associated with this ELB.
+                                          All attributes should be specified except for dimension which will be
+                                          automatically set to this ELB.
+                                          See the boto_cloudwatch_alarm state for information about these attributes.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357458e128" class="stentry propvalue">alarms_from_pillar:</td>
+                                    
+                                    <td valign="top" headers="d357458e130" class="stentry propdesc">
+                                       <p class="p">name of pillar dict that contains alarm settings.   Alarms defined for this specific
+                                          state will override those from pillar.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357458e128" class="stentry propvalue">region</td>
+                                    
+                                    <td valign="top" headers="d357458e130" class="stentry propdesc">
+                                       <p class="p">Region to connect to.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357458e128" class="stentry propvalue">key</td>
+                                    
+                                    <td valign="top" headers="d357458e130" class="stentry propdesc">
+                                       <p class="p">Secret key to be used.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357458e128" class="stentry propvalue">keyid</td>
+                                    
+                                    <td valign="top" headers="d357458e130" class="stentry propdesc">
+                                       <p class="p">Access key to be used.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357458e128" class="stentry propvalue">profile</td>
+                                    
+                                    <td valign="top" headers="d357458e130" class="stentry propdesc">
+                                       <p class="p">A dict with region, key and keyid, or a pillar key (string)
+                                          that contains a dict with region, key and keyid.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

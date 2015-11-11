@@ -1,0 +1,299 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.ini_manage</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.ini_manage">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-ini-manage">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-ini-manage">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.ini_manage</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-ini-manage__module-salt.modules.ini_manage"></span></p>
+                              
+                              <p class="p">Edit ini files</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">maintainer</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">&lt;<a class="xref" href="mailto:akilesh1597@gmail.com" target="_blank">akilesh1597@gmail.com</a>&gt;
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">maturity</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">new</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">re</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">platform</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">all</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">Use section as DEFAULT_IMPLICIT if your ini file does not have any section
+                                 (for example /etc/sysctl.conf)
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.ini_manage.get_option">
+                           <h2 class="title topictitle2">get_option</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ini_manage.get_option(
+								file_name,
+								section,
+								option
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Get value of a key from a section in an ini file. Returns <tt class="ph tt">None</tt> if
+                                    no matching key was found.
+                                 </p>
+                                 
+                                 <p class="p">API Example:</p>
+                                 <pre class="pre codeblock language-python">import salt
+sc = salt.client.get_local_client()
+sc.cmd('target', 'ini.get_option',
+       [path_to_ini_file, section_name, option])</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ini.get_option /path/to/ini section_name option_name</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.ini_manage.get_section">
+                           <h2 class="title topictitle2">get_section</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ini_manage.get_section(
+								file_name,
+								section
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Retrieve a section from an ini file. Returns the section as dictionary. If
+                                    the section is not found, an empty dictionary is returned.
+                                 </p>
+                                 
+                                 <p class="p">API Example:</p>
+                                 <pre class="pre codeblock language-python">import salt
+sc = salt.client.get_local_client()
+sc.cmd('target', 'ini.get_section',
+       [path_to_ini_file, section_name])</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ini.get_section /path/to/ini section_name</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.ini_manage.remove_option">
+                           <h2 class="title topictitle2">remove_option</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ini_manage.remove_option(
+								file_name,
+								section,
+								option
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Remove a key/value pair from a section in an ini file. Returns the value of
+                                    the removed key, or <tt class="ph tt">None</tt> if nothing was removed.
+                                 </p>
+                                 
+                                 <p class="p">API Example:</p>
+                                 <pre class="pre codeblock language-python">import salt
+sc = salt.client.get_local_client()
+sc.cmd('target', 'ini.remove_option',
+       [path_to_ini_file, section_name, option])</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ini.remove_option /path/to/ini section_name option_name</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.ini_manage.remove_section">
+                           <h2 class="title topictitle2">remove_section</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ini_manage.remove_section(
+								file_name,
+								section
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Remove a section in an ini file. Returns the removed section as dictionary,
+                                    or <tt class="ph tt">None</tt> if nothing was removed.
+                                 </p>
+                                 
+                                 <p class="p">API Example:</p>
+                                 <pre class="pre codeblock language-python">import salt
+sc = salt.client.get_local_client()
+sc.cmd('target', 'ini.remove_section',
+       [path_to_ini_file, section_name])</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ini.remove_section /path/to/ini section_name</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.ini_manage.set_option">
+                           <h2 class="title topictitle2">set_option</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ini_manage.set_option(
+								file_name,
+								sections=None,
+								summary=True
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Edit an ini file, replacing one or more sections. Returns a dictionary
+                                    containing the changes made.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d134334e219" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d134334e221" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d134334e219" class="stentry propvalue">file_name</td>
+                                    
+                                    <td valign="top" headers="d134334e221" class="stentry propdesc">
+                                       <p class="p">path of ini_file</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d134334e219" class="stentry propvalue">sections</td>
+                                    
+                                    <td valign="top" headers="d134334e221" class="stentry propdesc">
+                                       <p class="p">A dictionary representing the sections to be edited ini file</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Set <tt class="ph tt">summary=False</tt> if return data need not have previous option value
+                                 </p>
+                                 
+                                 <p class="p">API Example:</p>
+                                 <pre class="pre codeblock language-python">import salt
+sc = salt.client.get_local_client()
+sc.cmd('target', 'ini.set_option',
+       ['path_to_ini_file', '{"section_to_change": {"key": "value"}}'])</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ini.set_option /path/to/ini '{section_foo: {key: value}}'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

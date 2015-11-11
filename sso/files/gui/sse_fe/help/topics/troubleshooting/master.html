@@ -1,0 +1,311 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Troubleshooting the Salt Master</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Troubleshooting the Salt Master">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="troubleshooting-the-salt-master">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="troubleshooting-the-salt-master">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Troubleshooting the Salt Master</h1>
+                        <div class="body conbody">
+                           <div class="section" id="troubleshooting-the-salt-master__running-in-the-foreground">
+                              <h2 class="title sectiontitle">Running in the Foreground</h2>
+                              <p class="p">A great deal of information is available via the debug logging system, if you
+                                 are having issues with minions connecting or not starting run the master in
+                                 the foreground:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-master -l debug</pre>
+                              <p class="p">Anyone wanting to run Salt daemons via a process supervisor such as <a class="xref" href="http://mmonit.com/monit/" target="_blank">monit</a>,
+                                 <a class="xref" href="http://smarden.org/runit/" target="_blank">runit</a>, or <a class="xref" href="http://supervisord.org/" target="_blank">supervisord</a>, should omit the <tt class="ph tt">-d</tt> argument to the daemons and
+                                 run them in the foreground.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting-the-salt-master__what-ports-does-the-master-need-open">
+                              <h2 class="title sectiontitle">What Ports does the Master Need Open?</h2>
+                              <p class="p">For the master, TCP ports 4505 and 4506 need to be open. If you've put both
+                                 your Salt master and minion in debug mode and don't see an acknowledgment
+                                 that your minion has connected, it could very well be a firewall interfering
+                                 with the connection. See our 
+                                 		
+                                 			&nbsp;<a class="xref" href="../tutorials/firewall.html#opening-the-firewall-up-for-salt">firewall configuration</a> page for help opening the firewall on various
+                                 platforms.
+                              </p>
+                              
+                              <p class="p">If you've opened the correct TCP ports and still aren't seeing connections,
+                                 check that no additional access control system such as <a class="xref" href="https://en.wikipedia.org/wiki/Security-Enhanced_Linux" target="_blank">SELinux</a> or
+                                 <a class="xref" href="http://wiki.apparmor.net/index.php/Main_Page" target="_blank">AppArmor</a> is blocking Salt.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting-the-salt-master__too-many-open-files">
+                              <h2 class="title sectiontitle">Too many open files</h2>
+                              <p class="p">The salt-master needs at least 2 sockets per host that connects to it, one for
+                                 the Publisher and one for response port. Thus, large installations may, upon
+                                 scaling up the number of minions accessing a given master, encounter:
+                              </p>
+                              <pre class="pre codeblock language-bash">12:45:29,289 [salt.master    ][INFO    ] Starting Salt worker process 38
+Too many open files
+sock != -1 (tcp_listener.cpp:335)</pre>
+                              <p class="p">The solution to this would be to check the number of files allowed to be
+                                 opened by the user running salt-master (root by default):
+                              </p>
+                              <pre class="pre codeblock language-bash">[root@salt-master ~]# ulimit -n
+1024</pre>
+                              <p class="p">If this value is not equal to at least twice the number of minions, then it
+                                 will need to be raised. For example, in an environment with 1800 minions, the
+                                 <tt class="ph tt">nofile</tt> limit should be set to no less than 3600. This can be done by
+                                 creating the file <tt class="ph tt">/etc/security/limits.d/99-salt.conf</tt>, with the following
+                                 contents:
+                              </p>
+                              <pre class="pre codeblock language-">root        hard    nofile        4096
+root        soft    nofile        4096</pre>
+                              <p class="p">Replace <tt class="ph tt">root</tt> with the user under which the master runs, if different.
+                              </p>
+                              
+                              <p class="p">If your master does not have an <tt class="ph tt">/etc/security/limits.d</tt> directory, the lines
+                                 can simply be appended to <tt class="ph tt">/etc/security/limits.conf</tt>.
+                              </p>
+                              
+                              <p class="p">As with any change to resource limits, it is best to stay logged into your
+                                 current shell and open another shell to run <tt class="ph tt">ulimit -n</tt> again and verify that
+                                 the changes were applied correctly. Additionally, if your master is running
+                                 upstart, it may be necessary to specify the <tt class="ph tt">nofile</tt> limit in
+                                 <tt class="ph tt">/etc/default/salt-master</tt> if upstart isn't respecting your resource limits:
+                              </p>
+                              <pre class="pre codeblock language-text">limit nofile 4096 4096</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The above is simply an example of how to set these values, and you may
+                                    wish to increase them even further if your Salt master is doing more than
+                                    just running Salt.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting-the-salt-master__salt-master-stops-responding">
+                              <h2 class="title sectiontitle">Salt Master Stops Responding</h2>
+                              <p class="p">There are known bugs with ZeroMQ versions less than 2.1.11 which can cause the
+                                 Salt master to not respond properly. If you're running a ZeroMQ version greater
+                                 than or equal to 2.1.9, you can work around the bug by setting the sysctls
+                                 <tt class="ph tt">net.core.rmem_max</tt> and <tt class="ph tt">net.core.wmem_max</tt> to 16777216. Next, set the third
+                                 field in <tt class="ph tt">net.ipv4.tcp_rmem</tt> and <tt class="ph tt">net.ipv4.tcp_wmem</tt> to at least 16777216.
+                              </p>
+                              
+                              <p class="p">You can do it manually with something like:</p>
+                              <pre class="pre codeblock language-bash"># echo 16777216 &gt; /proc/sys/net/core/rmem_max
+# echo 16777216 &gt; /proc/sys/net/core/wmem_max
+# echo "4096 87380 16777216" &gt; /proc/sys/net/ipv4/tcp_rmem
+# echo "4096 87380 16777216" &gt; /proc/sys/net/ipv4/tcp_wmem</pre>
+                              <p class="p">Or with the following Salt state:</p>
+                              <pre class="pre codeblock language-yaml">net.core.rmem_max:
+  sysctl:
+    - present
+    - value: 16777216
+
+net.core.wmem_max:
+  sysctl:
+    - present
+    - value: 16777216
+
+net.ipv4.tcp_rmem:
+  sysctl:
+    - present
+    - value: 4096 87380 16777216
+
+net.ipv4.tcp_wmem:
+  sysctl:
+    - present
+    - value: 4096 87380 16777216</pre>
+                              </div>
+                           
+                           <div class="section" id="troubleshooting-the-salt-master__live-python-debug-output">
+                              <h2 class="title sectiontitle">Live Python Debug Output</h2>
+                              <p class="p">If the master seems to be unresponsive, a SIGUSR1 can be passed to the
+                                 salt-master threads to display what piece of code is executing. This debug
+                                 information can be invaluable in tracking down bugs.
+                              </p>
+                              
+                              <p class="p">To pass a SIGUSR1 to the master, first make sure the minion is running in the
+                                 foreground. Stop the service if it is running as a daemon, and start it in the
+                                 foreground like so:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-master -l debug</pre>
+                              <p class="p">Then pass the signal to the master when it seems to be unresponsive:</p>
+                              <pre class="pre codeblock language-bash"># killall -SIGUSR1 salt-master</pre>
+                              <p class="p">When filing an issue or sending questions to the mailing list for a problem
+                                 with an unresponsive daemon, be sure to include this information if possible.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting-the-salt-master__live-salt-master-profiling">
+                              <h2 class="title sectiontitle">Live Salt-Master Profiling</h2>
+                              <p class="p">When faced with performance problems one can turn on master process profiling by
+                                 sending it SIGUSR2.
+                              </p>
+                              <pre class="pre codeblock language-bash"># killall -SIGUSR2 salt-master</pre>
+                              <p class="p">This will activate <tt class="ph tt">yappi</tt> profiler inside salt-master code, then after some
+                                 time one must send SIGUSR2 again to stop profiling and save results to file. If
+                                 run in foreground salt-master will report filename for the results, which are
+                                 usually located under <tt class="ph tt">/tmp</tt> on Unix-based OSes and <tt class="ph tt">c:\temp</tt> on windows.
+                              </p>
+                              
+                              <p class="p">Results can then be analyzed with <a class="xref" href="http://kcachegrind.sourceforge.net/html/Home.html" target="_blank">kcachegrind</a> or similar tool.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting-the-salt-master__commands-time-out-or-do-not-return-output">
+                              <h2 class="title sectiontitle">Commands Time Out or Do Not Return Output</h2>
+                              <p class="p">Depending on your OS (this is most common on Ubuntu due to apt-get) you may
+                                 sometimes encounter times where your highstate, or other long running commands
+                                 do not return output.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">A number of timing issues were resolved in the 2014.1 release of Salt.
+                                    Upgrading to at least this version is strongly recommended if timeouts
+                                    persist.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">By default the timeout is set to 5 seconds. The timeout value can easily be
+                                 increased by modifying the <tt class="ph tt">timeout</tt> line within your <tt class="ph tt">/etc/salt/master</tt>
+                                 configuration file.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting-the-salt-master__passing-the-c-option-to-salt-returns-a-permissions-error">
+                              <h2 class="title sectiontitle">Passing the -c Option to Salt Returns a Permissions Error</h2>
+                              <p class="p">Using the <tt class="ph tt">-c</tt> option with the Salt command modifies the configuration
+                                 directory. When the configuration file is read it will still base data off of
+                                 the <tt class="ph tt">root_dir</tt> setting. This can result in unintended behavior if you are
+                                 expecting files such as <tt class="ph tt">/etc/salt/pki</tt> to be pulled from the location
+                                 specified with <tt class="ph tt">-c</tt>. Modify the <tt class="ph tt">root_dir</tt> setting to address this
+                                 behavior.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting-the-salt-master__salt-master-doesn-t-return-anything-while-running-jobs">
+                              <h2 class="title sectiontitle">Salt Master Doesn't Return Anything While Running jobs</h2>
+                              <p class="p">When a command being run via Salt takes a very long time to return
+                                 (package installations, certain scripts, etc.) the master may drop you back
+                                 to the shell. In most situations the job is still running but Salt has
+                                 exceeded the set timeout before returning. Querying the job queue will
+                                 provide the data of the job but is inconvenient. This can be resolved by
+                                 either manually using the <tt class="ph tt">-t</tt> option to set a longer timeout when running
+                                 commands (by default it is 5 seconds) or by modifying the master
+                                 configuration file: <tt class="ph tt">/etc/salt/master</tt> and setting the <tt class="ph tt">timeout</tt> value to
+                                 change the default timeout for all commands, and then restarting the
+                                 salt-master service.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting-the-salt-master__salt-master-auth-flooding">
+                              <h2 class="title sectiontitle">Salt Master Auth Flooding</h2>
+                              <p class="p">In large installations, care must be taken not to overwhealm the master with
+                                 authentication requests. Several options can be set on the master which
+                                 mitigate the chances of an authentication flood from causing an interuption in
+                                 service.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">recon_default:</p>
+                                 
+                                 <p class="p">The average number of seconds to wait between reconnection attempts.</p>
+                                 
+                                 <dl class="dl definition_list">
+                                    <dt class="dt dlterm">recon_max:</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">The maximum number of seconds to wait between reconnection attempts.</p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">recon_randomize:</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">A flag to indicate whether the recon_default value should be randomized.</p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">acceptance_wait_time:</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">The number of seconds to wait for a reply to each authentication request.</p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">random_reauth_delay:</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">The range of seconds across which the minions should attempt to randomize
+                                          authentication attempts.
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">auth_timeout:</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">The total time to wait for the authentication process to complete, regardless
+                                          of the number of attempts.
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

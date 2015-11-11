@@ -1,0 +1,111 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Failhard Global Option</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Failhard Global Option">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="failhard-global-option">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="failhard-global-option">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Failhard Global Option</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p">Normally, when a state fails Salt continues to execute the remainder of the
+                                 defined states and will only refuse to execute states that require the failed
+                                 state.
+                              </p>
+                              
+                              <p class="p">But the situation may exist, where you would want all state execution to stop
+                                 if a single state execution fails. The capability to do this is called
+                                 <tt class="ph tt">failing hard</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="failhard-global-option__state-level-failhard">
+                              <h2 class="title sectiontitle">State Level Failhard</h2>
+                              <p class="p">A single state can have a failhard set, this means that if this individual
+                                 state fails that all state execution will immediately stop. This is a great
+                                 thing to do if there is a state that sets up a critical config file and
+                                 setting a require for each state that reads the config would be cumbersome.
+                                 A good example of this would be setting up a package manager early on:
+                              </p>
+                              <pre class="pre codeblock language-yaml">/etc/yum.repos.d/company.repo:
+  file.managed:
+    - source: salt://company/yumrepo.conf
+    - user: root
+    - group: root
+    - mode: 644
+    - order: 1
+    - failhard: True</pre>
+                              <p class="p">In this situation, the yum repo is going to be configured before other states,
+                                 and if it fails to lay down the config file, than no other states will be
+                                 executed.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="failhard-global-option__global-failhard">
+                              <h2 class="title sectiontitle">Global Failhard</h2>
+                              <p class="p">It may be desired to have failhard be applied to every state that is executed,
+                                 if this is the case, then failhard can be set in the master configuration
+                                 file. Setting failhard in the master configuration file will result in failing
+                                 hard when any minion gathering states from the master have a state fail.
+                              </p>
+                              
+                              <p class="p">This is NOT the default behavior, normally Salt will only fail states that
+                                 require a failed state.
+                              </p>
+                              
+                              <p class="p">Using the global failhard is generally not recommended, since it can result
+                                 in states not being executed or even checked. It can also be confusing to
+                                 see states failhard if an admin is not actively aware that the failhard has
+                                 been set.
+                              </p>
+                              
+                              <p class="p">To use the global failhard set failhard: True in the master configuration
+                                 file.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

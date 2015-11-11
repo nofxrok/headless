@@ -1,0 +1,416 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.schedule</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.schedule">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-schedule">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-schedule">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.schedule</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-schedule__module-salt.states.schedule"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="management-of-the-salt-scheduler">
+                           <h2 class="title topictitle2">Management of the Salt scheduler</h2>
+                           <div class="body refbody">
+                              <div class="section"><pre class="pre codeblock language-yaml">job3:
+  schedule.present:
+    - function: test.ping
+    - seconds: 3600
+    - splay: 10
+
+This will schedule the command: test.ping every 3600 seconds
+(every hour) splaying the time between 0 and 10 seconds
+
+job2:
+  schedule.present:
+    - function: test.ping
+    - seconds: 15
+    - splay:
+        - start: 10
+        - end: 20
+
+This will schedule the command: test.ping every 3600 seconds
+(every hour) splaying the time between 10 and 20 seconds
+
+job1:
+  schedule.present:
+    - function: state.sls
+    - job_args:
+      - httpd
+    - job_kwargs:
+        test: True
+    - when:
+        - Monday 5:00pm
+        - Tuesday 3:00pm
+        - Wednesday 5:00pm
+        - Thursday 3:00pm
+        - Friday 5:00pm
+
+This will schedule the command: state.sls httpd test=True at 5pm on Monday,
+Wednesday and Friday, and 3pm on Tuesday and Thursday.  Requires that
+python-dateutil is installed on the minion.
+
+job1:
+  schedule.present:
+    - function: state.sls
+    - job_args:
+      - httpd
+    - job_kwargs:
+        test: True
+    - cron: '*/5 * * * *'
+
+Scheduled jobs can also be specified using the format used by cron.  This will
+schedule the command: state.sls httpd test=True to run every 5 minutes.  Requires
+that python-croniter is installed on the minion.
+
+job1:
+  schedule.present:
+    - function: state.sls
+    - args:
+      - httpd
+    - kwargs:
+      test: True
+    - when:
+        - Monday 5:00pm
+        - Tuesday 3:00pm
+        - Wednesday 5:00pm
+        - Thursday 3:00pm
+        - Friday 5:00pm
+    - returner: xmpp
+    - return_config: xmpp_state_run
+
+This will schedule the command: state.sls httpd test=True at 5pm on Monday,
+Wednesday and Friday, and 3pm on Tuesday and Thursday.  Using the xmpp returner
+to return the results of the scheduled job, with the alternative configuration
+options found in the xmpp_state_run section.</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.schedule.absent">
+                              <h3 class="title topictitle3">absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.schedule.absent(
+								name,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure a job is absent from the schedule</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d419334e55" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d419334e57" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d419334e55" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d419334e57" class="stentry propdesc">
+                                          <p class="p">The unique name that is given to the scheduled job.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.schedule.present">
+                              <h3 class="title topictitle3">present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.schedule.present(
+								name,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure a job is present in the schedule</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d419334e93" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d419334e95" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d419334e93" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d419334e95" class="stentry propdesc">
+                                          <p class="p">The unique name that is given to the scheduled job.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d419334e93" class="stentry propvalue">seconds</td>
+                                       
+                                       <td valign="top" headers="d419334e95" class="stentry propdesc">
+                                          <p class="p">The scheduled job will be executed after the specified
+                                             number of seconds have passed.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d419334e93" class="stentry propvalue">minutes</td>
+                                       
+                                       <td valign="top" headers="d419334e95" class="stentry propdesc">
+                                          <p class="p">The scheduled job will be executed after the specified
+                                             number of minutes have passed.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d419334e93" class="stentry propvalue">hours</td>
+                                       
+                                       <td valign="top" headers="d419334e95" class="stentry propdesc">
+                                          <p class="p">The scheduled job will be executed after the specified
+                                             number of hours have passed.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d419334e93" class="stentry propvalue">days</td>
+                                       
+                                       <td valign="top" headers="d419334e95" class="stentry propdesc">
+                                          <p class="p">The scheduled job will be executed after the specified
+                                             number of days have passed.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d419334e93" class="stentry propvalue">when</td>
+                                       
+                                       <td valign="top" headers="d419334e95" class="stentry propdesc">
+                                          <p class="p">This will schedule the job at the specified time(s).
+                                             The when parameter must be a single value or a dictionary
+                                             with the date string(s) using the dateutil format.
+                                             Requires python-dateutil.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d419334e93" class="stentry propvalue">cron</td>
+                                       
+                                       <td valign="top" headers="d419334e95" class="stentry propdesc">
+                                          <p class="p">This will schedule the job at the specified time(s)
+                                             using the crontab format.
+                                             Requires python-croniter.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d419334e93" class="stentry propvalue">function</td>
+                                       
+                                       <td valign="top" headers="d419334e95" class="stentry propdesc">
+                                          <p class="p">The function that should be executed by the scheduled job.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d419334e93" class="stentry propvalue">job_args</td>
+                                       
+                                       <td valign="top" headers="d419334e95" class="stentry propdesc">
+                                          <p class="p">The arguments that will be used by the scheduled job.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d419334e93" class="stentry propvalue">job_kwargs</td>
+                                       
+                                       <td valign="top" headers="d419334e95" class="stentry propdesc">
+                                          <p class="p">The keyword arguments that will be used by the scheduled job.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d419334e93" class="stentry propvalue">maxrunning</td>
+                                       
+                                       <td valign="top" headers="d419334e95" class="stentry propdesc">
+                                          <p class="p">Ensure that there are no more than N copies of a particular job running.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d419334e93" class="stentry propvalue">jid_include</td>
+                                       
+                                       <td valign="top" headers="d419334e95" class="stentry propdesc">
+                                          <p class="p">Include the job into the job cache.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d419334e93" class="stentry propvalue">splay</td>
+                                       
+                                       <td valign="top" headers="d419334e95" class="stentry propdesc">
+                                          <p class="p">The amount of time in seconds to splay a scheduled job.
+                                             Can be specified as a single value in seconds or as a dictionary
+                                             range with 'start' and 'end' values.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d419334e93" class="stentry propvalue">range</td>
+                                       
+                                       <td valign="top" headers="d419334e95" class="stentry propdesc">
+                                          <p class="p">This will schedule the command within the range specified.
+                                             The range parameter must be a dictionary with the date strings
+                                             using the dateutil format. Requires python-dateutil.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d419334e93" class="stentry propvalue">returner</td>
+                                       
+                                       <td valign="top" headers="d419334e95" class="stentry propdesc">
+                                          <p class="p">The returner to use to return the results of the scheduled job.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d419334e93" class="stentry propvalue">return_config</td>
+                                       
+                                       <td valign="top" headers="d419334e95" class="stentry propdesc">
+                                          <p class="p">The alternative configuration to use for returner configuration options.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

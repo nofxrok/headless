@@ -1,0 +1,32 @@
+<div class="modal-header">
+    <h3 class="modal-title">Upload Beacon File</h3>
+</div>
+<div class="modal-body">
+    <form name="uploadBeaconForm" id="upload-beacon-form" class="form-horizontal" role="form" novalidate>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Select a Beacon file:</label>
+            <div class="col-xs-9" ng-class="{'has-error': uploadBeaconForm.beaconfile.$error.required}">
+                <input id="beaconFileUpload" name="beaconfile" type="file" class="form-control" file-model="" accept="*.py" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Name:</label>
+            <div class="col-xs-9" ng-class="{'has-error': uploadBeaconForm.beaconName.$error.required}">
+                <input name="beaconName" class="form-control" ng-model="beacon.name" ng-pattern="/^[a-zA-Z0-9 ]+$/" maxlength="65" ng-trim="false" required salt-form-focus>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Description:</label>
+            <div class="col-xs-9" ng-class="{'has-error': uploadBeaconForm.beaconDesc.$error.required}">
+                <input name="beaconDescription" class="form-control" ng-model="beacon.description" />
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary site-btn-form" ng-click="uploadBeaconConfirm(beacon)" ng-disabled="uploadBeaconForm.$invalid || noFile">Upload</button>
+    <button class="btn btn-primary site-btn-form" ng-click="uploadBeaconCancel()">Cancel</button>
+</div>

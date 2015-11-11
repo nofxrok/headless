@@ -1,0 +1,241 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Getting Started With HP Cloud</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Getting Started With HP Cloud">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/cloud-providers.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="getting-started-with-hp-cloud">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="getting-started-with-hp-cloud">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Getting Started With HP Cloud</h1>
+                        <div class="body conbody">
+                           <p class="p">HP Cloud is a major public cloud platform and uses the libcloud
+                              <span class="keyword title_reference">openstack</span> driver. The current version of OpenStack that HP Cloud
+                              uses is Havana. When an instance is booted, it must have a
+                              floating IP added to it in order to connect to it and further below
+                              you will see an example that adds context to this statement.
+                           </p>
+                           
+                           <div class="section" id="getting-started-with-hp-cloud__set-up-a-cloud-provider-configuration-file">
+                              <h2 class="title sectiontitle">Set up a cloud provider configuration file</h2>
+                              <p class="p">To use the <span class="keyword title_reference">openstack</span> driver for HP Cloud, set up the cloud
+                                 provider configuration file as in the example shown below:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/etc/salt/cloud.providers.d/hpcloud.conf</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">hpcloud-config:
+  # Set the location of the salt-master
+  #
+  minion:
+    master: saltmaster.example.com
+
+  # Configure HP Cloud using the OpenStack plugin
+  #
+  identity_url: https://region-b.geo-1.identity.hpcloudsvc.com:35357/v2.0/tokens
+  compute_name: Compute
+  protocol: ipv4
+
+  # Set the compute region:
+  #
+  compute_region: region-b.geo-1
+
+  # Configure HP Cloud authentication credentials
+  #
+  user: myname
+  tenant: myname-project1
+  password: xxxxxxxxx
+
+  # keys to allow connection to the instance launched
+  #
+  ssh_key_name: yourkey
+  ssh_key_file: /path/to/key/yourkey.priv
+
+  provider: openstack</pre>
+                              <p class="p">The subsequent example that follows is using the openstack driver.</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="getting-started-with-hp-cloud__compute-region">
+                              <h2 class="title sectiontitle">Compute Region</h2>
+                              <p class="p">Originally, HP Cloud, in its OpenStack Essex version (1.0), had 3
+                                 availability zones in one region, US West (region-a.geo-1), which
+                                 each behaved each as a region.
+                              </p>
+                              
+                              <p class="p">This has since changed, and the current OpenStack Havana version of
+                                 HP Cloud (1.1) now has simplified this and now has two regions to choose from:
+                              </p>
+                              <pre class="pre codeblock language-bash">region-a.geo-1 -&gt; US West
+region-b.geo-1 -&gt; US East</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-hp-cloud__authentication">
+                              <h2 class="title sectiontitle">Authentication</h2>
+                              <p class="p">The <tt class="ph tt">user</tt> is the same user as is used to log into the HP Cloud management
+                                 UI. The <tt class="ph tt">tenant</tt> can be found in the upper left under "Project/Region/Scope".
+                                 It is often named the same as <tt class="ph tt">user</tt> albeit with a <tt class="ph tt">-project1</tt> appended.
+                                 The <tt class="ph tt">password</tt> is of course what you created your account with. The management
+                                 UI also has other information such as being able to select US East or US West.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="getting-started-with-hp-cloud__set-up-a-cloud-profile-config-file">
+                              <h2 class="title sectiontitle">Set up a cloud profile config file</h2>
+                              <p class="p">The profile shown below is a know working profile for an Ubuntu instance. The
+                                 profile configuration file is stored in the following location:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/etc/salt/cloud.profiles.d/hp_ae1_ubuntu.conf</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">hp_ae1_ubuntu:
+    provider: hp_ae1
+    image: 9302692b-b787-4b52-a3a6-daebb79cb498
+    ignore_cidr: 10.0.0.1/24
+    networks:
+      - floating: Ext-Net
+    size: standard.small
+    ssh_key_file: /root/keys/test.key
+    ssh_key_name: test
+    ssh_username: ubuntu</pre>
+                              <p class="p">Some important things about the example above:</p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">The <tt class="ph tt">image</tt> parameter can use either the image name or image ID which you can obtain by running
+                                       in the example below (this case US East):
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              <pre class="pre codeblock language-bash"># salt-cloud --list-images hp_ae1</pre>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">The parameter <tt class="ph tt">ignore_cidr</tt> specifies a range of addresses to ignore when trying to connect to the instance.
+                                       In this case, it's the range of IP addresses used for an private IP of the instance.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">The parameter <tt class="ph tt">networks</tt> is very important to include. In previous versions of Salt Cloud, this is what made
+                                       it possible for salt-cloud to be able to attach a floating IP to the instance in order
+                                       to connect to the instance and set up the minion. The current version of salt-cloud
+                                       doesn't require it, though having it is of no harm either. Newer versions of salt-cloud
+                                       will use this, and without it, will attempt to find a list of floating IP addresses
+                                       to use regardless.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">The <tt class="ph tt">ssh_key_file</tt> and <tt class="ph tt">ssh_key_name</tt> are the keys that will make it possible to connect to the instance to set up the
+                                       minion
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">The <tt class="ph tt">ssh_username</tt> parameter, in this case, being that the image used will be ubuntu, will make it possible
+                                       to not only log in but install the minion
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="getting-started-with-hp-cloud__launch-an-instance">
+                              <h2 class="title sectiontitle">Launch an instance</h2>
+                              <p class="p">To instantiate a machine based on this profile (example):</p>
+                              <pre class="pre codeblock language-bash"># salt-cloud -p hp_ae1_ubuntu ubuntu_instance_1</pre>
+                              <p class="p">After several minutes, this will create an instance named ubuntu_instance_1
+                                 running in HP Cloud in the US East region and will set up the minion and then
+                                 return information about the instance once completed.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="getting-started-with-hp-cloud__manage-the-instance">
+                              <h2 class="title sectiontitle">Manage the instance</h2>
+                              <p class="p">Once the instance has been created with salt-minion installed, connectivity to
+                                 it can be verified with Salt:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt ubuntu_instance_1 ping</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-hp-cloud__ssh-to-the-instance">
+                              <h2 class="title sectiontitle">SSH to the instance</h2>
+                              <p class="p">Additionally, the instance can be accessed via SSH using the floating IP assigned
+                                 to it
+                              </p>
+                              <pre class="pre codeblock language-bash"># ssh ubuntu@&lt;floating ip&gt;</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-hp-cloud__using-a-private-ip">
+                              <h2 class="title sectiontitle">Using a private IP</h2>
+                              <p class="p">Alternatively, in the cloud profile, using the private IP to log into the instance
+                                 to set up the minion is another option, particularly if salt-cloud is running within
+                                 the cloud on an instance that is on the same network with all the other instances
+                                 (minions)
+                              </p>
+                              
+                              <p class="p">The example below is a modified version of the previous example. Note the use of <tt class="ph tt">ssh_interface</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">hp_ae1_ubuntu:
+    provider: hp_ae1
+    image: 9302692b-b787-4b52-a3a6-daebb79cb498
+    size: standard.small
+    ssh_key_file: /root/keys/test.key
+    ssh_key_name: test
+    ssh_username: ubuntu
+    ssh_interface: private_ips</pre>
+                              <p class="p">With this setup, salt-cloud will use the private IP address to ssh into the instance
+                                 and set up the salt-minion
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

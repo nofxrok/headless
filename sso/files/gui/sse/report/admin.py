@@ -1,0 +1,3 @@
+'''
+report admin view
+'''

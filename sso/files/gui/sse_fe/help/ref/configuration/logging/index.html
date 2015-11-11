@@ -1,0 +1,188 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Logging</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Logging">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../../ent/administration.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../../topics/tutorials/syslog_ng-state-usage.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="logging">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="logging">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Logging</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p">The salt project tries to get the logging to work for you and help us solve any
+                                 issues you might find along the way.
+                              </p>
+                              
+                              <p class="p">If you want to get some more information on the nitty-gritty of salt's logging
+                                 system, please head over to the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../../topics/development/logging.html#logging-internals">logging development
+                                    document</a>, if all you're after is salt's logging
+                                 configurations, please continue reading.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="logging__available-configuration-settings">
+                              <h2 class="title sectiontitle">Available Configuration Settings</h2>
+                           </div>
+                           
+                           <div class="section" id="logging__log_file">
+                              <h2 class="title sectiontitle">log_file</h2>
+                              <p class="p">The log records can be sent to a regular file, local path name, or network location.
+                                 Remote logging works best when configured to use rsyslogd(8) (e.g.: <tt class="ph tt">file:///dev/log</tt>),
+                                 with rsyslogd(8) configured for network logging.  The format for remote addresses
+                                 is:
+                                 <tt class="ph tt">&lt;file|udp|tcp&gt;://&lt;host|socketpath&gt;:&lt;port-if-required&gt;/&lt;log-facility&gt;</tt>.
+                              </p>
+                              
+                              <p class="p">Default: Dependent of the binary being executed, for example, for <tt class="ph tt">salt-master</tt>,
+                                 <tt class="ph tt">/var/log/salt/master</tt>.
+                              </p>
+                              
+                              <p class="p">Examples:</p>
+                              <pre class="pre codeblock language-yaml">log_file: /var/log/salt/master</pre>
+                              <pre class="pre codeblock language-yaml">log_file: /var/log/salt/minion</pre>
+                              <pre class="pre codeblock language-yaml">log_file: file:///dev/log</pre>
+                              <pre class="pre codeblock language-yaml">log_file: udp://loghost:10514</pre>
+                              </div>
+                           
+                           <div class="section" id="logging__log_level">
+                              <h2 class="title sectiontitle">log_level</h2>
+                              <p class="p">Default: <tt class="ph tt">warning</tt></p>
+                              
+                              <p class="p">The level of log record messages to send to the console.
+                                 One of <tt class="ph tt">all</tt>, <tt class="ph tt">garbage</tt>, <tt class="ph tt">trace</tt>, <tt class="ph tt">debug</tt>, <tt class="ph tt">info</tt>, <tt class="ph tt">warning</tt>,
+                                 <tt class="ph tt">error</tt>, <tt class="ph tt">critical</tt>, <tt class="ph tt">quiet</tt>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_level: warning</pre>
+                              </div>
+                           
+                           <div class="section" id="logging__log_level_logfile">
+                              <h2 class="title sectiontitle">log_level_logfile</h2>
+                              <p class="p">Default: <tt class="ph tt">warning</tt></p>
+                              
+                              <p class="p">The level of messages to send to the log file.
+                                 One of <tt class="ph tt">all</tt>, <tt class="ph tt">garbage</tt>, <tt class="ph tt">trace</tt>, <tt class="ph tt">debug</tt>, <tt class="ph tt">info</tt>, <tt class="ph tt">warning</tt>,
+                                 <tt class="ph tt">error</tt>, <tt class="ph tt">critical</tt>, <tt class="ph tt">quiet</tt>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_level_logfile: warning</pre>
+                              </div>
+                           
+                           <div class="section" id="logging__log_datefmt">
+                              <h2 class="title sectiontitle">log_datefmt</h2>
+                              <p class="p">Default: <tt class="ph tt">%H:%M:%S</tt></p>
+                              
+                              <p class="p">The date and time format used in console log messages. Allowed date/time
+                                 formatting can be seen on <a class="xref" href="http://docs.python.org/2/library/time.html#time.strftime" target="_blank">time.strftime</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_datefmt: '%H:%M:%S'</pre>
+                              </div>
+                           
+                           <div class="section" id="logging__log_datefmt_logfile">
+                              <h2 class="title sectiontitle">log_datefmt_logfile</h2>
+                              <p class="p">Default: <tt class="ph tt">%Y-%m-%d %H:%M:%S</tt></p>
+                              
+                              <p class="p">The date and time format used in log file messages. Allowed date/time
+                                 formatting can be seen on <a class="xref" href="http://docs.python.org/2/library/time.html#time.strftime" target="_blank">time.strftime</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_datefmt_logfile: '%Y-%m-%d %H:%M:%S'</pre>
+                              </div>
+                           
+                           <div class="section" id="logging__log_fmt_console">
+                              <h2 class="title sectiontitle">log_fmt_console</h2>
+                              <p class="p">Default: <tt class="ph tt">[%(levelname)-8s] %(message)s</tt></p>
+                              
+                              <p class="p">The format of the console logging messages. Allowed formatting options can
+                                 be seen on the <a class="xref" href="http://docs.python.org/2/library/logging.html#logrecord-attributes" target="_blank">LogRecord attributes</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_fmt_console: '[%(levelname)-8s] %(message)s'</pre>
+                              </div>
+                           
+                           <div class="section" id="logging__log_fmt_logfile">
+                              <h2 class="title sectiontitle">log_fmt_logfile</h2>
+                              <p class="p">Default: <tt class="ph tt">%(asctime)s,%(msecs)03.0f [%(name)-17s][%(levelname)-8s] %(message)s</tt></p>
+                              
+                              <p class="p">The format of the log file logging messages. Allowed formatting options can
+                                 be seen on the <a class="xref" href="http://docs.python.org/2/library/logging.html#logrecord-attributes" target="_blank">LogRecord attributes</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_fmt_logfile: '%(asctime)s,%(msecs)03.0f [%(name)-17s][%(levelname)-8s] %(message)s'</pre>
+                              </div>
+                           
+                           <div class="section" id="logging__log_granular_levels">
+                              <h2 class="title sectiontitle">log_granular_levels</h2>
+                              <p class="p">Default: <tt class="ph tt">{}</tt></p>
+                              
+                              <p class="p">This can be used to control logging levels more specifically.  The example sets
+                                 the main salt library at the 'warning' level, but sets <tt class="ph tt">salt.modules</tt> to log
+                                 at the <tt class="ph tt">debug</tt> level:
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_granular_levels:
+  'salt': 'warning'
+  'salt.modules': 'debug'</pre>
+                              </div>
+                           
+                           <div class="section" id="logging__external-logging-handlers">
+                              <h2 class="title sectiontitle">External Logging Handlers</h2>
+                              <p class="p">Besides the internal logging handlers used by salt, there are some external
+                                 which can be used, see the 
+                                 		
+                                 			&nbsp;<a class="xref" href="handlers/index.html#external-logging-handlers">external logging handlers</a>
+                                 document.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links">
+                           
+                           <ul class="ullinks">
+                              
+                              <li class="link ulchildlink"><strong><a href="../../../topics/tutorials/syslog_ng-state-usage.html">Syslog-ng usage</a></strong><br>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                        </div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

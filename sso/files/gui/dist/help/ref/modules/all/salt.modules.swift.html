@@ -1,0 +1,219 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.swift</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.swift">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-swift">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-swift">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.swift</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-swift__module-salt.modules.swift"></span></p>
+                              
+                              <p class="p">Module for handling OpenStack Swift calls
+                                 Author: Anthony Stanton &lt;<a class="xref" href="mailto:anthony.stanton@gmail.com" target="_blank">anthony.stanton@gmail.com</a>&gt;
+                              </p>
+                              
+                              <p class="p">Inspired by the S3 and Nova modules</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">swiftclient Python module</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">configuration</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">This module is not usable until the user, password, tenant, and
+                                       auth URL are specified either in a pillar or in the minion's config file.
+                                       For example:
+                                    </p>
+                                    <pre class="pre codeblock language-">keystone.user: admin
+keystone.password: verybadpass
+keystone.tenant: admin
+keystone.auth_url: 'http://127.0.0.1:5000/v2.0/'</pre>
+                                    <p class="p">If configuration for multiple OpenStack accounts is required, they can be
+                                       set up as different configuration profiles:
+                                       For example:
+                                    </p>
+                                    <pre class="pre codeblock language-">openstack1:
+  keystone.user: admin
+  keystone.password: verybadpass
+  keystone.tenant: admin
+  keystone.auth_url: 'http://127.0.0.1:5000/v2.0/'
+
+openstack2:
+  keystone.user: admin
+  keystone.password: verybadpass
+  keystone.tenant: admin
+  keystone.auth_url: 'http://127.0.0.2:5000/v2.0/'</pre>
+                                    <p class="p">With this configuration in place, any of the swift functions can make use of
+                                       a configuration profile by declaring it explicitly.
+                                       For example:
+                                    </p>
+                                    <pre class="pre codeblock language-">salt '*' swift.get mycontainer myfile /tmp/file profile=openstack1</pre>
+                                    </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.swift.delete">
+                           <h2 class="title topictitle2">delete</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.swift.delete(
+								cont,
+								path=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Delete a container, or delete an object from a container.</p>
+                                 
+                                 <p class="p">CLI Example to delete a container:</p>
+                                 <pre class="pre codeblock language-">salt myminion swift.delete mycontainer</pre>
+                                 <p class="p">CLI Example to delete an object from a container:</p>
+                                 <pre class="pre codeblock language-">salt myminion swift.delete mycontainer remoteobject</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.swift.get">
+                           <h2 class="title topictitle2">get</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.swift.get(
+								cont=None,
+								path=None,
+								local_file=None,
+								return_bin=False,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List the contents of a container, or return an object from a container. Set
+                                    return_bin to True in order to retrieve an object wholesale. Otherwise,
+                                    Salt will attempt to parse an XML response.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example to list containers:</p>
+                                 <pre class="pre codeblock language-bash">salt myminion swift.get</pre>
+                                 <p class="p">CLI Example to list the contents of a container:</p>
+                                 <pre class="pre codeblock language-bash">salt myminion swift.get mycontainer</pre>
+                                 <p class="p">CLI Example to return the binary contents of an object:</p>
+                                 <pre class="pre codeblock language-bash">salt myminion swift.get mycontainer myfile.png return_bin=True</pre>
+                                 <p class="p">CLI Example to save the binary contents of an object to a local file:</p>
+                                 <pre class="pre codeblock language-bash">salt myminion swift.get mycontainer myfile.png local_file=/tmp/myfile.png</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.swift.head">
+                           <h2 class="title topictitle2">head</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.swift.head( )</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.swift.put">
+                           <h2 class="title topictitle2">put</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.swift.put(
+								cont,
+								path=None,
+								local_file=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Create a new container, or upload an object to a container.</p>
+                                 
+                                 <p class="p">CLI Example to create a container:</p>
+                                 <pre class="pre codeblock language-bash">salt myminion swift.put mycontainer</pre>
+                                 <p class="p">CLI Example to upload an object to a container:</p>
+                                 <pre class="pre codeblock language-bash">salt myminion swift.put mycontainer remotepath local_file=/path/to/file</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

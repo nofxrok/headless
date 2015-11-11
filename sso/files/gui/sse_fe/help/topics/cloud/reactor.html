@@ -1,0 +1,310 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Using Salt Cloud with the Event Reactor</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Using Salt Cloud with the Event Reactor">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="using-salt-cloud-with-the-event-reactor">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="using-salt-cloud-with-the-event-reactor">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Using Salt Cloud with the Event Reactor</h1>
+                        <div class="body conbody">
+                           <p class="p">One of the most powerful features of the Salt framework is the Event Reactor.
+                              As the Reactor was in development, Salt Cloud was regularly updated to take
+                              advantage of the Reactor upon completion. As such, various aspects of both the
+                              creation and destruction of instances with Salt Cloud fire events to the Salt
+                              Master, which can be used by the Event Reactor.
+                           </p>
+                           
+                           <div class="section" id="using-salt-cloud-with-the-event-reactor__event-structure">
+                              <h2 class="title sectiontitle">Event Structure</h2>
+                              <p class="p">As of this writing, all events in Salt Cloud have a tag, which includes the ID
+                                 of the instance being managed, and a payload which describes the task that is
+                                 currently being handled. A Salt Cloud tag looks like:
+                              </p>
+                              <pre class="pre codeblock language-yaml">salt/cloud/&lt;minion_id&gt;/&lt;task&gt;</pre>
+                              <p class="p">For instance, the first event fired when creating an instance named <tt class="ph tt">web1</tt>
+                                 would look like:
+                              </p>
+                              <pre class="pre codeblock language-yaml">salt/cloud/web1/creating</pre>
+                              <p class="p">Assuming this instance is using the <tt class="ph tt">ec2-centos</tt> profile, which is in turn
+                                 using the <tt class="ph tt">ec2-config</tt> provider, the payload for this tag would look like:
+                              </p>
+                              <pre class="pre codeblock language-python">{'name': 'web1',
+ 'profile': 'ec2-centos',
+ 'provider': 'ec2-config'}</pre>
+                              </div>
+                           
+                           <div class="section" id="using-salt-cloud-with-the-event-reactor__available-events">
+                              <h2 class="title sectiontitle">Available Events</h2>
+                              <p class="p">When an instance is created in Salt Cloud, whether by map, profile, or directly
+                                 through an API, a minimum of five events are normally fired. More may be
+                                 available, depending upon the cloud provider being used. Some of the common
+                                 events are described below.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="using-salt-cloud-with-the-event-reactor__salt-cloud-minion-id-creating">
+                              <h2 class="title sectiontitle">salt/cloud/&lt;minion_id&gt;/creating</h2>
+                              <p class="p">This event states simply that the process to create an instance has begun. At
+                                 this point in time, no actual work has begun. The payload for this event
+                                 includes:
+                              </p>
+                              
+                              <p class="p">name
+                                 profile
+                                 provider
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="using-salt-cloud-with-the-event-reactor__salt-cloud-minion-id-requesting">
+                              <h2 class="title sectiontitle">salt/cloud/&lt;minion_id&gt;/requesting</h2>
+                              <p class="p">Salt Cloud is about to make a request to the cloud provider to create an
+                                 instance. At this point, all of the variables required to make the request have
+                                 been gathered, and the payload of the event will reflect those variables which
+                                 do not normally pose a security risk. What is returned here is dependent upon
+                                 the cloud provider. Some common variables are:
+                              </p>
+                              
+                              <p class="p">name
+                                 image
+                                 size
+                                 location
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="using-salt-cloud-with-the-event-reactor__salt-cloud-minion-id-querying">
+                              <h2 class="title sectiontitle">salt/cloud/&lt;minion_id&gt;/querying</h2>
+                              <p class="p">The instance has been successfully requested, but the necessary information to
+                                 log into the instance (such as IP address) is not yet available. This event
+                                 marks the beginning of the process to wait for this information.
+                              </p>
+                              
+                              <p class="p">The payload for this event normally only includes the <tt class="ph tt">instance_id</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="using-salt-cloud-with-the-event-reactor__salt-cloud-minion-id-waiting-for-ssh">
+                              <h2 class="title sectiontitle">salt/cloud/&lt;minion_id&gt;/waiting_for_ssh</h2>
+                              <p class="p">The information required to log into the instance has been retrieved, but the
+                                 instance is not necessarily ready to be accessed. Following this event, Salt
+                                 Cloud will wait for the IP address to respond to a ping, then wait for the
+                                 specified port (usually 22) to respond to a connection, and on Linux systems,
+                                 for SSH to become available. Salt Cloud will attempt to issue the <tt class="ph tt">date</tt>
+                                 command on the remote system, as a means to check for availability. If no
+                                 <tt class="ph tt">ssh_username</tt> has been specified, a list of usernames (starting with
+                                 <tt class="ph tt">root</tt>) will be attempted. If one or more usernames was configured for
+                                 <tt class="ph tt">ssh_username</tt>, they will be added to the beginning of the list, in order.
+                              </p>
+                              
+                              <p class="p">The payload for this event normally only includes the <tt class="ph tt">ip_address</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="using-salt-cloud-with-the-event-reactor__salt-cloud-minion-id-deploying">
+                              <h2 class="title sectiontitle">salt/cloud/&lt;minion_id&gt;/deploying</h2>
+                              <p class="p">The necessary port has been detected as available, and now Salt Cloud can log
+                                 into the instance, upload any files used for deployment, and run the deploy
+                                 script. Once the script has completed, Salt Cloud will log back into the
+                                 instance and remove any remaining files.
+                              </p>
+                              
+                              <p class="p">A number of variables are used to deploy instances, and the majority of these
+                                 will be available in the payload. Any keys, passwords or other sensitive data
+                                 will be scraped from the payload. Most of the variables returned will be
+                                 related to the profile or provider config, and any default values that could
+                                 have been changed in the profile or provider, but weren't.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="using-salt-cloud-with-the-event-reactor__salt-cloud-minion-id-created">
+                              <h2 class="title sectiontitle">salt/cloud/&lt;minion_id&gt;/created</h2>
+                              <p class="p">The deploy sequence has completed, and the instance is now available, Salted,
+                                 and ready for use. This event is the final task for Salt Cloud, before returning
+                                 instance information to the user and exiting.
+                              </p>
+                              
+                              <p class="p">The payload for this event contains little more than the initial <tt class="ph tt">creating</tt>
+                                 event. This event is required in all cloud providers.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="using-salt-cloud-with-the-event-reactor__configuring-the-event-reactor">
+                              <h2 class="title sectiontitle">Configuring the Event Reactor</h2>
+                              <p class="p">The Event Reactor is built into the Salt Master process, and as such is
+                                 configured via the master configuration file. Normally this will will be a YAML
+                                 file located at <tt class="ph tt">/etc/salt/master</tt>. Additionally, master configuration items
+                                 can be stored, in YAML format, inside the <tt class="ph tt">/etc/salt/master.d/</tt> directory.
+                              </p>
+                              
+                              <p class="p">These configuration items may be stored in either location; however, they may
+                                 only be stored in one location. For organizational and security purposes, it
+                                 may be best to create a single configuration file, which contains only Event
+                                 Reactor configuration, at <tt class="ph tt">/etc/salt/master.d/reactor</tt>.
+                              </p>
+                              
+                              <p class="p">The Event Reactor uses a top-level configuration item called <tt class="ph tt">reactor</tt>. This
+                                 block contains a list of tags to be watched for, each of which also includes a
+                                 list of <tt class="ph tt">sls</tt> files. For instance:
+                              </p>
+                              <pre class="pre codeblock language-yaml">reactor:
+  - 'salt/minion/*/start':
+    - '/srv/reactor/custom-reactor.sls'
+  - 'salt/cloud/*/created':
+    - '/srv/reactor/cloud-alert.sls'
+  - 'salt/cloud/*/destroyed':
+    - '/srv/reactor/cloud-destroy-alert.sls'</pre>
+                              <p class="p">The above configuration configures reactors for three different tags: one which
+                                 is fired when a minion process has started and is available to receive commands,
+                                 one which is fired when a cloud instance has been created, and one which is
+                                 fired when a cloud instance is destroyed.
+                              </p>
+                              
+                              <p class="p">Note that each tag contains a wildcard (<tt class="ph tt">*</tt>) in it. For each of these tags,
+                                 this will normally refer to a <tt class="ph tt">minion_id</tt>. This is not required of event tags,
+                                 but is very common.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="using-salt-cloud-with-the-event-reactor__reactor-sls-files">
+                              <h2 class="title sectiontitle">Reactor SLS Files</h2>
+                              <p class="p">Reactor <tt class="ph tt">sls</tt> files should be placed in the <tt class="ph tt">/srv/reactor/</tt> directory for
+                                 consistency between environments, but this is not currently enforced by Salt.
+                              </p>
+                              
+                              <p class="p">Reactor <tt class="ph tt">sls</tt> files follow a similar format to other <tt class="ph tt">sls</tt> files in
+                                 Salt. By default they are written in YAML and can be templated using Jinja, but
+                                 since they are processed through Salt's rendering system, any available
+                                 renderer (JSON, Mako, Cheetah, etc.) can be used.
+                              </p>
+                              
+                              <p class="p">As with other <tt class="ph tt">sls</tt> files, each stanza will start with a declaration ID,
+                                 followed by the function to run, and then any arguments for that function. For
+                                 example:
+                              </p>
+                              <pre class="pre codeblock language-yaml"># /srv/reactor/cloud-alert.sls
+new_instance_alert:
+  cmd.pagerduty.create_event:
+    - tgt: alertserver
+    - kwarg:
+        description: "New instance: {{ data['name'] }}"
+        details: "New cloud instance created on {{ data['provider'] }}"
+        service_key: 1626dead5ecafe46231e968eb1be29c4
+        profile: my-pagerduty-account</pre>
+                              <p class="p">When the Event Reactor receives an event notifying it that a new instance has
+                                 been created, this <tt class="ph tt">sls</tt> will create a new incident in PagerDuty, using the
+                                 configured PagerDuty account.
+                              </p>
+                              
+                              <p class="p">The declaration ID in this example is <tt class="ph tt">new_instance_alert</tt>. The function
+                                 called is <tt class="ph tt">cmd.pagerduty.create_event</tt>. The <tt class="ph tt">cmd</tt> portion of this function
+                                 specifies that an execution module and function will be called, in this case,
+                                 the <tt class="ph tt">pagerduty.create_event</tt> function.
+                              </p>
+                              
+                              <p class="p">Because an execution module is specified, a target (<tt class="ph tt">tgt</tt>) must be specified
+                                 on which to call the function. In this case, a minion called <tt class="ph tt">alertserver</tt>
+                                 has been used. Any arguments passed through to the function are declared in the
+                                 <tt class="ph tt">kwarg</tt> block.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="using-salt-cloud-with-the-event-reactor__example-reactor-based-highstate">
+                              <h2 class="title sectiontitle">Example: Reactor-Based Highstate</h2>
+                              <p class="p">When Salt Cloud creates an instance, by default it will install the Salt Minion
+                                 onto the instance, along with any specified minion configuration, and
+                                 automatically accept that minion's keys on the master. One of the configuration
+                                 options that can be specified is <tt class="ph tt">startup_states</tt>, which is commonly set to
+                                 <tt class="ph tt">highstate</tt>. This will tell the minion to immediately apply a highstate, as
+                                 soon as it is able to do so.
+                              </p>
+                              
+                              <p class="p">This can present a problem with some system images on some cloud providers. For
+                                 instance, Salt Cloud can be configured to log in as either the <tt class="ph tt">root</tt> user, or
+                                 a user with <tt class="ph tt">sudo</tt> access. While some providers commonly use images that
+                                 lock out remote <tt class="ph tt">root</tt> access and require a user with <tt class="ph tt">sudo</tt> privileges to
+                                 log in (notably EC2, with their <tt class="ph tt">ec2-user</tt> login), most cloud providers fall
+                                 back to <tt class="ph tt">root</tt> as the default login on all images, including for operating
+                                 systems (such as Ubuntu) which normally disallow remote <tt class="ph tt">root</tt> login.
+                              </p>
+                              
+                              <p class="p">For users of these operating systems, it is understandable that a highstate
+                                 would include configuration to block remote <tt class="ph tt">root</tt> logins again. However,
+                                 Salt Cloud may not have finished cleaning up its deployment files by the time
+                                 the minion process has started, and kicked off a highstate run. Users have
+                                 reported errors from Salt Cloud getting locked out while trying to clean up
+                                 after itself.
+                              </p>
+                              
+                              <p class="p">The goal of a startup state may be achieved using the Event Reactor. Because a
+                                 minion fires an event when it is able to receive commands, this event can
+                                 effectively be used inside the reactor system instead. The following will point
+                                 the reactor system to the right <tt class="ph tt">sls</tt> file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">reactor:
+  - 'salt/cloud/*/created':
+    - '/srv/reactor/startup_highstate.sls'</pre>
+                              <p class="p">And the following <tt class="ph tt">sls</tt> file will start a highstate run on the target minion:
+                              </p>
+                              <pre class="pre codeblock language-yaml"># /srv/reactor/startup_highstate.sls
+reactor_highstate:
+  cmd.state.highstate:
+    - tgt: {{ data['name'] }}</pre>
+                              <p class="p">Because this event will not be fired until Salt Cloud has cleaned up after
+                                 itself, the highstate run will not step on Salt Cloud's toes. And because every
+                                 file on the minion is configurable, including <tt class="ph tt">/etc/salt/minion</tt>, the
+                                 <tt class="ph tt">startup_states</tt> can still be configured for future minion restarts, if
+                                 desired.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

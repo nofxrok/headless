@@ -1,0 +1,605 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.user</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.user">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-user">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-user">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.user</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-user__module-salt.states.user"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="management-of-user-accounts">
+                           <h2 class="title topictitle2">Management of user accounts</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">The user module is used to create and manage user settings, users can be set
+                                    as either absent or present
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">fred:
+  user.present:
+    - fullname: Fred Jones
+    - shell: /bin/zsh
+    - home: /home/fred
+    - uid: 4000
+    - gid: 4000
+    - groups:
+      - wheel
+      - storage
+      - games
+
+testuser:
+  user.absent</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.user.absent">
+                              <h3 class="title topictitle3">absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.user.absent(
+								name,
+								purge=False,
+								force=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure that the named user is absent</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d426882e57" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d426882e59" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e57" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d426882e59" class="stentry propdesc">
+                                          <p class="p">The name of the user to remove</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e57" class="stentry propvalue">purge</td>
+                                       
+                                       <td valign="top" headers="d426882e59" class="stentry propdesc">
+                                          <p class="p">Set purge to True to delete all of the user's files as well as the user,
+                                             Default is <tt class="ph tt">False</tt>.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e57" class="stentry propvalue">force</td>
+                                       
+                                       <td valign="top" headers="d426882e59" class="stentry propdesc">
+                                          <p class="p">If the user is logged in, the absent state will fail. Set the force
+                                             option to True to remove the user even if they are logged in. Not
+                                             supported in FreeBSD and Solaris, Default is <tt class="ph tt">False</tt>.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.user.present">
+                              <h3 class="title topictitle3">present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.user.present(
+								name,
+								uid=None,
+								gid=None,
+								gid_from_name=False,
+								groups=None,
+								optional_groups=None,
+								remove_groups=True,
+								home=None,
+								createhome=True,
+								password=None,
+								enforce_password=True,
+								empty_password=False,
+								shell=None,
+								unique=True,
+								system=False,
+								fullname=None,
+								roomnumber=None,
+								workphone=None,
+								homephone=None,
+								loginclass=None,
+								date=None,
+								mindays=None,
+								maxdays=None,
+								inactdays=None,
+								warndays=None,
+								expire=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure that the named user is present with the specified properties</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d426882e113" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d426882e115" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e113" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d426882e115" class="stentry propdesc">
+                                          <p class="p">The name of the user to manage</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e113" class="stentry propvalue">uid</td>
+                                       
+                                       <td valign="top" headers="d426882e115" class="stentry propdesc">
+                                          <p class="p">The user id to assign, if left empty then the next available user id
+                                             will be assigned
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e113" class="stentry propvalue">gid</td>
+                                       
+                                       <td valign="top" headers="d426882e115" class="stentry propdesc">
+                                          <p class="p">The default group id</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e113" class="stentry propvalue">gid_from_name</td>
+                                       
+                                       <td valign="top" headers="d426882e115" class="stentry propdesc">
+                                          <p class="p">If True, the default group id will be set to the id of the group with
+                                             the same name as the user, Default is <tt class="ph tt">False</tt>.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e113" class="stentry propvalue">groups</td>
+                                       
+                                       <td valign="top" headers="d426882e115" class="stentry propdesc">
+                                          <p class="p">A list of groups to assign the user to, pass a list object. If a group
+                                             specified here does not exist on the minion, the state will fail.
+                                             If set to the empty list, the user will be removed from all groups
+                                             except the default group.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e113" class="stentry propvalue">optional_groups</td>
+                                       
+                                       <td valign="top" headers="d426882e115" class="stentry propdesc">
+                                          <p class="p">A list of groups to assign the user to, pass a list object. If a group
+                                             specified here does not exist on the minion, the state will silently
+                                             ignore it.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">NOTE: If the same group is specified in both "groups" and
+                                       "optional_groups", then it will be assumed to be required and not optional.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d426882e161" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d426882e163" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e161" class="stentry propvalue">remove_groups</td>
+                                       
+                                       <td valign="top" headers="d426882e163" class="stentry propdesc">
+                                          <p class="p">Remove groups that the user is a member of that weren't specified in
+                                             the state, Default is <tt class="ph tt">True</tt>.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e161" class="stentry propvalue">home</td>
+                                       
+                                       <td valign="top" headers="d426882e163" class="stentry propdesc">
+                                          <p class="p">The location of the home directory to manage</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e161" class="stentry propvalue">createhome</td>
+                                       
+                                       <td valign="top" headers="d426882e163" class="stentry propdesc">
+                                          <p class="p">If False, the home directory will not be created if it doesn't exist.
+                                             Please note that directories leading up to the home directory
+                                             will NOT be created, Default is <tt class="ph tt">True</tt>.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e161" class="stentry propvalue">password</td>
+                                       
+                                       <td valign="top" headers="d426882e163" class="stentry propdesc">
+                                          <p class="p">A password hash to set for the user. This field is only supported on
+                                             Linux, FreeBSD, NetBSD, OpenBSD, and Solaris.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">NOTE: If the same group is specified in both "groups" and
+                                       "optional_groups", then it will be assumed to be required and not optional.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d426882e200" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d426882e202" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e200" class="stentry propvalue">enforce_password</td>
+                                       
+                                       <td valign="top" headers="d426882e202" class="stentry propdesc">
+                                          <p class="p">Set to False to keep the password from being changed if it has already
+                                             been set and the password hash differs from what is specified in the
+                                             "password" field. This option will be ignored if "password" is not
+                                             specified, Default is <tt class="ph tt">True</tt>.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e200" class="stentry propvalue">empty_password</td>
+                                       
+                                       <td valign="top" headers="d426882e202" class="stentry propdesc">
+                                          <p class="p">Set to True to enable password-less login for user, Default is <tt class="ph tt">False</tt>.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e200" class="stentry propvalue">shell</td>
+                                       
+                                       <td valign="top" headers="d426882e202" class="stentry propdesc">
+                                          <p class="p">The login shell, defaults to the system default shell</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e200" class="stentry propvalue">unique</td>
+                                       
+                                       <td valign="top" headers="d426882e202" class="stentry propdesc">
+                                          <p class="p">Require a unique UID, Default is <tt class="ph tt">True</tt>.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e200" class="stentry propvalue">system</td>
+                                       
+                                       <td valign="top" headers="d426882e202" class="stentry propdesc">
+                                          <p class="p">Choose UID in the range of FIRST_SYSTEM_UID and LAST_SYSTEM_UID, Default is
+                                             <tt class="ph tt">False</tt>.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e200" class="stentry propvalue">loginclass</td>
+                                       
+                                       <td valign="top" headers="d426882e202" class="stentry propdesc">
+                                          <p class="p">The login class, defaults to empty
+                                             (BSD only)
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">The below values should be specified as strings to avoid ambiguities when
+                                       the values are loaded. (Especially the phone and room number fields which
+                                       are likely to contain numeric data)
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d426882e258" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d426882e260" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e258" class="stentry propvalue">fullname</td>
+                                       
+                                       <td valign="top" headers="d426882e260" class="stentry propdesc">
+                                          <p class="p">The user's full name</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e258" class="stentry propvalue">roomnumber</td>
+                                       
+                                       <td valign="top" headers="d426882e260" class="stentry propdesc">
+                                          <p class="p">The user's room number (not supported in MacOS)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e258" class="stentry propvalue">workphone</td>
+                                       
+                                       <td valign="top" headers="d426882e260" class="stentry propdesc">
+                                          <p class="p">The user's work phone number (not supported in MacOS)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e258" class="stentry propvalue">homephone</td>
+                                       
+                                       <td valign="top" headers="d426882e260" class="stentry propdesc">
+                                          <p class="p">The user's home phone number (not supported in MacOS)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">The below values should be specified as integers.</p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d426882e291" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d426882e293" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e291" class="stentry propvalue">date</td>
+                                       
+                                       <td valign="top" headers="d426882e293" class="stentry propdesc">
+                                          <p class="p">Date of last change of password, represented in days since epoch
+                                             (January 1, 1970).
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e291" class="stentry propvalue">mindays</td>
+                                       
+                                       <td valign="top" headers="d426882e293" class="stentry propdesc">
+                                          <p class="p">The minimum number of days between password changes.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e291" class="stentry propvalue">maxdays</td>
+                                       
+                                       <td valign="top" headers="d426882e293" class="stentry propdesc">
+                                          <p class="p">The maximum number of days between password changes.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e291" class="stentry propvalue">inactdays</td>
+                                       
+                                       <td valign="top" headers="d426882e293" class="stentry propdesc">
+                                          <p class="p">The number of days after a password expires before an account is
+                                             locked.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e291" class="stentry propvalue">warndays</td>
+                                       
+                                       <td valign="top" headers="d426882e293" class="stentry propdesc">
+                                          <p class="p">Number of days prior to maxdays to warn users.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d426882e291" class="stentry propvalue">expire</td>
+                                       
+                                       <td valign="top" headers="d426882e293" class="stentry propdesc">
+                                          <p class="p">Date that account expires, represented in days since epoch (January 1,
+                                             1970).
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

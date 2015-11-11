@@ -1,0 +1,236 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Ordering States</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Ordering States">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="ordering">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="ordering">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Ordering States</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="ordering__ordering-states"></span></p>
+                              
+                              <p class="p">The way in which configuration management systems are executed is a hotly
+                                 debated topic in the configuration management world. Two
+                                 major philosophies exist on the subject, to either execute in an imperative
+                                 fashion where things are executed in the order in which they are defined, or
+                                 in a declarative fashion where dependencies need to be mapped between objects.
+                              </p>
+                              
+                              <p class="p">Imperative ordering is finite and generally considered easier to write, but
+                                 declarative ordering is much more powerful and flexible but generally considered
+                                 more difficult to create.
+                              </p>
+                              
+                              <p class="p">Salt has been created to get the best of both worlds. States are evaluated in
+                                 a finite order, which guarantees that states are always executed in the same
+                                 order, and the states runtime is declarative, making Salt fully aware of
+                                 dependencies via the <span class="keyword title_reference">requisite</span> system.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="ordering__ordering-auto-order">
+                              <h2 class="title sectiontitle">State Auto Ordering</h2><pre class="pre codeblock">versionadded: 0.17.0</pre>
+                              <p class="p">Salt always executes states in a finite manner, meaning that they will always
+                                 execute in the same order regardless of the system that is executing them.
+                                 But in Salt 0.17.0, the <tt class="ph tt">state_auto_order</tt> option was added. This option
+                                 makes states get evaluated in the order in which they are defined in sls
+                                 files.
+                              </p>
+                              
+                              <p class="p">The evaluation order makes it easy to know what order the states will be
+                                 executed in, but it is important to note that the requisite system will
+                                 override the ordering defined in the files, and the <tt class="ph tt">order</tt> option described
+                                 below will also override the order in which states are defined in sls files.
+                              </p>
+                              
+                              <p class="p">If the classic ordering is preferred (lexicographic), then set
+                                 <tt class="ph tt">state_auto_order</tt> to <tt class="ph tt">False</tt> in the master configuration file.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="ordering__ordering-requisites">
+                              <h2 class="title sectiontitle">Requisite Statements</h2>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">This document represents behavior exhibited by Salt requisites as of
+                                    version 0.9.7 of Salt.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Often when setting up states any single action will require or depend on
+                                 another action. Salt allows for the building of relationships between states
+                                 with requisite statements. A requisite statement ensures that the named state
+                                 is evaluated before the state requiring it. There are three types of requisite
+                                 statements in Salt, <strong class="ph b">require</strong>, <strong class="ph b">watch</strong>, and <strong class="ph b">prereq</strong>.
+                              </p>
+                              
+                              <p class="p">These requisite statements are applied to a specific state declaration:</p>
+                              <pre class="pre codeblock language-yaml">httpd:
+  pkg.installed: []
+  file.managed:
+    - name: /etc/httpd/conf/httpd.conf
+    - source: salt://httpd/httpd.conf
+    - require:
+      - pkg: httpd</pre>
+                              <p class="p">In this example, the <strong class="ph b">require</strong> requisite is used to declare that the file
+                                 /etc/httpd/conf/httpd.conf should only be set up if the pkg state executes
+                                 successfully.
+                              </p>
+                              
+                              <p class="p">The requisite system works by finding the states that are required and
+                                 executing them before the state that requires them. Then the required states
+                                 can be evaluated to see if they have executed correctly.
+                              </p>
+                              
+                              <p class="p">Require statements can refer to any state defined in Salt. The basic examples
+                                 are <span class="keyword title_reference">pkg</span>, <span class="keyword title_reference">service</span>, and <span class="keyword title_reference">file</span>, but any used state can be referenced.
+                              </p>
+                              
+                              <p class="p">In addition to state declarations such as pkg, file, etc., <strong class="ph b">sls</strong> type requisites
+                                 are also recognized, and essentially allow 'chaining' of states. This provides a
+                                 mechanism to ensure the proper sequence for complex state formulas, especially when
+                                 the discrete states are split or groups into separate sls files:
+                              </p>
+                              <pre class="pre codeblock language-yaml">include:
+  - network
+
+httpd:
+  pkg.installed: []
+  service.running:
+    - require:
+      - pkg: httpd
+      - sls: network</pre>
+                              <p class="p">In this example, the httpd service running state will not be applied
+                                 (i.e., the httpd service will not be started) unless both the httpd package is
+                                 installed AND the network state is satisfied.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Requisite matching</p>
+                                 
+                                 <p class="p">Requisites match on both the ID Declaration and the <tt class="ph tt">name</tt> parameter.
+                                    Therefore, if using the <tt class="ph tt">pkgs</tt> or <tt class="ph tt">sources</tt> argument to install
+                                    a list of packages in a pkg state, it's important to note that it is
+                                    impossible to match an individual package in the list, since all packages
+                                    are installed as a single state.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="ordering__multiple-requisites">
+                              <h2 class="title sectiontitle">Multiple Requisites</h2>
+                              <p class="p">The requisite statement is passed as a list, allowing for the easy addition of
+                                 more requisites. Both requisite types can also be separately declared:
+                              </p>
+                              <pre class="pre codeblock language-yaml">httpd:
+  pkg.installed: []
+  service.running:
+    - enable: True
+    - watch:
+      - file: /etc/httpd/conf/httpd.conf
+    - require:
+      - pkg: httpd
+      - user: httpd
+      - group: httpd
+  file.managed:
+    - name: /etc/httpd/conf/httpd.conf
+    - source: salt://httpd/httpd.conf
+    - require:
+      - pkg: httpd
+  user.present: []
+  group.present: []</pre>
+                              <p class="p">In this example, the httpd service is only going to be started if the package,
+                                 user, group, and file are executed successfully.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="ordering__requisite-documentation">
+                              <h2 class="title sectiontitle">Requisite Documentation</h2>
+                              <p class="p">For detailed information on each of the individual requisites, 
+                                 		
+                                 			&nbsp;<a class="xref" href="requisites.html#requisites">please
+                                    look here.</a></p>
+                              
+                           </div>
+                           
+                           <div class="section" id="ordering__the-order-option">
+                              <h2 class="title sectiontitle">The Order Option</h2>
+                              <p class="p">Before using the <span class="keyword title_reference">order</span> option, remember that the majority of state ordering
+                                 should be done with a 
+                                 		
+                                 			&nbsp;<a class="xref" href="highstate.html#states-highstate__requisite-declaration">Requisite declaration</a>, and that a requisite
+                                 declaration will override an <span class="keyword title_reference">order</span> option, so a state with order option
+                                 should not require or required by other states.
+                              </p>
+                              
+                              <p class="p">The order option is used by adding an order number to a state declaration
+                                 with the option <span class="keyword title_reference">order</span>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">vim:
+  pkg.installed:
+    - order: 1</pre>
+                              <p class="p">By adding the order option to <span class="keyword title_reference">1</span> this ensures that the vim package will be
+                                 installed in tandem with any other state declaration set to the order <span class="keyword title_reference">1</span>.
+                              </p>
+                              
+                              <p class="p">Any state declared without an order option will be executed after all states
+                                 with order options are executed.
+                              </p>
+                              
+                              <p class="p">But this construct can only handle ordering states from the beginning.
+                                 Certain circumstances will present a situation where it is desirable to send
+                                 a state to the end of the line. To do this, set the order to <tt class="ph tt">last</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">vim:
+  pkg.installed:
+    - order: last</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

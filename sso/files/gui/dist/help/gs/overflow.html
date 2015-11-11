@@ -1,0 +1,88 @@
+<img class="imgcenter" src="images/formulas.png"/><!--<span class="moreinfo"><a id="hostname" href="#">Explain this to me like I'm a developer</a></span>-->
+
+
+<p></p>
+
+<p>For example, here are a few different formulas for 'vim':</p>
+
+
+
+<table class="table table-noborder">
+    <tr>
+        <td><pre class="pre codeblock language-yaml">vim:
+  pkg.installed</pre></td>
+        <td><pre class="pre codeblock language-yaml">vim:
+  pkg.installed
+
+/etc/vimrc:
+  file.managed:
+    - source: salt://vimrc
+    - mode: 644
+    - user: root
+    - group: root</pre></td>
+        <td><pre class="pre codeblock language-yaml">vim:
+  pkg:
+    - installed
+    {% if grains['os_family'] == 'RedHat' %}
+    - name: vim-enhanced
+    {% else %}
+    - name: vim
+    {% endif %}</pre></td>
+    </tr>
+</table>
+
+<p>The important thing to understand is that <i>your</i> formulas can be customized for <i>your</i> environment, and can be as complex or as simple as you like. The salt community maintains a massive repository of <a href="https://github.com/saltstack-formulas" target="_blank">salt formulas</a> that you can fork and make your own, our you can derive your own from the ground up.</p>
+
+<p>For now, create a /srv/salt/vim.sls file that contains a definition for the 'vim' state referenced in our top.sls file:</p>
+<pre class="pre codeblock language-yaml">vim:
+  pkg.installed</pre>
+
+<p>Also create an /etc/salt/apache.sls file for the 'apache' state:</p>
+<pre class="pre codeblock language-yaml">
+apache:
+  pkg.installed []
+  service.running:
+    - require:
+      - pkg: apache</pre>
+
+
+
+
+<h2>Variables</h2>
+
+
+<h2>Conditions</h2>
+
+<h2>Combining Commands</h2>
+
+<p></p>
+<pre class="pre codeblock language-yaml">apache:
+apache:
+  pkg.installed: []
+  service.running:
+    - require:
+      - pkg: apache
+
+/var/www/index.html:                        # ID declaration
+  file:                                     # state declaration
+    - managed                               # function
+    - source: salt://webserver/index.html   # function arg
+    - require:                              # requisite declaration
+      - pkg: apache                         # requisite reference</pre>
+
+
+
+
+<!--<div class="section gs-scenario" id="concept_ivf_bcn_vp__section_5191FFF18E494D33AA46064EF96D0F57">
+    <h2 class="title sectiontitle">Scenario</h2>
+    <p class="p"></p>
+    <ul>
+        <li>Salt Master server</li>
+        <li>Web server</li>
+        <li>Database server</li>
+    </ul>
+
+
+</div>-->
+
+</div>

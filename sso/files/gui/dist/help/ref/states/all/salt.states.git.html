@@ -1,0 +1,636 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.git</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.git">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-git">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-git">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.git</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-git__module-salt.states.git"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="interaction-with-git-repositories">
+                           <h2 class="title topictitle2">Interaction with Git repositories</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">Important: Before using git over ssh, make sure your remote host fingerprint
+                                    exists in "~/.ssh/known_hosts" file. To avoid requiring password
+                                    authentication, it is also possible to pass private keys to use explicitly.
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">https://github.com/saltstack/salt.git:
+  git.latest:
+    - rev: develop
+    - target: /tmp/salt</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.git.config">
+                              <h3 class="title topictitle3">config</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.git.config(
+								name,
+								value,
+								repo=None,
+								user=None,
+								is_global=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                    
+                                    <p class="p">Manage a git config setting for a user or repository</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d373819e60" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d373819e62" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e60" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d373819e62" class="stentry propdesc">
+                                          <p class="p">Name of the git config value to set</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e60" class="stentry propvalue">value</td>
+                                       
+                                       <td valign="top" headers="d373819e62" class="stentry propdesc">
+                                          <p class="p">Value to set</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e60" class="stentry propvalue">repo</td>
+                                       
+                                       <td valign="top" headers="d373819e62" class="stentry propdesc">
+                                          <p class="p">An optional location of a git repository for local operations</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e60" class="stentry propvalue">user</td>
+                                       
+                                       <td valign="top" headers="d373819e62" class="stentry propdesc">
+                                          <p class="p">Optional name of a user as whom <span class="keyword title_reference">git config</span> will be run
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e60" class="stentry propvalue">is_global</td>
+                                       
+                                       <td valign="top" headers="d373819e62" class="stentry propdesc">
+                                          <p class="p">Whether or not to pass the <span class="keyword title_reference">--global</span> option to <span class="keyword title_reference">git config</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Local config example:</p>
+                                    <pre class="pre codeblock language-yaml">mylocalrepo:
+  git.config:
+    - name: user.email
+    - value: fester@bestertester.net
+    - repo: file://my/path/to/repo</pre>
+                                    <p class="p">Global config example:</p>
+                                    <pre class="pre codeblock language-yaml">mylocalrepo:
+  git.config:
+    - name: user.name
+    - value: Esther Bestertester
+    - user: ebestertester
+    - is_global: True</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.git.latest">
+                              <h3 class="title topictitle3">latest</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.git.latest(
+								name,
+								rev=None,
+								target=None,
+								user=None,
+								force=None,
+								force_checkout=False,
+								force_reset=False,
+								submodules=False,
+								mirror=False,
+								bare=False,
+								remote_name='origin',
+								always_fetch=False,
+								depth=None,
+								identity=None,
+								https_user=None,
+								https_pass=None,
+								onlyif=False,
+								unless=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Make sure the repository is cloned to the given directory and is up to date</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d373819e141" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d373819e143" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">Address of the remote repository as passed to "git clone"</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">rev</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">The remote branch, tag, or revision ID to checkout after
+                                             clone / before update
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">target</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">Name of the target directory where repository is about to be cloned</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">user</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">Name of the user performing repository management operations</p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">force</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">Force git to clone into pre-existing directories (deletes contents)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">force_checkout</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">Force a checkout even if there might be overwritten changes
+                                             (Default: False)
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">force_reset</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">Force the checkout to <tt class="ph tt">--reset hard</tt> to the remote ref
+                                             (Default: False)
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">submodules</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">Update submodules on clone or branch change (Default: False)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">mirror</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">True if the repository is to be a mirror of the remote repository.
+                                             This implies bare, and thus is incompatible with rev.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">bare</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">True if the repository is to be a bare clone of the remote repository.
+                                             This is incompatible with rev, as nothing will be checked out.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">remote_name</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">defines a different remote name.
+                                             For the first clone the given name is set to the default remote,
+                                             else it is just a additional remote. (Default: 'origin')
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">always_fetch</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">If a tag or branch name is used as the rev a fetch will not occur
+                                             until the tag or branch name changes. Setting this to true will force
+                                             a fetch to occur. Only applies when rev is set. (Default: False)
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">depth</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">Defines depth in history when git a clone is needed in order to ensure
+                                             latest. E.g. <tt class="ph tt">depth: 1</tt> is usefull when deploying from a repository
+                                             with a long history. Use rev to specify branch. This is not compatible with tags or
+                                             revision IDs.(Default: <tt class="ph tt">None</tt>)
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">identity</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">A path on the minion server to a private key to use over SSH</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">https_user</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">HTTP Basic Auth username for HTTPS (only) clones</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">https_pass</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">HTTP Basic Auth password for HTTPS (only) clones</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">onlyif</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">A command to run as a check, run the named command only if the command
+                                             passed to the <tt class="ph tt">onlyif</tt> option returns true
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e141" class="stentry propvalue">unless</td>
+                                       
+                                       <td valign="top" headers="d373819e143" class="stentry propdesc">
+                                          <p class="p">A command to run as a check, only run the named command if the command
+                                             passed to the <tt class="ph tt">unless</tt> option returns false
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                       <p class="p">Clashing ID declarations can be avoided when including different
+                                          branches from the same git repository in the same sls file by using the
+                                          <tt class="ph tt">name</tt> declaration.  The example below checks out the <tt class="ph tt">gh-pages</tt>
+                                          and <tt class="ph tt">gh-pages-prod</tt> branches from the same repository into separate
+                                          directories.  The example also sets up the <tt class="ph tt">ssh_known_hosts</tt> ssh key
+                                          required to perform the git checkout.
+                                       </p>
+                                       
+                                    </aside>
+                                    <pre class="pre codeblock language-yaml">gitlab.example.com:
+  ssh_known_hosts:
+    - present
+    - user: root
+    - enc: ecdsa
+    - fingerprint: 4e:94:b0:54:c1:5b:29:a2:70:0e:e1:a3:51:ee:ee:e3
+
+git-website-staging:
+  git.latest:
+    - name: git@gitlab.example.com:user/website.git
+    - rev: gh-pages
+    - target: /usr/share/nginx/staging
+    - identity: /root/.ssh/website_id_rsa
+    - require:
+        - pkg: git
+        - ssh_known_hosts: gitlab.example.com
+
+git-website-prod:
+  git.latest:
+    - name: git@gitlab.example.com:user/website.git
+    - rev: gh-pages-prod
+    - target: /usr/share/nginx/prod
+    - identity: /root/.ssh/website_id_rsa
+    - require:
+        - pkg: git
+        - ssh_known_hosts: gitlab.example.com</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.git.mod_run_check">
+                              <h3 class="title topictitle3">mod_run_check</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.git.mod_run_check(
+								cmd_kwargs,
+								onlyif,
+								unless
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Execute the onlyif and unless logic.
+                                       Return a result dict if:
+                                       * onlyif failed (onlyif != 0)
+                                       * unless succeeded (unless == 0)
+                                       else return True
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.git.present">
+                              <h3 class="title topictitle3">present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.git.present(
+								name,
+								bare=True,
+								user=None,
+								force=False,
+								shared=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Make sure the repository is present in the given directory</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d373819e345" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d373819e347" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e345" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d373819e347" class="stentry propdesc">
+                                          <p class="p">Name of the directory where the repository is about to be created</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e345" class="stentry propvalue">bare</td>
+                                       
+                                       <td valign="top" headers="d373819e347" class="stentry propdesc">
+                                          <p class="p">Create a bare repository (Default: True)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e345" class="stentry propvalue">user</td>
+                                       
+                                       <td valign="top" headers="d373819e347" class="stentry propdesc">
+                                          <p class="p">Name of the user performing repository management operations</p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e345" class="stentry propvalue">force</td>
+                                       
+                                       <td valign="top" headers="d373819e347" class="stentry propdesc">
+                                          <p class="p">Force-create a new repository into an pre-existing non-git directory
+                                             (deletes contents)
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d373819e345" class="stentry propvalue">shared</td>
+                                       
+                                       <td valign="top" headers="d373819e347" class="stentry propdesc">
+                                          <blockquote class="lq">
+                                             <p class="p">Specify the permission for sharing, see git-init for details (Default: None)</p>
+                                             
+                                          </blockquote>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version XXXX.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

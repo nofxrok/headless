@@ -1,0 +1,679 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.win_update</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.win_update">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-win-update">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-win-update">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.win_update</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-win-update__module-salt.modules.win_update"></span></p>
+                              
+                              <p class="p">Module for running windows updates.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">win32com</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">win32con</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">win32api</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">pywintypes</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.win_update.download_updates">
+                           <h2 class="title topictitle2">download_updates</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.win_update.download_updates(
+								includes=None,
+								retries=5,
+								categories=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Downloads all available updates, skipping those that require user
+                                    interaction.
+                                 </p>
+                                 
+                                 <p class="p">Various aspects of the updates can be included or excluded. this feature is
+                                    still in development.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d292131e70" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d292131e72" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d292131e70" class="stentry propvalue">retries</td>
+                                    
+                                    <td valign="top" headers="d292131e72" class="stentry propdesc">
+                                       <p class="p">Number of retries to make before giving up. This is total, not per
+                                          step.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d292131e70" class="stentry propvalue">categories</td>
+                                    
+                                    <td valign="top" headers="d292131e72" class="stentry propdesc">
+                                       <p class="p">Specify the categories to update. Must be passed as a list.</p>
+                                       <pre class="pre codeblock language-bash">salt '*' win_update.download_updates categories="['Updates']"</pre>
+                                       <p class="p">Categories include the following:</p>
+                                       
+                                       <ul class="ul">
+                                          <li class="li">
+                                             <p class="p">Updates</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Windows 7</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Critical Updates</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Security Updates</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Update Rollups</p>
+                                             
+                                          </li>
+                                          
+                                       </ul>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash"># Normal Usage
+salt '*' win_update.download_updates
+
+# Download critical updates only
+salt '*' win_update.download_updates categories="['Critical Updates']"</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.win_update.install_updates">
+                           <h2 class="title topictitle2">install_updates</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.win_update.install_updates(
+								includes=None,
+								retries=5,
+								categories=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Downloads and installs all available updates, skipping those that require
+                                    user interaction.
+                                 </p>
+                                 
+                                 <p class="p">Add <tt class="ph tt">cached</tt> to only install those updates which have already been downloaded.
+                                 </p>
+                                 
+                                 <p class="p">you can set the maximum number of retries to <tt class="ph tt">n</tt> in the search process by
+                                    adding: <tt class="ph tt">retries=n</tt></p>
+                                 
+                                 <p class="p">various aspects of the updates can be included or excluded. This function is
+                                    still under development.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d292131e155" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d292131e157" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d292131e155" class="stentry propvalue">retries</td>
+                                    
+                                    <td valign="top" headers="d292131e157" class="stentry propdesc">
+                                       <p class="p">Number of retries to make before giving up. This is total, not per
+                                          step.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d292131e155" class="stentry propvalue">categories</td>
+                                    
+                                    <td valign="top" headers="d292131e157" class="stentry propdesc">
+                                       <p class="p">Specify the categories to install. Must be passed as a list.</p>
+                                       <pre class="pre codeblock language-bash">salt '*' win_update.install_updates categories="['Updates']"</pre>
+                                       <p class="p">Categories include the following:</p>
+                                       
+                                       <ul class="ul">
+                                          <li class="li">
+                                             <p class="p">Updates</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Windows 7</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Critical Updates</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Security Updates</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Update Rollups</p>
+                                             
+                                          </li>
+                                          
+                                       </ul>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash"># Normal Usage
+salt '*' win_update.install_updates
+
+# Install all critical updates
+salt '*' win_update.install_updates categories="['Critical Updates']"</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.win_update.list_updates">
+                           <h2 class="title topictitle2">list_updates</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.win_update.list_updates(
+								verbose=False,
+								includes=None,
+								retries=5,
+								categories=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Returns a summary of available updates, grouped into their non-mutually
+                                    exclusive categories.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d292131e226" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d292131e228" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d292131e226" class="stentry propvalue">verbose</td>
+                                    
+                                    <td valign="top" headers="d292131e228" class="stentry propdesc">
+                                       <p class="p">Print results in greater detail</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d292131e226" class="stentry propvalue">retries</td>
+                                    
+                                    <td valign="top" headers="d292131e228" class="stentry propdesc">
+                                       <p class="p">Number of retries to make before giving up. This is total, not per
+                                          step.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d292131e226" class="stentry propvalue">categories</td>
+                                    
+                                    <td valign="top" headers="d292131e228" class="stentry propdesc">
+                                       <p class="p">Specify the categories to list. Must be passed as a list.</p>
+                                       <pre class="pre codeblock language-bash">salt '*' win_update.list_updates categories="['Updates']"</pre>
+                                       <p class="p">Categories include the following:</p>
+                                       
+                                       <ul class="ul">
+                                          <li class="li">
+                                             <p class="p">Updates</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Windows 7</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Critical Updates</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Security Updates</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Update Rollups</p>
+                                             
+                                          </li>
+                                          
+                                       </ul>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash"># Normal Usage
+salt '*' win_update.list_updates
+
+# List all critical updates list in verbose detail
+salt '*' win_update.list_updates categories=['Critical Updates'] verbose=True</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.win_update.PyWinUpdater">
+                           <h2 class="title topictitle2">PyWinUpdater Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.win_update.PyWinUpdater(
+									categories=None,
+									skipUI=True,
+									skipDownloaded=False,
+									skipInstalled=True,
+									skipReboot=False,
+									skipPresent=False,
+									softwareUpdates=True,
+									driverUpdates=False,
+									skipHidden=True
+									)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.win_update.PyWinUpdater.AutoSearch">
+                              <h3 class="title topictitle3">PyWinUpdater.AutoSearch Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">AutoSearch( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">this function generates a search string. simplifying the search function while
+                                       still providing as many features as possible.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.win_update.PyWinUpdater.Download">
+                              <h3 class="title topictitle3">PyWinUpdater.Download Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">Download( )</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.win_update.PyWinUpdater.GetAvailableCategories">
+                              <h3 class="title topictitle3">PyWinUpdater.GetAvailableCategories Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GetAvailableCategories( )</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.win_update.PyWinUpdater.GetCategories">
+                              <h3 class="title topictitle3">PyWinUpdater.GetCategories Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GetCategories( )</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.win_update.PyWinUpdater.GetDownloadResults">
+                              <h3 class="title topictitle3">PyWinUpdater.GetDownloadResults Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GetDownloadResults( )</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.win_update.PyWinUpdater.GetInstallationResults">
+                              <h3 class="title topictitle3">PyWinUpdater.GetInstallationResults Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GetInstallationResults( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">this gets results of installation process.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.win_update.PyWinUpdater.GetInstallationResultsPretty">
+                              <h3 class="title topictitle3">PyWinUpdater.GetInstallationResultsPretty Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GetInstallationResultsPretty( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">converts the installation results into a pretty print.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.win_update.PyWinUpdater.GetSearchResults">
+                              <h3 class="title topictitle3">PyWinUpdater.GetSearchResults Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GetSearchResults( )</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.win_update.PyWinUpdater.GetSearchResultsPretty">
+                              <h3 class="title topictitle3">PyWinUpdater.GetSearchResultsPretty Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GetSearchResultsPretty( )</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.win_update.PyWinUpdater.Install">
+                              <h3 class="title topictitle3">PyWinUpdater.Install Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">Install( )</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.win_update.PyWinUpdater.Search">
+                              <h3 class="title topictitle3">PyWinUpdater.Search Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">Search(
+								searchString
+								)</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.win_update.PyWinUpdater.SetCategories">
+                              <h3 class="title topictitle3">PyWinUpdater.SetCategories Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">SetCategories(
+								categories
+								)</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.win_update.PyWinUpdater.SetInclude">
+                              <h3 class="title topictitle3">PyWinUpdater.SetInclude Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">SetInclude(
+								include,
+								state
+								)</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.win_update.PyWinUpdater.SetIncludes">
+                              <h3 class="title topictitle3">PyWinUpdater.SetIncludes Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">SetIncludes(
+								includes
+								)</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

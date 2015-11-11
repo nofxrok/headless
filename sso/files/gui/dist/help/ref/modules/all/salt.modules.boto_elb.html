@@ -1,0 +1,649 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.boto_elb</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.boto_elb">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-boto-elb">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-boto-elb">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.boto_elb</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-boto-elb__module-salt.modules.boto_elb"></span></p>
+                              
+                              <p class="p">Connection module for Amazon ELB</p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">configuration</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">This module accepts explicit elb credentials but can also utilize
+                                       IAM roles assigned to the instance trough Instance Profiles. Dynamic
+                                       credentials are then automatically obtained from AWS API and no further
+                                       configuration is necessary. More Information available at:
+                                    </p>
+                                    <pre class="pre codeblock language-">http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html</pre>
+                                    <p class="p">If IAM roles are not used you need to specify them either in a pillar or
+                                       in the minion's config file:
+                                    </p>
+                                    <pre class="pre codeblock language-">elb.keyid: GKTADJGHEIQSXMKKRBJ08H
+elb.key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs</pre>
+                                    <p class="p">A region may also be specified in the configuration:</p>
+                                    <pre class="pre codeblock language-">elb.region: us-east-1</pre>
+                                    <p class="p">If a region is not specified, the default is us-east-1.</p>
+                                    
+                                    <p class="p">It's also possible to specify key, keyid and region via a profile, either
+                                       as a passed in dict, or as a string to pull from pillars or minion config:
+                                    </p>
+                                    
+                                    <blockquote class="lq">
+                                       <dl class="dl definition_list">
+                                          <dt class="dt dlterm">myprofile:</dt>
+                                          
+                                          <dd class="dd">
+                                             <p class="p">keyid: GKTADJGHEIQSXMKKRBJ08H
+                                                key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs
+                                                region: us-east-1
+                                             </p>
+                                             
+                                          </dd>
+                                          
+                                       </dl>
+                                       
+                                    </blockquote>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">boto</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.boto_elb.attach_subnets">
+                           <h2 class="title topictitle2">attach_subnets</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_elb.attach_subnets(
+								name,
+								subnets,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Attach ELB to subnets.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_elb.attach_subnets myelb '["mysubnet"]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_elb.create">
+                           <h2 class="title topictitle2">create</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_elb.create(
+								name,
+								availability_zones,
+								listeners=None,
+								subnets=None,
+								security_groups=None,
+								scheme='internet-facing',
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Create an ELB</p>
+                                 
+                                 <p class="p">CLI example to create an ELB:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_elb.create myelb '["us-east-1a", "us-east-1e"]' listeners='[["HTTPS", "HTTP", 443, 80, "arn:aws:iam::1111111:server-certificate/mycert"]]' region=us-east-1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_elb.create_listeners">
+                           <h2 class="title topictitle2">create_listeners</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_elb.create_listeners(
+								name,
+								listeners=None,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Create listeners on an ELB.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_elb.create_listeners myelb listeners='[["HTTPS", "HTTP", 443, 80, "arn:aws:iam::11  11111:server-certificate/mycert"]]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_elb.delete">
+                           <h2 class="title topictitle2">delete</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_elb.delete(
+								name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Delete an ELB.</p>
+                                 
+                                 <p class="p">CLI example to delete an ELB:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_elb.delete myelb region=us-east-1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_elb.delete_listeners">
+                           <h2 class="title topictitle2">delete_listeners</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_elb.delete_listeners(
+								name,
+								ports,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Delete listeners on an ELB.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_elb.delete_listeners myelb '[80,443]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_elb.deregister_instances">
+                           <h2 class="title topictitle2">deregister_instances</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_elb.deregister_instances(
+								name,
+								instances,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Deregister instances with an ELB.  Instances is either a string
+                                    instance id or a list of string instance id's.
+                                 </p>
+                                 
+                                 <p class="p">Returns:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">True</tt>: instance(s) deregistered successfully
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">False</tt>: instance(s) failed to be deregistered
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">None</tt>: instance(s) not valid or not registered, no action taken
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_elb.deregister_instances myelb instance_id
+salt myminion boto_elb.deregister_instances myelb "[instance_id, instance_id]"</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_elb.detach_subnets">
+                           <h2 class="title topictitle2">detach_subnets</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_elb.detach_subnets(
+								name,
+								subnets,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Detach ELB from subnets.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_elb.detach_subnets myelb '["mysubnet"]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_elb.disable_availability_zones">
+                           <h2 class="title topictitle2">disable_availability_zones</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_elb.disable_availability_zones(
+								name,
+								availability_zones,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Disable availability zones for ELB.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_elb.disable_availability_zones myelb '["us-east-1a"]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_elb.enable_availability_zones">
+                           <h2 class="title topictitle2">enable_availability_zones</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_elb.enable_availability_zones(
+								name,
+								availability_zones,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Enable availability zones for ELB.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_elb.enable_availability_zones myelb '["us-east-1a"]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_elb.exists">
+                           <h2 class="title topictitle2">exists</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_elb.exists(
+								name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check to see if an ELB exists.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_elb.exists myelb region=us-east-1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_elb.get_attributes">
+                           <h2 class="title topictitle2">get_attributes</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_elb.get_attributes(
+								name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check to see if attributes are set on an ELB.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_elb.get_attributes myelb</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_elb.get_elb_config">
+                           <h2 class="title topictitle2">get_elb_config</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_elb.get_elb_config(
+								name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check to see if an ELB exists.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_elb.exists myelb region=us-east-1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_elb.get_health_check">
+                           <h2 class="title topictitle2">get_health_check</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_elb.get_health_check(
+								name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Get the health check configured for this ELB.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_elb.get_health_check myelb</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_elb.get_instance_health">
+                           <h2 class="title topictitle2">get_instance_health</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_elb.get_instance_health(
+								name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None,
+								instances=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Get a list of instances and their health state</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_elb.get_instance_health myelb
+salt myminion boto_elb.get_instance_health myelb region=us-east-1 instances="[instance_id,instance_id]"</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_elb.register_instances">
+                           <h2 class="title topictitle2">register_instances</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_elb.register_instances(
+								name,
+								instances,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Register instances with an ELB.  Instances is either a string
+                                    instance id or a list of string instance id's.
+                                 </p>
+                                 
+                                 <p class="p">Returns:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">True</tt>: instance(s) registered successfully
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">False</tt>: instance(s) failed to be registered
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_elb.register_instances myelb instance_id
+salt myminion boto_elb.register_instances myelb "[instance_id,instance_id]"</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_elb.set_attributes">
+                           <h2 class="title topictitle2">set_attributes</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_elb.set_attributes(
+								name,
+								attributes,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Set attributes on an ELB.</p>
+                                 
+                                 <p class="p">CLI example to set attributes on an ELB:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_elb.set_attributes myelb '{"access_log": {"enabled": "true", "s3_bucket_name": "mybucket", "s3_bucket_prefix": "mylogs/", "emit_interval": "5"}}' region=us-east-1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_elb.set_health_check">
+                           <h2 class="title topictitle2">set_health_check</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_elb.set_health_check(
+								name,
+								health_check,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Set attributes on an ELB.</p>
+                                 
+                                 <p class="p">CLI example to set attributes on an ELB:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_elb.set_health_check myelb '{"target": "HTTP:80/"}'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

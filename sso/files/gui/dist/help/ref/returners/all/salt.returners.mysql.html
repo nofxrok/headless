@@ -1,0 +1,368 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.returners.mysql</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.returners.mysql">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../returners.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-returners-mysql">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-returners-mysql">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.returners.mysql</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-returners-mysql__module-salt.returners.mysql"></span></p>
+                              
+                              <p class="p">Return data to a mysql server</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">maintainer</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Dave Boucha &lt;<a class="xref" href="mailto:dave@saltstack.com" target="_blank">dave@saltstack.com</a>&gt;, Seth House &lt;<a class="xref" href="mailto:shouse@saltstack.com" target="_blank">shouse@saltstack.com</a>&gt;
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">maturity</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">new</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">python-mysqldb</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">platform</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">all</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">To enable this returner the minion will need the python client for mysql
+                                 installed and the following values configured in the minion or master
+                                 config, these are the defaults:
+                              </p>
+                              <pre class="pre codeblock language-yaml">mysql.host: 'salt'
+mysql.user: 'salt'
+mysql.pass: 'salt'
+mysql.db: 'salt'
+mysql.port: 3306</pre>
+                              <p class="p">Alternative configuration values can be used by prefacing the configuration.
+                                 Any values not found in the alternative configuration will be pulled from
+                                 the default location:
+                              </p>
+                              <pre class="pre codeblock language-yaml">alternative.mysql.host: 'salt'
+alternative.mysql.user: 'salt'
+alternative.mysql.pass: 'salt'
+alternative.mysql.db: 'salt'
+alternative.mysql.port: 3306</pre>
+                              <p class="p">Use the following mysql database schema:</p>
+                              <pre class="pre codeblock language-sql">CREATE DATABASE  `salt`
+  DEFAULT CHARACTER SET utf8
+  DEFAULT COLLATE utf8_general_ci;
+
+USE `salt`;
+
+--
+-- Table structure for table `jids`
+--
+
+DROP TABLE IF EXISTS `jids`;
+CREATE TABLE `jids` (
+  `jid` varchar(255) NOT NULL,
+  `load` mediumtext NOT NULL,
+  UNIQUE KEY `jid` (`jid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `salt_returns`
+--
+
+DROP TABLE IF EXISTS `salt_returns`;
+CREATE TABLE `salt_returns` (
+  `fun` varchar(50) NOT NULL,
+  `jid` varchar(255) NOT NULL,
+  `return` mediumtext NOT NULL,
+  `id` varchar(255) NOT NULL,
+  `success` varchar(10) NOT NULL,
+  `full_ret` mediumtext NOT NULL,
+  `alter_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  KEY `id` (`id`),
+  KEY `jid` (`jid`),
+  KEY `fun` (`fun`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `salt_events`
+--
+
+DROP TABLE IF EXISTS `salt_events`;
+CREATE TABLE `salt_events` (
+`id` BIGINT NOT NULL AUTO_INCREMENT,
+`tag` varchar(255) NOT NULL,
+`data` varchar(1024) NOT NULL,
+`alter_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+`master_id` varchar(255) NOT NULL,
+PRIMARY KEY (`id`),
+KEY `tag` (`tag`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;</pre>
+                              <p class="p">Required python modules: MySQLdb</p>
+                              
+                              <p class="p">To use the mysql returner, append '--return mysql' to the salt command.</p>
+                              <pre class="pre codeblock language-bash">salt '*' test.ping --return mysql</pre>
+                              <p class="p">To use the alternative configuration, append '--return_config alternative' to the
+                                 salt command.
+                              </p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                              <pre class="pre codeblock language-bash">salt '*' test.ping --return mysql --return_config alternative</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.returners.mysql.event_return">
+                           <h2 class="title topictitle2">event_return</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.mysql.event_return(
+								events
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return event to mysql server</p>
+                                 
+                                 <p class="p">Requires that configuration be enabled via 'event_return'
+                                    option in master config.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.mysql.get_fun">
+                           <h2 class="title topictitle2">get_fun</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.mysql.get_fun(
+								fun
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a dict of the last function called for all minions</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.mysql.get_jid">
+                           <h2 class="title topictitle2">get_jid</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.mysql.get_jid(
+								jid
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the information returned when the specified job id was executed</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.mysql.get_jids">
+                           <h2 class="title topictitle2">get_jids</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.mysql.get_jids( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of all job ids</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.mysql.get_load">
+                           <h2 class="title topictitle2">get_load</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.mysql.get_load(
+								jid
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the load data that marks a specified jid</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.mysql.get_minions">
+                           <h2 class="title topictitle2">get_minions</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.mysql.get_minions( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of minions</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.mysql.prep_jid">
+                           <h2 class="title topictitle2">prep_jid</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.mysql.prep_jid(
+								nocache=False,
+								passed_jid=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Do any work necessary to prepare a JID, including sending a custom id</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.mysql.returner">
+                           <h2 class="title topictitle2">returner</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.mysql.returner(
+								ret
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return data to a mysql server</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.mysql.save_load">
+                           <h2 class="title topictitle2">save_load</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.mysql.save_load(
+								jid,
+								load
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Save the load to the specified jid id</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

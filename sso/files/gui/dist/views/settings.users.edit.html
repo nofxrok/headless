@@ -1,0 +1,59 @@
+<div class="views-forms">
+<div class="modal-header">
+    <h3 class="modal-title">Edit User</h3>
+</div>
+<div class="modal-body">
+    <form name="editUserForm" id="add-master-form" class="form-horizontal" role="form" ng-submit="editUser(currentUserEdited)" novalidate>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">First Name</label>
+            <div class="col-xs-8" ng-class="{'has-error': editUserForm.firstname.$error.required}">
+                <input name="firstname" class="form-control" ng-pattern="/^[a-zA-Z0-9]+$/" ng-model="currentUserEdited.first_name" required salt-form-focus ng-click="editUserForm.firstname.$touched = false">
+                <div class="validation-error" ng-show="editUserForm.firstname.$touched && !editUserForm.firstname.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="editUserForm.firstname.$viewValue && !editUserForm.firstname.$valid">First name invalid</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Last Name</label>
+            <div class="col-xs-8" ng-class="{'has-error': editUserForm.lastname.$error.required}">
+                <input name="lastname" class="form-control" ng-pattern="/^[a-zA-Z0-9]+$/" ng-model="currentUserEdited.last_name" required ng-click="editUserForm.lastname.$touched = false">
+                <div class="validation-error" ng-show="editUserForm.lastname.$touched && !editUserForm.lastname.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="editUserForm.lastname.$viewValue && !editUserForm.lastname.$valid">Last name invalid</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Email</label>
+            <div class="col-xs-8" ng-class="{'has-error': editUserForm.email.$error.required}">
+                <input name="email" type="email" class="form-control" ng-model="currentUserEdited.email" required>
+                <div class="validation-error" ng-show="editUserForm.email.$touched && !editUserForm.email.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="editUserForm.email.$viewValue && !editUserForm.email.$valid">Email invalid</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">User Role</label>
+            <div class="col-xs-8" ng-class="{'has-error': editUserForm.userrole.$error.required}">
+                <!-- <select name="userrole" class="form-control" ng-model="currentUserEdited.type" required>
+                    <option value="superuser">superuser</option>
+                    <option value="admin">admin</option>
+                    <option value="user">user</option>
+                </select> -->
+                <!-- <div class="validation-error" ng-show="editUserForm.userrole.$touched && !editUserForm.userrole.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="editUserForm.userrole.$viewValue && !editUserForm.userrole.$valid">Please select a Role</div> -->
+
+                <input type="text" class="form-control" ng-readonly="true" value="Superuser"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">User Name</label>
+            <div class="col-xs-8">
+                <input name="username" class="form-control" ng-pattern="/^[a-zA-Z0-9]+$/" ng-model="currentUserEdited.username" ng-readonly="true">
+                <div class="validation-error" ng-show="editUserForm.username.$touched && !editUserForm.username.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="editUserForm.username.$viewValue && !editUserForm.username.$valid">User name invalid</div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary site-btn-form" ng-click="editUser(currentUserEdited)" ng-disabled="editUserForm.$invalid">Save</button>
+    <button class="btn btn-warning site-btn-form" ui-sref="salt.dashboard.settings.users.list" ui-sref-opts="{reload: true}">Cancel</button>
+</div>
+</div>

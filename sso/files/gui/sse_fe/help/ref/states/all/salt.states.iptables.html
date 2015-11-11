@@ -1,0 +1,731 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.iptables</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.iptables">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-iptables">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-iptables">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.iptables</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-iptables__module-salt.states.iptables"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="management-of-iptables">
+                           <h2 class="title topictitle2">Management of iptables</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">This is an iptables-specific module designed to manage Linux firewalls. It is
+                                    expected that this state module, and other system-specific firewall states, may
+                                    at some point be deprecated in favor of a more generic <span class="keyword title_reference">firewall</span> state.
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">httpd:
+  iptables.append:
+    - table: filter
+    - chain: INPUT
+    - jump: ACCEPT
+    - match: state
+    - connstate: NEW
+    - dport: 80
+    - proto: tcp
+    - sport: 1025:65535
+    - save: True
+
+httpd:
+  iptables.append:
+    - table: filter
+    - chain: INPUT
+    - jump: ACCEPT
+    - match:
+        - state
+        - comment
+    - comment: "Allow HTTP"
+    - connstate: NEW
+    - dport: 80
+    - proto: tcp
+    - sport: 1025:65535
+    - save: True
+
+httpd:
+  iptables.append:
+    - table: filter
+    - chain: INPUT
+    - jump: ACCEPT
+    - match:
+        - state
+        - comment
+    - comment: "Allow HTTP"
+    - connstate: NEW
+    - source: '127.0.0.1'
+    - dport: 80
+    - proto: tcp
+    - sport: 1025:65535
+    - save: True
+
+.. Invert Rule
+httpd:
+  iptables.append:
+    - table: filter
+    - chain: INPUT
+    - jump: ACCEPT
+    - match:
+        - state
+        - comment
+    - comment: "Allow HTTP"
+    - connstate: NEW
+    - source: '! 127.0.0.1'
+    - dport: 80
+    - proto: tcp
+    - sport: 1025:65535
+    - save: True
+
+httpd:
+  iptables.append:
+    - table: filter
+    - chain: INPUT
+    - jump: ACCEPT
+    - match:
+        - state
+        - comment
+    - comment: "Allow HTTP"
+    - connstate: NEW
+    - source: 'not 127.0.0.1'
+    - dport: 80
+    - proto: tcp
+    - sport: 1025:65535
+    - save: True
+
+httpd:
+  iptables.append:
+    - table: filter
+    - family: ipv6
+    - chain: INPUT
+    - jump: ACCEPT
+    - match: state
+    - connstate: NEW
+    - dport: 80
+    - proto: tcp
+    - sport: 1025:65535
+    - save: True
+
+httpd:
+  iptables.append:
+    - table: filter
+    - family: ipv4
+    - chain: INPUT
+    - jump: ACCEPT
+    - match: state
+    - connstate: NEW
+    - dports:
+        - 80
+        - 443
+    - proto: tcp
+    - sport: 1025:65535
+    - save: True
+
+httpd:
+  iptables.insert:
+    - position: 1
+    - table: filter
+    - chain: INPUT
+    - jump: ACCEPT
+    - match: state
+    - connstate: NEW
+    - dport: 80
+    - proto: tcp
+    - sport: 1025:65535
+    - save: True
+
+httpd:
+  iptables.insert:
+    - position: 1
+    - table: filter
+    - family: ipv6
+    - chain: INPUT
+    - jump: ACCEPT
+    - match: state
+    - connstate: NEW
+    - dport: 80
+    - proto: tcp
+    - sport: 1025:65535
+    - save: True
+
+httpd:
+  iptables.delete:
+    - table: filter
+    - chain: INPUT
+    - jump: ACCEPT
+    - match: state
+    - connstate: NEW
+    - dport: 80
+    - proto: tcp
+    - sport: 1025:65535
+    - save: True
+
+httpd:
+  iptables.delete:
+    - position: 1
+    - table: filter
+    - chain: INPUT
+    - jump: ACCEPT
+    - match: state
+    - connstate: NEW
+    - dport: 80
+    - proto: tcp
+    - sport: 1025:65535
+    - save: True
+
+httpd:
+  iptables.delete:
+    - table: filter
+    - family: ipv6
+    - chain: INPUT
+    - jump: ACCEPT
+    - match: state
+    - connstate: NEW
+    - dport: 80
+    - proto: tcp
+    - sport: 1025:65535
+    - save: True
+
+default to accept:
+  iptables.set_policy:
+    - chain: INPUT
+    - policy: ACCEPT</pre>
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p">Various functions of the <tt class="ph tt">iptables</tt> module use the <tt class="ph tt">--check</tt> option. If
+                                       the version of <tt class="ph tt">iptables</tt> on the target system does not include this
+                                       option, an alternate version of this check will be performed using the
+                                       output of iptables-save. This may have unintended consequences on legacy
+                                       releases of <tt class="ph tt">iptables</tt>.
+                                    </p>
+                                    
+                                 </aside>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.iptables.append">
+                              <h3 class="title topictitle3">append</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.iptables.append(
+								name,
+								family='ipv4',
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                                    
+                                    <p class="p">Append a rule to a chain</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d383191e78" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d383191e80" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d383191e78" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d383191e80" class="stentry propdesc">
+                                          <p class="p">A user-defined name to call this rule by in another part of a state or
+                                             formula. This should not be an actual rule.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d383191e78" class="stentry propvalue">family</td>
+                                       
+                                       <td valign="top" headers="d383191e80" class="stentry propdesc">
+                                          <p class="p">Network family, ipv4 or ipv6.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">All other arguments are passed in with the same name as the long option
+                                       that would normally be used for iptables, with one exception: <tt class="ph tt">--state</tt> is
+                                       specified as <span class="keyword title_reference">connstate</span> instead of <span class="keyword title_reference">state</span> (not to be confused with
+                                       <span class="keyword title_reference">ctstate</span>).
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.iptables.chain_absent">
+                              <h3 class="title topictitle3">chain_absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.iptables.chain_absent(
+								name,
+								table='filter',
+								family='ipv4'
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                    
+                                    <p class="p">Verify the chain is absent.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d383191e142" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d383191e144" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d383191e142" class="stentry propvalue">family</td>
+                                       
+                                       <td valign="top" headers="d383191e144" class="stentry propdesc">
+                                          <p class="p">Networking family, either ipv4 or ipv6</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.iptables.chain_present">
+                              <h3 class="title topictitle3">chain_present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.iptables.chain_present(
+								name,
+								table='filter',
+								family='ipv4'
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                    
+                                    <p class="p">Verify the chain is exist.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d383191e183" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d383191e185" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d383191e183" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d383191e185" class="stentry propdesc">
+                                          <p class="p">A user-defined chain name.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d383191e183" class="stentry propvalue">table</td>
+                                       
+                                       <td valign="top" headers="d383191e185" class="stentry propdesc">
+                                          <p class="p">The table to own the chain.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d383191e183" class="stentry propvalue">family</td>
+                                       
+                                       <td valign="top" headers="d383191e185" class="stentry propdesc">
+                                          <p class="p">Networking family, either ipv4 or ipv6</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.iptables.delete">
+                              <h3 class="title topictitle3">delete</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.iptables.delete(
+								name,
+								family='ipv4',
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                    
+                                    <p class="p">Delete a rule to a chain</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d383191e236" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d383191e238" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d383191e236" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d383191e238" class="stentry propdesc">
+                                          <p class="p">A user-defined name to call this rule by in another part of a state or
+                                             formula. This should not be an actual rule.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d383191e236" class="stentry propvalue">family</td>
+                                       
+                                       <td valign="top" headers="d383191e238" class="stentry propdesc">
+                                          <p class="p">Networking family, either ipv4 or ipv6</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">All other arguments are passed in with the same name as the long option
+                                       that would normally be used for iptables, with one exception: <tt class="ph tt">--state</tt> is
+                                       specified as <span class="keyword title_reference">connstate</span> instead of <span class="keyword title_reference">state</span> (not to be confused with
+                                       <span class="keyword title_reference">ctstate</span>).
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.iptables.flush">
+                              <h3 class="title topictitle3">flush</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.iptables.flush(
+								name,
+								family='ipv4',
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                    
+                                    <p class="p">Flush current iptables state</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d383191e300" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d383191e302" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d383191e300" class="stentry propvalue">family</td>
+                                       
+                                       <td valign="top" headers="d383191e302" class="stentry propdesc">
+                                          <p class="p">Networking family, either ipv4 or ipv6</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.iptables.insert">
+                              <h3 class="title topictitle3">insert</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.iptables.insert(
+								name,
+								family='ipv4',
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                    
+                                    <p class="p">Insert a rule into a chain</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d383191e341" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d383191e343" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d383191e341" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d383191e343" class="stentry propdesc">
+                                          <p class="p">A user-defined name to call this rule by in another part of a state or
+                                             formula. This should not be an actual rule.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d383191e341" class="stentry propvalue">family</td>
+                                       
+                                       <td valign="top" headers="d383191e343" class="stentry propdesc">
+                                          <p class="p">Networking family, either ipv4 or ipv6</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">All other arguments are passed in with the same name as the long option
+                                       that would normally be used for iptables, with one exception: <tt class="ph tt">--state</tt> is
+                                       specified as <span class="keyword title_reference">connstate</span> instead of <span class="keyword title_reference">state</span> (not to be confused with
+                                       <span class="keyword title_reference">ctstate</span>).
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.iptables.mod_aggregate">
+                              <h3 class="title topictitle3">mod_aggregate</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.iptables.mod_aggregate(
+								low,
+								chunks,
+								running
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">The mod_aggregate function which looks up all rules in the available
+                                       low chunks and merges them into a single rules ref in the present low data
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.iptables.set_policy">
+                              <h3 class="title topictitle3">set_policy</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.iptables.set_policy(
+								name,
+								family='ipv4',
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                    
+                                    <p class="p">Sets the default policy for iptables firewall tables</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d383191e430" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d383191e432" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d383191e430" class="stentry propvalue">family</td>
+                                       
+                                       <td valign="top" headers="d383191e432" class="stentry propdesc">
+                                          <p class="p">Networking family, either ipv4 or ipv6</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d383191e430" class="stentry propvalue">policy</td>
+                                       
+                                       <td valign="top" headers="d383191e432" class="stentry propdesc">
+                                          <p class="p">The requested table policy</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

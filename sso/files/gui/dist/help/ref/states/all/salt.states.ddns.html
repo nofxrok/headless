@@ -1,0 +1,282 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.ddns</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.ddns">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-ddns">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-ddns">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.ddns</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-ddns__module-salt.states.ddns"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="dynamic-dns-updates">
+                           <h2 class="title topictitle2">Dynamic DNS updates</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">Ensure a DNS record is present or absent utilizing RFC 2136
+                                    type dynamic updates. Requires dnspython module.
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">webserver:
+  ddns.present:
+    - zone: example.com
+    - ttl: 60
+    - data: 111.222.333.444
+    - nameserver: 123.234.345.456
+    - keyfile: /srv/salt/tsig_key.txt</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.ddns.absent">
+                              <h3 class="title topictitle3">absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.ddns.absent(
+								name,
+								zone,
+								data=None,
+								rdtype=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensures that the named DNS record is absent.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d367053e57" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d367053e59" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d367053e57" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d367053e59" class="stentry propdesc">
+                                          <p class="p">The host portion of the DNS record, e.g., 'webserver'</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d367053e57" class="stentry propvalue">zone</td>
+                                       
+                                       <td valign="top" headers="d367053e59" class="stentry propdesc">
+                                          <p class="p">The zone to check</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d367053e57" class="stentry propvalue">data</td>
+                                       
+                                       <td valign="top" headers="d367053e59" class="stentry propdesc">
+                                          <p class="p">Data for the DNS record. E.g., the IP address for an A record. If omitted,
+                                             all records matching name (and rdtype, if provided) will be purged.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d367053e57" class="stentry propvalue">rdtype</td>
+                                       
+                                       <td valign="top" headers="d367053e59" class="stentry propdesc">
+                                          <p class="p">DNS resource type. If omitted, all types will be purged.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d367053e57" class="stentry propvalue">**kwargs</td>
+                                       
+                                       <td valign="top" headers="d367053e59" class="stentry propdesc">
+                                          <p class="p">Additional arguments the ddns.delete function may need (e.g. nameserver, keyfile,
+                                             keyname).
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.ddns.present">
+                              <h3 class="title topictitle3">present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.ddns.present(
+								name,
+								zone,
+								ttl,
+								data,
+								rdtype='A',
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensures that the named DNS record is present with the given ttl.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d367053e119" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d367053e121" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d367053e119" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d367053e121" class="stentry propdesc">
+                                          <p class="p">The host portion of the DNS record, e.g., 'webserver'</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d367053e119" class="stentry propvalue">zone</td>
+                                       
+                                       <td valign="top" headers="d367053e121" class="stentry propdesc">
+                                          <p class="p">The zone to check/update</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d367053e119" class="stentry propvalue">ttl</td>
+                                       
+                                       <td valign="top" headers="d367053e121" class="stentry propdesc">
+                                          <p class="p">TTL for the record</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d367053e119" class="stentry propvalue">data</td>
+                                       
+                                       <td valign="top" headers="d367053e121" class="stentry propdesc">
+                                          <p class="p">Data for the DNS record. E.g., the IP address for an A record.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d367053e119" class="stentry propvalue">rdtype</td>
+                                       
+                                       <td valign="top" headers="d367053e121" class="stentry propdesc">
+                                          <p class="p">DNS resource type. Default 'A'.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d367053e119" class="stentry propvalue">**kwargs</td>
+                                       
+                                       <td valign="top" headers="d367053e121" class="stentry propdesc">
+                                          <p class="p">Additional arguments the ddns.update function may need (e.g. nameserver, keyfile,
+                                             keyname).
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,341 @@
+<div class="col-xs-2 right-nav-container col-height"  ng-hide="currentMinionDisplayed == undefined">
+    <accordion id="details-container" class="sidebar-accordion" close-others="oneAtATime">
+        <accordion-group id="grains-panel" ng-init="isopengrain = true" is-open="isopengrain">
+            <accordion-heading ng-click="isopengrain=!isopengrain"><i class="pull-left glyphicon" ng-class="{ 'ssIcons-icon_close1': isopengrain,'ssIcons-icon_open1': !isopengrain}"></i> Minion Grain Details</accordion-heading>
+            <div id="table-grains" class="right-bar-table-container" ng-show="!!currentMinionDisplayed">
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="labelHostname" class="col-xs-6 control-label">Name</label>
+                    <div class="col-sm-6">
+                        <label for="hostname" class="control-label">{{ currentMinionDisplayed.minion_id }}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelHostname" class="col-xs-6 control-label">IP Interfaces</label>
+                    <div class="col-sm-6">
+                        <label for="hostname" class="control-label">
+                            <ul class="nav" ng-repeat="(key, value) in currentMinionDisplayed.config.ip_interfaces">
+                                <li><b>{{key}}:</b> <ul class="nav" ng-repeat="ip in value"><li>{{ip}}</li></ul></li>
+                            </ul>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelOs" class="col-xs-6 control-label">OS</label>
+                    <div class="col-sm-6">
+                        <label for="os" class="control-label">{{currentMinionDisplayed.config.os | displayDefault}}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelOs" class="col-xs-6 control-label">OS Family</label>
+                    <div class="col-sm-6">
+                        <label for="os" class="control-label">{{currentMinionDisplayed.config.os_family | displayDefault}}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelOs" class="col-xs-6 control-label">OS Release</label>
+                    <div class="col-sm-6">
+                        <label for="os" class="control-label">{{currentMinionDisplayed.config.osrelease | displayDefault}}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">GPU</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{ currentMinionDisplayed.config.num_gpus | displayDefault }}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Memory</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{ currentMinionDisplayed.config.mem_total | displayDefault }}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelOs" class="col-xs-6 control-label">Last Seen</label>
+                    <div class="col-sm-6">
+                        <label for="os" class="control-label">{{currentMinionDisplayed.last_seen | date:'medium' | displayDefault}}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Key Status</label>
+                    <div class="col-sm-6">
+                      <label for="os" class="control-label"><span ng-if="currentMinionDisplayed.key_status == 0">Accepted</span></label>
+                      <label for="os" class="control-label"><span ng-if="currentMinionDisplayed.key_status == 1">Pending</span></label>
+                      <label for="os" class="control-label"><span ng-if="currentMinionDisplayed.key_status == 2">Rejected</span></label>
+                      <label for="os" class="control-label"><span ng-if="currentMinionDisplayed.key_status == 3">Deleted</span></label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Salt Version</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{ currentMinionDisplayed.config.saltversion | displayDefault }}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">ZMQ Version</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{ currentMinionDisplayed.config.zmqversion | displayDefault }}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Product Name</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{ currentMinionDisplayed.config.productname | displayDefault }}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Release</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{ currentMinionDisplayed.config.osrelease | displayDefault }}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Status</label>
+                    <div class="col-sm-6">
+                        <span ng-hide="currentMinionDisplayed.is_minion_up" class="icon-icon_x2"></span>
+                        <span ng-show="currentMinionDisplayed.is_minion_up" class="icon-icon_check2"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Last Job Run</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{ currentMinionDisplayed.config.latest_job_exec_time | displayDefault }}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Last Job Id</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{ currentMinionDisplayed.config.latest_jid | displayDefault }}</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        </accordion-group>
+        <accordion-group id="minion-connection-panel" ng-init="isopenconstatus = true" is-open="isopenconstatus">
+            <accordion-heading ng-click="isopenconstatus=!isopenconstatus"><i class="pull-left glyphicon" ng-class="{ 'ssIcons-icon_close1': isopenconstatus,'ssIcons-icon_open1': !isopenconstatus}"></i> Minion Connection Status</accordion-heading>
+            <div id="table-connection-status" class="right-bar-table-container" ng-show="!!currentMinionDisplayed">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                                <th>IP Address</th>
+                                <th>Status</th>
+                            </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="minionIndex in selectedMinionsIndex">
+                            <td>{{ minions[minionIndex].minion_id }}</td>
+                            <td>{{ minions[minionIndex].hostname }}</td>
+                            <td ng-show="minions[minionIndex].is_minion_up">Connected</td>
+                            <td ng-show="!minions[minionIndex].is_minion_up">Offline</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </accordion-group>
+
+        <accordion-group id="minion-job-status-panel" ng-init="isopenjobstatus = true" is-open="isopenjobstatus">
+            <accordion-heading ng-click="isopenjobstatus=!isopenjobstatus"><i class="pull-left glyphicon" ng-class="{ 'ssIcons-icon_close1': isopenjobstatus,'ssIcons-icon_open1': !isopenjobstatus}"></i>Minion Last Job Status</accordion-heading>
+            <div id="table-connection-status" class="right-bar-table-container" ng-show="!!currentMinionDisplayed">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>IP Address</th>
+                            <th>Status</th>
+                         </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="minionIndex in selectedMinionsIndex">
+                            <td>{{ minions[minionIndex].minion_id }}</td>
+                            <td>{{ minions[minionIndex].hostname }}</td>
+                            <td ng-show="minions[minionIndex].is_minion_up">Success</td>
+                            <td ng-show="!minions[minionIndex].is_minion_up">Fail</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </accordion-group>
+
+        <accordion-group id="minion-key-status-panel" ng-init="isopenkeystatus = true" is-open="isopenkeystatus">
+            <accordion-heading ng-click="isopenkeystatus=!isopenkeystatus"><i class="pull-left glyphicon" ng-class="{ 'ssIcons-icon_close1': isopenkeystatus,'ssIcons-icon_open1': !isopenkeystatus}"></i>Minion Key Status</accordion-heading>
+            <div id="table-connection-status" class="right-bar-table-container" ng-show="!!currentMinionDisplayed">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>IP Address</th>
+                            <th>Status</th>
+                         </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="minionIndex in selectedMinionsIndex">
+                            <td>{{ minions[minionIndex].minion_id }}</td>
+                            <td>{{ minions[minionIndex].hostname }}</td>
+                            <td ng-show="minions[minionIndex].key_status === 0">Accepted</td>
+                            <td ng-show="!minions[minionIndex].key_status === 1">Pending</td>
+                            <td ng-show="minions[minionIndex].key_status === 2">Rejected</td>
+                            <td ng-show="minions[minionIndex].key_status === 3">Deleted</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </accordion-group>
+    </accordion>
+</div>
+
+<!-- <div class="detail-header">
+       DETAILS
+</div>
+
+<div id="right-bar-container" class="col-height">
+    <h4 class="right-bar-headings">MINION STATS</h4>
+    <div id="right-bar-inner-container1">
+        <div id="table-container" ng-show="!!currentMinionDisplayed">
+            
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="labelHostname" class="col-xs-6 control-label">Name</label>
+                    <div class="col-sm-6">
+                        <label for="hostname" class="control-label">{{ currentMinionDisplayed.minion_id }}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelHostname" class="col-xs-6 control-label">IP Interfaces</label>
+                    <div class="col-sm-6">
+                        <label for="hostname" class="control-label">
+                            <ul class="nav" ng-repeat="(key, value) in currentMinionDisplayed.config.ip_interfaces">
+                                <li><b>{{key}}:</b> <ul class="nav" ng-repeat="ip in value"><li>{{ip}}</li></ul></li>
+                            </ul>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelOs" class="col-xs-6 control-label">OS</label>
+                    <div class="col-sm-6">
+                        <label for="os" class="control-label">{{currentMinionDisplayed.config.os | displayDefault}}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelOs" class="col-xs-6 control-label">OS Family</label>
+                    <div class="col-sm-6">
+                        <label for="os" class="control-label">{{currentMinionDisplayed.config.os_family | displayDefault}}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelOs" class="col-xs-6 control-label">OS Release</label>
+                    <div class="col-sm-6">
+                        <label for="os" class="control-label">{{currentMinionDisplayed.config.osrelease | displayDefault}}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">GPU</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{ currentMinionDisplayed.config.num_gpus | displayDefault }}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Memory</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{ currentMinionDisplayed.config.mem_total | displayDefault }}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelOs" class="col-xs-6 control-label">Last Seen</label>
+                    <div class="col-sm-6">
+                        <label for="os" class="control-label">{{currentMinionDisplayed.last_seen | date:'medium' | displayDefault}}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Key Status</label>
+                    <div class="col-sm-6">
+                      <label for="os" class="control-label"><span ng-if="currentMinionDisplayed.key_status == 0">Accepted</span></label>
+                      <label for="os" class="control-label"><span ng-if="currentMinionDisplayed.key_status == 1">Pending</span></label>
+                      <label for="os" class="control-label"><span ng-if="currentMinionDisplayed.key_status == 2">Rejected</span></label>
+                      <label for="os" class="control-label"><span ng-if="currentMinionDisplayed.key_status == 3">Deleted</span></label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Salt Version</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{ currentMinionDisplayed.config.saltversion | displayDefault }}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">ZMQ Version</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{ currentMinionDisplayed.config.zmqversion | displayDefault }}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Product Name</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{ currentMinionDisplayed.config.productname | displayDefault }}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Release</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{ currentMinionDisplayed.config.osrelease | displayDefault }}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Status</label>
+                    <div class="col-sm-6">
+                        <span ng-hide="currentMinionDisplayed.is_minion_up" class="icon-icon_x2"></span>
+                        <span ng-show="currentMinionDisplayed.is_minion_up" class="icon-icon_check2"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Last Job Run</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{ currentMinionDisplayed.config.latest_job_exec_time | displayDefault }}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Last Job Id</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{ currentMinionDisplayed.config.latest_jid | displayDefault }}</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div ng-show="!!currentMinionDisplayed"><h4 id="heading" class="right-bar-headings">JOB STATUS</h4></div>
+    <div id="right-bar-inner-container2">
+        <div id="right-accordian-container" ng-show="!!currentMinionDisplayed">
+            <accordion id="minion-jobs" class="rightbar-accordian" close-others="oneAtATime">
+        <accordion-group class="rightbar-accordion-group" ng-init="isopenrep = true" is-open="isopenrep" ng-repeat="job in currentMinionDisplayedJobs">
+            <accordion-heading ng-click="isopenrep=!isopenrep"><i class="pull-left glyphicon" ng-class="{ 'glyphicon-chevron-down': isopenrep,'glyphicon-chevron-right': !isopenrep}"></i> 
+            {{job.jid.sls[0].name}}
+            <span ng-hide="job.jid.sls[0].name"> JOB {{ $index + 1 }}</span>
+            </accordion-heading>
+            <div>
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Time</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{job.full_ret.time_stamp}}</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">Status</label>
+                    <div class="col-sm-6">
+                        <label ng-show="!!job.full_ret.success" for="configmodel" class="control-label">Successful</label>
+                        <label ng-hide="!!job.full_ret.success" for="configmodel" class="control-label">Failed</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="labelConfigmodel" class="col-xs-6 control-label">User</label>
+                    <div class="col-sm-6">
+                        <label for="configmodel" class="control-label">{{job.jid.user}} </label>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </accordion-group>
+    </accordion>
+        </div>
+    </div>
+</div> -->

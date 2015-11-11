@@ -1,0 +1,2027 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.yumpkg</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.yumpkg">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-yumpkg">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-yumpkg">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.yumpkg</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-yumpkg__module-salt.modules.yumpkg"></span></p>
+                              
+                              <p class="p">Support for YUM</p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">This module makes heavy use of the <strong class="ph b">repoquery</strong> utility, from the
+                                    <a class="xref" href="http://yum.baseurl.org/wiki/YumUtils" target="_blank">yum-utils</a> package. This package will be installed as a dependency if salt
+                                    is installed via EPEL. However, if salt has been installed using pip, or a
+                                    host is being managed using salt-ssh, then as of version 2014.7.0
+                                    <a class="xref" href="http://yum.baseurl.org/wiki/YumUtils" target="_blank">yum-utils</a> will be installed automatically to satisfy this dependency.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.check_db">
+                           <h2 class="title topictitle2">check_db</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.check_db(
+								*names,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                                 
+                                 <p class="p">Returns a dict containing the following information for each specified
+                                    package:
+                                 </p>
+                                 
+                                 <ol class="ol">
+                                    <li class="li">
+                                       <p class="p">A key <tt class="ph tt">found</tt>, which will be a boolean value denoting if a match was
+                                          found in the package database.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">If <tt class="ph tt">found</tt> is <tt class="ph tt">False</tt>, then a second key called <tt class="ph tt">suggestions</tt> will
+                                          be present, which will contain a list of possible matches.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                 </ol>
+                                 
+                                 <p class="p">The <tt class="ph tt">fromrepo</tt>, <tt class="ph tt">enablerepo</tt> and <tt class="ph tt">disablerepo</tt> arguments are
+                                    supported, as used in pkg states, and the <tt class="ph tt">disableexcludes</tt> option is
+                                    also supported.
+                                 </p>
+                                 
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0: </span>Support for the <tt class="ph tt">disableexcludes</tt> option
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.check_db &lt;package1&gt; &lt;package2&gt; &lt;package3&gt;
+salt '*' pkg.check_db &lt;package1&gt; &lt;package2&gt; &lt;package3&gt; fromrepo=epel-testing
+salt '*' pkg.check_db &lt;package1&gt; &lt;package2&gt; &lt;package3&gt; disableexcludes=main</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.clean_metadata">
+                           <h2 class="title topictitle2">clean_metadata</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.clean_metadata(
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                 
+                                 <p class="p">Cleans local yum metadata. Functionally identical to <a class="xref" href="salt.modules.yumpkg.html#salt.modules.yumpkg.refresh_db">refresh_db()</a>.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.clean_metadata</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.del_repo">
+                           <h2 class="title topictitle2">del_repo</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.del_repo(
+								repo,
+								basedir='/etc/yum.repos.d',
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Delete a repo from &lt;basedir&gt; (default basedir: /etc/yum.repos.d).</p>
+                                 
+                                 <p class="p">If the .repo file that the repo exists in does not contain any other repo
+                                    configuration, the file itself will be deleted.
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.del_repo myrepo
+salt '*' pkg.del_repo myrepo basedir=/path/to/dir</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.diff">
+                           <h2 class="title topictitle2">diff</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.diff(
+								*paths
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Return a formatted diff between current files and original in a package.
+                                    NOTE: this function includes all files (configuration and not), but does
+                                    not work on binary content.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr>
+                                    
+                                    <th id="d295940e201-value" valign="bottom" align="left">Value</th>
+                                    
+                                    <th id="d295940e201-desc" valign="bottom" align="left">Description</th>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e201-value" class="stentry propvalue">Parameters</td>
+                                    
+                                    <td valign="top" headers="d295940e201-desc" class="stentry propdesc">
+                                       <p class="p">path -- Full path to the installed file</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e201-value" class="stentry propvalue">Returns</td>
+                                    
+                                    <td valign="top" headers="d295940e201-desc" class="stentry propdesc">
+                                       <p class="p">Difference string or raises and exception if examined file is binary.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.diff /etc/apache2/httpd.conf /etc/sudoers</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.download">
+                           <h2 class="title topictitle2">download</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.download(
+								*packages
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                                 
+                                 <p class="p">Download packages to the local disk. Requires <tt class="ph tt">yumdownloader</tt> from
+                                    <tt class="ph tt">yum-utils</tt> package.
+                                 </p>
+                                 
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p"><tt class="ph tt">yum-utils</tt> will already be installed on the minion if the package
+                                       was installed from the Fedora / EPEL repositories.
+                                    </p>
+                                    
+                                 </aside>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.download httpd
+salt '*' pkg.download httpd postfix</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.expand_repo_def">
+                           <h2 class="title topictitle2">expand_repo_def</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.expand_repo_def(
+								repokwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Take a repository definition and expand it to the full pkg repository dict
+                                    that can be used for comparison. This is a helper function to make
+                                    certain repo managers sane for comparison in the pkgrepo states.
+                                 </p>
+                                 
+                                 <p class="p">There is no use to calling this function via the CLI.</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.file_dict">
+                           <h2 class="title topictitle2">file_dict</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.file_dict(
+								*packages
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                 
+                                 <p class="p">List the files that belong to a package, grouped by package. Not
+                                    specifying any packages will return a list of <em class="ph i">every</em> file on the system's
+                                    rpm database (not generally recommended).
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.file_list httpd
+salt '*' pkg.file_list httpd postfix
+salt '*' pkg.file_list</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.file_list">
+                           <h2 class="title topictitle2">file_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.file_list(
+								*packages
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                 
+                                 <p class="p">List the files that belong to a package. Not specifying any packages will
+                                    return a list of <em class="ph i">every</em> file on the system's rpm database (not generally
+                                    recommended).
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.file_list httpd
+salt '*' pkg.file_list httpd postfix
+salt '*' pkg.file_list</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.get_locked_packages">
+                           <h2 class="title topictitle2">get_locked_packages</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.get_locked_packages(
+								pattern=None,
+								full=True
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Get packages that are currently locked
+                                    <tt class="ph tt">yum -q versionlock list</tt>.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.get_locked_packages</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.get_repo">
+                           <h2 class="title topictitle2">get_repo</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.get_repo(
+								repo,
+								basedir='/etc/yum.repos.d',
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Display a repo from &lt;basedir&gt; (default basedir: <tt class="ph tt">/etc/yum.repos.d</tt>).
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.get_repo myrepo
+salt '*' pkg.get_repo myrepo basedir=/path/to/dir</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.group_diff">
+                           <h2 class="title topictitle2">group_diff</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.group_diff(
+								name
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                 
+                                 <p class="p">Lists packages belonging to a certain group, and which are installed</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.group_diff 'Perl Support'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.group_info">
+                           <h2 class="title topictitle2">group_info</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.group_info(
+								name
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                 
+                                 <p class="p">Lists packages belonging to a certain group</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.group_info 'Perl Support'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.group_install">
+                           <h2 class="title topictitle2">group_install</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.group_install(
+								name,
+								skip=(),
+								include=(),
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                 
+                                 <p class="p">Install the passed package group(s). This is basically a wrapper around
+                                    pkg.install, which performs package group resolution for the user. This
+                                    function is currently considered experimental, and should be expected to
+                                    undergo changes.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d295940e521" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d295940e523" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e521" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d295940e523" class="stentry propdesc">
+                                       <p class="p">Package group to install. To install more than one group, either use a
+                                          comma-separated list or pass the value as a python list.
+                                       </p>
+                                       
+                                       <p class="p">CLI Examples:</p>
+                                       <pre class="pre codeblock language-bash">salt '*' pkg.group_install 'Group 1'
+salt '*' pkg.group_install 'Group 1,Group 2'
+salt '*' pkg.group_install '["Group 1", "Group 2"]'</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e521" class="stentry propvalue">skip</td>
+                                    
+                                    <td valign="top" headers="d295940e523" class="stentry propdesc">
+                                       <p class="p">The name(s), in a list, of any packages that would normally be
+                                          installed by the package group ("default" packages), which should not
+                                          be installed. Can be passed either as a comma-separated list or a
+                                          python list.
+                                       </p>
+                                       
+                                       <p class="p">CLI Examples:</p>
+                                       <pre class="pre codeblock language-bash">salt '*' pkg.group_install 'My Group' skip='foo,bar'
+salt '*' pkg.group_install 'My Group' skip='["foo", "bar"]'</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e521" class="stentry propvalue">include</td>
+                                    
+                                    <td valign="top" headers="d295940e523" class="stentry propdesc">
+                                       <p class="p">The name(s), in a list, of any packages which are included in a group,
+                                          which would not normally be installed ("optional" packages). Note that
+                                          this will not enforce group membership; if you include packages which
+                                          are not members of the specified groups, they will still be installed.
+                                          Can be passed either as a comma-separated list or a python list.
+                                       </p>
+                                       
+                                       <p class="p">CLI Examples:</p>
+                                       <pre class="pre codeblock language-bash">salt '*' pkg.group_install 'My Group' include='foo,bar'
+salt '*' pkg.group_install 'My Group' include='["foo", "bar"]'</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p">Because this is essentially a wrapper around pkg.install, any argument
+                                       which can be passed to pkg.install may also be included here, and it
+                                       will be passed along wholesale.
+                                    </p>
+                                    
+                                 </aside>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.group_list">
+                           <h2 class="title topictitle2">group_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.group_list( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                 
+                                 <p class="p">Lists all groups known by yum on this system</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.group_list</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.hold">
+                           <h2 class="title topictitle2">hold</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.hold(
+								name=None,
+								pkgs=None,
+								sources=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">Hold packages with <tt class="ph tt">yum -q versionlock</tt>.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d295940e627" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d295940e629" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e627" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d295940e629" class="stentry propdesc">
+                                       <p class="p">The name of the package to be deleted.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <p class="p">Multiple Package Options:</p>
+                                 
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d295940e642" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d295940e644" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e642" class="stentry propvalue">pkgs</td>
+                                    
+                                    <td valign="top" headers="d295940e644" class="stentry propdesc">
+                                       <p class="p">A list of packages to hold. Must be passed as a python list. The
+                                          <tt class="ph tt">name</tt> parameter will be ignored if this option is passed.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Returns a dict containing the changes.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.hold &lt;package name&gt;
+salt '*' pkg.hold pkgs='["foo", "bar"]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.install">
+                           <h2 class="title topictitle2">install</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.install(
+								name=None,
+								refresh=False,
+								fromrepo=None,
+								skip_verify=False,
+								pkgs=None,
+								sources=None,
+								reinstall=False,
+								normalize=True,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Install the passed package(s), add refresh=True to clean the yum database
+                                    before package is installed.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d295940e692" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d295940e694" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e692" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d295940e694" class="stentry propdesc">
+                                       <p class="p">The name of the package to be installed. Note that this parameter is
+                                          ignored if either "pkgs" or "sources" is passed. Additionally, please
+                                          note that this option can only be used to install packages from a
+                                          software repository. To install a package file manually, use the
+                                          "sources" option.
+                                       </p>
+                                       
+                                       <p class="p">32-bit packages can be installed on 64-bit systems by appending the
+                                          architecture designation (<tt class="ph tt">.i686</tt>, <tt class="ph tt">.i586</tt>, etc.) to the end of the
+                                          package name.
+                                       </p>
+                                       
+                                       <p class="p">CLI Example:</p>
+                                       <pre class="pre codeblock language-bash">salt '*' pkg.install &lt;package name&gt;</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e692" class="stentry propvalue">refresh</td>
+                                    
+                                    <td valign="top" headers="d295940e694" class="stentry propdesc">
+                                       <p class="p">Whether or not to update the yum database before executing.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e692" class="stentry propvalue">reinstall</td>
+                                    
+                                    <td valign="top" headers="d295940e694" class="stentry propdesc">
+                                       <p class="p">Specifying reinstall=True will use <tt class="ph tt">yum reinstall</tt> rather than
+                                          <tt class="ph tt">yum install</tt> for requested packages that are already installed.
+                                       </p>
+                                       
+                                       <p class="p">If a version is specified with the requested package, then
+                                          <tt class="ph tt">yum reinstall</tt> will only be used if the installed version
+                                          matches the requested version.
+                                       </p>
+                                       
+                                       <p class="p">Works with sources when the package header of the source can be
+                                          matched to the name and version of an installed package.
+                                       </p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e692" class="stentry propvalue">skip_verify</td>
+                                    
+                                    <td valign="top" headers="d295940e694" class="stentry propdesc">
+                                       <p class="p">Skip the GPG verification check (e.g., <tt class="ph tt">--nogpgcheck</tt>)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e692" class="stentry propvalue">version</td>
+                                    
+                                    <td valign="top" headers="d295940e694" class="stentry propdesc">
+                                       <p class="p">Install a specific version of the package, e.g. 1.2.3-4.el5. Ignored
+                                          if "pkgs" or "sources" is passed.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <p class="p">Repository Options:</p>
+                                 
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d295940e762" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d295940e764" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e762" class="stentry propvalue">fromrepo</td>
+                                    
+                                    <td valign="top" headers="d295940e764" class="stentry propdesc">
+                                       <p class="p">Specify a package repository (or repositories) from which to install.
+                                          (e.g., <tt class="ph tt">yum --disablerepo='*' --enablerepo='somerepo'</tt>)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e762" class="stentry propvalue">enablerepo (ignored if fromrepo is specified)</td>
+                                    
+                                    <td valign="top" headers="d295940e764" class="stentry propdesc">
+                                       <p class="p">Specify a disabled package repository (or repositories) to enable.
+                                          (e.g., <tt class="ph tt">yum --enablerepo='somerepo'</tt>)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e762" class="stentry propvalue">disablerepo (ignored if fromrepo is specified)</td>
+                                    
+                                    <td valign="top" headers="d295940e764" class="stentry propdesc">
+                                       <p class="p">Specify an enabled package repository (or repositories) to disable.
+                                          (e.g., <tt class="ph tt">yum --disablerepo='somerepo'</tt>)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e762" class="stentry propvalue">disableexcludes</td>
+                                    
+                                    <td valign="top" headers="d295940e764" class="stentry propdesc">
+                                       <p class="p">Disable exclude from main, for a repo or for everything.
+                                          (e.g., <tt class="ph tt">yum --disableexcludes='main'</tt>)
+                                       </p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <p class="p">Multiple Package Installation Options:</p>
+                                 
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d295940e810" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d295940e812" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e810" class="stentry propvalue">pkgs</td>
+                                    
+                                    <td valign="top" headers="d295940e812" class="stentry propdesc">
+                                       <p class="p">A list of packages to install from a software repository. Must be
+                                          passed as a python list. A specific version number can be specified
+                                          by using a single-element dict representing the package and its
+                                          version.
+                                       </p>
+                                       
+                                       <p class="p">CLI Examples:</p>
+                                       <pre class="pre codeblock language-bash">salt '*' pkg.install pkgs='["foo", "bar"]'
+salt '*' pkg.install pkgs='["foo", {"bar": "1.2.3-4.el5"}]'</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e810" class="stentry propvalue">sources</td>
+                                    
+                                    <td valign="top" headers="d295940e812" class="stentry propdesc">
+                                       <p class="p">A list of RPM packages to install. Must be passed as a list of dicts,
+                                          with the keys being package names, and the values being the source URI
+                                          or local path to the package.
+                                       </p>
+                                       
+                                       <p class="p">CLI Example:</p>
+                                       <pre class="pre codeblock language-bash">salt '*' pkg.install sources='[{"foo": "salt://foo.rpm"}, {"bar": "salt://bar.rpm"}]'</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e810" class="stentry propvalue">normalize</td>
+                                    
+                                    <td valign="top" headers="d295940e812" class="stentry propdesc">
+                                       <p class="p">Normalize the package name by removing the architecture.  Default is True.
+                                          This is useful for poorly created packages which might include the
+                                          architecture as an actual part of the name such as kernel modules
+                                          which match a specific kernel version.
+                                       </p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Example:</p>
+                                 <pre class="pre codeblock language-bash">salt -G role:nsd pkg.install gpfs.gplbin-2.6.32-279.31.1.el6.x86_64 normalize=False</pre>
+                                 <p class="p">Returns a dict containing the new package names and versions:</p>
+                                 <pre class="pre codeblock language-">{'&lt;package&gt;': {'old': '&lt;old-version&gt;',
+               'new': '&lt;new-version&gt;'}}</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.latest_version">
+                           <h2 class="title topictitle2">latest_version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.latest_version(
+								*names,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the latest version of the named package available for upgrade or
+                                    installation. If more than one package name is specified, a dict of
+                                    name/version pairs is returned.
+                                 </p>
+                                 
+                                 <p class="p">If the latest version of a given package is already installed, an empty
+                                    string will be returned for that package.
+                                 </p>
+                                 
+                                 <p class="p">A specific repo can be requested using the <tt class="ph tt">fromrepo</tt> keyword argument,
+                                    and the <tt class="ph tt">disableexcludes</tt> option is also supported.
+                                 </p>
+                                 
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0: </span>Support for the <tt class="ph tt">disableexcludes</tt> option
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.latest_version &lt;package name&gt;
+salt '*' pkg.latest_version &lt;package name&gt; fromrepo=epel-testing
+salt '*' pkg.latest_version &lt;package name&gt; disableexcludes=main
+salt '*' pkg.latest_version &lt;package1&gt; &lt;package2&gt; &lt;package3&gt; ...</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.list_pkgs">
+                           <h2 class="title topictitle2">list_pkgs</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.list_pkgs(
+								versions_as_list=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List the packages currently installed in a dict:</p>
+                                 <pre class="pre codeblock language-">{'&lt;package_name&gt;': '&lt;version&gt;'}</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.list_pkgs</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.list_repo_pkgs">
+                           <h2 class="title topictitle2">list_repo_pkgs</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.list_repo_pkgs(
+								*args,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                 
+                                 <p class="p"><span class="keyword versionmodified">Changed in version 2014.7.0: </span>All available versions of each package are now returned. This required
+                                    a slight modification to the structure of the return dict. The return
+                                    data shown below reflects the updated return dict structure.
+                                 </p>
+                                 
+                                 <p class="p">Returns all available packages. Optionally, package names (and name globs)
+                                    can be passed and the results will be filtered to packages matching those
+                                    names. This is recommended as it speeds up the function considerably.
+                                 </p>
+                                 
+                                 <p class="p">This function can be helpful in discovering the version or repo to specify
+                                    in a 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../states/all/salt.states.pkg.html#salt.states.pkg.installed">pkg.installed</a> state.
+                                 </p>
+                                 
+                                 <p class="p">The return data is a dictionary of repo names, with each repo containing a
+                                    dictionary in which the keys are package names, and the values are a list
+                                    of version numbers. Here is an example of the return data:
+                                 </p>
+                                 <pre class="pre codeblock language-python">{
+    'base': {
+        'bash': ['4.1.2-15.el6_4'],
+        'kernel': ['2.6.32-431.el6']
+    },
+    'updates': {
+        'bash': ['4.1.2-15.el6_5.2', '4.1.2-15.el6_5.1'],
+        'kernel': ['2.6.32-431.29.2.el6',
+                   '2.6.32-431.23.3.el6',
+                   '2.6.32-431.20.5.el6',
+                   '2.6.32-431.20.3.el6',
+                   '2.6.32-431.17.1.el6',
+                   '2.6.32-431.11.2.el6',
+                   '2.6.32-431.5.1.el6',
+                   '2.6.32-431.3.1.el6',
+                   '2.6.32-431.1.2.0.1.el6']
+    }
+}</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d295940e976" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d295940e978" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e976" class="stentry propvalue">fromrepo</td>
+                                    
+                                    <td valign="top" headers="d295940e978" class="stentry propdesc">
+                                       <p class="p">Only include results from the specified repo(s). Multiple repos can be
+                                          specified, comma-separated.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.list_repo_pkgs
+salt '*' pkg.list_repo_pkgs foo bar baz
+salt '*' pkg.list_repo_pkgs 'samba4*' fromrepo=base,updates</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.list_repos">
+                           <h2 class="title topictitle2">list_repos</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.list_repos(
+								basedir='/etc/yum.repos.d'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Lists all repos in &lt;basedir&gt; (default: /etc/yum.repos.d/).</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.list_repos</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.list_upgrades">
+                           <h2 class="title topictitle2">list_upgrades</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.list_upgrades(
+								refresh=True,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check whether or not an upgrade is available for all packages</p>
+                                 
+                                 <p class="p">The <tt class="ph tt">fromrepo</tt>, <tt class="ph tt">enablerepo</tt>, and <tt class="ph tt">disablerepo</tt> arguments are
+                                    supported, as used in pkg states, and the <tt class="ph tt">disableexcludes</tt> option is
+                                    also supported.
+                                 </p>
+                                 
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0: </span>Support for the <tt class="ph tt">disableexcludes</tt> option
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.list_upgrades</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.mod_repo">
+                           <h2 class="title topictitle2">mod_repo</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.mod_repo(
+								repo,
+								basedir=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Modify one or more values for a repo. If the repo does not exist, it will
+                                    be created, so long as the following values are specified:
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1101" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1103" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1101" class="stentry propvalue">repo</td>
+                                    
+                                    <td valign="top" headers="d295940e1103" class="stentry propdesc">
+                                       <p class="p">name by which the yum refers to the repo</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1101" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d295940e1103" class="stentry propdesc">
+                                       <p class="p">a human-readable name for the repo</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1101" class="stentry propvalue">baseurl</td>
+                                    
+                                    <td valign="top" headers="d295940e1103" class="stentry propdesc">
+                                       <p class="p">the URL for yum to reference</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1101" class="stentry propvalue">mirrorlist</td>
+                                    
+                                    <td valign="top" headers="d295940e1103" class="stentry propdesc">
+                                       <p class="p">the URL for yum to reference</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Key/Value pairs may also be removed from a repo's configuration by setting
+                                    a key to a blank value. Bear in mind that a name cannot be deleted, and a
+                                    baseurl can only be deleted if a mirrorlist is specified (or vice versa).
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.mod_repo reponame enabled=1 gpgcheck=1
+salt '*' pkg.mod_repo reponame basedir=/path/to/dir enabled=1
+salt '*' pkg.mod_repo reponame baseurl= mirrorlist=http://host.com/</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.modified">
+                           <h2 class="title topictitle2">modified</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.modified(
+								*packages,
+								**flags
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">List the modified files that belong to a package. Not specifying any packages
+                                    will return a list of _all_ modified files on the system's RPM database.
+                                 </p>
+                                 
+                                 <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                                 
+                                 <p class="p">Filtering by flags (True or False):</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1171" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1173" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1171" class="stentry propvalue">size</td>
+                                    
+                                    <td valign="top" headers="d295940e1173" class="stentry propdesc">
+                                       <p class="p">Include only files where size changed.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1171" class="stentry propvalue">mode</td>
+                                    
+                                    <td valign="top" headers="d295940e1173" class="stentry propdesc">
+                                       <p class="p">Include only files which file's mode has been changed.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1171" class="stentry propvalue">checksum</td>
+                                    
+                                    <td valign="top" headers="d295940e1173" class="stentry propdesc">
+                                       <p class="p">Include only files which MD5 checksum has been changed.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1171" class="stentry propvalue">device</td>
+                                    
+                                    <td valign="top" headers="d295940e1173" class="stentry propdesc">
+                                       <p class="p">Include only files which major and minor numbers has been changed.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1171" class="stentry propvalue">symlink</td>
+                                    
+                                    <td valign="top" headers="d295940e1173" class="stentry propdesc">
+                                       <p class="p">Include only files which are symbolic link contents.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1171" class="stentry propvalue">owner</td>
+                                    
+                                    <td valign="top" headers="d295940e1173" class="stentry propdesc">
+                                       <p class="p">Include only files where owner has been changed.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1171" class="stentry propvalue">group</td>
+                                    
+                                    <td valign="top" headers="d295940e1173" class="stentry propdesc">
+                                       <p class="p">Include only files where group has been changed.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1171" class="stentry propvalue">time</td>
+                                    
+                                    <td valign="top" headers="d295940e1173" class="stentry propdesc">
+                                       <p class="p">Include only files where modification time of the file has been changed.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1171" class="stentry propvalue">capabilities</td>
+                                    
+                                    <td valign="top" headers="d295940e1173" class="stentry propdesc">
+                                       <p class="p">Include only files where capabilities differ or not. Note: supported only on newer
+                                          RPM versions.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.modified
+salt '*' pkg.modified httpd
+salt '*' pkg.modified httpd postfix
+salt '*' pkg.modified httpd owner=True group=False</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.normalize_name">
+                           <h2 class="title topictitle2">normalize_name</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.normalize_name(
+								name
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Strips the architecture from the specified package name, if necessary.
+                                    Circumstances where this would be done include:
+                                 </p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">If the arch is 32 bit and the package name ends in a 32-bit arch.</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">If the arch matches the OS arch, or is <tt class="ph tt">noarch</tt>.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.normalize_name zsh.x86_64</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.owner">
+                           <h2 class="title topictitle2">owner</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.owner(
+								*paths
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">Return the name of the package that owns the file. Multiple file paths can
+                                    be passed. Like <tt class="ph tt">pkg.version &lt;salt.modules.yumpkg.version</tt>, if a
+                                    single path is passed, a string will be returned, and if multiple paths are
+                                    passed, a dictionary of file/package name pairs will be returned.
+                                 </p>
+                                 
+                                 <p class="p">If the file is not owned by a package, or is not present on the minion,
+                                    then an empty string will be returned for that path.
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.owner /usr/bin/apachectl
+salt '*' pkg.owner /usr/bin/apachectl /etc/httpd/conf/httpd.conf</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.purge">
+                           <h2 class="title topictitle2">purge</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.purge(
+								name=None,
+								pkgs=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Package purges are not supported by yum, this function is identical to
+                                    <a class="xref" href="salt.modules.yumpkg.html#salt.modules.yumpkg.remove">pkg.remove</a>.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1344" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1346" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1344" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d295940e1346" class="stentry propdesc">
+                                       <p class="p">The name of the package to be deleted.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <p class="p">Multiple Package Options:</p>
+                                 
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1359" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1361" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1359" class="stentry propvalue">pkgs</td>
+                                    
+                                    <td valign="top" headers="d295940e1361" class="stentry propdesc">
+                                       <p class="p">A list of packages to delete. Must be passed as a python list. The
+                                          <tt class="ph tt">name</tt> parameter will be ignored if this option is passed.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 0.16.0.</span></p>
+                                 
+                                 <p class="p">Returns a dict containing the changes.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.purge &lt;package name&gt;
+salt '*' pkg.purge &lt;package1&gt;,&lt;package2&gt;,&lt;package3&gt;
+salt '*' pkg.purge pkgs='["foo", "bar"]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.refresh_db">
+                           <h2 class="title topictitle2">refresh_db</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.refresh_db(
+								branch_arg,
+								repo_arg,
+								exclude_arg
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check the yum repos for updated packages</p>
+                                 
+                                 <p class="p">Returns:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">True</tt>: Updates are available
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">False</tt>: An error occurred
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">None</tt>: No updates are available
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.refresh_db</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.remove">
+                           <h2 class="title topictitle2">remove</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.remove(
+								name=None,
+								pkgs=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Remove packages with <tt class="ph tt">yum -q -y remove</tt>.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1462" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1464" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1462" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d295940e1464" class="stentry propdesc">
+                                       <p class="p">The name of the package to be deleted.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <p class="p">Multiple Package Options:</p>
+                                 
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1477" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1479" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1477" class="stentry propvalue">pkgs</td>
+                                    
+                                    <td valign="top" headers="d295940e1479" class="stentry propdesc">
+                                       <p class="p">A list of packages to delete. Must be passed as a python list. The
+                                          <tt class="ph tt">name</tt> parameter will be ignored if this option is passed.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 0.16.0.</span></p>
+                                 
+                                 <p class="p">Returns a dict containing the changes.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.remove &lt;package name&gt;
+salt '*' pkg.remove &lt;package1&gt;,&lt;package2&gt;,&lt;package3&gt;
+salt '*' pkg.remove pkgs='["foo", "bar"]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.unhold">
+                           <h2 class="title topictitle2">unhold</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.unhold(
+								name=None,
+								pkgs=None,
+								sources=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">Hold packages with <tt class="ph tt">yum -q versionlock</tt>.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1536" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1538" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1536" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d295940e1538" class="stentry propdesc">
+                                       <p class="p">The name of the package to be deleted.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <p class="p">Multiple Package Options:</p>
+                                 
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1551" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1553" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1551" class="stentry propvalue">pkgs</td>
+                                    
+                                    <td valign="top" headers="d295940e1553" class="stentry propdesc">
+                                       <p class="p">A list of packages to unhold. Must be passed as a python list. The
+                                          <tt class="ph tt">name</tt> parameter will be ignored if this option is passed.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Returns a dict containing the changes.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.unhold &lt;package name&gt;
+salt '*' pkg.unhold pkgs='["foo", "bar"]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.upgrade">
+                           <h2 class="title topictitle2">upgrade</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.upgrade(
+								refresh=True,
+								fromrepo=None,
+								skip_verify=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Run a full system upgrade, a yum upgrade</p>
+                                 
+                                 <p class="p"><span class="keyword versionmodified">Changed in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">Return a dict containing the new package names and versions:</p>
+                                 <pre class="pre codeblock language-">{'&lt;package&gt;': {'old': '&lt;old-version&gt;',
+               'new': '&lt;new-version&gt;'}}</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.upgrade</pre>
+                                 <p class="p">Repository Options:</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1614" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d295940e1616" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1614" class="stentry propvalue">fromrepo</td>
+                                    
+                                    <td valign="top" headers="d295940e1616" class="stentry propdesc">
+                                       <p class="p">Specify a package repository (or repositories) from which to install.
+                                          (e.g., <tt class="ph tt">yum --disablerepo='*' --enablerepo='somerepo'</tt>)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1614" class="stentry propvalue">enablerepo (ignored if fromrepo is specified)</td>
+                                    
+                                    <td valign="top" headers="d295940e1616" class="stentry propdesc">
+                                       <p class="p">Specify a disabled package repository (or repositories) to enable.
+                                          (e.g., <tt class="ph tt">yum --enablerepo='somerepo'</tt>)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1614" class="stentry propvalue">disablerepo (ignored if fromrepo is specified)</td>
+                                    
+                                    <td valign="top" headers="d295940e1616" class="stentry propdesc">
+                                       <p class="p">Specify an enabled package repository (or repositories) to disable.
+                                          (e.g., <tt class="ph tt">yum --disablerepo='somerepo'</tt>)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d295940e1614" class="stentry propvalue">disableexcludes</td>
+                                    
+                                    <td valign="top" headers="d295940e1616" class="stentry propdesc">
+                                       <p class="p">Disable exclude from main, for a repo or for everything.
+                                          (e.g., <tt class="ph tt">yum --disableexcludes='main'</tt>)
+                                       </p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.upgrade_available">
+                           <h2 class="title topictitle2">upgrade_available</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.upgrade_available(
+								name
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check whether or not an upgrade is available for a given package</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.upgrade_available &lt;package name&gt;</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.verify">
+                           <h2 class="title topictitle2">verify</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.verify(
+								*names,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                 
+                                 <p class="p">Runs an rpm -Va on a system, and returns the results in a dict</p>
+                                 
+                                 <p class="p">Files with an attribute of config, doc, ghost, license or readme in the
+                                    package header can be ignored using the <tt class="ph tt">ignore_types</tt> keyword argument
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.verify
+salt '*' pkg.verify httpd
+salt '*' pkg.verify 'httpd postfix'
+salt '*' pkg.verify 'httpd postfix' ignore_types=['config','doc']</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.yumpkg.version">
+                           <h2 class="title topictitle2">version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.yumpkg.version(
+								*names,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Returns a string representing the package version or an empty string if not
+                                    installed. If more than one package name is specified, a dict of
+                                    name/version pairs is returned.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.version &lt;package name&gt;
+salt '*' pkg.version &lt;package1&gt; &lt;package2&gt; &lt;package3&gt; ...</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

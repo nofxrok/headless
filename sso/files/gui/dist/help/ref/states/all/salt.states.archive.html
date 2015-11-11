@@ -1,0 +1,233 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.archive</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.archive">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-archive">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-archive">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.archive</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-archive__module-salt.states.archive"></span></p>
+                              
+                              <p class="p">Extract an archive</p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.states.archive.extracted">
+                           <h2 class="title topictitle2">extracted</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.archive.extracted(
+								name,
+								source,
+								archive_format,
+								archive_user=None,
+								tar_options=None,
+								source_hash=None,
+								if_missing=None,
+								keep=False
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                 
+                                 <p class="p">State that make sure an archive is extracted in a directory.
+                                    The downloaded archive is erased if successfully extracted.
+                                    The archive is downloaded only if necessary.
+                                 </p>
+                                 
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p">If <tt class="ph tt">if_missing</tt> is not defined, this state will check for <tt class="ph tt">name</tt>
+                                       instead.  If <tt class="ph tt">name</tt> exists, it will assume the archive was previously
+                                       extracted successfully and will not extract it again.
+                                    </p>
+                                    
+                                 </aside>
+                                 <pre class="pre codeblock language-yaml">graylog2-server:
+  archive.extracted:
+    - name: /opt/
+    - source: https://github.com/downloads/Graylog2/graylog2-server/graylog2-server-0.9.6p1.tar.lzma
+    - source_hash: md5=499ae16dcae71eeb7c3a30c75ea7a1a6
+    - tar_options: J
+    - archive_format: tar
+    - if_missing: /opt/graylog2-server-0.9.6p1/</pre>
+                                 <pre class="pre codeblock language-yaml">graylog2-server:
+  archive.extracted:
+    - name: /opt/
+    - source: https://github.com/downloads/Graylog2/graylog2-server/graylog2-server-0.9.6p1.tar.gz
+    - source_hash: md5=499ae16dcae71eeb7c3a30c75ea7a1a6
+    - archive_format: tar
+    - tar_options: v
+    - if_missing: /opt/graylog2-server-0.9.6p1/</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d353401e69" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d353401e71" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d353401e69" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d353401e71" class="stentry propdesc">
+                                       <p class="p">Directory name where to extract the archive</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d353401e69" class="stentry propvalue">source</td>
+                                    
+                                    <td valign="top" headers="d353401e71" class="stentry propdesc">
+                                       <p class="p">Archive source, same syntax as file.managed source argument.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d353401e69" class="stentry propvalue">source_hash</td>
+                                    
+                                    <td valign="top" headers="d353401e71" class="stentry propdesc">
+                                       <p class="p">Hash of source file, or file with list of hash-to-file mappings.
+                                          It uses the same syntax as the file.managed source_hash argument.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d353401e69" class="stentry propvalue">archive_format</td>
+                                    
+                                    <td valign="top" headers="d353401e71" class="stentry propdesc">
+                                       <p class="p">tar, zip or rar</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d353401e69" class="stentry propvalue">archive_user:</td>
+                                    
+                                    <td valign="top" headers="d353401e71" class="stentry propdesc">
+                                       <p class="p">user to extract files as</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d353401e69" class="stentry propvalue">if_missing</td>
+                                    
+                                    <td valign="top" headers="d353401e71" class="stentry propdesc">
+                                       <p class="p">Some archives, such as tar, extract themselves in a subfolder.
+                                          This directive can be used to validate if the archive had been
+                                          previously extracted.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d353401e69" class="stentry propvalue">tar_options</td>
+                                    
+                                    <td valign="top" headers="d353401e71" class="stentry propdesc">
+                                       <p class="p">Required if used with <tt class="ph tt">archive_format: tar</tt>, otherwise optional.
+                                          It needs to be the tar argument specific to the archive being extracted,
+                                          such as 'J' for LZMA or 'v' to verbosely list files processed.
+                                          Using this option means that the tar executable on the target will
+                                          be used, which is less platform independent.
+                                          Main operators like -x, --extract, --get, -c and -f/--file
+                                          <strong class="ph b">should not be used</strong> here.
+                                          If <tt class="ph tt">archive_format</tt> is <tt class="ph tt">zip</tt> or <tt class="ph tt">rar</tt> and this option is not set,
+                                          then the Python tarfile module is used. The tarfile module supports gzip
+                                          and bz2 in Python 2.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d353401e69" class="stentry propvalue">keep</td>
+                                    
+                                    <td valign="top" headers="d353401e71" class="stentry propdesc">
+                                       <p class="p">Keep the archive in the minion's cache</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

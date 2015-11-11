@@ -1,0 +1,354 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.renderers.stateconf</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.renderers.stateconf">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../renderers.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-renderers-stateconf">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-renderers-stateconf">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.renderers.stateconf</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-renderers-stateconf__module-salt.renderers.stateconf"></span></p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">maintainer</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Jack Kuan &lt;<a class="xref" href="mailto:kjkuan@gmail.com" target="_blank">kjkuan@gmail.com</a>&gt;
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">maturity</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">new</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">platform</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">all</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">This module provides a custom renderer that processes a salt file with a
+                                 specified templating engine (e.g. Jinja) and a chosen data renderer (e.g. YAML),
+                                 extracts arguments for any <tt class="ph tt">stateconf.set</tt> state, and provides the extracted
+                                 arguments (including Salt-specific args, such as <tt class="ph tt">require</tt>, etc) as template
+                                 context. The goal is to make writing reusable/configurable/parameterized
+                                 salt files easier and cleaner.
+                              </p>
+                              
+                              <p class="p">To use this renderer, either set it as the default renderer via the
+                                 <tt class="ph tt">renderer</tt> option in master/minion's config, or use the shebang line in each
+                                 individual sls file, like so: <tt class="ph tt">#!stateconf</tt>. Note, due to the way this
+                                 renderer works, it must be specified as the first renderer in a render
+                                 pipeline. That is, you cannot specify <tt class="ph tt">#!mako|yaml|stateconf</tt>, for example.
+                                 Instead, you specify them as renderer arguments: <tt class="ph tt">#!stateconf mako . yaml</tt>.
+                              </p>
+                              
+                              <p class="p">Here's a list of features enabled by this renderer.</p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Prefixes any state id (declaration or reference) that starts with a dot (<tt class="ph tt">.</tt>)
+                                       to avoid duplicated state ids when the salt file is included by other salt
+                                       files.
+                                    </p>
+                                    
+                                    <p class="p">For example, in the <span class="keyword title_reference">salt://some/file.sls</span>, a state id such as <tt class="ph tt">.sls_params</tt>
+                                       will be turned into <tt class="ph tt">some.file::sls_params</tt>. Example:
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">#!stateconf yaml . jinja
+
+.vim:
+  pkg.installed</pre>
+                                    <p class="p">Above will be translated into:</p>
+                                    <pre class="pre codeblock language-yaml">some.file::vim:
+  pkg.installed:
+    - name: vim</pre>
+                                    <p class="p">Notice how that if a state under a dot-prefixed state id has no <tt class="ph tt">name</tt>
+                                       argument then one will be added automatically by using the state id with
+                                       the leading dot stripped off.
+                                    </p>
+                                    
+                                    <p class="p">The leading dot trick can be used with extending state ids as well,
+                                       so you can include relatively and extend relatively. For example, when
+                                       extending a state in <span class="keyword title_reference">salt://some/other_file.sls</span>, e.g.:
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">#!stateconf yaml . jinja
+
+include:
+  - .file
+
+extend:
+  .file::sls_params:
+    stateconf.set:
+      - name1: something</pre>
+                                    <p class="p">Above will be pre-processed into:</p>
+                                    <pre class="pre codeblock language-yaml">include:
+  - some.file
+
+extend:
+  some.file::sls_params:
+    stateconf.set:
+      - name1: something</pre>
+                                    </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Adds a <tt class="ph tt">sls_dir</tt> context variable that expands to the directory containing
+                                       the rendering salt file. So, you can write <tt class="ph tt">salt://{{sls_dir}}/...</tt> to
+                                       reference templates files used by your salt file.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Recognizes the special state function, <tt class="ph tt">stateconf.set</tt>, that configures a
+                                       default list of named arguments usable within the template context of
+                                       the salt file. Example:
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">#!stateconf yaml . jinja
+
+.sls_params:
+  stateconf.set:
+    - name1: value1
+    - name2: value2
+    - name3:
+      - value1
+      - value2
+      - value3
+    - require_in:
+      - cmd: output
+
+# --- end of state config ---
+
+.output:
+  cmd.run:
+    - name: |
+        echo 'name1={{sls_params.name1}}
+              name2={{sls_params.name2}}
+              name3[1]={{sls_params.name3[1]}}
+        '</pre>
+                                    <p class="p">This even works with <tt class="ph tt">include</tt> + <tt class="ph tt">extend</tt> so that you can override
+                                       the default configured arguments by including the salt file and then
+                                       <tt class="ph tt">extend</tt> the <tt class="ph tt">stateconf.set</tt> states that come from the included salt
+                                       file. (<em class="ph i">IMPORTANT: Both the included and the extending sls files must use the
+                                          stateconf renderer for this ``extend`` to work!</em>)
+                                    </p>
+                                    
+                                    <p class="p">Notice that the end of configuration marker (<tt class="ph tt"># --- end of state config --</tt>)
+                                       is needed to separate the use of 'stateconf.set' form the rest of your salt
+                                       file. The regex that matches such marker can be configured via the
+                                       <tt class="ph tt">stateconf_end_marker</tt> option in your master or minion config file.
+                                    </p>
+                                    
+                                    <p class="p">Sometimes, it is desirable to set a default argument value that's based on
+                                       earlier arguments in the same <tt class="ph tt">stateconf.set</tt>. For example, it may be
+                                       tempting to do something like this:
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">#!stateconf yaml . jinja
+
+.apache:
+  stateconf.set:
+    - host: localhost
+    - port: 1234
+    - url: 'http://{{host}}:{{port}}/'
+
+# --- end of state config ---
+
+.test:
+  cmd.run:
+    - name: echo '{{apache.url}}'
+    - cwd: /</pre>
+                                    <p class="p">However, this won't work. It can however be worked around like so:</p>
+                                    <pre class="pre codeblock language-yaml">#!stateconf yaml . jinja
+
+.apache:
+  stateconf.set:
+    - host: localhost
+    - port: 1234
+{#  - url: 'http://{{host}}:{{port}}/' #}
+
+# --- end of state config ---
+# {{ apache.setdefault('url', "http://%(host)s:%(port)s/" % apache) }}
+
+.test:
+  cmd.run:
+    - name: echo '{{apache.url}}'
+    - cwd: /</pre>
+                                    </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Adds support for relative include and exclude of .sls files. Example:</p>
+                                    <pre class="pre codeblock language-yaml">#!stateconf yaml . jinja
+
+include:
+  - .apache
+  - .db.mysql
+
+exclude:
+  - sls: .users</pre>
+                                    <p class="p">If the above is written in a salt file at <span class="keyword title_reference">salt://some/where.sls</span> then
+                                       it will include <span class="keyword title_reference">salt://some/apache.sls</span> and <span class="keyword title_reference">salt://some/db/mysql.sls</span>,
+                                       and exclude <span class="keyword title_reference">salt://some/users.ssl</span>. Actually, it does that by rewriting
+                                       the above <tt class="ph tt">include</tt> and <tt class="ph tt">exclude</tt> into:
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">include:
+  - some.apache
+  - some.db.mysql
+
+exclude:
+  - sls: some.users</pre>
+                                    </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Optionally (enabled by default, <em class="ph i">disable</em> via the <span class="keyword title_reference">-G</span> renderer option,
+                                       e.g. in the shebang line: <tt class="ph tt">#!stateconf -G</tt>), generates a
+                                       <tt class="ph tt">stateconf.set</tt> goal state (state id named as <tt class="ph tt">.goal</tt> by default,
+                                       configurable via the master/minion config option, <tt class="ph tt">stateconf_goal_state</tt>)
+                                       that requires all other states in the salt file. Note, the <tt class="ph tt">.goal</tt>
+                                       state id is subject to dot-prefix rename rule mentioned earlier.
+                                    </p>
+                                    
+                                    <p class="p">Such goal state is intended to be required by some state in an including
+                                       salt file. For example, in your webapp salt file, if you include a
+                                       sls file that is supposed to setup Tomcat, you might want to make sure that
+                                       all states in the Tomcat sls file will be executed before some state in
+                                       the webapp sls file.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Optionally (enable via the <span class="keyword title_reference">-o</span> renderer option, e.g. in the shebang line:
+                                       <tt class="ph tt">#!stateconf -o</tt>), orders the states in a sls file by adding a
+                                       <tt class="ph tt">require</tt> requisite to each state such that every state requires the
+                                       state defined just before it. The order of the states here is the order
+                                       they are defined in the sls file. (Note: this feature is only available
+                                       if your minions are using Python &gt;= 2.7. For Python2.6, it should also
+                                       work if you install the <span class="keyword title_reference">ordereddict</span> module from PyPI)
+                                    </p>
+                                    
+                                    <p class="p">By enabling this feature, you are basically agreeing to author your sls
+                                       files in a way that gives up the explicit (or implicit?) ordering imposed
+                                       by the use of <tt class="ph tt">require</tt>, <tt class="ph tt">watch</tt>, <tt class="ph tt">require_in</tt> or <tt class="ph tt">watch_in</tt>
+                                       requisites, and instead, you rely on the order of states you define in
+                                       the sls files. This may or may not be a better way for you. However, if
+                                       there are many states defined in a sls file, then it tends to be easier
+                                       to see the order they will be executed with this feature.
+                                    </p>
+                                    
+                                    <p class="p">You are still allowed to use all the requisites, with a few restrictions.
+                                       You cannot <tt class="ph tt">require</tt> or <tt class="ph tt">watch</tt> a state defined <em class="ph i">after</em> the current
+                                       state. Similarly, in a state, you cannot <tt class="ph tt">require_in</tt> or <tt class="ph tt">watch_in</tt>
+                                       a state defined <em class="ph i">before</em> it. Breaking any of the two restrictions above
+                                       will result in a state loop. The renderer will check for such incorrect
+                                       uses if this feature is enabled.
+                                    </p>
+                                    
+                                    <p class="p">Additionally, <tt class="ph tt">names</tt> declarations cannot be used with this feature
+                                       because the way they are compiled into low states make it impossible to
+                                       guarantee the order in which they will be executed. This is also checked
+                                       by the renderer. As a workaround for not being able to use <tt class="ph tt">names</tt>,
+                                       you can achieve the same effect, by generate your states with the
+                                       template engine available within your sls file.
+                                    </p>
+                                    
+                                    <p class="p">Finally, with the use of this feature, it becomes possible to easily make
+                                       an included sls file execute all its states <em class="ph i">after</em> some state (say, with
+                                       id <tt class="ph tt">X</tt>) in the including sls file.  All you have to do is to make state,
+                                       <tt class="ph tt">X</tt>, <tt class="ph tt">require_in</tt> the first state defined in the included sls file.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <p class="p">When writing sls files with this renderer, one should avoid using what can be
+                                 defined in a <tt class="ph tt">name</tt> argument of a state as the state's id. That is, avoid
+                                 writing states like this:
+                              </p>
+                              <pre class="pre codeblock language-yaml">/path/to/some/file:
+  file.managed:
+    - source: salt://some/file
+
+cp /path/to/some/file file2:
+  cmd.run:
+    - cwd: /
+    - require:
+      - file: /path/to/some/file</pre>
+                              <p class="p">Instead, define the state id and the <tt class="ph tt">name</tt> argument separately for each
+                                 state. Also, the ID should be something meaningful and easy to reference within
+                                 a requisite (which is a good habit anyway, and such extra indirection would
+                                 also makes the sls file easier to modify later). Thus, the above states should
+                                 be written like this:
+                              </p>
+                              <pre class="pre codeblock language-yaml">add-some-file:
+  file.managed:
+    - name: /path/to/some/file
+    - source: salt://some/file
+
+copy-files:
+  cmd.run:
+    - name: cp /path/to/some/file file2
+    - cwd: /
+    - require:
+      - file: add-some-file</pre>
+                              <p class="p">Moreover, when referencing a state from a requisite, you should reference the
+                                 state's id plus the state name rather than the state name plus its <tt class="ph tt">name</tt>
+                                 argument. (Yes, in the above example, you can actually <tt class="ph tt">require</tt> the
+                                 <tt class="ph tt">file: /path/to/some/file</tt>, instead of the <tt class="ph tt">file: add-some-file</tt>). The
+                                 reason is that this renderer will re-write or rename state id's and their
+                                 references for state id's prefixed with <tt class="ph tt">.</tt>. So, if you reference <tt class="ph tt">name</tt>
+                                 then there's no way to reliably rewrite such reference.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

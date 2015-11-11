@@ -1,0 +1,414 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>The Top File</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="The Top File">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="states-top">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="states-top">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">The Top File</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="states-top__the-top-file"></span></p>
+                              
+                              <p class="p">The top file is used to map what SLS modules get loaded onto what minions via
+                                 the state system. The top file creates a few general abstractions. First it
+                                 maps what nodes should pull from which environments, next it defines which
+                                 matches systems should draw from.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-top__states-top-environments">
+                              <h2 class="title sectiontitle">Environments</h2>
+                              <p class="p">Environments allow conceptually organizing state tree directories. Environments
+                                 can be made to be self-contained or state trees can be made to bleed through
+                                 environments.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Environments in Salt are very flexible. This section defines how the top
+                                    file can be used to define what states from what environments are to be
+                                    used for specific minions.
+                                 </p>
+                                 
+                                 <p class="p">If the intent is to bind minions to specific environments, then the
+                                    <span class="keyword title_reference">environment</span> option can be set in the minion configuration file.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">The environments in the top file corresponds with the environments defined in
+                                 the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__file_roots">file_roots</a> variable. In a simple, single environment setup
+                                 you only have the <tt class="ph tt">base</tt> environment, and therefore only one state tree. Here
+                                 is a simple example of 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__file_roots">file_roots</a> in the master configuration:
+                              </p>
+                              <pre class="pre codeblock language-yaml">file_roots:
+  base:
+    - /srv/salt</pre>
+                              <p class="p">This means that the top file will only have one environment to pull from,
+                                 here is a simple, single environment top file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">base:
+  '*':
+    - core
+    - edit</pre>
+                              <p class="p">This also means that <tt class="ph tt">/srv/salt</tt> has a state tree. But if you want to use
+                                 multiple environments, or partition the file server to serve more than
+                                 just the state tree, then the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__file_roots">file_roots</a> option can be expanded:
+                              </p>
+                              <pre class="pre codeblock language-yaml">file_roots:
+  base:
+    - /srv/salt/base
+  dev:
+    - /srv/salt/dev
+  qa:
+    - /srv/salt/qa
+  prod:
+    - /srv/salt/prod</pre>
+                              <p class="p">Then our top file could reference the environments:</p>
+                              <pre class="pre codeblock language-yaml">dev:
+  'webserver*dev*':
+    - webserver
+  'db*dev*':
+    - db
+qa:
+  'webserver*qa*':
+    - webserver
+  'db*qa*':
+    - db
+prod:
+  'webserver*prod*':
+    - webserver
+  'db*prod*':
+    - db</pre>
+                              <p class="p">In this setup we have state trees in three of the four environments, and no
+                                 state tree in the <tt class="ph tt">base</tt> environment. Notice that the targets for the minions
+                                 specify environment data. In Salt the master determines who is in what
+                                 environment, and many environments can be crossed together. For instance, a
+                                 separate global state tree could be added to the <tt class="ph tt">base</tt> environment if it
+                                 suits your deployment:
+                              </p>
+                              <pre class="pre codeblock language-yaml">base:
+  '*':
+    - global
+dev:
+  'webserver*dev*':
+    - webserver
+  'db*dev*':
+    - db
+qa:
+  'webserver*qa*':
+    - webserver
+  'db*qa*':
+    - db
+prod:
+  'webserver*prod*':
+    - webserver
+  'db*prod*':
+    - db</pre>
+                              <p class="p">In this setup all systems will pull the global SLS from the base environment,
+                                 as well as pull from their respective environments. If you assign only one SLS
+                                 to a system, as in this example, a shorthand is also available:
+                              </p>
+                              <pre class="pre codeblock language-yaml">base:
+  '*': global
+dev:
+  'webserver*dev*': webserver
+  'db*dev*':        db
+qa:
+  'webserver*qa*': webserver
+  'db*qa*':        db
+prod:
+  'webserver*prod*': webserver
+  'db*prod*':        db</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The top files from all defined environments will be compiled into a single
+                                    top file for all states. Top files are environment agnostic.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Remember, that since everything is a file in Salt, the environments are
+                                 primarily file server environments, this means that environments that have
+                                 nothing to do with states can be defined and used to distribute other files.
+                              </p>
+                              
+                              <p class="p">A clean and recommended setup for multiple environments would look like this:</p>
+                              <pre class="pre codeblock language-yaml"># Master file_roots configuration:
+file_roots:
+  base:
+    - /srv/salt/base
+  dev:
+    - /srv/salt/dev
+  qa:
+    - /srv/salt/qa
+  prod:
+    - /srv/salt/prod</pre>
+                              <p class="p">Then only place state trees in the dev, qa, and prod environments, leaving
+                                 the base environment open for generic file transfers. Then the top.sls file
+                                 would look something like this:
+                              </p>
+                              <pre class="pre codeblock language-yaml">dev:
+  'webserver*dev*':
+    - webserver
+  'db*dev*':
+    - db
+qa:
+  'webserver*qa*':
+    - webserver
+  'db*qa*':
+    - db
+prod:
+  'webserver*prod*':
+    - webserver
+  'db*prod*':
+    - db</pre>
+                              </div>
+                           
+                           <div class="section" id="states-top__other-ways-of-targeting-minions">
+                              <h2 class="title sectiontitle">Other Ways of Targeting Minions</h2>
+                              <p class="p">In addition to globs, minions can be specified in top files a few other
+                                 ways. Some common ones are 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/targeting/compound.html#targeting-compound">compound matches</a>
+                                 and 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/targeting/nodegroups.html#targeting-nodegroups">node groups</a>.
+                              </p>
+                              
+                              <p class="p">Here is a slightly more complex top file example, showing the different types
+                                 of matches you can perform:
+                              </p>
+                              <pre class="pre codeblock language-yaml">base:
+    '*':
+        - ldap-client
+        - networking
+        - salt.minion
+
+    'salt-master*':
+        - salt.master
+
+    '^(memcache|web).(qa|prod).loc$':
+        - match: pcre
+        - nagios.mon.web
+        - apache.server
+
+    'os:Ubuntu':
+        - match: grain
+        - repos.ubuntu
+
+    'os:(RedHat|CentOS)':
+        - match: grain_pcre
+        - repos.epel
+
+    'foo,bar,baz':
+        - match: list
+        - database
+
+    'somekey:abc':
+        - match: pillar
+        - xyz
+
+    'nag1* or G@role:monitoring':
+        - match: compound
+        - nagios.server</pre>
+                              <p class="p">In this example <tt class="ph tt">top.sls</tt>, all minions get the ldap-client, networking, and
+                                 salt.minion states. Any minion with an id matching the <tt class="ph tt">salt-master*</tt> glob
+                                 will get the salt.master state. Any minion with ids matching the regular
+                                 expression <tt class="ph tt">^(memcache|web).(qa|prod).loc$</tt> will get the nagios.mon.web and
+                                 apache.server states. All Ubuntu minions will receive the repos.ubuntu state,
+                                 while all RHEL and CentOS minions will receive the repos.epel state. The
+                                 minions <tt class="ph tt">foo</tt>, <tt class="ph tt">bar</tt>, and <tt class="ph tt">baz</tt> will receive the database state. Any
+                                 minion with a pillar named <tt class="ph tt">somekey</tt>, having a value of <tt class="ph tt">abc</tt> will receive
+                                 the xyz state.  Finally, minions with ids matching the nag1* glob or with a
+                                 grain named <tt class="ph tt">role</tt> equal to <tt class="ph tt">monitoring</tt> will receive the nagios.server
+                                 state.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-top__how-top-files-are-compiled">
+                              <h2 class="title sectiontitle">How Top Files Are Compiled</h2>
+                              <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                 <p class="p">There is currently a known issue with the topfile compilation. The below
+                                    may not be completely valid until
+                                    <a class="xref" href="https://github.com/saltstack/salt/issues/12483#issuecomment-64181598" target="_blank">https://github.com/saltstack/salt/issues/12483#issuecomment-64181598</a>
+                                    is closed.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">As mentioned earlier, the top files in the different environments are compiled
+                                 into a single set of data. The way in which this is done follows a few rules,
+                                 which are important to understand when arranging top files in different
+                                 environments. The examples below all assume that the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__file_roots">file_roots</a>
+                                 are set as in the <a class="xref" href="top.html#states-top__states-top-file-roots">above multi-environment example</a>.
+                              </p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">The <tt class="ph tt">base</tt> environment's top file is processed first. Any environment which
+                                       is defined in the <tt class="ph tt">base</tt> top.sls as well as another environment's top file,
+                                       will use the instance of the environment configured in <tt class="ph tt">base</tt> and ignore
+                                       all other instances.  In other words, the <tt class="ph tt">base</tt> top file is
+                                       authoritative when defining environments. Therefore, in the example below,
+                                       the <tt class="ph tt">dev</tt> section in <tt class="ph tt">/srv/salt/dev/top.sls</tt> would be completely
+                                       ignored.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/base/top.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">base:
+  '*':
+    - common
+dev:
+  'webserver*dev*':
+    - webserver
+  'db*dev*':
+    - db</pre>
+                              <p class="p"><tt class="ph tt">/srv/salt/dev/top.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">dev:
+  '10.10.100.0/24':
+    - match: ipcidr
+    - deployments.dev.site1
+  '10.10.101.0/24':
+    - match: ipcidr
+    - deployments.dev.site2</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The rules below assume that the environments being discussed were not
+                                    defined in the <tt class="ph tt">base</tt> top file.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">If, for some reason, the <tt class="ph tt">base</tt> environment is not configured in the
+                                       <tt class="ph tt">base</tt> environment's top file, then the other environments will be checked
+                                       in alphabetical order. The first top file found to contain a section for the
+                                       <tt class="ph tt">base</tt> environment wins, and the other top files' <tt class="ph tt">base</tt> sections are
+                                       ignored. So, provided there is no <tt class="ph tt">base</tt> section in the <tt class="ph tt">base</tt> top file,
+                                       with the below two top files the <tt class="ph tt">dev</tt> environment would win out, and the
+                                       <tt class="ph tt">common.centos</tt> SLS would not be applied to CentOS hosts.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/dev/top.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">base:
+  'os:Ubuntu':
+    - common.ubuntu
+dev:
+  'webserver*dev*':
+    - webserver
+  'db*dev*':
+    - db</pre>
+                              <p class="p"><tt class="ph tt">/srv/salt/qa/top.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">base:
+  'os:Ubuntu':
+    - common.ubuntu
+  'os:CentOS':
+    - common.centos
+qa:
+  'webserver*qa*':
+    - webserver
+  'db*qa*':
+    - db</pre>
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">For environments other than <tt class="ph tt">base</tt>, the top file in a given environment
+                                       will be checked for a section matching the environment's name. If one is
+                                       found, then it is used. Otherwise, the remaining (non-<tt class="ph tt">base</tt>) environments
+                                       will be checked in alphabetical order. In the below example, the <tt class="ph tt">qa</tt>
+                                       section in <tt class="ph tt">/srv/salt/dev/top.sls</tt> will be ignored, but if
+                                       <tt class="ph tt">/srv/salt/qa/top.sls</tt> were cleared or removed, then the states configured
+                                       for the <tt class="ph tt">qa</tt> environment in <tt class="ph tt">/srv/salt/dev/top.sls</tt> will be applied.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/dev/top.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">dev:
+  'webserver*dev*':
+    - webserver
+  'db*dev*':
+    - db
+qa:
+  '10.10.200.0/24':
+    - match: ipcidr
+    - deployments.qa.site1
+  '10.10.201.0/24':
+    - match: ipcidr
+    - deployments.qa.site2</pre>
+                              <p class="p"><tt class="ph tt">/srv/salt/qa/top.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">qa:
+  'webserver*qa*':
+    - webserver
+  'db*qa*':
+    - db</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">When in doubt, the simplest way to configure your states is with a single
+                                    top.sls in the <tt class="ph tt">base</tt> environment.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

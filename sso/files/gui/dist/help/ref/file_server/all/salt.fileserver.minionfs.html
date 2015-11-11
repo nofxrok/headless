@@ -1,0 +1,262 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.fileserver.minionfs</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.fileserver.minionfs">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../fileserver.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-fileserver-minionfs">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-fileserver-minionfs">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.fileserver.minionfs</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-fileserver-minionfs__module-salt.fileserver.minionfs"></span></p>
+                              
+                              <p class="p">Fileserver backend which serves files pushed to the Master</p>
+                              
+                              <p class="p">The 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../modules/all/salt.modules.cp.html#salt.modules.cp.push">cp.push</a> function allows Minions to push files
+                                 up to the Master. Using this backend, these pushed files are exposed to other
+                                 Minions via the Salt fileserver.
+                              </p>
+                              
+                              <p class="p">To enable minionfs, 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../configuration/master.html#configuration-salt-master__file_recv">file_recv</a> needs to be set to <tt class="ph tt">True</tt> in
+                                 the master config file (otherwise 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../modules/all/salt.modules.cp.html#salt.modules.cp.push">cp.push</a> will
+                                 not be allowed to push files to the Master), and <tt class="ph tt">minion</tt> must be added to
+                                 the <tt class="ph tt">fileserver_backends</tt> list.
+                              </p>
+                              <pre class="pre codeblock language-yaml">fileserver_backend:
+  - minion</pre>
+                              <p class="p">Other minionfs settings include: 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../configuration/master.html#configuration-salt-master__minionfs_whitelist">minionfs_whitelist</a>,
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../configuration/master.html#configuration-salt-master__minionfs_blacklist">minionfs_blacklist</a>, 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../configuration/master.html#configuration-salt-master__minionfs_mountpoint">minionfs_mountpoint</a>, and
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../configuration/master.html#configuration-salt-master__minionfs_env">minionfs_env</a>.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="../../../topics/tutorials/minionfs.html#tutorial-minionfs">MinionFS Backend Walkthrough</a></p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.fileserver.minionfs.dir_list">
+                           <h2 class="title topictitle2">dir_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.minionfs.dir_list(
+								load
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of all directories on the master</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">$ salt 'source-minion' cp.push /absolute/path/file  # Push the file to the master
+$ salt 'destination-minion' cp.list_master_dirs
+destination-minion:
+    - source-minion/absolute
+    - source-minion/absolute/path</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.fileserver.minionfs.envs">
+                           <h2 class="title topictitle2">envs</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.minionfs.envs( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Returns the one environment specified for minionfs in the master
+                                    configuration.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.fileserver.minionfs.file_hash">
+                           <h2 class="title topictitle2">file_hash</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.minionfs.file_hash(
+								load,
+								fnd
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a file hash, the hash type is set in the master config file</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.fileserver.minionfs.file_list">
+                           <h2 class="title topictitle2">file_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.minionfs.file_list(
+								load
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of all files on the file server in a specified environment</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.fileserver.minionfs.find_file">
+                           <h2 class="title topictitle2">find_file</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.minionfs.find_file(
+								path,
+								tgt_env='base',
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Search the environment for the relative path</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.fileserver.minionfs.serve_file">
+                           <h2 class="title topictitle2">serve_file</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.minionfs.serve_file(
+								load,
+								fnd
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a chunk from a file based on the data received</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash"># Push the file to the master
+$ salt 'source-minion' cp.push /path/to/the/file
+$ salt 'destination-minion' cp.get_file salt://source-minion/path/to/the/file /destination/file</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.fileserver.minionfs.update">
+                           <h2 class="title topictitle2">update</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.fileserver.minionfs.update( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">When we are asked to update (regular interval) lets reap the cache</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

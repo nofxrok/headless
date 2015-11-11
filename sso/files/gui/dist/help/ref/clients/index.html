@@ -1,0 +1,1958 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Python client API</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Python client API">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="client-apis">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="client-apis">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Python client API</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="client-apis__python-client-api"></span></p>
+                              
+                              <p class="p ids"><span class="ph" id="client-apis__python-api"></span></p>
+                              
+                              <p class="p">Salt provides several entry points for interfacing with Python applications.
+                                 These entry points are often referred to as <tt class="ph tt">*Client()</tt> APIs. Each client
+                                 accesses different parts of Salt, either from the master or from a minion. Each
+                                 client is detailed below.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">There are many ways to access Salt programmatically.</p>
+                                 
+                                 <p class="p">Salt can be used from CLI scripts as well as via a REST interface.</p>
+                                 
+                                 <p class="p">See Salt's 
+                                    		
+                                    			&nbsp;<a class="xref" href="../output/all/index.html#all-salt-output">outputter system</a> to retrieve structured
+                                    data from Salt as JSON, or as shell-friendly text, or many other formats.
+                                 </p>
+                                 
+                                 <p class="p">See the 
+                                    		
+                                    			&nbsp;<a class="xref" href="../runners/all/salt.runners.state.html#salt.runners.state.event">state.event</a> runner to utilize
+                                    Salt's event bus from shell scripts.
+                                 </p>
+                                 
+                                 <p class="p">Salt's <a class="xref" href="http://docs.saltstack.com/en/latest/topics/netapi/index.html" target="_blank">netapi module</a> provides access to Salt externally via a REST interface.
+                                    Review the <a class="xref" href="http://docs.saltstack.com/en/latest/topics/netapi/index.html" target="_blank">netapi module</a> documentation for more information.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt-s-opts-dictionary">
+                           <h2 class="title topictitle2">Salt's opts dictionary</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">Some clients require access to Salt's <tt class="ph tt">opts</tt> dictionary. (The dictionary
+                                    representation of the 
+                                    		
+                                    			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master">master</a> or
+                                    
+                                    		
+                                    			&nbsp;<a class="xref" href="../configuration/minion.html#configuration-salt-minion">minion</a> config files.)
+                                 </p>
+                                 
+                                 <p class="p">A common pattern for fetching the <tt class="ph tt">opts</tt> dictionary is to defer to
+                                    environment variables if they exist or otherwise fetch the config from the
+                                    default location.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.config.client_config">
+                              <h3 class="title topictitle3">client_config</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.config.client_config(
+								path,
+								env_var='SALT_CLIENT_CONFIG',
+								defaults=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Load Master configuration data</p>
+                                    
+                                    <p class="p">Usage:</p>
+                                    <pre class="pre codeblock language-python">import salt.config
+master_opts = salt.config.client_config('/etc/salt/master')</pre>
+                                    <p class="p">Returns a dictionary of the Salt Master configuration file with necessary
+                                       options needed to communicate with a locally-running Salt Master daemon.
+                                       This function searches for client specific configurations and adds them to
+                                       the data from the master configuration.
+                                    </p>
+                                    
+                                    <p class="p">This is useful for master-side operations like
+                                       <a class="xref" href="index.html#salt.client.LocalClient">LocalClient</a>.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.config.minion_config">
+                              <h3 class="title topictitle3">minion_config</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.config.minion_config(
+								path,
+								env_var='SALT_MINION_CONFIG',
+								defaults=None,
+								cache_minion_id=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Reads in the minion configuration file and sets up special options</p>
+                                    
+                                    <p class="p">This is useful for Minion-side operations, such as the
+                                       <a class="xref" href="index.html#salt.client.Caller">Caller</a> class, and manually running the loader
+                                       interface.
+                                    </p>
+                                    <pre class="pre codeblock language-python">import salt.client
+minion_opts = salt.config.minion_config('/etc/salt/minion')</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt-s-loader-interface">
+                           <h2 class="title topictitle2">Salt's Loader Interface</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">Modules in the Salt ecosystem are loaded into memory using a custom loader
+                                    system. This allows modules to have conditional requirements (OS, OS version,
+                                    installed libraries, etc) and allows Salt to inject special variables
+                                    (<tt class="ph tt">__salt__</tt>, <tt class="ph tt">__opts</tt>, etc).
+                                 </p>
+                                 
+                                 <p class="p">Most modules can be manually loaded. This is often useful in third-party Python
+                                    apps or when writing tests. However some modules require and expect a full,
+                                    running Salt system underneath. Notably modules that facilitate
+                                    master-to-minion communication such as the 
+                                    		
+                                    			&nbsp;<a class="xref" href="../modules/all/salt.modules.mine.html#salt.modules.mine">mine</a>,
+                                    
+                                    		
+                                    			&nbsp;<a class="xref" href="../modules/all/salt.modules.publish.html#salt.modules.publish">publish</a>, and <tt class="ph tt">peer</tt> execution
+                                    modules. The error <tt class="ph tt">KeyError: 'master_uri'</tt> is a likely indicator for this
+                                    situation. In those instances use the <a class="xref" href="index.html#salt.client.Caller">Caller</a> class
+                                    to execute those modules instead.
+                                 </p>
+                                 
+                                 <p class="p">Each module type has a corresponding loader function.</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.loader.minion_mods">
+                              <h3 class="title topictitle3">minion_mods</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.loader.minion_mods(
+								opts,
+								context=None,
+								whitelist=None,
+								include_errors=False,
+								initial_load=False,
+								loaded_base_name=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Load execution modules</p>
+                                    
+                                    <p class="p">Returns a dictionary of execution modules appropriate for the current
+                                       system by evaluating the __virtual__() function in each module.
+                                    </p>
+                                    <pre class="pre codeblock language-python">import salt.config
+import salt.loader
+
+__opts__ = salt.config.minion_config('/etc/salt/minion')
+__grains__ = salt.loader.grains(__opts__)
+__opts__['grains'] = __grains__
+__salt__ = salt.loader.minion_mods(__opts__)
+__salt__['test.ping']()</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.loader.raw_mod">
+                              <h3 class="title topictitle3">raw_mod</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.loader.raw_mod(
+								opts,
+								name,
+								functions,
+								mod='modules'
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Returns a single module loaded raw and bypassing the __virtual__ function</p>
+                                    <pre class="pre codeblock language-python">import salt.config
+import salt.loader
+
+__opts__ = salt.config.minion_config('/etc/salt/minion')
+testmod = salt.loader.raw_mod(__opts__, 'test', None)
+testmod['test.ping']()</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.loader.states">
+                              <h3 class="title topictitle3">states</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.loader.states(
+								opts,
+								functions,
+								whitelist=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Returns the state modules</p>
+                                    <pre class="pre codeblock language-python">import salt.config
+import salt.loader
+
+__opts__ = salt.config.minion_config('/etc/salt/minion')
+statemods = salt.loader.states(__opts__, None)</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.loader.grains">
+                              <h3 class="title topictitle3">grains</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.loader.grains(
+								opts,
+								force_refresh=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the functions for the dynamic grains and the values for the static
+                                       grains.
+                                    </p>
+                                    <pre class="pre codeblock language-python">import salt.config
+import salt.loader
+
+__opts__ = salt.config.minion_config('/etc/salt/minion')
+__grains__ = salt.loader.grains(__opts__)
+print __grains__['id']</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt-s-client-interfaces">
+                           <h2 class="title topictitle2">Salt's Client Interfaces</h2>
+                           <div class="body refbody">
+                              <div class="section"></div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.client.Caller">
+                              <h3 class="title topictitle3">Caller Class</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.client.Caller(
+									c_path='/etc/salt/minion',
+									mopts=None
+									)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p"><tt class="ph tt">Caller</tt> is the same interface used by the salt-call command-line tool on the
+                                       Salt Minion.
+                                    </p>
+                                    
+                                    <p class="p">Importing and using <tt class="ph tt">Caller</tt> must be done on the same machine as a Salt Minion
+                                       and it must be done using the same user that the Salt Minion is running as.
+                                    </p>
+                                    
+                                    <p class="p">Usage:</p>
+                                    <pre class="pre codeblock language-python">import salt.client
+caller = salt.client.Caller()
+caller.function('test.ping')
+
+# Or call objects directly
+caller.sminion.functions['cmd.run']('ls -l')</pre>
+                                    <p class="p">Note, a running master or minion daemon is not required to use this class. Running
+                                       <tt class="ph tt">salt-call --local</tt> simply sets &nbsp;<a class="xref" href="../configuration/minion.html#configuration-salt-minion__file_client">file_client</a> to <tt class="ph tt">'local'</tt>. The same can be achieved at the Python level
+                                       by including that setting in a minion config file.
+                                    </p>
+                                    
+                                    <p class="p">Instantiate a new Caller() instance using a file system path to the minion config
+                                       file:
+                                    </p>
+                                    <pre class="pre codeblock language-python">caller = salt.client.Caller('/path/to/custom/minion_config')
+caller.sminion.functions['grains.items']()</pre>
+                                    <p class="p">Instantiate a new Caller() instance using a dictionary of the minion config:</p>
+                                    
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.7.0: </span>Pass the
+                                       minion config as a dictionary.
+                                    </p>
+                                    <pre class="pre codeblock language-python">import salt.client
+import salt.config
+
+opts = salt.config.minion_config('/etc/salt/minion')
+opts['file_client'] = 'local'
+caller = salt.client.Caller(mopts=opts)
+caller.sminion.functions['grains.items']()</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.client.Caller.function">
+                                 <h4 class="title topictitle4">Caller.function Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">function(
+								fun,
+								*args,
+								**kwargs
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Call a single salt function</p>
+                                       
+                                    </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.client.LocalClient">
+                              <h3 class="title topictitle3">LocalClient Class</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.client.LocalClient(
+									c_path='/etc/salt/master',
+									mopts=None,
+									skip_perm_errors=False
+									)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">The interface used by the salt CLI tool on the Salt Master</p>
+                                    
+                                    <p class="p"><tt class="ph tt">LocalClient</tt> is used to send a command to Salt minions to execute &nbsp;<a class="xref" href="../modules/all/index.html#all-salt-modules">execution modules</a> and return the results to the Salt Master.
+                                    </p>
+                                    
+                                    <p class="p">Importing and using <tt class="ph tt">LocalClient</tt> must be done on the same machine as the Salt
+                                       Master and it must be done using the same user that the Salt Master is running as.
+                                       (Unless &nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__external_auth">external_auth</a> is configured and authentication credentials are included in
+                                       the execution).
+                                    </p>
+                                    <pre class="pre codeblock language-python">import salt.client
+
+local = salt.client.LocalClient()
+local.cmd('*', 'test.fib', [10])</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.client.LocalClient.cmd">
+                                 <h4 class="title topictitle4">LocalClient.cmd Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">cmd(
+								tgt,
+								fun,
+								arg=(),
+								timeout=None,
+								expr_form='glob',
+								ret='',
+								jid='',
+								kwarg=None,
+								**kwargs
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <p class="p">Synchronously execute a command on targeted minions</p>
+                                       
+                                       <p class="p">The cmd method will execute and wait for the timeout period for all
+                                          minions to reply, then it will return all minion data at once.
+                                       </p>
+                                       <pre class="pre codeblock language-python">&gt;&gt;&gt; import salt.client
+&gt;&gt;&gt; local = salt.client.LocalClient()
+&gt;&gt;&gt; local.cmd('*', 'cmd.run', ['whoami'])
+{'jerry': 'root'}</pre>
+                                       <p class="p">With extra keyword arguments for the command function to be run:</p>
+                                       <pre class="pre codeblock language-python">local.cmd('*', 'test.arg', ['arg1', 'arg2'], kwarg={'foo': 'bar'})</pre>
+                                       <p class="p">Compound commands can be used for multiple executions in a single
+                                          publish. Function names and function arguments are provided in separate
+                                          lists but the index values must correlate and an empty list must be
+                                          used if no arguments are required.
+                                       </p>
+                                       <pre class="pre codeblock language-python">&gt;&gt;&gt; local.cmd('*', [
+        'grains.items',
+        'sys.doc',
+        'cmd.run',
+    ],
+    [
+        [],
+        [],
+        ['uptime'],
+    ])</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Arguments</h5>
+                                    </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                    </div>
+                                    
+                                    <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                       <tr>
+                                          
+                                          <th id="d78586e453-value" valign="bottom" align="left">Value</th>
+                                          
+                                          <th id="d78586e453-desc" valign="bottom" align="left">Description</th>
+                                          
+                                       </tr>
+                                       
+                                       <tr class="strow property">
+                                          
+                                          <td valign="top" headers="d78586e453-value" class="stentry propvalue">Parameters</td>
+                                          
+                                          <td valign="top" headers="d78586e453-desc" class="stentry propdesc">
+                                             <ul class="ul">
+                                                <li class="li">
+                                                   <p class="p">tgt (<em class="ph i">string or list</em>) -- Which minions to target for the execution. Default is shell
+                                                      glob. Modified by the <tt class="ph tt">expr_form</tt> option.
+                                                   </p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <div class="p">fun (<em class="ph i">string or list of strings</em>) -- The module and function to call
+                                                      on the specified minions of the form <tt class="ph tt">module.function</tt>. For
+                                                      example <tt class="ph tt">test.ping</tt> or <tt class="ph tt">grains.items</tt>. 
+                                                      <dl class="dl definition_list">
+                                                         <dt class="dt dlterm">Compound commands</dt>
+                                                         
+                                                         <dd class="dd">
+                                                            <p class="p">Multiple functions may be called in a single publish by
+                                                               passing a list of commands. This can dramatically lower
+                                                               overhead and speed up the application communicating with
+                                                               Salt.
+                                                            </p>
+                                                            
+                                                            <p class="p">This requires that the <tt class="ph tt">arg</tt> param is a list of lists.
+                                                               The <tt class="ph tt">fun</tt> list and the <tt class="ph tt">arg</tt> list must
+                                                               correlate by index meaning a function that does not take
+                                                               arguments must still have a corresponding empty list at the
+                                                               expected index.
+                                                            </p>
+                                                            
+                                                         </dd>
+                                                         
+                                                      </dl>
+                                                      
+                                                   </div>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">arg (<em class="ph i">list or list-of-lists</em>) -- A list of arguments to pass to the remote function. If the
+                                                      function takes no arguments <tt class="ph tt">arg</tt> may be omitted except when
+                                                      executing a compound command.
+                                                   </p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">timeout -- Seconds to wait after the last minion returns but
+                                                      before all minions return.
+                                                   </p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <div class="p">expr_form -- The type of <tt class="ph tt">tgt</tt>. Allowed values: 
+                                                      <ul class="ul">
+                                                         <li class="li">
+                                                            <p class="p"><tt class="ph tt">glob</tt> - Bash glob completion - Default
+                                                            </p>
+                                                            
+                                                         </li>
+                                                         
+                                                         <li class="li">
+                                                            <p class="p"><tt class="ph tt">pcre</tt> - Perl style regular expression
+                                                            </p>
+                                                            
+                                                         </li>
+                                                         
+                                                         <li class="li">
+                                                            <p class="p"><tt class="ph tt">list</tt> - Python list of hosts
+                                                            </p>
+                                                            
+                                                         </li>
+                                                         
+                                                         <li class="li">
+                                                            <p class="p"><tt class="ph tt">grain</tt> - Match based on a grain comparison
+                                                            </p>
+                                                            
+                                                         </li>
+                                                         
+                                                         <li class="li">
+                                                            <p class="p"><tt class="ph tt">grain_pcre</tt> - Grain comparison with a regex
+                                                            </p>
+                                                            
+                                                         </li>
+                                                         
+                                                         <li class="li">
+                                                            <p class="p"><tt class="ph tt">pillar</tt> - Pillar data comparison
+                                                            </p>
+                                                            
+                                                         </li>
+                                                         
+                                                         <li class="li">
+                                                            <p class="p"><tt class="ph tt">pillar_pcre</tt> - Pillar data comparison with a regex
+                                                            </p>
+                                                            
+                                                         </li>
+                                                         
+                                                         <li class="li">
+                                                            <p class="p"><tt class="ph tt">nodegroup</tt> - Match on nodegroup
+                                                            </p>
+                                                            
+                                                         </li>
+                                                         
+                                                         <li class="li">
+                                                            <p class="p"><tt class="ph tt">range</tt> - Use a Range server for matching
+                                                            </p>
+                                                            
+                                                         </li>
+                                                         
+                                                         <li class="li">
+                                                            <p class="p"><tt class="ph tt">compound</tt> - Pass a compound match string
+                                                            </p>
+                                                            
+                                                         </li>
+                                                         
+                                                      </ul>
+                                                      
+                                                   </div>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">ret -- The returner to use. The value passed can be single
+                                                      returner, or a comma delimited list of returners to call in order
+                                                      on the minions
+                                                   </p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">kwarg -- A dictionary with keyword arguments for the function.</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">kwargs -- Optional keyword arguments. Authentication credentials may be
+                                                      passed when using &nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__external_auth">external_auth</a>.  
+                                                   </p>
+                                                   
+                                                   <p class="p">For example: <tt class="ph tt">local.cmd('*', 'test.ping', username='saltdev',
+                                                         password='saltdev', eauth='pam')</tt>. Or: <tt class="ph tt">local.cmd('*',
+                                                         'test.ping', token='5871821ea51754fdcea8153c1c745433')</tt></p>
+                                                   
+                                                </li>
+                                                
+                                             </ul>
+                                             
+                                          </td>
+                                          
+                                       </tr>
+                                       
+                                       <tr class="strow property">
+                                          
+                                          <td valign="top" headers="d78586e453-value" class="stentry propvalue">Returns</td>
+                                          
+                                          <td valign="top" headers="d78586e453-desc" class="stentry propdesc">
+                                             <p class="p">A dictionary with the result of the execution, keyed by
+                                                minion ID. A compound command will return a sub-dictionary keyed by
+                                                function name.
+                                             </p>
+                                             
+                                          </td>
+                                          
+                                       </tr>
+                                       
+                                    </table>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.client.LocalClient.cmd_async">
+                                 <h4 class="title topictitle4">LocalClient.cmd_async Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">cmd_async(
+								tgt,
+								fun,
+								arg=(),
+								expr_form='glob',
+								ret='',
+								jid='',
+								kwarg=None,
+								**kwargs
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <p class="p">Asynchronously send a command to connected minions</p>
+                                       
+                                       <p class="p">The function signature is the same as <tt class="ph tt">cmd()</tt> with the
+                                          following exceptions.
+                                       </p>
+                                       
+                                    </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Arguments</h5>
+                                    </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                    </div>
+                                    
+                                    <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                       <tr>
+                                          
+                                          <th id="d78586e630-value" valign="bottom" align="left">Value</th>
+                                          
+                                          <th id="d78586e630-desc" valign="bottom" align="left">Description</th>
+                                          
+                                       </tr>
+                                       
+                                       <tr class="strow property">
+                                          
+                                          <td valign="top" headers="d78586e630-value" class="stentry propvalue">Returns</td>
+                                          
+                                          <td valign="top" headers="d78586e630-desc" class="stentry propdesc">
+                                             <p class="p">A job ID or 0 on failure.</p>
+                                             
+                                          </td>
+                                          
+                                       </tr>
+                                       
+                                    </table>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5><pre class="pre codeblock language-python">&gt;&gt;&gt; local.cmd_async('*', 'test.sleep', [300])
+'20131219215921857715'</pre>
+                                       </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.client.LocalClient.cmd_batch">
+                                 <h4 class="title topictitle4">LocalClient.cmd_batch Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">cmd_batch(
+								tgt,
+								fun,
+								arg=(),
+								expr_form='glob',
+								ret='',
+								kwarg=None,
+								batch='10%',
+								**kwargs
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <p class="p">Iteratively execute a command on subsets of minions at a time</p>
+                                       
+                                       <p class="p">The function signature is the same as <tt class="ph tt">cmd()</tt> with the
+                                          following exceptions.
+                                       </p>
+                                       
+                                    </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Arguments</h5>
+                                    </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                    </div>
+                                    
+                                    <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                       <tr>
+                                          
+                                          <th id="d78586e676-value" valign="bottom" align="left">Value</th>
+                                          
+                                          <th id="d78586e676-desc" valign="bottom" align="left">Description</th>
+                                          
+                                       </tr>
+                                       
+                                       <tr class="strow property">
+                                          
+                                          <td valign="top" headers="d78586e676-value" class="stentry propvalue">Parameters</td>
+                                          
+                                          <td valign="top" headers="d78586e676-desc" class="stentry propdesc">
+                                             <p class="p">batch -- The batch identifier of systems to execute on</p>
+                                             
+                                          </td>
+                                          
+                                       </tr>
+                                       
+                                       <tr class="strow property">
+                                          
+                                          <td valign="top" headers="d78586e676-value" class="stentry propvalue">Returns</td>
+                                          
+                                          <td valign="top" headers="d78586e676-desc" class="stentry propdesc">
+                                             <p class="p">A generator of minion returns</p>
+                                             
+                                          </td>
+                                          
+                                       </tr>
+                                       
+                                    </table>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5><pre class="pre codeblock language-python">&gt;&gt;&gt; returns = local.cmd_batch('*', 'state.highstate', bat='10%')
+&gt;&gt;&gt; for return in returns:
+...     print return
+{'jerry': {...}}
+{'dave': {...}}
+{'stewart': {...}}</pre>
+                                       </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.client.LocalClient.cmd_iter">
+                                 <h4 class="title topictitle4">LocalClient.cmd_iter Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">cmd_iter(
+								tgt,
+								fun,
+								arg=(),
+								timeout=None,
+								expr_form='glob',
+								ret='',
+								kwarg=None,
+								**kwargs
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <p class="p">Yields the individual minion returns as they come in</p>
+                                       
+                                       <p class="p">The function signature is the same as <tt class="ph tt">cmd()</tt> with the
+                                          following exceptions.
+                                       </p>
+                                       
+                                    </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Arguments</h5>
+                                    </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                    </div>
+                                    
+                                    <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                       <tr>
+                                          
+                                          <th id="d78586e728-value" valign="bottom" align="left">Value</th>
+                                          
+                                          <th id="d78586e728-desc" valign="bottom" align="left">Description</th>
+                                          
+                                       </tr>
+                                       
+                                       <tr class="strow property">
+                                          
+                                          <td valign="top" headers="d78586e728-value" class="stentry propvalue">Returns</td>
+                                          
+                                          <td valign="top" headers="d78586e728-desc" class="stentry propdesc">
+                                             <p class="p">A generator</p>
+                                             
+                                          </td>
+                                          
+                                       </tr>
+                                       
+                                    </table>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5><pre class="pre codeblock language-python">&gt;&gt;&gt; ret = local.cmd_iter('*', 'test.ping')
+&gt;&gt;&gt; for i in ret:
+...     print i
+{'jerry': {'ret': True}}
+{'dave': {'ret': True}}
+{'stewart': {'ret': True}}</pre>
+                                       </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.client.LocalClient.cmd_iter_no_block">
+                                 <h4 class="title topictitle4">LocalClient.cmd_iter_no_block Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">cmd_iter_no_block(
+								tgt,
+								fun,
+								arg=(),
+								timeout=None,
+								expr_form='glob',
+								ret='',
+								kwarg=None,
+								**kwargs
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <p class="p">Blocks while waiting for individual minions to return.</p>
+                                       
+                                       <p class="p">The function signature is the same as <tt class="ph tt">cmd()</tt> with the
+                                          following exceptions.
+                                       </p>
+                                       
+                                    </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Arguments</h5>
+                                    </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                    </div>
+                                    
+                                    <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                       <tr>
+                                          
+                                          <th id="d78586e774-value" valign="bottom" align="left">Value</th>
+                                          
+                                          <th id="d78586e774-desc" valign="bottom" align="left">Description</th>
+                                          
+                                       </tr>
+                                       
+                                       <tr class="strow property">
+                                          
+                                          <td valign="top" headers="d78586e774-value" class="stentry propvalue">Returns</td>
+                                          
+                                          <td valign="top" headers="d78586e774-desc" class="stentry propdesc">
+                                             <p class="p">None until the next minion returns. This allows for actions
+                                                to be injected in between minion returns.
+                                             </p>
+                                             
+                                          </td>
+                                          
+                                       </tr>
+                                       
+                                    </table>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5><pre class="pre codeblock language-python">&gt;&gt;&gt; ret = local.cmd_iter('*', 'test.ping')
+&gt;&gt;&gt; for i in ret:
+...     print i
+None
+{'jerry': {'ret': True}}
+{'dave': {'ret': True}}
+None
+{'stewart': {'ret': True}}</pre>
+                                       </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.client.LocalClient.cmd_subset">
+                                 <h4 class="title topictitle4">LocalClient.cmd_subset Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">cmd_subset(
+								tgt,
+								fun,
+								arg=(),
+								expr_form='glob',
+								ret='',
+								kwarg=None,
+								sub=3,
+								cli=False,
+								progress=False,
+								**kwargs
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <p class="p">Execute a command on a random subset of the targeted systems</p>
+                                       
+                                       <p class="p">The function signature is the same as <tt class="ph tt">cmd()</tt> with the
+                                          following exceptions.
+                                       </p>
+                                       
+                                    </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Arguments</h5>
+                                    </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                    </div>
+                                    
+                                    <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                       <tr>
+                                          
+                                          <th id="d78586e820-value" valign="bottom" align="left">Value</th>
+                                          
+                                          <th id="d78586e820-desc" valign="bottom" align="left">Description</th>
+                                          
+                                       </tr>
+                                       
+                                       <tr class="strow property">
+                                          
+                                          <td valign="top" headers="d78586e820-value" class="stentry propvalue">Parameters</td>
+                                          
+                                          <td valign="top" headers="d78586e820-desc" class="stentry propdesc">
+                                             <p class="p">sub -- The number of systems to execute on</p>
+                                             
+                                          </td>
+                                          
+                                       </tr>
+                                       
+                                    </table>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5><pre class="pre codeblock language-python">&gt;&gt;&gt; SLC.cmd_subset('*', 'test.ping', sub=1)
+{'jerry': True}</pre>
+                                       </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.client.LocalClient.get_cli_returns">
+                                 <h4 class="title topictitle4">LocalClient.get_cli_returns Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">get_cli_returns(
+								jid,
+								minions,
+								timeout=None,
+								tgt='*',
+								tgt_type='glob',
+								verbose=False,
+								show_jid=False,
+								**kwargs
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <p class="p">Starts a watcher looking at the return data for a specified JID</p>
+                                       
+                                    </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Arguments</h5>
+                                    </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                    </div>
+                                    
+                                    <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                       <tr>
+                                          
+                                          <th id="d78586e861-value" valign="bottom" align="left">Value</th>
+                                          
+                                          <th id="d78586e861-desc" valign="bottom" align="left">Description</th>
+                                          
+                                       </tr>
+                                       
+                                       <tr class="strow property">
+                                          
+                                          <td valign="top" headers="d78586e861-value" class="stentry propvalue">Returns</td>
+                                          
+                                          <td valign="top" headers="d78586e861-desc" class="stentry propdesc">
+                                             <p class="p">all of the information for the JID</p>
+                                             
+                                          </td>
+                                          
+                                       </tr>
+                                       
+                                    </table>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.client.LocalClient.get_event_iter_returns">
+                                 <h4 class="title topictitle4">LocalClient.get_event_iter_returns Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">get_event_iter_returns(
+								jid,
+								minions,
+								timeout=None
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Gather the return data from the event system, break hard when timeout
+                                          is reached.
+                                       </p>
+                                       
+                                    </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.client.LocalClient.run_job">
+                                 <h4 class="title topictitle4">LocalClient.run_job Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">run_job(
+								tgt,
+								fun,
+								arg=(),
+								expr_form='glob',
+								ret='',
+								timeout=None,
+								jid='',
+								kwarg=None,
+								**kwargs
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <p class="p">Asynchronously send a command to connected minions</p>
+                                       
+                                       <p class="p">Prep the job directory and publish a command to any targeted minions.</p>
+                                       
+                                    </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Arguments</h5>
+                                    </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                    </div>
+                                    
+                                    <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                       <tr>
+                                          
+                                          <th id="d78586e924-value" valign="bottom" align="left">Value</th>
+                                          
+                                          <th id="d78586e924-desc" valign="bottom" align="left">Description</th>
+                                          
+                                       </tr>
+                                       
+                                       <tr class="strow property">
+                                          
+                                          <td valign="top" headers="d78586e924-value" class="stentry propvalue">Returns</td>
+                                          
+                                          <td valign="top" headers="d78586e924-desc" class="stentry propdesc">
+                                             <p class="p">A dictionary of (validated) <tt class="ph tt">pub_data</tt> or an empty
+                                                dictionary on failure. The <tt class="ph tt">pub_data</tt> contains the job ID and a
+                                                list of all minions that are expected to return data.
+                                             </p>
+                                             
+                                          </td>
+                                          
+                                       </tr>
+                                       
+                                    </table>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5><pre class="pre codeblock language-python">&gt;&gt;&gt; local.run_job('*', 'test.sleep', [300])
+{'jid': '20131219215650131543', 'minions': ['jerry']}</pre>
+                                       </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.CloudClient">
+                              <h3 class="title topictitle3">CloudClient Class</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.CloudClient(
+									path=None,
+									opts=None,
+									config_dir=None,
+									pillars=None
+									)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">The client class to wrap cloud interactions</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.cloud.CloudClient.action">
+                                 <h4 class="title topictitle4">CloudClient.action Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">action(
+								fun=None,
+								cloudmap=None,
+								names=None,
+								provider=None,
+								instance=None,
+								kwargs=None
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Execute a single action via the cloud plugin backend</p>
+                                       
+                                       <p class="p">Examples:</p>
+                                       <pre class="pre codeblock language-python">client.action(fun='show_instance', names=['myinstance'])
+client.action(fun='show_image', provider='my-ec2-config',
+    kwargs={'image': 'ami-10314d79'}
+)</pre>
+                                       </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.cloud.CloudClient.create">
+                                 <h4 class="title topictitle4">CloudClient.create Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">create(
+								provider,
+								names,
+								**kwargs
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Create the named VMs, without using a profile</p>
+                                       
+                                       <p class="p">Example:</p>
+                                       <pre class="pre codeblock language-python">client.create(names=['myinstance'], provider='my-ec2-config',
+    kwargs={'image': 'ami-1624987f', 'size': 't1.micro',
+            'ssh_username': 'ec2-user', 'securitygroup': 'default',
+            'delvol_on_destroy': True})</pre>
+                                       </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.cloud.CloudClient.destroy">
+                                 <h4 class="title topictitle4">CloudClient.destroy Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">destroy(
+								names
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Destroy the named VMs</p>
+                                       
+                                    </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.cloud.CloudClient.extra_action">
+                                 <h4 class="title topictitle4">CloudClient.extra_action Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">extra_action(
+								names,
+								provider,
+								action,
+								**kwargs
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Perform actions with block storage devices</p>
+                                       
+                                       <p class="p">Example:</p>
+                                       <pre class="pre codeblock language-python">client.extra_action(names=['myblock'], action='volume_create',
+    provider='my-nova', kwargs={'voltype': 'SSD', 'size': 1000}
+)
+client.extra_action(names=['salt-net'], action='network_create',
+    provider='my-nova', kwargs={'cidr': '192.168.100.0/24'}
+)</pre>
+                                       </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.cloud.CloudClient.full_query">
+                                 <h4 class="title topictitle4">CloudClient.full_query Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">full_query(
+								query_type='list_nodes_full'
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Query all instance information</p>
+                                       
+                                    </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.cloud.CloudClient.list_images">
+                                 <h4 class="title topictitle4">CloudClient.list_images Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">list_images(
+								provider=None
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">List all available images in configured cloud systems</p>
+                                       
+                                    </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.cloud.CloudClient.list_locations">
+                                 <h4 class="title topictitle4">CloudClient.list_locations Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">list_locations(
+								provider=None
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">List all available locations in configured cloud systems</p>
+                                       
+                                    </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.cloud.CloudClient.list_sizes">
+                                 <h4 class="title topictitle4">CloudClient.list_sizes Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">list_sizes(
+								provider=None
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">List all available sizes in configured cloud systems</p>
+                                       
+                                    </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.cloud.CloudClient.low">
+                                 <h4 class="title topictitle4">CloudClient.low Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">low(
+								fun,
+								low
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Pass the cloud function and low data structure to run</p>
+                                       
+                                    </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.cloud.CloudClient.map_run">
+                                 <h4 class="title topictitle4">CloudClient.map_run Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">map_run(
+								path,
+								**kwargs
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Pass in a location for a map to execute</p>
+                                       
+                                    </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.cloud.CloudClient.min_query">
+                                 <h4 class="title topictitle4">CloudClient.min_query Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">min_query(
+								query_type='list_nodes_min'
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Query select instance information</p>
+                                       
+                                    </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.cloud.CloudClient.profile">
+                                 <h4 class="title topictitle4">CloudClient.profile Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">profile(
+								profile,
+								names,
+								vm_overrides=None,
+								**kwargs
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Pass in a profile to create, names is a list of vm names to allocate</p>
+                                       
+                                       <blockquote class="lq">
+                                          <p class="p">vm_overrides is a special dict that will be per node options
+                                             overrides
+                                          </p>
+                                          
+                                       </blockquote>
+                                       
+                                       <p class="p">Example:</p>
+                                       <pre class="pre codeblock language-python">&gt;&gt;&gt; client= salt.cloud.CloudClient(path='/etc/salt/cloud')
+&gt;&gt;&gt; client.profile('do_512_git', names=['minion01',])
+{'minion01': {u'backups_active': 'False',
+        u'created_at': '2014-09-04T18:10:15Z',
+        u'droplet': {u'event_id': 31000502,
+                     u'id': 2530006,
+                     u'image_id': 5140006,
+                     u'name': u'minion01',
+                     u'size_id': 66},
+        u'id': '2530006',
+        u'image_id': '5140006',
+        u'ip_address': '107.XXX.XXX.XXX',
+        u'locked': 'True',
+        u'name': 'minion01',
+        u'private_ip_address': None,
+        u'region_id': '4',
+        u'size_id': '66',
+        u'status': 'new'}}</pre>
+                                       </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.cloud.CloudClient.query">
+                                 <h4 class="title topictitle4">CloudClient.query Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">query(
+								query_type='list_nodes'
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Query basic instance information</p>
+                                       
+                                    </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.cloud.CloudClient.select_query">
+                                 <h4 class="title topictitle4">CloudClient.select_query Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">select_query(
+								query_type='list_nodes_select'
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Query select instance information</p>
+                                       
+                                    </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.runner.RunnerClient">
+                              <h3 class="title topictitle3">RunnerClient Class</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runner.RunnerClient(
+									opts
+									)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">The interface used by the salt-run CLI tool on the Salt Master</p>
+                                    
+                                    <p class="p">It executes &nbsp;<a class="xref" href="../runners/all/index.html#all-salt-runners">runner modules</a> which run on
+                                       the Salt Master.
+                                    </p>
+                                    
+                                    <p class="p">Importing and using <tt class="ph tt">RunnerClient</tt> must be done on the same machine as the Salt
+                                       Master and it must be done using the same user that the Salt Master is running as.
+                                    </p>
+                                    
+                                    <p class="p">Salt's &nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__external_auth">external_auth</a> can be used to authenticate calls. The eauth user must be
+                                       authorized to execute runner modules: (<tt class="ph tt">@runner</tt>). Only the
+                                       <tt class="ph tt">master_call()</tt> below supports eauth.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.runner.RunnerClient.async">
+                                 <h4 class="title topictitle4">RunnerClient.async Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">async(
+								fun,
+								low,
+								user='UNKNOWN'
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Execute the function in a multiprocess and return the event tag to use
+                                          to watch for the return
+                                       </p>
+                                       
+                                    </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.runner.RunnerClient.cmd">
+                                 <h4 class="title topictitle4">RunnerClient.cmd Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">cmd(
+								fun,
+								arg=None,
+								pub_data=None,
+								kwarg=None
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Execute a function</p>
+                                       <pre class="pre codeblock language-python">&gt;&gt;&gt; opts = salt.config.master_config('/etc/salt/master')
+&gt;&gt;&gt; runner = salt.runner.RunnerClient(opts)
+&gt;&gt;&gt; runner.cmd('jobs.list_jobs', [])
+{
+    '20131219215650131543': {
+        'Arguments': [300],
+        'Function': 'test.sleep',
+        'StartTime': '2013, Dec 19 21:56:50.131543',
+        'Target': '*',
+        'Target-type': 'glob',
+        'User': 'saltdev'
+    },
+    '20131219215921857715': {
+        'Arguments': [300],
+        'Function': 'test.sleep',
+        'StartTime': '2013, Dec 19 21:59:21.857715',
+        'Target': '*',
+        'Target-type': 'glob',
+        'User': 'saltdev'
+    },
+}</pre>
+                                       </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.runner.RunnerClient.cmd_async">
+                                 <h4 class="title topictitle4">RunnerClient.cmd_async Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">cmd_async(
+								low
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Execute a runner function asynchronously; eauth is respected</p>
+                                       
+                                       <p class="p">This function requires that 
+                                          		
+                                          			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__external_auth">external_auth</a> is configured
+                                          and the user is authorized to execute runner functions: (<tt class="ph tt">@runner</tt>).
+                                       </p>
+                                       <pre class="pre codeblock language-python">runner.eauth_async({
+    'fun': 'jobs.list_jobs',
+    'username': 'saltdev',
+    'password': 'saltdev',
+    'eauth': 'pam',
+})</pre>
+                                       </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.runner.RunnerClient.cmd_sync">
+                                 <h4 class="title topictitle4">RunnerClient.cmd_sync Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">cmd_sync(
+								low,
+								timeout=None
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Execute a runner function synchronously; eauth is respected</p>
+                                       
+                                       <p class="p">This function requires that 
+                                          		
+                                          			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__external_auth">external_auth</a> is configured
+                                          and the user is authorized to execute runner functions: (<tt class="ph tt">@runner</tt>).
+                                       </p>
+                                       <pre class="pre codeblock language-python">runner.eauth_sync({
+    'fun': 'jobs.list_jobs',
+    'username': 'saltdev',
+    'password': 'saltdev',
+    'eauth': 'pam',
+})</pre>
+                                       </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.wheel.WheelClient">
+                              <h3 class="title topictitle3">WheelClient Class</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.wheel.WheelClient(
+									opts=None
+									)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">An interface to Salt's wheel modules</p>
+                                    
+                                    <p class="p"> &nbsp;<a class="xref" href="../wheel/all/index.html#all-salt-wheel">Wheel
+                                          modules</a> interact with various parts of the Salt Master.
+                                    </p>
+                                    
+                                    <p class="p">Importing and using <tt class="ph tt">WheelClient</tt> must be done on the same machine as the Salt
+                                       Master and it must be done using the same user that the Salt Master is running as.
+                                       Unless &nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__external_auth">external_auth</a> is configured and the user is authorized to execute wheel
+                                       functions: (<tt class="ph tt">@wheel</tt>).
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.wheel.WheelClient.async">
+                                 <h4 class="title topictitle4">WheelClient.async Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">async(
+								fun,
+								low,
+								user='UNKNOWN'
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Execute the function in a multiprocess and return the event tag to use
+                                          to watch for the return
+                                       </p>
+                                       
+                                    </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.wheel.WheelClient.cmd">
+                                 <h4 class="title topictitle4">WheelClient.cmd Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">cmd(
+								fun,
+								arg=None,
+								pub_data=None,
+								kwarg=None
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Execute a function</p>
+                                       <pre class="pre codeblock language-python">&gt;&gt;&gt; opts = salt.config.master_config('/etc/salt/master')
+&gt;&gt;&gt; runner = salt.runner.RunnerClient(opts)
+&gt;&gt;&gt; runner.cmd('jobs.list_jobs', [])
+{
+    '20131219215650131543': {
+        'Arguments': [300],
+        'Function': 'test.sleep',
+        'StartTime': '2013, Dec 19 21:56:50.131543',
+        'Target': '*',
+        'Target-type': 'glob',
+        'User': 'saltdev'
+    },
+    '20131219215921857715': {
+        'Arguments': [300],
+        'Function': 'test.sleep',
+        'StartTime': '2013, Dec 19 21:59:21.857715',
+        'Target': '*',
+        'Target-type': 'glob',
+        'User': 'saltdev'
+    },
+}</pre>
+                                       </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.wheel.WheelClient.cmd_async">
+                                 <h4 class="title topictitle4">WheelClient.cmd_async Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">cmd_async(
+								low
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Execute a function asynchronously; eauth is respected</p>
+                                       
+                                       <p class="p">This function requires that 
+                                          		
+                                          			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__external_auth">external_auth</a> is configured
+                                          and the user is authorized
+                                       </p>
+                                       <pre class="pre codeblock language-python">&gt;&gt;&gt; wheel.cmd_async({
+    'fun': 'key.finger',
+    'match': 'jerry',
+    'eauth': 'auto',
+    'username': 'saltdev',
+    'password': 'saltdev',
+})
+{'jid': '20131219224744416681', 'tag': 'salt/wheel/20131219224744416681'}</pre>
+                                       </div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                              <div class="topic reference nested3" id="salt.wheel.WheelClient.cmd_sync">
+                                 <h4 class="title topictitle4">WheelClient.cmd_sync Method</h4>
+                                 <div class="body refbody">
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Syntax</h5>
+                                    </div>
+                                    
+                                    <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">cmd_sync(
+								low,
+								timeout=None
+								)</pre>
+                                       </div>
+                                    
+                                    <div class="section">
+                                       <h5 class="title sectiontitle">Details</h5>
+                                       <p class="p">Execute a wheel function synchronously; eauth is respected</p>
+                                       
+                                       <p class="p">This function requires that 
+                                          		
+                                          			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__external_auth">external_auth</a> is configured
+                                          and the user is authorized to execute runner functions: (<tt class="ph tt">@wheel</tt>).
+                                       </p>
+                                       <pre class="pre codeblock language-python"></pre>
+                                       &gt;&gt;&gt; wheel.cmd_sync({
+                                       'fun': 'key.finger',
+                                       'match': 'jerry',
+                                       'eauth': 'auto',
+                                       'username': 'saltdev',
+                                       'password': 'saltdev',
+                                       })
+                                       {'minions': {'jerry': '5d:f6:79:43:5e:d4:42:3f:57:b8:45:a8:7e:a4:6e:ca'}}</div>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

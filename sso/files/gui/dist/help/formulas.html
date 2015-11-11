@@ -1,0 +1,244 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>SaltStack Formulas - QuickStart Guide</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="SaltStack Enterprise Help Center">
+      
+      <meta name="abstract" content="">
+      
+      <meta name="description" content="">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="concept_z5t_tpb_gq">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/bootstrap/css/bootstrap.min.css">
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/bootstrap/css/fonts.css">
+
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/bootstrap/css/prism.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/bootstrap/css/webhelp2.css">
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/bootstrap/css/progress.css">
+      <script type="text/javascript" src="themes/bootstrap/js/jquery-1.11.0.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/jquery-ui-1.9.1.custom.min.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/bootbox.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/jquery.slimscroll.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/jquery.tocify.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/prism.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/webhelp-qs.js"></script>
+      </head>
+   <body>
+      <header class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+         <div class="container">
+            <div class="navbar-header"><button id="menu-toggle" class="navbar-toggle" type="button"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="#"><div class="ss-logo"></div></a></div>
+            <div class="collapse navbar-collapse"></div>
+         </div>
+      </header>
+      <div class="jumbotron active_texture">
+          <div class="container">
+              <h1><!--<i class="glyphicon glyphicon-question-sign"></i>-->Up & Running with SaltStack</h1>
+              <h3>Quick Start Guide</h3>
+          </div>
+      </div>
+      <div id="wrapper">
+
+
+              <div class="container-fluid">
+                  <div class="row">
+                      <div class="col-lg-12">
+                          <ol class="progtrckr" data-progtrckr-steps="8">
+                              <!--<li class="progtrckr-done"><a href="overview.html">Overview</a></li>-->
+                              <li class="progtrckr-done"><a href="qs.html">Demo Environment</a></li>
+                              <li class="progtrckr-done"><a href="install.html">Install</a></li>
+                              <li class="progtrckr-done"><a href="remotex.html">Execute Commands</a></li>
+                              <li class="progtrckr-done"><a href="top.html">Define Configurations</a></li>
+                              <li class="progtrckr-done">Create Formulas</li>
+                              <li class="progtrckr-todo"><a href="targeting.html">Target Systems</a></li>
+                              <li class="progtrckr-todo"><a href="states.html">Apply States</a></li>
+                              <li class="progtrckr-todo"><a href="next.html">Next Steps</a></li>
+                          </ol>
+                      </div>
+                      </div>
+
+                <!--<div class="row">
+                    <div class="col-lg-12"></div>
+                </div>-->
+<div class="row">
+
+</div>
+
+
+              <div class="row">
+                  <div class="col-lg-1"></div>
+                  <div class="col-lg-10">
+
+
+                          <h1 class="title topictitle1">Create Formulas</h1>
+                          <div class="body conbody">
+                              <p class="shortdesc"></p>
+
+                              <div class="section gs-overview" id="concept_ivf_bcn_vp__section_EF69791A73AB411AA070F467095A5130">
+                                  <p class="p gs-overview-sub"><span class="ph">You'll learn how to:</span></p>
+
+                                  <ul class="ul" id="concept_ivf_bcn_vp__ul_qjt_rhn_tp">
+                                      <li class="li" id="concept_ivf_bcn_vp__li_B7E78094456C4DC19C4B6133FC46D104">Define a repeatable, customized definition of a management task
+                                      </li>
+
+                                      <li class="li" id="concept_ivf_bcn_vp__li_FB2FDC1241D542D6AE9BF6349D7E374F">Insert system specific variables into a formula
+                                      </li>
+
+                                      <li>Insert simple conditions</li>
+
+
+                                  </ul>
+
+                                  <p class="p gs-overview-sub gs-time"><span class="ph">Estimated time: 15
+                                    			 minutes</span></p>
+
+                                  <p class="p gs-overview-sub gs-difficulty-2"><span class="ph">Difficulty</span>:
+
+                                  </p>
+
+                              </div>
+
+
+                              <div class="section gs-mainbody" id="concept_ivf_bcn_vp__section_D6F77362DCE342D9B67DE9E631A365C6">
+
+
+                                  <p>When you created the top.sls file in the previous section, you defined <i>where</i> and <i>what</i>. Now it is time to go into detail about the <i>how</i> using Salt formulas.</p>
+
+                                  <p>Salt formulas define exactly what <i>you</i> mean when you say "this system should have vim." For example, if you can't image vim without your perfect vimrc file, you can make that part of the vim formula. Each entry in your top file has a corresponding formula that explains how to achieve a particular state.</p>
+
+
+                                  <div class="section gs-terms gs-sidebar" id="concept_ivf_bcn_vp__section_043E1272A3E94500934501DFABE4DCF9">
+                                      <h4 class="sidebar">What the {{}}{% if %}?</h4>
+
+                                      <p>If you've looked at any sample formulas on the web, you've likely encountered some complex-looking values:</p>
+
+                                      <ul>
+                                          <li>{% if grains['os_family'] == 'RedHat' %}...{% endif %}
+                                          </li>
+                                          <li>{{ apache.server }}</li>
+                                      </ul>
+
+                                  </div>
+
+                                  <img class="imgcenter" src="images/formulas.png"/><!--<span class="moreinfo"><a id="hostname" href="#">Explain this to me like I'm a developer</a></span>-->
+
+
+                                  <p></p>
+
+                                      <p>For example, here are a few different formulas for 'vim':</p>
+
+
+
+    <table class="table table-noborder">
+        <tr>
+            <td><pre class="pre codeblock language-yaml">vim:
+  pkg.installed</pre></td>
+            <td><pre class="pre codeblock language-yaml">vim:
+  pkg.installed
+
+/etc/vimrc:
+  file.managed:
+    - source: salt://vimrc
+    - mode: 644
+    - user: root
+    - group: root</pre></td>
+            <td><pre class="pre codeblock language-yaml">vim:
+  pkg:
+    - installed
+    {% if grains['os_family'] == 'RedHat' %}
+    - name: vim-enhanced
+    {% else %}
+    - name: vim
+    {% endif %}</pre></td>
+        </tr>
+    </table>
+
+                                  <p>The important thing to understand is that <i>your</i> vim formula can be customized for <i>your</i> environment, and can be as complex or as simple as you like. The salt community maintains a massive repository of <a href="https://github.com/saltstack-formulas" target="_blank">salt formulas</a> that you can fork and make your own, our you can derive your own from the ground up.</p>
+
+                                  <p>For now, create a /etc/salt/vim.sls file that contains a definition for the 'vim' state referenced in our top.sls file:</p>
+<pre class="pre codeblock language-yaml">vim:
+  pkg.installed</pre>
+
+                                  <p>Also create an /etc/salt/apache.sls file for the 'apache' state:</p>
+<pre class="pre codeblock language-yaml">
+apache:
+  pkg.installed []
+  service.running:
+    - require:
+      - pkg: apache</pre>
+
+
+
+
+                                  <h2>Variables</h2>
+
+
+                                  <h2>Conditions</h2>
+
+                                  <h2>Combining Commands</h2>
+
+                                  <p></p>
+<pre class="pre codeblock language-yaml">apache:
+apache:
+  pkg.installed: []
+  service.running:
+    - require:
+      - pkg: apache
+
+/var/www/index.html:                        # ID declaration
+  file:                                     # state declaration
+    - managed                               # function
+    - source: salt://webserver/index.html   # function arg
+    - require:                              # requisite declaration
+      - pkg: apache                         # requisite reference</pre>
+
+
+                                  <a href="targeting.html"><button id="next-button" type="button" class="btn btn-primary">
+                                      Next <span class="glyphicon glyphicon-chevron-right"></span></button></a>
+                                  <div class="footer"></div>
+                              </div>
+
+                              <!--<div class="section gs-scenario" id="concept_ivf_bcn_vp__section_5191FFF18E494D33AA46064EF96D0F57">
+                                  <h2 class="title sectiontitle">Scenario</h2>
+                                  <p class="p"></p>
+                                  <ul>
+                                      <li>Salt Master server</li>
+                                      <li>Web server</li>
+                                      <li>Database server</li>
+                                  </ul>
+
+
+                              </div>-->
+
+                          </div>
+
+
+
+
+                  </div>
+                  <div class="col-lg-1"></div>
+
+
+              </div>
+              <div class="row">
+                  <div class="col-lg-12">
+
+                  </div>
+              </div>
+
+                  </div>
+              </div>
+
+   </body>
+</html>

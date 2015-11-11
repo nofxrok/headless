@@ -1,0 +1,309 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>MinionFS Backend Walkthrough</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="MinionFS Backend Walkthrough">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="minionfs-backend-walkthrough">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/bootstrap.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/fonts.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/prism.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/lightbox.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/webhelp.css">
+      <script type="text/javascript" src="../../../themes/bootstrap/js/jquery-1.11.0.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/jquery-ui-1.9.1.custom.min.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/jquery.slimscroll.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/jquery.tocify.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/prism.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/lightbox.min.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/webhelp.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <div id="sidebar-wrapper"><a class="ss-logo" href="/help/home.html"></a><div id="search-form" class="inner-addon left-addon"><i class="glyphicon glyphicon-search"></i><input type="text" class="form-control"></div>
+            <div id="guide-links">
+               <div class="well">
+                  <ul class="nav nav-pills nav-stacked">
+                     <li><a href="/help/gs/index.html"><span class="glyphicon glyphicon glyphicon-th-list"></span> Get Started</a></li>
+                     <li><a href="/help/home.html"><span class="glyphicon glyphicon-home"></span>  Home</a></li>
+                     <li><a href="/help/enterprise/user-guide.html"><span class="glyphicon glyphicon-user"></span> User Guide</a></li>
+                  </ul>
+               </div>
+               <p id="guide-title">Enterprise Help</p>
+            </div>
+            <div class="sidebar-nav">
+               <ul id="gen-links">
+                  <li class=" collapsible  collapsed"><a href="../../../enterprise/use-cases.html">Use Cases</a><ul>
+                        <li class=" no-child "><a href="../../../enterprise/continuous-deployment.html">Continuous Deployment</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/app-stacks.html">Application Stacks</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../../enterprise/cloud.html">Cloud Management</a><ul>
+                              <li class=" no-child "><a href="../../../enterprise/orchestrate.html">Orchestration</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../../enterprise/security-bp.html">Security Best Practices</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/components.html">SaltStack Components</a></li>
+                     </ul>
+                  </li>
+                  <li class=" collapsible  collapsed"><a href="../../../enterprise/deployment.html">Deployment</a><ul>
+                        <li class=" no-child "><a href="../../../enterprise/t_ops_prepare.html">Preparing the SaltStack Ops System</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/t_master_prepare.html">Preparing Masters for SaltStack Ops Integration</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/requirements.html">System Requirements</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/faq.html">Frequently Asked Questions</a></li>
+                     </ul>
+                  </li>
+                  <li class=" no-child "><a href="../../../enterprise/masters.html">View Masters</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/minions.html">View Minions</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/jobs.html">Jobs</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/targets.html">Targets</a></li>
+                  <li class=" collapsible  collapsed"><a href="../../../enterprise/management.html">Admin Management</a><ul>
+                        <li class=" no-child "><a href="../../../enterprise/cfg-masters.html">Manage Masters</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/jobs-all.html">Manage Jobs</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/cfg-users.html">User Accounts</a></li>
+                     </ul>
+                  </li>
+                  <li class=" no-child "><a href="../../../enterprise/web-console-overview.html">Console Overview</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/reports.html">View Reports</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/architecture.html">Architecture Reference</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/glossary.html">Glossary</a></li>
+                  <li class=" collapsible  active"><a href="../../../enterprise/user-guide.html">SaltStack User Guide</a><ul>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/installation/index.html">Installation</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/installation/debian.html">Debian Installation</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/freebsd.html">FreeBSD</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/gentoo.html">Gentoo</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/solaris.html">Solaris</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/ubuntu.html">Ubuntu Installation</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/windows.html">Windows</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  active"><a href="../../../user/topics/tutorials/index.html">Tutorials</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/standalone_minion.html">Standalone Minion</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/cron.html">Using cron with Salt</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/states_pt1.html">States tutorial, part 1 - Basic Usage</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/states_pt2.html">States tutorial, part 2 - More Complex States, Requisites</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/states_pt4.html">States tutorial, part 4</a></li>
+                              <li class=" no-child  active">
+                                 <div id="toc"></div>
+                              </li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/multimaster_pki.html">Multi-Master-PKI Tutorial With Failover</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/writing_tests.html">Writing Salt Tests</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/halite.html">Installing and Configuring Halite</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/targeting/index.html">Targeting Minions</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/globbing.html">Matching the minion id</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/grains.html">Grains</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/ipcidr.html">Subnet/IP Address Matching</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/compound.html">Compound matchers</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/nodegroups.html">Node groups</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/batch.html">Batch Size</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/range.html">SECO Range</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../../user/topics/pillar/index.html">Storing Static Data in the Pillar</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/reactor/index.html">Reactor System</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/eauth/index.html">External Authentication System</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/eauth/access_control.html">Access Control System</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/event/index.html">Salt Event System</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/event/master_events.html">Salt Master Events</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../../user/topics/topology/syndic.html">Salt Syndic</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/topology/proxyminion/index.html">Proxy Minion</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/windows/windows-specific-behavior.html">Windows-specific Behaviour</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/cloud/index.html">Salt Cloud</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/basic.html">Salt Cloud basic usage</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/profiles.html">VM Profiles</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/map.html">Cloud Map File</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/action.html">Cloud Actions</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/function.html">Cloud Functions</a></li>
+                              <li class=" collapsible  collapsed"><a href="../../../user/topics/cloud/provider-specifics.html">Cloud Provider Specifics</a><ul>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/parallels.html">Getting Started With Parallels</a></li>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/proxmox.html">Getting Started With Proxmox</a></li>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/lxc.html">Getting Started With LXC</a></li>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/hpcloud.html">Getting Started With HP Cloud</a></li>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/vexxhost.html">Getting Started with VEXXHOST</a></li>
+                                 </ul>
+                              </li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/deploy.html">OS Support for Cloud VMs</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/features.html">Feature Matrix</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/windows.html">Spinning up Windows Minions</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/netapi/index.html">netapi modules</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/netapi/writing.html">Writing netapi modules</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/virt/index.html">Salt Virt</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/virt/disk.html">Virtual Machine Disk Profiles</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/virt/nic.html">Virtual Machine Network Profiles</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../../user/topics/yaml/index.html">Understanding YAML</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/master_tops/index.html">Master Tops System</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/best_practices.html">Salt Best Practices</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/troubleshooting/index.html">Troubleshooting</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/troubleshooting/minion.html">Troubleshooting the Salt Minion</a></li>
+                           </ul>
+                        </li>
+                     </ul>
+                  </li>
+               </ul>
+            </div>
+         </div>
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="minionfs-backend-walkthrough">
+                        
+                        <h1 class="title topictitle1">MinionFS Backend Walkthrough</h1>
+                        <div class="body conbody">
+                           <p class="p"><span class="keyword inline">New in version 2014.1.0.</span></p>
+                           
+                           <p class="p">Sometimes, you might need to propagate files that are generated on a minion.
+                              Salt already has a feature to send files from a minion to the master:
+                           </p>
+                           <pre class="pre codeblock language-bash">salt 'minion-id' cp.push /path/to/the/file</pre>
+                           <p class="p">This command will store the file, including its full path, under
+                              <a class="xref" href="unresolvable-reference.html#configuring-the-salt-master__std:conf_master-cachedir">cachedir</a><tt class="ph tt">/master/minions/minion-id/files</tt>. With the default
+                              <a class="xref" href="unresolvable-reference.html#configuring-the-salt-master__std:conf_master-cachedir">cachedir</a> the example file above would be stored as
+                              <a class="xref title_reference" href="minionfs.html">/var/cache/salt/master/minions/minion-id/files/path/to/the/file</a>.
+                           </p>
+                           
+                           <aside class="note "><span class="title">Note:</span> 
+                              <p class="p">This walkthrough assumes basic knowledge of Salt and <a class="xref" href="unresolvable-reference.html#module-salt.modules.cp__salt.modules.cp.push">cp.push</a>. To get up to speed, check out the
+                                 <a class="xref" href="unresolvable-reference.html#__">walkthrough</a>.
+                              </p>
+                              
+                           </aside>
+                           
+                           <p class="p">Since it is not a good idea to expose the whole <a class="xref" href="unresolvable-reference.html#configuring-the-salt-master__std:conf_master-cachedir">cachedir</a>, MinionFS
+                              should be used to send these files to other minions.
+                           </p>
+                           
+                           <div class="section" id="minionfs-backend-walkthrough__simple-configuration">
+                              <h2 class="title sectiontitle">Simple Configuration</h2>
+                              <p class="p">To use the minionfs backend only two configuration changes are required on the
+                                 master. The <a class="xref" href="unresolvable-reference.html#configuring-the-salt-master__std:conf_master-fileserver_backend">fileserver_backend</a> option needs to contain a value of
+                                 <tt class="ph tt">minion</tt> and <a class="xref" href="unresolvable-reference.html#configuring-the-salt-master__std:conf_master-file_recv">file_recv</a> needs to be set to true:
+                              </p>
+                              <pre class="pre codeblock language-yaml">fileserver_backend:
+  - roots
+  - minion
+
+file_recv: True</pre>
+                              <p class="p">These changes require a restart of the master, then new requests for the
+                                 <tt class="ph tt">salt://minion-id/</tt> protocol will send files that are pushed by <tt class="ph tt">cp.push</tt>
+                                 from <tt class="ph tt">minion-id</tt> to the master.
+                              </p>
+                              
+                              <aside class="note "><span class="title">Note:</span> 
+                                 <p class="p">All of the files that are pushed to the master are going to be available to
+                                    all of the minions. If this is not what you want, please remove <tt class="ph tt">minion</tt>
+                                    from <a class="xref" href="unresolvable-reference.html#configuring-the-salt-master__std:conf_master-fileserver_backend">fileserver_backend</a> in the master config file.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <aside class="note "><span class="title">Note:</span> 
+                                 <p class="p">Having directories with the same name as your minions in the root
+                                    that can be accessed like <tt class="ph tt">salt://minion-id/</tt> might cause confusion.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="minionfs-backend-walkthrough__commandline-example">
+                              <h2 class="title sectiontitle">Commandline Example</h2>
+                              <p class="p">Lets assume that we are going to generate SSH keys on a minion called
+                                 <tt class="ph tt">minion-source</tt> and put the public part in <tt class="ph tt">~/.ssh/authorized_keys</tt> of root
+                                 user of a minion called <tt class="ph tt">minion-destination</tt>.
+                              </p>
+                              
+                              <p class="p">First, lets make sure that <tt class="ph tt">/root/.ssh</tt> exists and has the right permissions:
+                              </p>
+                              <pre class="pre codeblock language-bash">[root@salt-master file]# salt '*' file.mkdir dir_path=/root/.ssh user=root group=root mode=700
+minion-source:
+    None
+minion-destination:
+    None</pre>
+                              <p class="p">We create an RSA key pair without a passphrase <a class="xref footnote_reference" href="minionfs.html">*</a>:
+                              </p>
+                              <pre class="pre codeblock language-bash">[root@salt-master file]# salt 'minion-source' cmd.run 'ssh-keygen -N "" -f /root/.ssh/id_rsa'
+minion-source:
+    Generating public/private rsa key pair.
+    Your identification has been saved in /root/.ssh/id_rsa.
+    Your public key has been saved in /root/.ssh/id_rsa.pub.
+    The key fingerprint is:
+    9b:cd:1c:b9:c2:93:8e:ad:a3:52:a0:8b:0a:cc:d4:9b root@minion-source
+    The key's randomart image is:
+    +--[ RSA 2048]----+
+    |                 |
+    |                 |
+    |                 |
+    |  o        .     |
+    | o o    S o      |
+    |=   +  . B o     |
+    |o+ E    B =      |
+    |+ .   .+ o       |
+    |o  ...ooo        |
+    +-----------------+</pre>
+                              <p class="p">and we send the public part to the master to be available to all minions:</p>
+                              <pre class="pre codeblock language-bash">[root@salt-master file]# salt 'minion-source' cp.push /root/.ssh/id_rsa.pub
+minion-source:
+    True</pre>
+                              <p class="p">now it can be seen by everyone:</p>
+                              <pre class="pre codeblock language-bash">[root@salt-master file]# salt 'minion-destination' cp.list_master_dirs
+minion-destination:
+    - .
+    - etc
+    - minion-source/root
+    - minion-source/root/.ssh</pre>
+                              <p class="p">Lets copy that as the only authorized key to <tt class="ph tt">minion-destination</tt>:
+                              </p>
+                              <pre class="pre codeblock language-bash">[root@salt-master file]# salt 'minion-destination' cp.get_file salt://minion-source/root/.ssh/id_rsa.pub /root/.ssh/authorized_keys
+minion-destination:
+    /root/.ssh/authorized_keys</pre>
+                              <p class="p">Or we can use a more elegant and salty way to add an SSH key:</p>
+                              <pre class="pre codeblock language-bash">[root@salt-master file]# salt 'minion-destination' ssh.set_auth_key_from_file user=root source=salt://minion-source/root/.ssh/id_rsa.pub
+minion-destination:
+    new</pre>
+                              *<p class="p">Yes, that was the actual key on my server, but the server is already destroyed.</p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+                        <p class="text-muted pull-right"><small>Copyright © 2015 SaltStack.</small></p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

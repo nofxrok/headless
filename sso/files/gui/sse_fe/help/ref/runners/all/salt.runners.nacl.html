@@ -1,0 +1,172 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.runners.nacl</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.runners.nacl">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../runners.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-runners-nacl">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-runners-nacl">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.runners.nacl</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-runners-nacl__module-salt.runners.nacl"></span></p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">requires</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">libnacl</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><a class="xref" href="https://github.com/saltstack/libnacl" target="_blank">https://github.com/saltstack/libnacl</a></p>
+                              
+                              <p class="p">This runner helps create encrypted passwords that can be included in pillars.
+                                 This is often usefull if you wish to store your pillars in source control or
+                                 share your pillar data with others that you trust. I dont advise making your pillars
+                                 public
+                                 regardless if they are encrypted or not.
+                              </p>
+                              
+                              <p class="p">The following configurations can be defined in the master config
+                                 so your users can create encrypted passwords using the runner nacl.
+                              </p>
+                              
+                              <blockquote class="lq">
+                                 <p class="p">cat /etc/salt/master.d/nacl.conf nacl.config:</p>
+                                 <span class="q">" key: None keyfile: /root/.nacl "</span></blockquote>
+                              
+                              <p class="p">Now with the config in the master you can use the runner nacl like:</p>
+                              
+                              <blockquote class="lq">
+                                 <p class="p">salt-run nacl.enc 'data'</p>
+                                 
+                              </blockquote>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.runners.nacl.dec">
+                           <h2 class="title topictitle2">dec</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.nacl.dec(
+								data,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Takes a key generated from <span class="keyword title_reference">nacl.keygen</span> and decrypt some data.
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt-run nacl.dec pEXHQM6cuaF7A=
+salt-run nacl.dec data='pEXHQM6cuaF7A=' keyfile=/root/.nacl
+salt-run nacl.dec data='pEXHQM6cuaF7A=' key='cKEzd4kXsbeCE7/nLTIqXwnUiD1ulg4NoeeYcCFpd9k='</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.runners.nacl.enc">
+                           <h2 class="title topictitle2">enc</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.nacl.enc(
+								data,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Takes a key generated from <span class="keyword title_reference">nacl.keygen</span> and encrypt some data.
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt-run nacl.enc datatoenc
+salt-run nacl.enc datatoenc keyfile=/root/.nacl
+salt-run nacl.enc datatoenc key='cKEzd4kXsbeCE7/nLTIqXwnUiD1ulg4NoeeYcCFpd9k='</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.runners.nacl.keygen">
+                           <h2 class="title topictitle2">keygen</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.nacl.keygen(
+								keyfile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Use libnacl to generate a private key</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt-run nacl.keygen
+salt-run nacl.keygen keyfile=/root/.nacl
+salt-run --out=newline_values_only nacl.keygen &gt; /root/.nacl</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

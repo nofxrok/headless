@@ -1,0 +1,167 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Manage User Accounts</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="task">
+      
+      <meta name="DC.Title" content="Manage User Accounts">
+      
+      <meta name="abstract" content="">
+      
+      <meta name="description" content="">
+      
+      <meta name="DC.Relation" scheme="URI" content="gui.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="task_chc_qbl_qr">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page task  - topic-topic task-task " id="task_chc_qbl_qr">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Manage User Accounts</h1>
+                        <div class="body taskbody">
+                           <p class="shortdesc"></p>
+                           
+                           <div class="section context">
+                              <p class="p">Each user that manages systems using <span class="keyword">SaltStack Enterprise Web Console</span>
+                                 must have the following:
+                              </p>
+                              
+                              <ul class="ul" id="task_chc_qbl_qr__ul_em3_2bl_qr">
+                                 <li class="li">An account on the Salt Master with external authentication privileges defined for the commands and
+                                    systems to which the user has access.
+                                 </li>
+                                 
+                                 <li class="li">A corresponding account in the <span class="keyword">SaltStack Enterprise Web Console</span> GUI
+                                    with the same username and password. <span class="keyword">SaltStack Enterprise Web Console</span> uses these credentials to connect to the Salt Master using the API.
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <p class="p"></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic task nested1" id="task_dzr_5dl_qr">
+                           <h2 class="title topictitle2">Add the Account on the Master(s)</h2>
+                           <div class="body taskbody">
+                              <div class="section context">Complete these steps to add this account on each Master to which the user needs
+                                 access.
+                              </div>
+                              
+                              <ol class="ol steps" id="task_dzr_5dl_qr__steps_e3c_vdl_qr">
+                                 <li class="li step stepexpand"><span class="ph cmd">Add the user on the system using the <samp class="ph codeph">useradd</samp> or similar
+                                       command.</span></li>
+                                 
+                                 <li class="li step stepexpand"><span class="ph cmd">In the <span class="ph filepath">/ect/salt/master</span> configuration file, add the
+                                       <a class="xref" href="../topics/eauth/index.html#acl-eauth">External Authentication System</a> settings required
+                                       for this user. For example:</span><div class="itemgroup stepresult"><pre class="pre codeblock language-ini">external_auth:
+  pam:
+    thatch:
+      - 'web*':
+        - test.*
+        - network.*
+    steve:
+      - .*</pre>
+                                       </div>
+                                 </li>
+                                 
+                                 <li class="li step stepexpand"><span class="ph cmd">Restart the Salt Master after adding user accounts or changing
+                                       privileges.</span></li>
+                                 
+                              </ol>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic task nested1" id="task_cj1_wdl_qr">
+                           <h2 class="title topictitle2">Add the Account in <span class="keyword">SaltStack Enterprise Web Console</span></h2>
+                           <div class="body taskbody">
+                              <ol class="ol steps" id="task_cj1_wdl_qr__steps_vbj_wdl_qr">
+                                 <li class="li step stepexpand"><span class="ph cmd">Click <span class="ph uicontrol">Configure</span> &gt; <span class="ph uicontrol">Users</span> &gt;
+                                       <span class="ph uicontrol">Add User</span>.</span><div class="itemgroup stepresult"><img class="inline  " id="task_cj1_wdl_qr__image_xr5_2r5_tr" src="../images/add-user.png"></div>
+                                 </li>
+                                 
+                                 <li class="li step stepexpand"><span class="ph cmd">Provide the user account details and then click
+                                       <span class="ph uicontrol">Add</span>.</span>
+                                    
+                                    <table border="1" frame="hsides" rules="rows" cellpadding="4" cellspacing="0" summary="" class="simpletable choicetable choicetableborder" id="task_cj1_wdl_qr__choicetable_rjn_4dt_sr">
+                                       
+                                       <thead>
+                                          <tr>
+                                             <th id="d3835e89-option" valign="bottom" align="left">Option</th>
+                                             
+                                             <th id="d3835e89-desc" valign="bottom" align="left">Description</th>
+                                          </tr>
+                                       </thead>
+                                       
+                                       <tbody>
+
+                                          
+                                          <tr class="strow chrow">
+                                             <td valign="top" headers="d3835e89-option" id="d3835e103" class="stentry choption" width="28.490028490028493%"><strong>
+                                                   <p class="p subhead">User Name</p>
+                                                   </strong></td>
+                                             
+                                             <td valign="top" headers="d3835e89-desc d3835e103" class="stentry chdesc" width="71.5099715099715%">The username of the user that you added in the previous
+                                                step.
+                                             </td>
+                                             
+                                          </tr>
+                                          
+                                          <tr class="strow chrow">
+                                             <td valign="top" headers="d3835e89-option" id="d3835e109" class="stentry choption" width="28.490028490028493%"><strong>
+                                                   <p class="p subhead">Password</p>
+                                                   </strong></td>
+                                             
+                                             <td valign="top" headers="d3835e89-desc d3835e109" class="stentry chdesc" width="71.5099715099715%">The password of the user that you added in the previous
+                                                step.
+                                             </td>
+                                             
+                                          </tr>
+                                          
+                                       </tbody>
+                                    </table>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

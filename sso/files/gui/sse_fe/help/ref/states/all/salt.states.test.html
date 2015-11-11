@@ -1,0 +1,429 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.test</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.test">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-test">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-test">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.test</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-test__module-salt.states.test"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="test-states">
+                           <h2 class="title topictitle2">Test States</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <dl class="dl definition_list">
+                                    <dt class="dt dlterm">Provide test case states that enable easy testing of things to do with</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">state calls, e.g. running, calling, logging, output filtering etc.</p>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 <pre class="pre codeblock language-yaml">always-passes:
+  test.succeed_without_changes:
+    - name: foo
+
+always-fails:
+  test.fail_without_changes:
+    - name: foo
+
+always-changes-and-succeeds:
+  test.succeed_with_changes:
+    - name: foo
+
+always-changes-and-fails:
+  test.fail_with_changes:
+    - name: foo
+
+my-custom-combo:
+  test.configurable_test_state:
+    - name: foo
+    - changes: True
+    - result: False
+    - comment: bar.baz</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.test.configurable_test_state">
+                              <h3 class="title topictitle3">configurable_test_state</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.test.configurable_test_state(
+								name,
+								changes=True,
+								result=True,
+								comment=''
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">A configurable test state which determines its output based on the inputs.</p>
+                                    
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d425683e65" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d425683e67" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d425683e65" class="stentry propvalue">name:</td>
+                                       
+                                       <td valign="top" headers="d425683e67" class="stentry propdesc">
+                                          <p class="p">A unique string.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d425683e65" class="stentry propvalue">changes:</td>
+                                       
+                                       <td valign="top" headers="d425683e67" class="stentry propdesc">
+                                          <p class="p">Do we return anything in the changes field?
+                                             Accepts True, False, and 'Random'
+                                             Default is True
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d425683e65" class="stentry propvalue">result:</td>
+                                       
+                                       <td valign="top" headers="d425683e67" class="stentry propdesc">
+                                          <p class="p">Do we return successfully or not?
+                                             Accepts True, False, and 'Random'
+                                             Default is True
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d425683e65" class="stentry propvalue">comment:</td>
+                                       
+                                       <td valign="top" headers="d425683e67" class="stentry propdesc">
+                                          <p class="p">String to fill the comment field with.
+                                             Default is ''
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.test.fail_with_changes">
+                              <h3 class="title topictitle3">fail_with_changes</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.test.fail_with_changes(
+								name
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Returns failure and changes is not empty.</p>
+                                    
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d425683e124" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d425683e126" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d425683e124" class="stentry propvalue">name:</td>
+                                       
+                                       <td valign="top" headers="d425683e126" class="stentry propdesc">
+                                          <p class="p">A unique string.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.test.fail_without_changes">
+                              <h3 class="title topictitle3">fail_without_changes</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.test.fail_without_changes(
+								name
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Returns failure.</p>
+                                    
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d425683e165" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d425683e167" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d425683e165" class="stentry propvalue">name:</td>
+                                       
+                                       <td valign="top" headers="d425683e167" class="stentry propdesc">
+                                          <p class="p">A unique string.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.test.mod_watch">
+                              <h3 class="title topictitle3">mod_watch</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.test.mod_watch(
+								name,
+								sfun=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">'
+                                       Call this function via a watch statement
+                                    </p>
+                                    
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                    
+                                    <p class="p">Any parameters in the state return dictionary can be customized by adding
+                                       the keywords <tt class="ph tt">result</tt>, <tt class="ph tt">comment</tt>, and <tt class="ph tt">changes</tt>.
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">this_state_will_return_changes:
+  test.succeed_with_changes
+
+this_state_will_NOT_return_changes:
+  test.succeed_without_changes
+
+this_state_is_watching_another_state:
+  test.succeed_without_changes:
+    - comment: 'This is a custom comment'
+    - watch:
+      - test: this_state_will_return_changes
+      - test: this_state_will_NOT_return_changes
+
+this_state_is_also_watching_another_state:
+  test.succeed_without_changes:
+    - watch:
+      - test: this_state_will_NOT_return_changes</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.test.succeed_with_changes">
+                              <h3 class="title topictitle3">succeed_with_changes</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.test.succeed_with_changes(
+								name
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Returns successful and changes is not empty</p>
+                                    
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d425683e247" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d425683e249" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d425683e247" class="stentry propvalue">name:</td>
+                                       
+                                       <td valign="top" headers="d425683e249" class="stentry propdesc">
+                                          <p class="p">A unique string.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.test.succeed_without_changes">
+                              <h3 class="title topictitle3">succeed_without_changes</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.test.succeed_without_changes(
+								name
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Returns successful.</p>
+                                    
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d425683e288" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d425683e290" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d425683e288" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d425683e290" class="stentry propdesc">
+                                          <p class="p">A unique string.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

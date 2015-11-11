@@ -1,0 +1,173 @@
+<div class="detail-header">
+       DETAILS
+</div>
+
+<div id="right-bar-inner-container1">
+    <div id="table-container" ng-show="!!currentMasterDisplayed">
+        <h4>MASTER STATS</h4>
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-xs-6 control-label" for="labelHostname">FQDN</label>
+                <div class="col-xs-6 ">
+                    <label class="control-label" for="hostname">{{currentMasterDisplayed.hostname}}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label" for="labelNetapiport">API Port</label>
+                <div class="col-xs-6 ">
+                    <label for="netapi_port" class="control-label">{{currentMasterDisplayed.netapi_port}}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="labelAuthmode" class="col-xs-6 control-label">Authentication</label>
+                <div class="col-xs-6 ">
+                    <label for="auth_mode" class="control-label">{{currentMasterDisplayed.auth_mode}}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">User</label>
+                <div class="col-xs-6 ">
+                    <select id="user-select" class="input-sm" ng-model="userName" ng-options="obj.user.username for obj in userDetails"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">Role</label>
+                 <div class="col-xs-6 ">
+                    <label ng-show="userName.user.userprofile.is_user"  class="control-label">User</label>
+                    <label ng-show="userName.user.userprofile.is_admin" class="control-label">Admin</label>
+                    <label ng-show="userName.user.userprofile.is_superuser" class="control-label">Super User</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">First Name</label>
+                 <div class="col-xs-6">
+                    <label class="control-label">{{userName.user.first_name?userName.user.first_name:'NA'}}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">Last Name</label>
+                 <div class="col-xs-6 ">
+                    <label class="control-label">{{userName.user.last_name?userName.user.last_name:'NA'}}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">Email</label>
+                 <div class="col-xs-6 ">
+                    <label title="{{userName.user.email?userName.user.email:'NA'}}" class="control-label"><a href="mailto:{{user.user.email}}">{{userName.user.email?userName.user.email:'NA'}}</a></label>
+                </div>
+            </div>
+            <div class="form-group">
+                 <label class="col-xs-6 control-label">Permissions</label>
+                 <div class="col-xs-6 ">
+                    <ul class="nav" ng-repeat="function in userName.allowed_functions">
+                        <li style="text-align: left;" class="control-label">{{function}}</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- ------------- -->
+            <div class="form-group">
+                <label class="col-xs-6 control-label">Logfile</label>
+                 <div class="col-xs-6 ">
+                    <label title="{{ currentMasterDisplayed.config.log_file | displayDefault }}" class="control-label">{{ currentMasterDisplayed.config.log_file | displayDefault }}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">Renderer</label>
+                 <div class="col-xs-6 ">
+                    <label title="{{ currentMasterDisplayed.config.renderer | displayDefault }}" class="control-label">{{ currentMasterDisplayed.config.renderer | displayDefault }}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">Worker Threads</label>
+                 <div class="col-xs-6 ">
+                    <label title="{{ currentMasterDisplayed.config.worker_threads | displayDefault }}" class="control-label">{{ currentMasterDisplayed.config.worker_threads | displayDefault }}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">Key Logfile</label>
+                 <div class="col-xs-6 ">
+                    <label title="{{ currentMasterDisplayed.config.key_logfile | displayDefault }}" class="control-label">{{ currentMasterDisplayed.config.key_logfile | displayDefault }}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">MySQL DB</label>
+                 <div class="col-xs-6 ">
+                    <label title="{{ currentMasterDisplayed.config.mysql_db | displayDefault }}" class="control-label">{{ currentMasterDisplayed.config.mysql_db | displayDefault }}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">Transport</label>
+                 <div class="col-xs-6 ">
+                    <label title="{{ currentMasterDisplayed.config.transport | displayDefault }}" class="control-label">{{ currentMasterDisplayed.config.transport | displayDefault }}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">Loop Interval</label>
+                 <div class="col-xs-6 ">
+                    <label title="{{ currentMasterDisplayed.config.loop_interval | displayDefault }}" class="control-label">{{ currentMasterDisplayed.config.loop_interval | displayDefault }}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">Rest Cherry Pie Settings</label>
+                <div class="col-xs-6 ">
+                    <select id="settings-select" class="input-sm" ng-model="cherryPieSetting" ng-options="k for (k, v) in currentMasterDisplayed.config.rest_cherrypy"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label"></label>
+                 <div class="col-xs-6 ">
+                    <label title="{{ cherryPieSetting }}" class="control-label">{{ cherryPieSetting }}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">File Roots</label>
+                <div class="col-xs-6 ">
+                    <select id="settings-select" class="input-sm" ng-model="fileRoot" ng-options="k for (k, v) in currentMasterDisplayed.config.file_roots"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">Path/s</label>
+                 <div class="col-xs-6 ">
+                    <label class="control-label">{{ fileRoot.join() }}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">MySQL Host</label>
+                 <div class="col-xs-6 ">
+                    <label title="{{ currentMasterDisplayed.config.mysql_host | displayDefault }}" class="control-label">{{ currentMasterDisplayed.config.mysql_host | displayDefault }}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">Master Job Cache</label>
+                 <div class="col-xs-6 ">
+                    <label title="{{ currentMasterDisplayed.config.master_job_cache | displayDefault }}" class="control-label">{{ currentMasterDisplayed.config.master_job_cache | displayDefault }}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">Max Event Size</label>
+                 <div class="col-xs-6 ">
+                    <label title="{{ currentMasterDisplayed.config.max_event_size | displayDefault }}" class="control-label">{{ currentMasterDisplayed.config.max_event_size | displayDefault }}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">Event Return</label>
+                 <div class="col-xs-6 ">
+                    <label title="{{ currentMasterDisplayed.config.event_return | displayDefault }}" class="control-label">{{ currentMasterDisplayed.config.event_return | displayDefault }}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">Interface</label>
+                 <div class="col-xs-6 ">
+                    <label title="{{ currentMasterDisplayed.config.interface | displayDefault }}" class="control-label">{{ currentMasterDisplayed.config.interface | displayDefault }}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label">Pillar Version</label>
+                 <div class="col-xs-6 ">
+                    <label title="{{ currentMasterDisplayed.config.pillar_version | displayDefault }}" class="control-label">{{ currentMasterDisplayed.config.pillar_version | displayDefault }}</label>
+                </div>
+            </div>
+        </form>
+        <a ui-sref="salt.dashboard.resources.minions.master({ masterId: currentMasterDisplayed.id, view: 'list' })"><b>View Minions</b></a>
+    </div>
+</div>

@@ -1,0 +1,693 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.boto_asg</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.boto_asg">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-boto-asg">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-boto-asg">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.boto_asg</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-boto-asg__module-salt.states.boto_asg"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="manage-autoscale-groups">
+                           <h2 class="title topictitle2">Manage Autoscale Groups</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">Create and destroy autoscale groups. Be aware that this interacts with Amazon's
+                                    services, and so may incur charges.
+                                 </p>
+                                 
+                                 <p class="p">This module uses boto, which can be installed via package, or pip.</p>
+                                 
+                                 <p class="p">This module accepts explicit autoscale credentials but can also utilize
+                                    IAM roles assigned to the instance trough Instance Profiles. Dynamic
+                                    credentials are then automatically obtained from AWS API and no further
+                                    configuration is necessary. More Information available at:
+                                 </p>
+                                 <pre class="pre codeblock language-">http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html</pre>
+                                 <p class="p">If IAM roles are not used you need to specify them either in a pillar or
+                                    in the minion's config file:
+                                 </p>
+                                 <pre class="pre codeblock language-">asg.keyid: GKTADJGHEIQSXMKKRBJ08H
+asg.key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs</pre>
+                                 <p class="p">It's also possible to specify key, keyid and region via a profile, either
+                                    as a passed in dict, or as a string to pull from pillars or minion config:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">myprofile:
+    keyid: GKTADJGHEIQSXMKKRBJ08H
+    key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs
+    region: us-east-1</pre>
+                                 <pre class="pre codeblock language-yaml">Ensure myasg exists:
+  boto_asg.present:
+    - name: myasg
+    - launch_config_name: mylc
+    - availability_zones:
+      - us-east-1a
+      - us-east-1b
+    - min_size: 1
+    - max_size: 1
+    - desired_capacity: 1
+    - load_balancers:
+      - myelb
+    - suspended_processes:
+        - AddToLoadBalancer
+        - AlarmNotification
+    - scaling_policies
+        ----------
+        - adjustment_type: ChangeInCapacity
+        - as_name: api-production-iad
+        - cooldown: 1800
+        - min_adjustment_step: None
+        - name: ScaleDown
+        - scaling_adjustment: -1
+    - region: us-east-1
+    - keyid: GKTADJGHEIQSXMKKRBJ08H
+    - key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs
+
+# Using a profile from pillars.
+Ensure myasg exists:
+  boto_asg.present:
+    - name: myasg
+    - launch_config_name: mylc
+    - availability_zones:
+      - us-east-1a
+      - us-east-1b
+    - min_size: 1
+    - max_size: 1
+    - desired_capacity: 1
+    - load_balancers:
+      - myelb
+    - profile: myprofile
+
+# Passing in a profile.
+Ensure myasg exists:
+  boto_asg.present:
+    - name: myasg
+    - launch_config_name: mylc
+    - availability_zones:
+      - us-east-1a
+      - us-east-1b
+    - min_size: 1
+    - max_size: 1
+    - desired_capacity: 1
+    - load_balancers:
+      - myelb
+    - profile:
+        keyid: GKTADJGHEIQSXMKKRBJ08H
+        key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs
+        region: us-east-1
+
+# Deleting an autoscale group with running instances.
+Ensure myasg is deleted:
+  boto_asg.absent:
+    - name: myasg
+    # If instances exist, we must force the deletion of the asg.
+    - force: True</pre>
+                                 <p class="p">It's possible to specify cloudwatch alarms that will be setup along with the
+                                    ASG. Note the alarm name will be the name attribute defined, plus the ASG
+                                    resource name.
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">Ensure myasg exists:
+  boto_asg.present:
+    - name: myasg
+    - launch_config_name: mylc
+    - availability_zones:
+      - us-east-1a
+      - us-east-1b
+    - min_size: 1
+    - max_size: 1
+    - desired_capacity: 1
+    - load_balancers:
+      - myelb
+    - profile: myprofile
+    - alarms:
+        CPU:
+          name: 'ASG CPU **MANAGED BY SALT**'
+          attributes:
+            metric: CPUUtilization
+            namespace: AWS/EC2
+            statistic: Average
+            comparison: '&gt;='
+            threshold: 65.0
+            period: 60
+            evaluation_periods: 30
+            unit: null
+            description: 'ASG CPU'
+            alarm_actions: [ 'arn:aws:sns:us-east-1:12345:myalarm' ]
+            insufficient_data_actions: []
+            ok_actions: [ 'arn:aws:sns:us-east-1:12345:myalarm' ]</pre>
+                                 <p class="p">You can also use alarms from pillars, and override values from the pillar
+                                    alarms by setting overrides on the resource. Note that 'boto_asg_alarms'
+                                    will be used as a default value for all resources, if defined and can be
+                                    used to ensure alarms are always set for an ASG resource.
+                                 </p>
+                                 
+                                 <p class="p">Setting the alarms in a pillar:</p>
+                                 <pre class="pre codeblock language-yaml">my_asg_alarm:
+  CPU:
+    name: 'ASG CPU **MANAGED BY SALT**'
+    attributes:
+      metric: CPUUtilization
+      namespace: AWS/EC2
+      statistic: Average
+      comparison: '&gt;='
+      threshold: 65.0
+      period: 60
+      evaluation_periods: 30
+      unit: null
+      description: 'ASG CPU'
+      alarm_actions: [ 'arn:aws:sns:us-east-1:12345:myalarm' ]
+      insufficient_data_actions: []
+      ok_actions: [ 'arn:aws:sns:us-east-1:12345:myalarm' ]</pre>
+                                 <p class="p">Overriding the alarm values on the resource:</p>
+                                 <pre class="pre codeblock language-yaml">Ensure myasg exists:
+  boto_asg.present:
+    - name: myasg
+    - launch_config_name: mylc
+    - availability_zones:
+      - us-east-1a
+      - us-east-1b
+    - min_size: 1
+    - max_size: 1
+    - desired_capacity: 1
+    - load_balancers:
+      - myelb
+    - profile: myprofile
+    - alarms_from_pillar: my_asg_alarm
+    # override CPU:attributes:threshold
+    - alarms:
+        CPU:
+          attributes:
+            threshold: 50.0</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.boto_asg.absent">
+                              <h3 class="title topictitle3">absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.boto_asg.absent(
+								name,
+								force=False,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure the named autoscale group is deleted.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d354975e89" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d354975e91" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e89" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d354975e91" class="stentry propdesc">
+                                          <p class="p">Name of the autoscale group.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e89" class="stentry propvalue">force</td>
+                                       
+                                       <td valign="top" headers="d354975e91" class="stentry propdesc">
+                                          <p class="p">Force deletion of autoscale group.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e89" class="stentry propvalue">region</td>
+                                       
+                                       <td valign="top" headers="d354975e91" class="stentry propdesc">
+                                          <p class="p">The region to connect to.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e89" class="stentry propvalue">key</td>
+                                       
+                                       <td valign="top" headers="d354975e91" class="stentry propdesc">
+                                          <p class="p">Secret key to be used.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e89" class="stentry propvalue">keyid</td>
+                                       
+                                       <td valign="top" headers="d354975e91" class="stentry propdesc">
+                                          <p class="p">Access key to be used.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e89" class="stentry propvalue">profile</td>
+                                       
+                                       <td valign="top" headers="d354975e91" class="stentry propdesc">
+                                          <p class="p">A dict with region, key and keyid, or a pillar key (string)
+                                             that contains a dict with region, key and keyid.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.boto_asg.present">
+                              <h3 class="title topictitle3">present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.boto_asg.present(
+								name,
+								launch_config_name,
+								availability_zones,
+								min_size,
+								max_size,
+								launch_config=None,
+								desired_capacity=None,
+								load_balancers=None,
+								default_cooldown=None,
+								health_check_type=None,
+								health_check_period=None,
+								placement_group=None,
+								vpc_zone_identifier=None,
+								tags=None,
+								termination_policies=None,
+								suspended_processes=None,
+								scaling_policies=None,
+								alarms=None,
+								alarms_from_pillar='boto_asg_alarms',
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure the autoscale group exists.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d354975e157" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d354975e159" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e157" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d354975e159" class="stentry propdesc">
+                                          <p class="p">Name of the autoscale group.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">launch_config
+                                       A dictionary of launch config attributes.  If specified, a
+                                       launch config will be used or created, matching this set
+                                       of attributes, and the autoscale group will be set to use
+                                       that launch config.  The launch config name will be the
+                                       launch_config_name followed by a hyphen followed by a hash
+                                       of the launch_config dict contents.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d354975e172" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d354975e174" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">availability_zones</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">List of availability zones for the group.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">min_size</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">Minimum size of the group.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">max_size</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">Maximum size of the group.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">desired_capacity</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">The desired capacity of the group.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">load_balancers</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">List of load balancers for the group. Once set this can not be
+                                             updated (Amazon restriction).
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">default_cooldown</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">Number of seconds after a Scaling Activity completes before any further
+                                             scaling activities can start.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">health_check_type</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">The service you want the health status from, Amazon EC2 or Elastic Load
+                                             Balancer (EC2 or ELB).
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">health_check_period</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">Length of time in seconds after a new EC2 instance comes into service
+                                             that Auto Scaling starts checking its health.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">placement_group</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">Physical location of your cluster placement group created in Amazon
+                                             EC2. Once set this can not be updated (Amazon restriction).
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">vpc_zone_identifier</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">A list of the subnet identifiers of the Virtual Private Cloud.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">tags</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <dl class="dl definition_list">
+                                             <dt class="dt dlterm">A list of tags. Example:</dt>
+                                             
+                                             <dd class="dd">
+                                                <ul class="ul">
+                                                   <li class="li">
+                                                      <p class="p">key: 'key'
+                                                         value: 'value'
+                                                         propagate_at_launch: true
+                                                      </p>
+                                                      
+                                                   </li>
+                                                   
+                                                </ul>
+                                                
+                                             </dd>
+                                             
+                                          </dl>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">termination_policies</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">A list of termination policies. Valid values are: “OldestInstance”,
+                                             “NewestInstance”, “OldestLaunchConfiguration”,
+                                             “ClosestToNextInstanceHour”, “Default”. If no value is specified, the
+                                             “Default” value is used.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">suspended_processes</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">List of processes to be suspended. see
+                                             <a class="xref" href="http://docs.aws.amazon.com/AutoScaling/latest/DeveloperGuide/US_SuspendResume.html" target="_blank">http://docs.aws.amazon.com/AutoScaling/latest/DeveloperGuide/US_SuspendResume.html</a></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">scaling_policies</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">List of scaling policies.  Each policy is a dict of key-values described by
+                                             <a class="xref" href="http://boto.readthedocs.org/en/latest/ref/autoscale.html#boto.ec2.autoscale.policy.ScalingPolicy" target="_blank">http://boto.readthedocs.org/en/latest/ref/autoscale.html#boto.ec2.autoscale.policy.ScalingPolicy</a></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">alarms:</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">a dictionary of name-&gt;boto_cloudwatch_alarm sections to be associated with this ASG.
+                                             All attributes should be specified except for dimension which will be
+                                             automatically set to this ASG.
+                                             See the boto_cloudwatch_alarm state for information about these attributes.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">alarms_from_pillar:</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">name of pillar dict that contains alarm settings.   Alarms defined for this specific
+                                             state will override those from pillar.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">region</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">The region to connect to.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">key</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">Secret key to be used.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">keyid</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">Access key to be used.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d354975e172" class="stentry propvalue">profile</td>
+                                       
+                                       <td valign="top" headers="d354975e174" class="stentry propdesc">
+                                          <p class="p">A dict with region, key and keyid, or a pillar key (string)
+                                             that contains a dict with region, key and keyid.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

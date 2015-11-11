@@ -1,0 +1,645 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>rest_tornado</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="rest_tornado">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../rest-api.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="rest-tornado">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="rest-tornado">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">rest_tornado</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="rest-tornado__module-salt.netapi.rest_tornado.saltnado"></span></p>
+                              
+                           </div>
+                           
+                           <div class="section" id="rest-tornado__a-non-blocking-rest-api-for-salt">
+                              <h2 class="title sectiontitle">A non-blocking REST API for Salt</h2>
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">tornado Python module</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">configuration</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">All authentication is done through Salt's 
+                                       		
+                                       			&nbsp;<a class="xref" href="../../../topics/eauth/index.html#acl-eauth">external auth</a> system which requires additional configuration not described
+                                       here.
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">In order to run rest_tornado with the salt-master
+                                 add the following to the Salt master config file.
+                              </p>
+                              <pre class="pre codeblock language-yaml">rest_tornado:
+    # can be any port
+    port: 8000
+    # address to bind to (defaults to 0.0.0.0)
+    address: 0.0.0.0
+    # socket backlog
+    backlog: 128
+    ssl_crt: /etc/pki/api/certs/server.crt
+    # no need to specify ssl_key if cert and key
+    # are in one single file
+    ssl_key: /etc/pki/api/certs/server.key
+    debug: False
+    disable_ssl: False</pre>
+                              </div>
+                           
+                           <div class="section" id="rest-tornado__rest-tornado-auth">
+                              <h2 class="title sectiontitle">Authentication</h2>
+                              <p class="p">Authentication is performed by passing a session token with each request.
+                                 Tokens are generated via the <a class="xref" href="salt.netapi.rest_tornado.html#salt.netapi.rest_tornado.saltnado.SaltAuthHandler">SaltAuthHandler</a> URL.
+                              </p>
+                              
+                              <p class="p">The token may be sent in one of two ways:</p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Include a custom header named X-Auth-Token.</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Sent via a cookie. This option is a convenience for HTTP clients that
+                                       automatically handle cookie support (such as browsers).
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">You can bypass the session handling via the <a class="xref" href="salt.netapi.rest_tornado.html#salt.netapi.rest_tornado.saltnado.RunSaltAPIHandler">RunSaltAPIHandler</a> URL.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="rest-tornado__usage">
+                              <h2 class="title sectiontitle">Usage</h2>
+                              <p class="p">Commands are sent to a running Salt master via this module by sending HTTP
+                                 requests to the URLs detailed below.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">Content negotiation</strong><p class="p">This REST interface is flexible in what data formats it will accept as well
+                                    as what formats it will return (e.g., JSON, YAML, x-www-form-urlencoded).
+                                 </p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">Specify the format of data in the request body by including the
+                                          Content-Type header.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">Specify the desired data format for the response body with the
+                                          Accept header.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                              </aside>
+                              
+                              <p class="p">Data sent in <a class="xref" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.5" target="_blank">POST</a> and <a class="xref" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.6" target="_blank">PUT</a> requests  must be in
+                                 the format of a list of lowstate dictionaries. This allows multiple commands to
+                                 be executed in a single HTTP request.
+                              </p>
+                              
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm">lowstate</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">A dictionary containing various keys that instruct Salt which command
+                                       to run, where that command lives, any parameters for that command, any
+                                       authentication credentials, what returner to use, etc.
+                                    </p>
+                                    
+                                    <p class="p">Salt uses the lowstate data format internally in many places to pass
+                                       command data between functions. Salt also uses lowstate for the
+                                       
+                                       		
+                                       			&nbsp;<a class="xref" href="../../clients/index.html#client-apis__python-api">LocalClient()</a> Python API interface.
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">The following example (in JSON format) causes Salt to execute two commands:</p>
+                              <pre class="pre codeblock language-">[{
+    "client": "local",
+    "tgt": "*",
+    "fun": "test.fib",
+    "arg": ["10"]
+},
+{
+    "client": "runner",
+    "fun": "jobs.lookup_jid",
+    "jid": "20130603122505459265"
+}]</pre>
+                              <p class="p">Multiple commands in a Salt API request will be executed in serial and makes
+                                 no gaurantees that all commands will run. Meaning that if test.fib (from the
+                                 example above) had an exception, the API would still execute "jobs.lookup_jid".
+                              </p>
+                              
+                              <p class="p">Responses to these lowstates are an in-order list of dicts containing the
+                                 return data, a yaml response could look like:
+                              </p>
+                              <pre class="pre codeblock language-">- ms-1: true
+  ms-2: true
+- ms-1: foo
+  ms-2: bar</pre>
+                              <p class="p">In the event of an exception while executing a command the return for that lowstate
+                                 will be a string, for example if no minions matched the first lowstate we would get
+                                 a return like:
+                              </p>
+                              <pre class="pre codeblock language-">- No minions matched the target. No command was sent, no jid was assigned.
+- ms-1: true
+  ms-2: true</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">x-www-form-urlencoded</strong><p class="p">Sending JSON or YAML in the request body is simple and most flexible,
+                                    however sending data in urlencoded format is also supported with the
+                                    caveats below. It is the default format for HTML forms, many JavaScript
+                                    libraries, and the curl command.
+                                 </p>
+                                 
+                                 <p class="p">For example, the equivalent to running <tt class="ph tt">salt '*' test.ping</tt> is sending
+                                    <tt class="ph tt">fun=test.ping&amp;arg&amp;client=local&amp;tgt=*</tt> in the HTTP request body.
+                                 </p>
+                                 
+                                 <p class="p">Caveats:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">Only a single command may be sent per HTTP request.</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">Repeating the <tt class="ph tt">arg</tt> parameter multiple times will cause those
+                                          parameters to be combined into a single list.
+                                       </p>
+                                       
+                                       <p class="p">Note, some popular frameworks and languages (notably jQuery, PHP, and
+                                          Ruby on Rails) will automatically append empty brackets onto repeated
+                                          parameters. E.g., <tt class="ph tt">arg=one</tt>, <tt class="ph tt">arg=two</tt> will be sent as <tt class="ph tt">arg[]=one</tt>,
+                                          <tt class="ph tt">arg[]=two</tt>. This is not supported; send JSON or YAML instead.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="rest-tornado__a-websockets-add-on-to-saltnado">
+                              <h2 class="title sectiontitle">A Websockets add-on to saltnado</h2>
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">tornado Python module</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">In order to enable saltnado_websockets you must add websockets: True to your
+                                 saltnado config block.
+                              </p>
+                              <pre class="pre codeblock language-yaml">rest_tornado:
+    # can be any port
+    port: 8000
+    ssl_crt: /etc/pki/api/certs/server.crt
+    # no need to specify ssl_key if cert and key
+    # are in one single file
+    ssl_key: /etc/pki/api/certs/server.key
+    debug: False
+    disable_ssl: False
+    websockets: True</pre>
+                              </div>
+                           
+                           <div class="section" id="rest-tornado__all-events">
+                              <h2 class="title sectiontitle">All Events</h2>
+                              <p class="p">Exposes <tt class="ph tt">all</tt> "real-time" events from Salt's event bus on a websocket connection.
+                                 It should be noted that "Real-time" here means these events are made available
+                                 to the server as soon as any salt related action (changes to minions, new jobs etc)
+                                 happens.
+                                 Clients are however assumed to be able to tolerate any network transport related latencies.
+                                 Functionality provided by this endpoint is similar to the <tt class="ph tt">/events</tt> end point.
+                              </p>
+                              
+                              <p class="p">The event bus on the Salt master exposes a large variety of things, notably
+                                 when executions are started on the master and also when minions ultimately
+                                 return their results. This URL provides a real-time window into a running
+                                 Salt infrastructure. Uses websocket as the transport mechanism.
+                              </p>
+                              
+                              <p class="p">Exposes GET method to return websocket connections.
+                                 All requests should include an auth token.
+                                 A way to obtain obtain authentication tokens is shown below.
+                              </p>
+                              <pre class="pre codeblock language-bash">% curl -si localhost:8000/login \
+    -H "Accept: application/json" \
+    -d username='salt' \
+    -d password='salt' \
+    -d eauth='pam'</pre>
+                              <p class="p">Which results in the response</p>
+                              <pre class="pre codeblock language-javascript">{
+    "return": [{
+        "perms": [".*", "@runner", "@wheel"],
+        "start": 1400556492.277421,
+        "token": "d0ce6c1a37e99dcc0374392f272fe19c0090cca7",
+        "expire": 1400599692.277422,
+        "user": "salt",
+        "eauth": "pam"
+    }]
+}</pre>
+                              <p class="p">In this example the <tt class="ph tt">token</tt> returned is <tt class="ph tt">d0ce6c1a37e99dcc0374392f272fe19c0090cca7</tt> and can be included
+                                 in subsequent websocket requests (as part of the URL).
+                              </p>
+                              
+                              <p class="p">The event stream can be easily consumed via JavaScript:</p>
+                              <pre class="pre codeblock language-javascript">// Note, you must be authenticated!
+
+// Get the Websocket connection to Salt
+var source = new Websocket('wss://localhost:8000/all_events/d0ce6c1a37e99dcc0374392f272fe19c0090cca7');
+
+// Get Salt's "real time" event stream.
+source.onopen = function() { source.send('websocket client ready'); };
+
+// Other handlers
+source.onerror = function(e) { console.debug('error!', e); };
+
+// e.data represents Salt's "real time" event data as serialized JSON.
+source.onmessage = function(e) { console.debug(e.data); };
+
+// Terminates websocket connection and Salt's "real time" event stream on the server.
+source.close();</pre>
+                              <p class="p">Or via Python, using the Python module
+                                 <a class="xref" href="https://pypi.python.org/pypi/websocket-client/" target="_blank">websocket-client</a> for example.
+                                 Or the tornado
+                                 <a class="xref" href="http://tornado.readthedocs.org/en/latest/websocket.html#client-side-support" target="_blank">client</a>.
+                              </p>
+                              <pre class="pre codeblock language-python"># Note, you must be authenticated!
+
+from websocket import create_connection
+
+# Get the Websocket connection to Salt
+ws = create_connection('wss://localhost:8000/all_events/d0ce6c1a37e99dcc0374392f272fe19c0090cca7')
+
+# Get Salt's "real time" event stream.
+ws.send('websocket client ready')
+
+
+# Simple listener to print results of Salt's "real time" event stream.
+# Look at https://pypi.python.org/pypi/websocket-client/ for more examples.
+while listening_to_events:
+    print ws.recv()       #  Salt's "real time" event data as serialized JSON.
+
+# Terminates websocket connection and Salt's "real time" event stream on the server.
+ws.close()
+
+# Please refer to https://github.com/liris/websocket-client/issues/81 when using a self signed cert</pre>
+                              <p class="p">Above examples show how to establish a websocket connection to Salt and activating
+                                 real time updates from Salt's event stream by signaling <tt class="ph tt">websocket client ready</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="rest-tornado__formatted-events">
+                              <h2 class="title sectiontitle">Formatted Events</h2>
+                              <p class="p">Exposes <tt class="ph tt">formatted</tt> "real-time" events from Salt's event bus on a websocket connection.
+                                 It should be noted that "Real-time" here means these events are made available
+                                 to the server as soon as any salt related action (changes to minions, new jobs etc)
+                                 happens.
+                                 Clients are however assumed to be able to tolerate any network transport related latencies.
+                                 Functionality provided by this endpoint is similar to the <tt class="ph tt">/events</tt> end point.
+                              </p>
+                              
+                              <p class="p">The event bus on the Salt master exposes a large variety of things, notably
+                                 when executions are started on the master and also when minions ultimately
+                                 return their results. This URL provides a real-time window into a running
+                                 Salt infrastructure. Uses websocket as the transport mechanism.
+                              </p>
+                              
+                              <p class="p">Formatted events parses the raw "real time" event stream and maintains
+                                 a current view of the following:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">minions</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">jobs</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <p class="p">A change to the minions (such as addition, removal of keys or connection drops)
+                                 or jobs is processed and clients are updated.
+                                 Since we use salt's presence events to track minions,
+                                 please enable <tt class="ph tt">presence_events</tt>
+                                 and set a small value for the <tt class="ph tt">loop_interval</tt>
+                                 in the salt master config file.
+                              </p>
+                              
+                              <p class="p">Exposes GET method to return websocket connections.
+                                 All requests should include an auth token.
+                                 A way to obtain obtain authentication tokens is shown below.
+                              </p>
+                              <pre class="pre codeblock language-bash">% curl -si localhost:8000/login \
+    -H "Accept: application/json" \
+    -d username='salt' \
+    -d password='salt' \
+    -d eauth='pam'</pre>
+                              <p class="p">Which results in the response</p>
+                              <pre class="pre codeblock language-javascript">{
+    "return": [{
+        "perms": [".*", "@runner", "@wheel"],
+        "start": 1400556492.277421,
+        "token": "d0ce6c1a37e99dcc0374392f272fe19c0090cca7",
+        "expire": 1400599692.277422,
+        "user": "salt",
+        "eauth": "pam"
+    }]
+}</pre>
+                              <p class="p">In this example the <tt class="ph tt">token</tt> returned is <tt class="ph tt">d0ce6c1a37e99dcc0374392f272fe19c0090cca7</tt> and can be included
+                                 in subsequent websocket requests (as part of the URL).
+                              </p>
+                              
+                              <p class="p">The event stream can be easily consumed via JavaScript:</p>
+                              <pre class="pre codeblock language-javascript">// Note, you must be authenticated!
+
+// Get the Websocket connection to Salt
+var source = new Websocket('wss://localhost:8000/formatted_events/d0ce6c1a37e99dcc0374392f272fe19c0090cca7');
+
+// Get Salt's "real time" event stream.
+source.onopen = function() { source.send('websocket client ready'); };
+
+// Other handlers
+source.onerror = function(e) { console.debug('error!', e); };
+
+// e.data represents Salt's "real time" event data as serialized JSON.
+source.onmessage = function(e) { console.debug(e.data); };
+
+// Terminates websocket connection and Salt's "real time" event stream on the server.
+source.close();</pre>
+                              <p class="p">Or via Python, using the Python module
+                                 <a class="xref" href="https://pypi.python.org/pypi/websocket-client/" target="_blank">websocket-client</a> for example.
+                                 Or the tornado
+                                 <a class="xref" href="http://tornado.readthedocs.org/en/latest/websocket.html#client-side-support" target="_blank">client</a>.
+                              </p>
+                              <pre class="pre codeblock language-python"># Note, you must be authenticated!
+
+from websocket import create_connection
+
+# Get the Websocket connection to Salt
+ws = create_connection('wss://localhost:8000/formatted_events/d0ce6c1a37e99dcc0374392f272fe19c0090cca7')
+
+# Get Salt's "real time" event stream.
+ws.send('websocket client ready')
+
+
+# Simple listener to print results of Salt's "real time" event stream.
+# Look at https://pypi.python.org/pypi/websocket-client/ for more examples.
+while listening_to_events:
+    print ws.recv()       #  Salt's "real time" event data as serialized JSON.
+
+# Terminates websocket connection and Salt's "real time" event stream on the server.
+ws.close()
+
+# Please refer to https://github.com/liris/websocket-client/issues/81 when using a self signed cert</pre>
+                              <p class="p">Above examples show how to establish a websocket connection to Salt and activating
+                                 real time updates from Salt's event stream by signaling <tt class="ph tt">websocket client ready</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="rest-tornado__example-responses">
+                              <h2 class="title sectiontitle">Example responses</h2>
+                              <p class="p"><tt class="ph tt">Minion information</tt> is a dictionary keyed by each connected minion's <tt class="ph tt">id</tt> (<tt class="ph tt">mid</tt>),
+                                 grains information for each minion is also included.
+                              </p>
+                              
+                              <p class="p">Minion information is sent in response to the following minion events:</p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <dl class="dl definition_list">
+                                       <dt class="dt dlterm">connection drops</dt>
+                                       
+                                       <dd class="dd">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">requires running <tt class="ph tt">manage.present</tt> periodically every <tt class="ph tt">loop_interval</tt> seconds
+                                                </p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </dd>
+                                       
+                                    </dl>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">minion addition</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">minon removal</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              <pre class="pre codeblock language-python"># Not all grains are shown
+data: {
+    "minions": {
+        "minion1": {
+            "id": "minion1",
+            "grains": {
+                "kernel": "Darwin",
+                "domain": "local",
+                "zmqversion": "4.0.3",
+                "kernelrelease": "13.2.0"
+            }
+        }
+    }
+}</pre>
+                              <p class="p"><tt class="ph tt">Job information</tt> is also tracked and delivered.
+                              </p>
+                              
+                              <p class="p">Job information is also a dictionary
+                                 in which each job's information is keyed by salt's <tt class="ph tt">jid</tt>.
+                              </p>
+                              <pre class="pre codeblock language-python">data: {
+    "jobs": {
+        "20140609153646699137": {
+            "tgt_type": "glob",
+            "jid": "20140609153646699137",
+            "tgt": "*",
+            "start_time": "2014-06-09T15:36:46.700315",
+            "state": "complete",
+            "fun": "test.ping",
+            "minions": {
+                "minion1": {
+                    "return": true,
+                    "retcode": 0,
+                    "success": true
+                }
+            }
+        }
+    }
+}</pre>
+                              </div>
+                           
+                           <div class="section" id="rest-tornado__setup">
+                              <h2 class="title sectiontitle">Setup</h2>
+                           </div>
+                           
+                           <div class="section" id="rest-tornado__rest-uri-reference">
+                              <h2 class="title sectiontitle">REST URI Reference</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-tornado__id3">/</span></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-tornado__login">/login</span></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-tornado__minions">/minions</span></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-tornado__jobs">/jobs</span></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-tornado__run">/run</span></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-tornado__events">/events</span></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-tornado__hook">/hook</span></p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="rest-tornado__id3">
+                              <h2 class="title sectiontitle">/</h2>
+                           </div>
+                           
+                           <div class="section" id="rest-tornado__login">
+                              <h2 class="title sectiontitle">/login</h2>
+                           </div>
+                           
+                           <div class="section" id="rest-tornado__minions">
+                              <h2 class="title sectiontitle">/minions</h2>
+                           </div>
+                           
+                           <div class="section" id="rest-tornado__jobs">
+                              <h2 class="title sectiontitle">/jobs</h2>
+                           </div>
+                           
+                           <div class="section" id="rest-tornado__run">
+                              <h2 class="title sectiontitle">/run</h2>
+                           </div>
+                           
+                           <div class="section" id="rest-tornado__events">
+                              <h2 class="title sectiontitle">/events</h2>
+                           </div>
+                           
+                           <div class="section" id="rest-tornado__hook">
+                              <h2 class="title sectiontitle">/hook</h2>
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

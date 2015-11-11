@@ -1,0 +1,488 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.lvm</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.lvm">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-lvm">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-lvm">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.lvm</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-lvm__module-salt.states.lvm"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="management-of-linux-logical-volumes">
+                           <h2 class="title topictitle2">Management of Linux logical volumes</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">A state module to manage LVMs</p>
+                                 <pre class="pre codeblock language-yaml">/dev/sda:
+  lvm.pv_present
+
+my_vg:
+  lvm.vg_present:
+    - devices: /dev/sda
+
+lvroot:
+  lvm.lv_present:
+    - vgname: my_vg
+    - size: 10G
+    - stripes: 5
+    - stripesize: 8K</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.lvm.lv_absent">
+                              <h3 class="title topictitle3">lv_absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.lvm.lv_absent(
+								name,
+								vgname=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Remove a given existing logical volume from a named existing volume group</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d389979e57" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d389979e59" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d389979e57" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d389979e59" class="stentry propdesc">
+                                          <p class="p">The logical volume to remove</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d389979e57" class="stentry propvalue">vgname</td>
+                                       
+                                       <td valign="top" headers="d389979e59" class="stentry propdesc">
+                                          <p class="p">The volume group name</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.lvm.lv_present">
+                              <h3 class="title topictitle3">lv_present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.lvm.lv_present(
+								name,
+								vgname=None,
+								size=None,
+								extents=None,
+								snapshot=None,
+								pv='',
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Create a new logical volume</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d389979e101" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d389979e103" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d389979e101" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d389979e103" class="stentry propdesc">
+                                          <p class="p">The name of the logical volume</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d389979e101" class="stentry propvalue">vgname</td>
+                                       
+                                       <td valign="top" headers="d389979e103" class="stentry propdesc">
+                                          <p class="p">The volume group name for this logical volume</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d389979e101" class="stentry propvalue">size</td>
+                                       
+                                       <td valign="top" headers="d389979e103" class="stentry propdesc">
+                                          <p class="p">The initial size of the logical volume</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d389979e101" class="stentry propvalue">extents</td>
+                                       
+                                       <td valign="top" headers="d389979e103" class="stentry propdesc">
+                                          <p class="p">The number of logical extents to allocate</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d389979e101" class="stentry propvalue">snapshot</td>
+                                       
+                                       <td valign="top" headers="d389979e103" class="stentry propdesc">
+                                          <p class="p">The name of the snapshot</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d389979e101" class="stentry propvalue">pv</td>
+                                       
+                                       <td valign="top" headers="d389979e103" class="stentry propdesc">
+                                          <p class="p">The physical volume to use</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d389979e101" class="stentry propvalue">kwargs</td>
+                                       
+                                       <td valign="top" headers="d389979e103" class="stentry propdesc">
+                                          <p class="p">Any supported options to lvcreate. See
+                                             
+                                             		
+                                             			&nbsp;<a class="xref" href="../../modules/all/salt.modules.linux_lvm.html#salt.modules.linux_lvm">linux_lvm</a> for more details.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.lvm.pv_absent">
+                              <h3 class="title topictitle3">pv_absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.lvm.pv_absent(
+								name
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure that a Physical Device is not being used by lvm</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d389979e179" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d389979e181" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d389979e179" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d389979e181" class="stentry propdesc">
+                                          <p class="p">The device name to initialize.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.lvm.pv_present">
+                              <h3 class="title topictitle3">pv_present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.lvm.pv_present(
+								name,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Set a physical device to be used as an LVM physical volume</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d389979e217" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d389979e219" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d389979e217" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d389979e219" class="stentry propdesc">
+                                          <p class="p">The device name to initialize.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d389979e217" class="stentry propvalue">kwargs</td>
+                                       
+                                       <td valign="top" headers="d389979e219" class="stentry propdesc">
+                                          <p class="p">Any supported options to pvcreate. See
+                                             
+                                             		
+                                             			&nbsp;<a class="xref" href="../../modules/all/salt.modules.linux_lvm.html#salt.modules.linux_lvm">linux_lvm</a> for more details.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.lvm.vg_absent">
+                              <h3 class="title topictitle3">vg_absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.lvm.vg_absent(
+								name
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Remove an LVM volume group</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d389979e265" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d389979e267" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d389979e265" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d389979e267" class="stentry propdesc">
+                                          <p class="p">The volume group to remove</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.lvm.vg_present">
+                              <h3 class="title topictitle3">vg_present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.lvm.vg_present(
+								name,
+								devices=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Create an LVM volume group</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d389979e303" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d389979e305" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d389979e303" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d389979e305" class="stentry propdesc">
+                                          <p class="p">The volume group name to create</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d389979e303" class="stentry propvalue">devices</td>
+                                       
+                                       <td valign="top" headers="d389979e305" class="stentry propdesc">
+                                          <p class="p">A list of devices that will be added to the volume group</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d389979e303" class="stentry propvalue">kwargs</td>
+                                       
+                                       <td valign="top" headers="d389979e305" class="stentry propdesc">
+                                          <p class="p">Any supported options to vgcreate. See
+                                             
+                                             		
+                                             			&nbsp;<a class="xref" href="../../modules/all/salt.modules.linux_lvm.html#salt.modules.linux_lvm">linux_lvm</a> for more details.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

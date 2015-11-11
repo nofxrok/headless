@@ -1,0 +1,190 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>High-Availability</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="High-Availability">
+      
+      <meta name="abstract" content="SaltStack includes many features that are designed to support a highly available implementation.">
+      
+      <meta name="description" content="SaltStack includes many features that are designed to support a highly available implementation.">
+      
+      <meta name="DC.Relation" scheme="URI" content="architecture.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="concept_rs4_bmm_4r">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="concept_rs4_bmm_4r">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">High-Availability</h1>
+                        <div class="body conbody">
+                           <p class="shortdesc">SaltStack includes many features that are designed to support a highly available
+                              implementation. 
+                           </p>
+                           
+                           <p class="p"><strong class="ph b">Minion Master / Multi-Master</strong></p>
+                           
+                           <p class="p">The minion’s configuration file is typically found under /etc/salt/minion. In this
+                              file, the
+                              hostname or ip of the salt-master is defined (default is “salt”). The minion can connect
+                              simultaneously to multiple masters. This is achieved by simply presenting the masters
+                              as a list
+                              in YAML (<a class="xref" href="http://www.yaml.org" target="_blank">www.yaml.org</a>)
+                              formatting. So instead of Master: hostname it would look like the following example:
+                           </p>
+                           
+                           <p class="p"></p>
+                           
+                           <p class="p">Master:</p>
+                           
+                           <ul class="ul" id="concept_rs4_bmm_4r__ul_ash_cnm_4r">
+                              <li class="li">Master1</li>
+                              
+                              <li class="li">Master2</li>
+                              
+                           </ul>
+                           
+                           <p class="p"></p>
+                           
+                           <p class="p">Note that the indentation is double-spaced, not tabular. There are two spaces from
+                              the margin
+                              before the “-” and a single space between the “-” and the name or ip string. The minion
+                              will
+                              actively connect simultaneously to all masters.
+                           </p>
+                           
+                           <p class="p"><strong class="ph b">Master Configuration</strong></p>
+                           
+                           <p class="p">The master’s central configuration settings file is typically found on the master
+                              under
+                              /etc/salt/master. This file should be replicable among all masters as there are not
+                              typically
+                              master specific settings stored in this file. Important behavioural aspects of the
+                              salt-master
+                              from application settings to security are all defined in this file.
+                           </p>
+                           
+                           <p class="p">As of this writing, there are no mechanisms to replicate this file amongst masters
+                              native to
+                              Salt. A possible solution for consideration is to place this file under management
+                              by Salt. Since
+                              all salt-commands are forked from the salt-minion and master processes, Salt can “salt”
+                              itself. 
+                           </p>
+                           
+                           <p class="p"><strong class="ph b">Master Minion Trust</strong></p>
+                           
+                           <p class="p">When a minion first connects to a salt-master, it sends a copy of its public key.
+                              If the key
+                              has been accepted it will be moved to /etc/salt/pki/master. If a minion is trusted
+                              by one master,
+                              it will be important to replicate that trust across all masters. If the minion is
+                              no longer
+                              trusted by a master, that state must be replicated as well.
+                           </p>
+                           
+                           <p class="p">As of this writing, there are no mechanisms to replicate keys across salt-masters
+                              that are
+                              native to SaltStack. Key Management is accessible from the Salt-API and will be included
+                              in a
+                              future release of the SaltStack Enterprise console. As a workaround, using an external
+                              replication mechanism such as a scheduled “Rsync” may be the preferred option. 
+                           </p>
+                           
+                           <p class="p"><strong class="ph b">Salt Pillars</strong></p>
+                           
+                           <p class="p">Pillar definitions are stored either external to the salt-master as an “external pillar”
+                              or
+                              stored as a YAML data structure on the master directly. In the case of external pillars,
+                              the only
+                              consideration would be replicating the salt master config (see Master Configuration).
+                              In the case
+                              of native pillars, they are typically found in flat files under /srv/pillar. 
+                           </p>
+                           
+                           <p class="p">As of this writing there are no mechanisms to replicate pillars across salt-masters
+                              that are
+                              native to SaltStack; however, it is possible to store Pillar data external to the
+                              Salt Master in
+                              a DVCS. By placing the pillar in a DVCS, you may take advantage of the distributed
+                              architecture
+                              of the system as well as obtain the additional benefits of version control. 
+                           </p>
+                           
+                           <p class="p"><strong class="ph b">Salt States</strong></p>
+                           
+                           <p class="p">Salt configuration data is typically stored in a YAML flat file called a Salt State.
+                              The
+                              directory structure containing Salt States is known as a “state tree” and typically
+                              found under
+                              /srv/salt. 
+                           </p>
+                           
+                           <p class="p">Like Pillars, as of this writing there are no mechanisms to replicate state files
+                              across
+                              salt-masters that are native to SaltStack. The recommended approach for most environments
+                              is to
+                              store the state files directly in the DVCS system. 
+                           </p>
+                           
+                           <p class="p"><strong class="ph b">Salt Syndic</strong></p>
+                           
+                           <p class="p">In any highly available SaltStack implementation, you will have multiple salt-master
+                              servers
+                              with the exception of running salt in “masterless mode” which is rather uncommon.
+                              In order to
+                              maintain a central control point for all salt-masters, configuring a Salt Syndic is
+                              desirable.
+                              The syndic is very simple to configure, see docs.saltstack.com - salt syndic <a class="xref" href="http://docs.saltstack.com/en/latest/topics/topology/syndic.html" target="_blank">http://docs.saltstack.com/en/latest/topics/topology/syndic.html</a>.
+                              Multiple syndics are not recommended as of this writing. 
+                           </p>
+                           
+                           <p class="p"><strong class="ph b">Additional thoughts</strong></p>
+                           
+                           <p class="p">The intention of this guide is to identify the core considerations for achieving a
+                              highly
+                              available (HA) solution with SaltStack. It is not the design of this document to identify
+                              every
+                              possible HA solution or architecture, nor is it to be entirely prescriptive on how
+                              high-availability should be achieved within each consideration. We recommend working
+                              closely with
+                              SaltStack Professional Services to design a high-availability approach that is suitable
+                              for your
+                              enterprise.
+                           </p>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

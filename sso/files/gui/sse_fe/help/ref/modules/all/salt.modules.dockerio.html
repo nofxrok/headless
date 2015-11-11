@@ -1,0 +1,3065 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.dockerio</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.dockerio">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-dockerio">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-dockerio">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.dockerio</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-dockerio__module-salt.modules.dockerio"></span></p>
+                              
+                              <p class="p">Management of Docker Containers</p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The DockerIO integration is still in beta; the API is subject to change</p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="general-notes">
+                           <h2 class="title topictitle2">General Notes</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">As we use states, we don't want to be continuously popping dockers, so we
+                                    will map each container id (or image) with a grain whenever it is relevant.
+                                 </p>
+                                 
+                                 <p class="p">As a corollary, we will resolve a container id either directly by the id
+                                    or try to find a container id matching something stocked in grain.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="installation-prerequisites">
+                           <h2 class="title topictitle2">Installation Prerequisites</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">You will need the <tt class="ph tt">docker-py</tt> python package in your python installation
+                                          path that is running salt. Its version should support <a class="xref" href="http://docs.docker.io/en/latest/reference/api/docker_remote_api_v1.12" target="_blank">Docker Remote API
+                                             v1.12</a>.
+                                       </p>
+                                       
+                                       <p class="p">Currently, <tt class="ph tt">docker-py 0.5.0</tt> is known to support <a class="xref" href="http://docs.docker.io/en/latest/reference/api/docker_remote_api_v1.12" target="_blank">Docker Remote API v1.12</a></p>
+                                       <pre class="pre codeblock language-bash">pip install docker-py==0.5.0</pre>
+                                       </li>
+                                    
+                                 </ul>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="prerequisite-pillar-configuration-for-authentication">
+                           <h2 class="title topictitle2">Prerequisite Pillar Configuration for Authentication</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">To push or pull you will need to be authenticated as the <tt class="ph tt">docker-py</tt> bindings
+                                          require it
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">For this to happen, you will need to configure a mapping in the pillar
+                                          representing your per URL authentication bits:
+                                       </p>
+                                       <pre class="pre codeblock language-yaml">docker-registries:
+    registry_url:
+        email: foo@foo.com
+        password: s3cr3t
+        username: foo</pre>
+                                       </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">You need at least an entry to the default docker index:</p>
+                                       <pre class="pre codeblock language-yaml">docker-registries:
+    https://index.docker.io/v1/:
+        email: foo@foo.com
+        password: s3cr3t
+        username: foo</pre>
+                                       </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">You can define multiple registry blocks for them to be aggregated. The only thing
+                                          to keep
+                                          in mind is that their ID must finish with <tt class="ph tt">-docker-registries</tt>:
+                                       </p>
+                                       <pre class="pre codeblock language-yaml">ac-docker-registries:
+    https://index.bar.io/v1/:
+        email: foo@foo.com
+        password: s3cr3t
+        username: foo
+
+ab-docker-registries:
+    https://index.foo.io/v1/:
+        email: foo@foo.com
+        password: s3cr3t
+        username: foo</pre>
+                                       <p class="p">This could be also written as:</p>
+                                       <pre class="pre codeblock language-yaml">docker-registries:
+    https://index.bar.io/v1/:
+        email: foo@foo.com
+        password: s3cr3t
+        username: foo
+    https://index.foo.io/v1/:
+        email: foo@foo.com
+        password: s3cr3t
+        username: foo</pre>
+                                       </li>
+                                    
+                                 </ul>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="runtime-execution-within-a-specific-already-existing-running-container">
+                           <h2 class="title topictitle2">Runtime Execution within a specific, already existing/running container</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">Idea is to use <a class="xref" href="http://linux.die.net/man/1/lxc-attach" target="_blank">lxc-attach</a> to execute
+                                    inside the container context.
+                                    We do not want to use <tt class="ph tt">docker run</tt> but want to execute something inside a
+                                    running container.
+                                 </p>
+                                 
+                                 <p class="p">These are the available methods:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p"><a class="xref" href="salt.modules.dockerio.html#salt.modules.dockerio.retcode">retcode</a></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><a class="xref" href="salt.modules.dockerio.html#salt.modules.dockerio.run">run</a></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><a class="xref" href="salt.modules.dockerio.html#salt.modules.dockerio.run_all">run_all</a></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><a class="xref" href="salt.modules.dockerio.html#salt.modules.dockerio.run_stderr">run_stderr</a></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><a class="xref" href="salt.modules.dockerio.html#salt.modules.dockerio.run_stdout">run_stdout</a></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><a class="xref" href="salt.modules.dockerio.html#salt.modules.dockerio.script">script</a></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><a class="xref" href="salt.modules.dockerio.html#salt.modules.dockerio.script_retcode">script_retcode</a></p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.build">
+                              <h3 class="title topictitle3">build</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.build(
+								path=None,
+								tag=None,
+								quiet=False,
+								fileobj=None,
+								nocache=False,
+								rm=True,
+								timeout=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Build a docker image from a dockerfile or an URL</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e187" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e189" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e187" class="stentry propvalue">path</td>
+                                       
+                                       <td valign="top" headers="d90633e189" class="stentry propdesc">
+                                          <p class="p">url/branch/docker_dir or path on the filesystem to the dockerfile</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e187" class="stentry propvalue">tag</td>
+                                       
+                                       <td valign="top" headers="d90633e189" class="stentry propdesc">
+                                          <p class="p">tag of the image</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e187" class="stentry propvalue">quiet</td>
+                                       
+                                       <td valign="top" headers="d90633e189" class="stentry propdesc">
+                                          <p class="p">quiet mode, Default is <tt class="ph tt">False</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e187" class="stentry propvalue">nocache</td>
+                                       
+                                       <td valign="top" headers="d90633e189" class="stentry propdesc">
+                                          <p class="p">do not use docker image cache, Default is <tt class="ph tt">False</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e187" class="stentry propvalue">rm</td>
+                                       
+                                       <td valign="top" headers="d90633e189" class="stentry propdesc">
+                                          <p class="p">remove intermediate commits, Default is <tt class="ph tt">True</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e187" class="stentry propvalue">timeout</td>
+                                       
+                                       <td valign="top" headers="d90633e189" class="stentry propdesc">
+                                          <p class="p">timeout value before aborting (in seconds)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.build vieux/apache
+salt '*' docker.build github.com/creack/docker-firefox</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.commit">
+                              <h3 class="title topictitle3">commit</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.commit(
+								container,
+								repository=None,
+								tag=None,
+								message=None,
+								author=None,
+								conf=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Commit a container (promotes it to an image)</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e268" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e270" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e268" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e270" class="stentry propdesc">
+                                          <p class="p">container id</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e268" class="stentry propvalue">repository</td>
+                                       
+                                       <td valign="top" headers="d90633e270" class="stentry propdesc">
+                                          <p class="p">repository/image to commit to</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e268" class="stentry propvalue">tag</td>
+                                       
+                                       <td valign="top" headers="d90633e270" class="stentry propdesc">
+                                          <p class="p">tag of the image (Optional)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e268" class="stentry propvalue">message</td>
+                                       
+                                       <td valign="top" headers="d90633e270" class="stentry propdesc">
+                                          <p class="p">commit message (Optional)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e268" class="stentry propvalue">author</td>
+                                       
+                                       <td valign="top" headers="d90633e270" class="stentry propdesc">
+                                          <p class="p">author name (Optional)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e268" class="stentry propvalue">conf</td>
+                                       
+                                       <td valign="top" headers="d90633e270" class="stentry propdesc">
+                                          <p class="p">conf (Optional)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.commit &lt;container id&gt;</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.create_container">
+                              <h3 class="title topictitle3">create_container</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.create_container(
+								image,
+								command=None,
+								hostname=None,
+								user=None,
+								detach=True,
+								stdin_open=False,
+								tty=False,
+								mem_limit=0,
+								ports=None,
+								environment=None,
+								dns=None,
+								volumes=None,
+								volumes_from=None,
+								name=None,
+								cpu_shares=None,
+								cpuset=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Create a new container</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e343" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e345" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e343" class="stentry propvalue">image</td>
+                                       
+                                       <td valign="top" headers="d90633e345" class="stentry propdesc">
+                                          <p class="p">image to create the container from</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e343" class="stentry propvalue">command</td>
+                                       
+                                       <td valign="top" headers="d90633e345" class="stentry propdesc">
+                                          <p class="p">command to execute while starting</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e343" class="stentry propvalue">hostname</td>
+                                       
+                                       <td valign="top" headers="d90633e345" class="stentry propdesc">
+                                          <p class="p">hostname of the container</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e343" class="stentry propvalue">user</td>
+                                       
+                                       <td valign="top" headers="d90633e345" class="stentry propdesc">
+                                          <p class="p">user to run docker as</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e343" class="stentry propvalue">detach</td>
+                                       
+                                       <td valign="top" headers="d90633e345" class="stentry propdesc">
+                                          <p class="p">daemon mode, Default is <tt class="ph tt">True</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e343" class="stentry propvalue">environment</td>
+                                       
+                                       <td valign="top" headers="d90633e345" class="stentry propdesc">
+                                          <p class="p">environment variable mapping <tt class="ph tt">({'foo':'BAR'})</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e343" class="stentry propvalue">ports</td>
+                                       
+                                       <td valign="top" headers="d90633e345" class="stentry propdesc">
+                                          <p class="p">port redirections <tt class="ph tt">({'222': {}})</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e343" class="stentry propvalue">volumes</td>
+                                       
+                                       <td valign="top" headers="d90633e345" class="stentry propdesc">
+                                          <p class="p">list of volume mappings:</p>
+                                          <pre class="pre codeblock language-">(['/mountpoint/in/container:/guest/foo', '/same/path/mounted/point'])</pre>
+                                          </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e343" class="stentry propvalue">tty</td>
+                                       
+                                       <td valign="top" headers="d90633e345" class="stentry propdesc">
+                                          <p class="p">attach ttys, Default is <tt class="ph tt">False</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e343" class="stentry propvalue">stdin_open</td>
+                                       
+                                       <td valign="top" headers="d90633e345" class="stentry propdesc">
+                                          <p class="p">let stdin open, Default is <tt class="ph tt">False</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e343" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d90633e345" class="stentry propdesc">
+                                          <p class="p">name given to container</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e343" class="stentry propvalue">cpu_shares</td>
+                                       
+                                       <td valign="top" headers="d90633e345" class="stentry propdesc">
+                                          <p class="p">CPU shares (relative weight)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e343" class="stentry propvalue">cpuset</td>
+                                       
+                                       <td valign="top" headers="d90633e345" class="stentry propdesc">
+                                          <p class="p">CPUs in which to allow execution ('0-3' or '0,1')</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.create_container o/ubuntu volumes="['/s','/m:/f']"</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.diff">
+                              <h3 class="title topictitle3">diff</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.diff(
+								container
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Get container diffs</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e473" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e475" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e473" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e475" class="stentry propdesc">
+                                          <p class="p">container id</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.diff &lt;container id&gt;</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.exists">
+                              <h3 class="title topictitle3">exists</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.exists(
+								container
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Check if a given container exists</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e518" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e520" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e518" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e520" class="stentry propdesc">
+                                          <p class="p">container id</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Returns <tt class="ph tt">True</tt> if container exists otherwise returns <tt class="ph tt">False</tt></p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.exists &lt;container id&gt;</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.export">
+                              <h3 class="title topictitle3">export</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.export(
+								container,
+								path
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Export a container to a file</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e570" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e572" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e570" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e572" class="stentry propdesc">
+                                          <p class="p">container id</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e570" class="stentry propvalue">path</td>
+                                       
+                                       <td valign="top" headers="d90633e572" class="stentry propdesc">
+                                          <p class="p">path to which file is to be exported</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.export &lt;container id&gt;</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.get_container_root">
+                              <h3 class="title topictitle3">get_container_root</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.get_container_root(
+								container
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Get the container rootfs path</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e621" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e623" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e621" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e623" class="stentry propdesc">
+                                          <p class="p">container id or grain</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.get_container_root &lt;container id&gt;</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.get_containers">
+                              <h3 class="title topictitle3">get_containers</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.get_containers(
+								all=True,
+								trunc=False,
+								since=None,
+								before=None,
+								limit=-1,
+								host=False,
+								inspect=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Get a list of mappings representing all containers</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e666" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e668" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e666" class="stentry propvalue">all</td>
+                                       
+                                       <td valign="top" headers="d90633e668" class="stentry propdesc">
+                                          <p class="p">return all containers, Default is <tt class="ph tt">True</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e666" class="stentry propvalue">trunc</td>
+                                       
+                                       <td valign="top" headers="d90633e668" class="stentry propdesc">
+                                          <p class="p">set it to True to have the short ID, Default is <tt class="ph tt">False</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e666" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d90633e668" class="stentry propdesc">
+                                          <p class="p">include the Docker host's ipv4 and ipv6 address in return, Default is <tt class="ph tt">False</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e666" class="stentry propvalue">inspect</td>
+                                       
+                                       <td valign="top" headers="d90633e668" class="stentry propdesc">
+                                          <p class="p">Get more granular information about each container by running a docker inspect</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.get_containers
+salt '*' docker.get_containers host=True
+salt '*' docker.get_containers host=True inspect=True</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.get_images">
+                              <h3 class="title topictitle3">get_images</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.get_images(
+								name=None,
+								quiet=False,
+								all=True
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">List docker images</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e735" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e737" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e735" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d90633e737" class="stentry propdesc">
+                                          <p class="p">repository name</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e735" class="stentry propvalue">quiet</td>
+                                       
+                                       <td valign="top" headers="d90633e737" class="stentry propdesc">
+                                          <p class="p">only show image id, Default is <tt class="ph tt">False</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e735" class="stentry propvalue">all</td>
+                                       
+                                       <td valign="top" headers="d90633e737" class="stentry propdesc">
+                                          <p class="p">show all images, Default is <tt class="ph tt">True</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.get_images &lt;name&gt; [quiet=True|False] [all=True|False]</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.import_image">
+                              <h3 class="title topictitle3">import_image</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.import_image(
+								src,
+								repo,
+								tag=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Import content from a local tarball or a URL to a docker image</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e797" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e799" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e797" class="stentry propvalue">src</td>
+                                       
+                                       <td valign="top" headers="d90633e799" class="stentry propdesc">
+                                          <p class="p">content to import (URL or absolute path to a tarball)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e797" class="stentry propvalue">repo</td>
+                                       
+                                       <td valign="top" headers="d90633e799" class="stentry propdesc">
+                                          <p class="p">repository to import to</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e797" class="stentry propvalue">tag</td>
+                                       
+                                       <td valign="top" headers="d90633e799" class="stentry propdesc">
+                                          <p class="p">set tag of the image (Optional)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.import_image &lt;src&gt; &lt;repo&gt; [tag]</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.info">
+                              <h3 class="title topictitle3">info</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.info( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Get the version information about docker. This is similar to <tt class="ph tt">docker info</tt> command
+                                    </p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.info</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.inspect_container">
+                              <h3 class="title topictitle3">inspect_container</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.inspect_container(
+								container
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Get container information. This is similar to <tt class="ph tt">docker inspect</tt> command but only for containers
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e889" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e891" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e889" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e891" class="stentry propdesc">
+                                          <p class="p">container id</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.inspect_container &lt;container id&gt;</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.inspect_image">
+                              <h3 class="title topictitle3">inspect_image</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.inspect_image(
+								image
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Inspect the status of an image and return relative data. This is similar to
+                                       <tt class="ph tt">docker inspect</tt> command but only for images
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e937" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e939" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e937" class="stentry propvalue">image</td>
+                                       
+                                       <td valign="top" headers="d90633e939" class="stentry propdesc">
+                                          <p class="p">name of the image</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.inspect_image &lt;image&gt;</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.is_running">
+                              <h3 class="title topictitle3">is_running</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.is_running(
+								container
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Check if the specified container is running</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e982" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e984" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e982" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e984" class="stentry propdesc">
+                                          <p class="p">container id</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Returns <tt class="ph tt">True</tt> if container is running otherwise returns <tt class="ph tt">False</tt></p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.is_running &lt;container id&gt;</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.kill">
+                              <h3 class="title topictitle3">kill</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.kill(
+								container
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Kill a running container</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1034" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1036" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1034" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e1036" class="stentry propdesc">
+                                          <p class="p">container id</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.kill &lt;container id&gt;</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.load">
+                              <h3 class="title topictitle3">load</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.load(
+								imagepath
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <blockquote class="lq">
+                                       <p class="p">Load the specified file at imagepath into docker that was generated from</p>
+                                       
+                                    </blockquote>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1080" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1082" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1080" class="stentry propvalue">a docker save command</td>
+                                       
+                                       <td valign="top" headers="d90633e1082" class="stentry propdesc">
+                                          <p class="p">e.g. <span class="keyword title_reference">docker load &lt; imagepath</span></p>
+                                          
+                                          <dl class="dl definition_list">
+                                             <dt class="dt dlterm">imagepath</dt>
+                                             
+                                             <dd class="dd">
+                                                <p class="p">imagepath to docker tar file</p>
+                                                
+                                             </dd>
+                                             
+                                          </dl>
+                                          
+                                          <p class="p">CLI Example:</p>
+                                          <pre class="pre codeblock language-bash">salt '*' docker.load /path/to/image</pre>
+                                          </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.login">
+                              <h3 class="title topictitle3">login</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.login(
+								url=None,
+								username=None,
+								password=None,
+								email=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Wrapper to the <tt class="ph tt">docker.py</tt> login method (does not do much yet)
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1134" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1136" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1134" class="stentry propvalue">url</td>
+                                       
+                                       <td valign="top" headers="d90633e1136" class="stentry propdesc">
+                                          <p class="p">registry url to authenticate to</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1134" class="stentry propvalue">username</td>
+                                       
+                                       <td valign="top" headers="d90633e1136" class="stentry propdesc">
+                                          <p class="p">username to authenticate</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1134" class="stentry propvalue">password</td>
+                                       
+                                       <td valign="top" headers="d90633e1136" class="stentry propdesc">
+                                          <p class="p">password to authenticate</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1134" class="stentry propvalue">email</td>
+                                       
+                                       <td valign="top" headers="d90633e1136" class="stentry propdesc">
+                                          <p class="p">email to authenticate</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.login &lt;url&gt; &lt;username&gt; &lt;password&gt; &lt;email&gt;</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.logs">
+                              <h3 class="title topictitle3">logs</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.logs(
+								container
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Return logs for a specified container</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1197" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1199" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1197" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e1199" class="stentry propdesc">
+                                          <p class="p">container id</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.logs &lt;container id&gt;</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.port">
+                              <h3 class="title topictitle3">port</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.port(
+								container,
+								private_port
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Private port mapping allocation information. This method is broken on docker-py
+                                       side. Just use the result of inspect to mangle port
+                                       allocation
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1242" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1244" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1242" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e1244" class="stentry propdesc">
+                                          <p class="p">container id</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1242" class="stentry propvalue">private_port</td>
+                                       
+                                       <td valign="top" headers="d90633e1244" class="stentry propdesc">
+                                          <p class="p">private port on the container to query for</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.port &lt;container id&gt; &lt;private port&gt;</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.pull">
+                              <h3 class="title topictitle3">pull</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.pull(
+								repo,
+								tag=None,
+								insecure_registry=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Pulls an image from any registry. See documentation at top of this page to
+                                       configure authenticated access
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1293" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1295" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1293" class="stentry propvalue">repo</td>
+                                       
+                                       <td valign="top" headers="d90633e1295" class="stentry propdesc">
+                                          <p class="p">name of repository</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1293" class="stentry propvalue">tag</td>
+                                       
+                                       <td valign="top" headers="d90633e1295" class="stentry propdesc">
+                                          <p class="p">specific tag to pull (Optional)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1293" class="stentry propvalue">insecure_registry</td>
+                                       
+                                       <td valign="top" headers="d90633e1295" class="stentry propdesc">
+                                          <p class="p">set as <tt class="ph tt">True</tt> to use insecure (non HTTPS) registry. Default is <tt class="ph tt">False</tt>
+                                             (only available if using docker-py &gt;= 0.5.0)
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.pull &lt;repository&gt; [tag]</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.push">
+                              <h3 class="title topictitle3">push</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.push(
+								repo,
+								tag=None,
+								quiet=False,
+								insecure_registry=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Pushes an image to any registry. See documentation at top of this page to
+                                       configure authenticated access
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1357" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1359" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1357" class="stentry propvalue">repo</td>
+                                       
+                                       <td valign="top" headers="d90633e1359" class="stentry propdesc">
+                                          <p class="p">name of repository</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1357" class="stentry propvalue">tag</td>
+                                       
+                                       <td valign="top" headers="d90633e1359" class="stentry propdesc">
+                                          <p class="p">specific tag to push (Optional)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1357" class="stentry propvalue">quiet</td>
+                                       
+                                       <td valign="top" headers="d90633e1359" class="stentry propdesc">
+                                          <p class="p">set as <tt class="ph tt">True</tt> to quiet output, Default is <tt class="ph tt">False</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1357" class="stentry propvalue">insecure_registry</td>
+                                       
+                                       <td valign="top" headers="d90633e1359" class="stentry propdesc">
+                                          <p class="p">set as <tt class="ph tt">True</tt> to use insecure (non HTTPS) registry. Default is <tt class="ph tt">False</tt>
+                                             (only available if using docker-py &gt;= 0.5.0)
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.push &lt;repository&gt; [tag] [quiet=True|False]</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.remove_container">
+                              <h3 class="title topictitle3">remove_container</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.remove_container(
+								container,
+								force=False,
+								v=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Remove a container from a docker installation</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1431" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1433" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1431" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e1433" class="stentry propdesc">
+                                          <p class="p">container id</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1431" class="stentry propvalue">force</td>
+                                       
+                                       <td valign="top" headers="d90633e1433" class="stentry propdesc">
+                                          <p class="p">remove a running container, Default is <tt class="ph tt">False</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1431" class="stentry propvalue">v</td>
+                                       
+                                       <td valign="top" headers="d90633e1433" class="stentry propdesc">
+                                          <p class="p">remove the volumes associated to the container, Default is <tt class="ph tt">False</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.remove_container &lt;container id&gt; [force=True|False] [v=True|False]</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.remove_image">
+                              <h3 class="title topictitle3">remove_image</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.remove_image(
+								image
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Remove an image from a system.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1492" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1494" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1492" class="stentry propvalue">image</td>
+                                       
+                                       <td valign="top" headers="d90633e1494" class="stentry propdesc">
+                                          <p class="p">name of image</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.remove_image &lt;image&gt;</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.restart">
+                              <h3 class="title topictitle3">restart</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.restart(
+								container,
+								timeout=10
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Restart a running container</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1537" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1539" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1537" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e1539" class="stentry propdesc">
+                                          <p class="p">container id</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1537" class="stentry propvalue">timeout</td>
+                                       
+                                       <td valign="top" headers="d90633e1539" class="stentry propdesc">
+                                          <p class="p">timeout for container to exit gracefully before killing it, Default is <tt class="ph tt">10</tt> seconds
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.restart &lt;container id&gt; [timeout=20]</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.retcode">
+                              <h3 class="title topictitle3">retcode</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.retcode(
+								container,
+								cmd
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Wrapper for 
+                                       		
+                                       			&nbsp;<a class="xref" href="salt.modules.cmdmod.html#salt.modules.cmdmod.retcode">cmdmod.retcode</a> inside a container context
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1595" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1597" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1595" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e1597" class="stentry propdesc">
+                                          <p class="p">container id (or grain)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1595" class="stentry propvalue">cmd</td>
+                                       
+                                       <td valign="top" headers="d90633e1597" class="stentry propdesc">
+                                          <p class="p">command to execute</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                       <p class="p">The return is a bit different as we use the docker struct.
+                                          Output of the command is in 'out' and result is <tt class="ph tt">False</tt> if
+                                          command failed to execute.
+                                       </p>
+                                       
+                                    </aside>
+                                    
+                                    <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                       <p class="p">Be advised that this function allows for raw shell access to the named
+                                          container! If allowing users to execute this directly it may allow more
+                                          rights than intended!
+                                       </p>
+                                       
+                                    </aside>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.retcode &lt;container id&gt; 'ls -l /etc'</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.run">
+                              <h3 class="title topictitle3">run</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.run(
+								container,
+								cmd
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Wrapper for 
+                                       		
+                                       			&nbsp;<a class="xref" href="salt.modules.cmdmod.html#salt.modules.cmdmod.run">cmdmod.run</a> inside a container context
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1659" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1661" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1659" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e1661" class="stentry propdesc">
+                                          <p class="p">container id (or grain)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1659" class="stentry propvalue">cmd</td>
+                                       
+                                       <td valign="top" headers="d90633e1661" class="stentry propdesc">
+                                          <p class="p">command to execute</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                       <p class="p">The return is a bit different as we use the docker struct.
+                                          Output of the command is in 'out' and result is always <tt class="ph tt">True</tt>.
+                                       </p>
+                                       
+                                    </aside>
+                                    
+                                    <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                       <p class="p">Be advised that this function allows for raw shell access to the named
+                                          container! If allowing users to execute this directly it may allow more
+                                          rights than intended!
+                                       </p>
+                                       
+                                    </aside>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.run &lt;container id&gt; 'ls -l /etc'</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.run_all">
+                              <h3 class="title topictitle3">run_all</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.run_all(
+								container,
+								cmd
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Wrapper for 
+                                       		
+                                       			&nbsp;<a class="xref" href="salt.modules.cmdmod.html#salt.modules.cmdmod.run_all">cmdmod.run_all</a> inside a container context
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1723" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1725" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1723" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e1725" class="stentry propdesc">
+                                          <p class="p">container id (or grain)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1723" class="stentry propvalue">cmd</td>
+                                       
+                                       <td valign="top" headers="d90633e1725" class="stentry propdesc">
+                                          <p class="p">command to execute</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                       <p class="p">The return is a bit different as we use the docker struct.
+                                          Output of the command is in 'out' and result is <tt class="ph tt">False</tt> if
+                                          command failed to execute.
+                                       </p>
+                                       
+                                    </aside>
+                                    
+                                    <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                       <p class="p">Be advised that this function allows for raw shell access to the named
+                                          container! If allowing users to execute this directly it may allow more
+                                          rights than intended!
+                                       </p>
+                                       
+                                    </aside>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.run_all &lt;container id&gt; 'ls -l /etc'</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.run_stderr">
+                              <h3 class="title topictitle3">run_stderr</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.run_stderr(
+								container,
+								cmd
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Wrapper for 
+                                       		
+                                       			&nbsp;<a class="xref" href="salt.modules.cmdmod.html#salt.modules.cmdmod.run_stderr">cmdmod.run_stderr</a> inside a container context
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1787" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1789" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1787" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e1789" class="stentry propdesc">
+                                          <p class="p">container id (or grain)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1787" class="stentry propvalue">cmd</td>
+                                       
+                                       <td valign="top" headers="d90633e1789" class="stentry propdesc">
+                                          <p class="p">command to execute</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                       <p class="p">The return is a bit different as we use the docker struct.
+                                          Output of the command is in 'out' and result is always <tt class="ph tt">True</tt>.
+                                       </p>
+                                       
+                                    </aside>
+                                    
+                                    <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                       <p class="p">Be advised that this function allows for raw shell access to the named
+                                          container! If allowing users to execute this directly it may allow more
+                                          rights than intended!
+                                       </p>
+                                       
+                                    </aside>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.run_stderr &lt;container id&gt; 'ls -l /etc'</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.run_stdout">
+                              <h3 class="title topictitle3">run_stdout</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.run_stdout(
+								container,
+								cmd
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Wrapper for 
+                                       		
+                                       			&nbsp;<a class="xref" href="salt.modules.cmdmod.html#salt.modules.cmdmod.run_stdout">cmdmod.run_stdout</a> inside a container context
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1851" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1853" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1851" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e1853" class="stentry propdesc">
+                                          <p class="p">container id (or grain)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1851" class="stentry propvalue">cmd</td>
+                                       
+                                       <td valign="top" headers="d90633e1853" class="stentry propdesc">
+                                          <p class="p">command to execute</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                       <p class="p">The return is a bit different as we use the docker struct.
+                                          Output of the command is in 'out' and result is always <tt class="ph tt">True</tt>.
+                                       </p>
+                                       
+                                    </aside>
+                                    
+                                    <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                       <p class="p">Be advised that this function allows for raw shell access to the named
+                                          container! If allowing users to execute this directly it may allow more
+                                          rights than intended!
+                                       </p>
+                                       
+                                    </aside>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.run_stdout &lt;container id&gt; 'ls -l /etc'</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.save">
+                              <h3 class="title topictitle3">save</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.save(
+								image,
+								filename
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                                    
+                                    <p class="p">Save the specified image to filename from docker
+                                       e.g. <span class="keyword title_reference">docker save image &gt; filename</span></p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1916" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1918" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1916" class="stentry propvalue">image</td>
+                                       
+                                       <td valign="top" headers="d90633e1918" class="stentry propdesc">
+                                          <p class="p">name of image</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1916" class="stentry propvalue">filename</td>
+                                       
+                                       <td valign="top" headers="d90633e1918" class="stentry propdesc">
+                                          <p class="p">The filename of the saved docker image</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.save arch_image /path/to/save/image</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.script">
+                              <h3 class="title topictitle3">script</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.script(
+								container,
+								source,
+								args=None,
+								cwd=None,
+								stdin=None,
+								runas=None,
+								shell='/bin/bash',
+								env=None,
+								template='jinja',
+								umask=None,
+								timeout=None,
+								reset_system_locale=True,
+								no_clean=False,
+								saltenv='base'
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Wrapper for 
+                                       		
+                                       			&nbsp;<a class="xref" href="salt.modules.cmdmod.html#salt.modules.cmdmod.script">cmdmod.script</a> inside a container context
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1971" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e1973" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1971" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e1973" class="stentry propdesc">
+                                          <p class="p">container id (or grain)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e1971" class="stentry propvalue">additional parameters</td>
+                                       
+                                       <td valign="top" headers="d90633e1973" class="stentry propdesc">
+                                          <p class="p">See 
+                                             		
+                                             			&nbsp;<a class="xref" href="salt.modules.cmdmod.html#salt.modules.cmdmod.script">cmd.script</a></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                       <p class="p">Be advised that this function allows for raw shell access to the named
+                                          container! If allowing users to execute this directly it may allow more
+                                          rights than intended!
+                                       </p>
+                                       
+                                    </aside>
+                                    
+                                    <p class="p">Download a script from a remote location and execute the script in the container.
+                                       The script can be located on the salt master file server or on an HTTP/FTP server.
+                                    </p>
+                                    
+                                    <p class="p">The script will be executed directly, so it can be written in any available programming
+                                       language.
+                                    </p>
+                                    
+                                    <p class="p">The script can also be formatted as a template, the default is jinja. Arguments for
+                                       the
+                                       script can be specified as well.
+                                    </p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.script &lt;container id&gt; salt://docker_script.py
+salt '*' docker.script &lt;container id&gt; salt://scripts/runme.sh 'arg1 arg2 "arg 3"'
+salt '*' docker.script &lt;container id&gt; salt://scripts/windows_task.ps1 args=' -Input c:\tmp\infile.txt' shell='powershell'</pre>
+                                    <p class="p">A string of standard input can be specified for the command to be run using the stdin
+                                       parameter. This can be useful in cases where sensitive information must be read from
+                                       standard input:
+                                    </p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.script &lt;container id&gt; salt://scripts/runme.sh stdin='one\ntwo\nthree\nfour\nfive\n'</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.script_retcode">
+                              <h3 class="title topictitle3">script_retcode</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.script_retcode(
+								container,
+								source,
+								cwd=None,
+								stdin=None,
+								runas=None,
+								shell='/bin/bash',
+								env=None,
+								template='jinja',
+								umask=None,
+								timeout=None,
+								reset_system_locale=True,
+								no_clean=False,
+								saltenv='base'
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Wrapper for 
+                                       		
+                                       			&nbsp;<a class="xref" href="salt.modules.cmdmod.html#salt.modules.cmdmod.script_retcode">cmdmod.script_retcode</a> inside a container context
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e2045" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e2047" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e2045" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e2047" class="stentry propdesc">
+                                          <p class="p">container id (or grain)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e2045" class="stentry propvalue">additional parameters</td>
+                                       
+                                       <td valign="top" headers="d90633e2047" class="stentry propdesc">
+                                          <p class="p">See 
+                                             		
+                                             			&nbsp;<a class="xref" href="salt.modules.cmdmod.html#salt.modules.cmdmod.script_retcode">cmd.script_retcode</a></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                       <p class="p">Be advised that this function allows for raw shell access to the named
+                                          container! If allowing users to execute this directly it may allow more
+                                          rights than intended!
+                                       </p>
+                                       
+                                    </aside>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.script_retcode &lt;container id&gt; salt://docker_script.py</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.search">
+                              <h3 class="title topictitle3">search</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.search(
+								term
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Search for an image on the registry</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e2102" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e2104" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e2102" class="stentry propvalue">term</td>
+                                       
+                                       <td valign="top" headers="d90633e2104" class="stentry propdesc">
+                                          <p class="p">search keyword</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.search &lt;term&gt;</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.start">
+                              <h3 class="title topictitle3">start</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.start(
+								container,
+								binds=None,
+								port_bindings=None,
+								lxc_conf=None,
+								publish_all_ports=None,
+								links=None,
+								privileged=False,
+								dns=None,
+								volumes_from=None,
+								network_mode=None,
+								restart_policy=None,
+								cap_add=None,
+								cap_drop=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Start the specified container</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e2147" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e2149" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e2147" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e2149" class="stentry propdesc">
+                                          <p class="p">container id</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.start &lt;container id&gt;</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.stop">
+                              <h3 class="title topictitle3">stop</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.stop(
+								container,
+								timeout=10
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Stop a running container</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e2192" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e2194" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e2192" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e2194" class="stentry propdesc">
+                                          <p class="p">container id</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e2192" class="stentry propvalue">timeout</td>
+                                       
+                                       <td valign="top" headers="d90633e2194" class="stentry propdesc">
+                                          <p class="p">timeout for container to exit gracefully before killing it, Default is <tt class="ph tt">10</tt> seconds
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.stop &lt;container id&gt; [timeout=20]</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.tag">
+                              <h3 class="title topictitle3">tag</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.tag(
+								image,
+								repository,
+								tag=None,
+								force=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Tag an image into a repository</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e2246" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e2248" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e2246" class="stentry propvalue">image</td>
+                                       
+                                       <td valign="top" headers="d90633e2248" class="stentry propdesc">
+                                          <p class="p">name of image</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e2246" class="stentry propvalue">repository</td>
+                                       
+                                       <td valign="top" headers="d90633e2248" class="stentry propdesc">
+                                          <p class="p">name of repository</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e2246" class="stentry propvalue">tag</td>
+                                       
+                                       <td valign="top" headers="d90633e2248" class="stentry propdesc">
+                                          <p class="p">tag to apply (Optional)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e2246" class="stentry propvalue">force</td>
+                                       
+                                       <td valign="top" headers="d90633e2248" class="stentry propdesc">
+                                          <p class="p">force apply tag, Default is <tt class="ph tt">False</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.tag &lt;image&gt; &lt;repository&gt; [tag] [force=True|False]</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.top">
+                              <h3 class="title topictitle3">top</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.top(
+								container
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Run the docker top command on a specific container</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e2311" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e2313" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e2311" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e2313" class="stentry propdesc">
+                                          <p class="p">container id</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.top &lt;container id&gt;</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.version">
+                              <h3 class="title topictitle3">version</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.version( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Get docker version</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.version</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.dockerio.wait">
+                              <h3 class="title topictitle3">wait</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.dockerio.wait(
+								container
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Wait for a container to exit gracefully</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d90633e2385" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d90633e2387" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d90633e2385" class="stentry propvalue">container</td>
+                                       
+                                       <td valign="top" headers="d90633e2387" class="stentry propdesc">
+                                          <p class="p">container id</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' docker.wait &lt;container id&gt;</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

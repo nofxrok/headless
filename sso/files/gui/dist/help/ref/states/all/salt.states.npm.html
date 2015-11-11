@@ -1,0 +1,338 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.npm</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.npm">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-npm">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-npm">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.npm</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-npm__module-salt.states.npm"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="installation-of-npm-packages">
+                           <h2 class="title topictitle2">Installation of NPM Packages</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">These states manage the installed packages for node.js using the Node Package
+                                    Manager (npm). Note that npm must be installed for these states to be
+                                    available, so npm states should include a requisite to a pkg.installed state
+                                    for the package which provides npm (simply <tt class="ph tt">npm</tt> in most cases). Example:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">npm:
+  pkg.installed
+
+yaml:
+  npm.installed:
+    - require:
+      - pkg: npm</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.npm.bootstrap">
+                              <h3 class="title topictitle3">bootstrap</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.npm.bootstrap(
+								name,
+								user=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Bootstraps a node.js application.</p>
+                                    
+                                    <p class="p">Will execute 'npm install --json' on the specified directory.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d401733e62" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d401733e64" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d401733e62" class="stentry propvalue">user</td>
+                                       
+                                       <td valign="top" headers="d401733e64" class="stentry propdesc">
+                                          <p class="p">The user to run NPM with</p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.npm.installed">
+                              <h3 class="title topictitle3">installed</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.npm.installed(
+								name,
+								pkgs=None,
+								dir=None,
+								user=None,
+								force_reinstall=False,
+								registry=None,
+								env=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Verify that the given package is installed and is at the correct version
+                                       (if specified).
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">coffee-script:
+  npm.installed:
+    - user: someuser
+
+coffee-script@1.0.1:
+  npm.installed: []</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d401733e105" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d401733e107" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d401733e105" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d401733e107" class="stentry propdesc">
+                                          <p class="p">The package to install</p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">Changed in version 2014.7.2: </span>This parameter is no longer lowercased by salt so that
+                                             case-sensitive NPM package names will work.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d401733e105" class="stentry propvalue">pkgs</td>
+                                       
+                                       <td valign="top" headers="d401733e107" class="stentry propdesc">
+                                          <p class="p">A list of packages to install with a single npm invocation; specifying
+                                             this argument will ignore the <tt class="ph tt">name</tt> argument
+                                          </p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d401733e105" class="stentry propvalue">dir</td>
+                                       
+                                       <td valign="top" headers="d401733e107" class="stentry propdesc">
+                                          <p class="p">The target directory in which to install the package, or None for
+                                             global installation
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d401733e105" class="stentry propvalue">user</td>
+                                       
+                                       <td valign="top" headers="d401733e107" class="stentry propdesc">
+                                          <p class="p">The user to run NPM with</p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d401733e105" class="stentry propvalue">registry</td>
+                                       
+                                       <td valign="top" headers="d401733e107" class="stentry propdesc">
+                                          <p class="p">The NPM registry from which to install the package</p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d401733e105" class="stentry propvalue">env</td>
+                                       
+                                       <td valign="top" headers="d401733e107" class="stentry propdesc">
+                                          <p class="p">A list of environment variables to be set prior to execution. The
+                                             format is the same as the 
+                                             		
+                                             			&nbsp;<a class="xref" href="salt.states.cmd.html#salt.states.cmd.run">cmd.run</a>.
+                                             state function.
+                                          </p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d401733e105" class="stentry propvalue">force_reinstall</td>
+                                       
+                                       <td valign="top" headers="d401733e107" class="stentry propdesc">
+                                          <p class="p">Install the package even if it is already installed</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.npm.removed">
+                              <h3 class="title topictitle3">removed</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.npm.removed(
+								name,
+								dir=None,
+								user=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Verify that the given package is not installed.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d401733e202" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d401733e204" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d401733e202" class="stentry propvalue">dir</td>
+                                       
+                                       <td valign="top" headers="d401733e204" class="stentry propdesc">
+                                          <p class="p">The target directory in which to install the package, or None for
+                                             global installation
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d401733e202" class="stentry propvalue">user</td>
+                                       
+                                       <td valign="top" headers="d401733e204" class="stentry propdesc">
+                                          <p class="p">The user to run NPM with</p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Salt as a Cloud Controller</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Salt as a Cloud Controller">
+      
+      <meta name="DC.Relation" scheme="URI" content="../virt/index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-as-a-cloud-controller">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="salt-as-a-cloud-controller">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Salt as a Cloud Controller</h1>
+                        <div class="body conbody">
+                           <p class="p">In Salt 0.14.0, an advanced cloud control system were introduced, allow
+                              private cloud vms to be managed directly with Salt. This system is generally
+                              referred to as <strong class="ph b">Salt Virt</strong>.
+                           </p>
+                           
+                           <p class="p">The Salt Virt system already exists and is installed within Salt itself, this
+                              means that beside setting up Salt, no additional salt code needs to be
+                              deployed.
+                           </p>
+                           
+                           <p class="p">The main goal of Salt Virt is to facilitate a very fast and simple cloud. The
+                              cloud that can scale and fully featured. Salt Virt comes with the
+                              ability to set up and manage complex virtual machine networking, powerful
+                              image, and disk management, as well as virtual machine migration with and without
+                              shared storage.
+                           </p>
+                           
+                           <p class="p">This means that Salt Virt can be used to create a cloud from a blade center
+                              and a SAN, but can also create a cloud out of a swarm of Linux Desktops
+                              without a single shared storage system. Salt Virt can make clouds from
+                              truly commodity hardware, but can also stand up the power of specialized
+                              hardware as well.
+                           </p>
+                           
+                           <div class="section" id="salt-as-a-cloud-controller__setting-up-hypervisors">
+                              <h2 class="title sectiontitle">Setting up Hypervisors</h2>
+                              <p class="p">The first step to set up the hypervisors involves getting the correct software
+                                 installed and setting up the hypervisor network interfaces.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="salt-as-a-cloud-controller__installing-hypervisor-software">
+                              <h2 class="title sectiontitle">Installing Hypervisor Software</h2>
+                              <p class="p">Salt Virt is made to be hypervisor agnostic but currently the only fully
+                                 implemented hypervisor is KVM via libvirt.
+                              </p>
+                              
+                              <p class="p">The required software for a hypervisor is libvirt and kvm. For advanced
+                                 features install libguestfs or qemu-nbd.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Libguestfs and qemu-nbd allow for virtual machine images to be mounted
+                                    before startup and get pre-seeded with configurations and a salt minion
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">This sls will set up the needed software for a hypervisor, and run the routines
+                                 to set up the libvirt pki keys.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Package names and setup used is Red Hat specific, different package names
+                                    will be required for different platforms
+                                 </p>
+                                 
+                              </aside>
+                              <pre class="pre codeblock language-yaml">libvirt:
+  pkg.installed: []
+  file.managed:
+    - name: /etc/sysconfig/libvirtd
+    - contents: 'LIBVIRTD_ARGS="--listen"'
+    - require:
+      - pkg: libvirt
+  libvirt.keys:
+    - require:
+      - pkg: libvirt
+  service.running:
+    - name: libvirtd
+    - require:
+      - pkg: libvirt
+      - network: br0
+      - libvirt: libvirt
+    - watch:
+      - file: libvirt
+
+libvirt-python:
+  pkg.installed: []
+
+libguestfs:
+  pkg.installed:
+    - pkgs:
+      - libguestfs
+      - libguestfs-tools</pre>
+                              </div>
+                           
+                           <div class="section head3" id="salt-as-a-cloud-controller__hypervisor-network-setup">
+                              <h2 class="title sectiontitle">Hypervisor Network Setup</h2>
+                              <p class="p">The hypervisors will need to be running a network bridge to serve up network
+                                 devices for virtual machines, this formula will set up a standard bridge on
+                                 a hypervisor connecting the bridge to eth0:
+                              </p>
+                              <pre class="pre codeblock language-yaml">eth0:
+  network.managed:
+    - enabled: True
+    - type: eth
+    - bridge: br0
+
+br0:
+  network.managed:
+    - enabled: True
+    - type: bridge
+    - proto: dhcp
+    - require:
+      - network: eth0</pre>
+                              </div>
+                           
+                           <div class="section head3" id="salt-as-a-cloud-controller__virtual-machine-network-setup">
+                              <h2 class="title sectiontitle">Virtual Machine Network Setup</h2>
+                              <p class="p">Salt Virt comes with a system to model the network interfaces used by the
+                                 deployed virtual machines; by default a single interface is created for the
+                                 deployed virtual machine and is bridged to <tt class="ph tt">br0</tt>. To get going with the
+                                 default networking setup, ensure that the bridge interface named <tt class="ph tt">br0</tt> exists
+                                 on the hypervisor and is bridged to an active network device.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">To use more advanced networking in Salt Virt, read the <span class="keyword title_reference">Salt Virt
+                                       Networking</span> document:
+                                 </p>
+                                 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="../virt/nic.html#virtual-machine-network-profiles">Salt Virt Networking</a></p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="salt-as-a-cloud-controller__libvirt-state">
+                              <h2 class="title sectiontitle">Libvirt State</h2>
+                              <p class="p">One of the challenges of deploying a libvirt based cloud is the distribution
+                                 of libvirt certificates. These certificates allow for virtual machine
+                                 migration. Salt comes with a system used to auto deploy these certificates.
+                                 Salt manages the signing authority key and generates keys for libvirt clients
+                                 on the master, signs them with the certificate authority and uses pillar to
+                                 distribute them. This is managed via the <tt class="ph tt">libvirt</tt> state. Simply execute this
+                                 formula on the minion to ensure that the certificate is in place and up to
+                                 date:
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The above formula includes the calls needed to set up libvirt keys.</p>
+                                 
+                              </aside>
+                              <pre class="pre codeblock language-yaml">libvirt_keys:
+  libvirt.keys</pre>
+                              </div>
+                           
+                           <div class="section" id="salt-as-a-cloud-controller__getting-virtual-machine-images-ready">
+                              <h2 class="title sectiontitle">Getting Virtual Machine Images Ready</h2>
+                              <p class="p">Salt Virt, requires that virtual machine images be provided as these are not
+                                 generated on the fly. Generating these virtual machine images differs greatly
+                                 based on the underlying platform.
+                              </p>
+                              
+                              <p class="p">Virtual machine images can be manually created using KVM and running through
+                                 the installer, but this process is not recommended since it is very manual and
+                                 prone to errors.
+                              </p>
+                              
+                              <p class="p">Virtual Machine generation applications are available for many platforms:</p>
+                              
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm">vm-builder:</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p"><a class="xref" href="https://wiki.debian.org/VMBuilder" target="_blank">https://wiki.debian.org/VMBuilder</a></p>
+                                    
+                                    <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                       <p class="p"><a class="xref" href="https://github.com/saltstack-formulas/vmbuilder-formula" target="_blank">vmbuilder-formula</a></p>
+                                       
+                                    </aside>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">Once virtual machine images are available, the easiest way to make them
+                                 available to Salt Virt is to place them in the Salt file server. Just copy an
+                                 image into <tt class="ph tt">/srv/salt</tt> and it can now be used by Salt Virt.
+                              </p>
+                              
+                              <p class="p">For purposes of this demo, the file name <tt class="ph tt">centos.img</tt> will be used.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="salt-as-a-cloud-controller__existing-virtual-machine-images">
+                              <h2 class="title sectiontitle">Existing Virtual Machine Images</h2>
+                              <p class="p">Many existing Linux distributions distribute virtual machine images which
+                                 can be used with Salt Virt. Please be advised that NONE OF THESE IMAGES ARE
+                                 SUPPORTED BY SALTSTACK.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="salt-as-a-cloud-controller__centos">
+                              <h2 class="title sectiontitle">CentOS</h2>
+                              <p class="p">These images have been prepared for OpenNebula but should work without issue with
+                                 Salt Virt, only the raw qcow image file is needed:
+                                 <a class="xref" href="http://wiki.centos.org/Cloud/OpenNebula" target="_blank">http://wiki.centos.org/Cloud/OpenNebula</a></p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="salt-as-a-cloud-controller__fedora-linux">
+                              <h2 class="title sectiontitle">Fedora Linux</h2>
+                              <p class="p">Images for Fedora Linux can be found here:
+                                 <a class="xref" href="http://fedoraproject.org/en/get-fedora#clouds" target="_blank">http://fedoraproject.org/en/get-fedora#clouds</a></p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="salt-as-a-cloud-controller__ubuntu-linux">
+                              <h2 class="title sectiontitle">Ubuntu Linux</h2>
+                              <p class="p">Images for Ubuntu Linux can be found here:
+                                 <a class="xref" href="http://cloud-images.ubuntu.com/" target="_blank">http://cloud-images.ubuntu.com/</a></p>
+                              
+                           </div>
+                           
+                           <div class="section" id="salt-as-a-cloud-controller__using-salt-virt">
+                              <h2 class="title sectiontitle">Using Salt Virt</h2>
+                              <p class="p">With hypervisors set up and virtual machine images ready, Salt can start
+                                 issuing cloud commands.
+                              </p>
+                              
+                              <p class="p">Start by running a Salt Virt hypervisor info command:</p>
+                              <pre class="pre codeblock language-bash">salt-run virt.hyper_info</pre>
+                              <p class="p">This will query what the running hypervisor stats are and display information
+                                 for all configured hypervisors. This command will also validate that the
+                                 hypervisors are properly configured.
+                              </p>
+                              
+                              <p class="p">Now that hypervisors are available a virtual machine can be provisioned. The
+                                 <tt class="ph tt">virt.init</tt> routine will create a new virtual machine:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-run virt.init centos1 2 512 salt://centos.img</pre>
+                              <p class="p">This command assumes that the CentOS virtual machine image is sitting in the
+                                 root of the Salt fileserver. Salt Virt will now select a hypervisor to deploy
+                                 the new virtual machine on and copy the virtual machine image down to the
+                                 hypervisor.
+                              </p>
+                              
+                              <p class="p">Once the VM image has been copied down the new virtual machine will be seeded.
+                                 Seeding the VMs involves setting pre-authenticated Salt keys on the new VM and
+                                 if needed, will install the Salt Minion on the new VM before it is started.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The biggest bottleneck in starting VMs is when the Salt Minion needs to be
+                                    installed. Making sure that the source VM images already have Salt
+                                    installed will GREATLY speed up virtual machine deployment.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Now that the new VM has been prepared, it can be seen via the <tt class="ph tt">virt.query</tt>
+                                 command:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-run virt.query</pre>
+                              <p class="p">This command will return data about all of the hypervisors and respective
+                                 virtual machines.
+                              </p>
+                              
+                              <p class="p">Now that the new VM is booted it should have contacted the Salt Master, a
+                                 <tt class="ph tt">test.ping</tt> will reveal if the new VM is running.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="salt-as-a-cloud-controller__migrating-virtual-machines">
+                              <h2 class="title sectiontitle">Migrating Virtual Machines</h2>
+                              <p class="p">Salt Virt comes with full support for virtual machine migration, and using
+                                 the libvirt state in the above formula makes migration possible.
+                              </p>
+                              
+                              <p class="p">A few things need to be available to support migration. Many operating systems
+                                 turn on firewalls when originally set up, the firewall needs to be opened up
+                                 to allow for libvirt and kvm to cross communicate and execution migration
+                                 routines. On Red Hat based hypervisors in particular port 16514 needs to be
+                                 opened on hypervisors:
+                              </p>
+                              <pre class="pre codeblock language-bash">iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 16514 -j ACCEPT</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">More in-depth information regarding distribution specific firewall settings can read
+                                    in:
+                                 </p>
+                                 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="firewall.html#opening-the-firewall-up-for-salt">Opening the Firewall up for Salt</a></p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Salt also needs an additional flag to be turned on as well. The <tt class="ph tt">virt.tunnel</tt>
+                                 option needs to be turned on. This flag tells Salt to run migrations securely
+                                 via the libvirt TLS tunnel and to use port 16514. Without <tt class="ph tt">virt.tunnel</tt> libvirt
+                                 tries to bind to random ports when running migrations. To turn on <tt class="ph tt">virt.tunnel</tt>
+                                 simple apply it to the master config file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">virt.tunnel: True</pre>
+                              <p class="p">Once the master config has been updated, restart the master and send out a call
+                                 to the minions to refresh the pillar to pick up on the change:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt \* saltutil.refresh_modules</pre>
+                              <p class="p">Now, migration routines can be run! To migrate a VM, simply run the Salt Virt
+                                 migrate routine:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-run virt.migrate centos &lt;new hypervisor&gt;</pre>
+                              </div>
+                           
+                           <div class="section" id="salt-as-a-cloud-controller__vnc-consoles">
+                              <h2 class="title sectiontitle">VNC Consoles</h2>
+                              <p class="p">Salt Virt also sets up VNC consoles by default, allowing for remote visual
+                                 consoles to be oped up. The information from a <tt class="ph tt">virt.query</tt> routine will
+                                 display the vnc console port for the specific vms:
+                              </p>
+                              <pre class="pre codeblock language-yaml">centos
+  CPU: 2
+  Memory: 524288
+  State: running
+  Graphics: vnc - hyper6:5900
+  Disk - vda:
+    Size: 2.0G
+    File: /srv/salt-images/ubuntu2/system.qcow2
+    File Format: qcow2
+  Nic - ac:de:48:98:08:77:
+    Source: br0
+    Type: bridge</pre>
+                              <p class="p">The line <span class="keyword title_reference">Graphics: vnc - hyper6:5900</span> holds the key. First the port named,
+                                 in this case 5900, will need to be available in the hypervisor's firewall.
+                                 Once the port is open, then the console can be easily opened via vncviewer:
+                              </p>
+                              <pre class="pre codeblock language-bash">vncviewer hyper6:5900</pre>
+                              <p class="p">By default there is no VNC security set up on these ports, which suggests that
+                                 keeping them firewalled and mandating that SSH tunnels be used to access these
+                                 VNC interfaces. Keep in mind that activity on a VNC interface that is accessed
+                                 can be viewed by any other user that accesses that same VNC interface, and any other
+                                 user logging in can also operate with the logged in user on the virtual
+                                 machine.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="salt-as-a-cloud-controller__conclusion">
+                              <h2 class="title sectiontitle">Conclusion</h2>
+                              <p class="p">Now with Salt Virt running, new hypervisors can be seamlessly added just by
+                                 running the above states on new bare metal machines, and these machines will be
+                                 instantly available to Salt Virt.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

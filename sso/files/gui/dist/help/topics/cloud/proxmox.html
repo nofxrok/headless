@@ -1,0 +1,207 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Getting Started With Proxmox</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Getting Started With Proxmox">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/cloud-providers.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="getting-started-with-proxmox">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="getting-started-with-proxmox">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Getting Started With Proxmox</h1>
+                        <div class="body conbody">
+                           <p class="p">Proxmox Virtual Environment is a complete server virtualization management solution,
+                              based on KVM virtualization and OpenVZ containers.
+                              Further information can be found at:
+                           </p>
+                           
+                           <p class="p"><a class="xref" href="http://www.proxmox.org/" target="_blank">http://www.proxmox.org/</a></p>
+                           
+                           <div class="section" id="getting-started-with-proxmox__dependencies">
+                              <h2 class="title sectiontitle">Dependencies</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">IPy &gt;= 0.81</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">requests &gt;= 2.2.1</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <p class="p">Please note:
+                                 This module allows you to create both OpenVZ and KVM but installing Salt on it will
+                                 only be
+                                 done when the VM is an OpenVZ container rather than a KVM virtual machine.
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Set up the cloud configuration at
+                                       <tt class="ph tt">/etc/salt/cloud.providers</tt> or
+                                       <tt class="ph tt">/etc/salt/cloud.providers.d/proxmox.conf</tt>:
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              <pre class="pre codeblock language-yaml">my-proxmox-config:
+  # Set up the location of the salt master
+  #
+  minion:
+    master: saltmaster.example.com
+
+  # Set the PROXMOX access credentials (see below)
+  #
+  user: myuser@pve
+  password: badpass
+
+  # Set the access URL for your PROXMOX provider
+  #
+  url: your.proxmox.host
+  provider: proxmox</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-proxmox__access-credentials">
+                              <h2 class="title sectiontitle">Access Credentials</h2>
+                              <p class="p">The <tt class="ph tt">user</tt>, <tt class="ph tt">password</tt>, and <tt class="ph tt">url</tt> will be provided to you by your cloud
+                                 provider. These are all required in order for the PROXMOX driver to work.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="getting-started-with-proxmox__cloud-profiles">
+                              <h2 class="title sectiontitle">Cloud Profiles</h2>
+                              <p class="p">Set up an initial profile at <tt class="ph tt">/etc/salt/cloud.profiles</tt> or
+                                 <tt class="ph tt">/etc/salt/cloud.profiles.d/proxmox.conf</tt>:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Configure a profile to be used:</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              <pre class="pre codeblock language-yaml">proxmox-ubuntu:
+    provider: proxmox
+    image: local:vztmpl/ubuntu-12.04-standard_12.04-1_amd64.tar.gz
+    technology: openvz
+    host: myvmhost
+    ip_address: 192.168.100.155
+    password: topsecret</pre>
+                              <p class="p">The profile can be realized now with a salt command:</p>
+                              <pre class="pre codeblock language-bash"># salt-cloud -p proxmox-ubuntu myubuntu</pre>
+                              <p class="p">This will create an instance named <tt class="ph tt">myubuntu</tt> on the cloud provider. The
+                                 minion that is installed on this instance will have a <tt class="ph tt">hostname</tt> of <tt class="ph tt">myubuntu</tt>.
+                                 If the command was executed on the salt-master, its Salt key will automatically
+                                 be signed on the master.
+                              </p>
+                              
+                              <p class="p">Once the instance has been created with salt-minion installed, connectivity to
+                                 it can be verified with Salt:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt myubuntu test.ping</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-proxmox__required-settings">
+                              <h2 class="title sectiontitle">Required Settings</h2>
+                              <p class="p">The following settings are always required for PROXMOX:</p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Using the new cloud configuration format:</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              <pre class="pre codeblock language-yaml">my-proxmox-config:
+  provider: proxmox
+  user: saltcloud@pve
+  password: xyzzy
+  url: your.proxmox.host</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-proxmox__optional-settings">
+                              <h2 class="title sectiontitle">Optional Settings</h2>
+                              <p class="p">Unlike other cloud providers in Salt Cloud, Proxmox does not utilize a
+                                 <tt class="ph tt">size</tt> setting. This is because Proxmox allows the end-user to specify a
+                                 more detailed configuration for their instances, than is allowed by many other
+                                 cloud providers. The following options are available to be used in a profile,
+                                 with their default settings listed.
+                              </p>
+                              <pre class="pre codeblock language-yaml"># Description of the instance.
+desc: &lt;instance_name&gt;
+
+# How many CPU cores, and how fast they are (in MHz)
+cpus: 1
+cpuunits: 1000
+
+# How many megabytes of RAM
+memory: 256
+
+# How much swap space in MB
+swap: 256
+
+# Whether to auto boot the vm after the host reboots
+onboot: 1
+
+# Size of the instance disk (in GiB)
+disk: 10
+
+# Host to create this vm on
+host: myvmhost
+
+# Nameservers. Defaults to host
+nameserver: 8.8.8.8 8.8.4.4
+
+# Username and password
+ssh_username: root
+password: &lt;value from PROXMOX.password&gt;
+
+# The name of the image, from ``salt-cloud --list-images proxmox``
+image: local:vztmpl/ubuntu-12.04-standard_12.04-1_amd64.tar.gz</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

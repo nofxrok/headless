@@ -1,0 +1,170 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.sdb.sqlite3</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.sdb.sqlite3">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../sdb.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-sdb-sqlite3">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-sdb-sqlite3">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.sdb.sqlite3</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-sdb-sqlite3__module-salt.sdb.sqlite3"></span></p>
+                              
+                              <p class="p">SQLite sdb Module</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">maintainer</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">SaltStack</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">maturity</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">New</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">platform</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">all</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">This module allows access to sqlite3 using an <tt class="ph tt">sdb://</tt> URI
+                              </p>
+                              
+                              <p class="p">Like all sdb modules, the sqlite3 module requires a configuration profile to
+                                 be configured in either the minion or master configuration file. This profile
+                                 requires very little. For example:
+                              </p>
+                              <pre class="pre codeblock language-yaml">mysqlite:
+  driver: sqlite3
+  database: /tmp/sdb.sqlite
+  table: sdb
+  create_table: True</pre>
+                              <p class="p">The <tt class="ph tt">driver</tt> refers to the sqlite3 module, <tt class="ph tt">database</tt> refers to the sqlite3
+                                 database file. <tt class="ph tt">table</tt> is the table within the db that will hold keys and
+                                 values (defaults to <tt class="ph tt">sdb</tt>). The database and table will be created if they
+                                 do not exist.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="advanced-usage">
+                           <h2 class="title topictitle2">Advanced Usage:</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">Instead of a table name, it is possible to provide custom SQL statements to
+                                    create the table(s) and get and set values.
+                                 </p>
+                                 <pre class="pre codeblock">code-block: yaml
+
+myadvanced
+  driver: sqlite3
+  database: /tmp/sdb-advanced.sqlite
+create_statements:
+  - "CREATE TABLE advanced (a text, b text, c blob, d blob)"
+  - "CREATE INDEX myidx ON advanced (a)"
+get_query: "SELECT d FROM advanced WHERE a=:key"
+set_query: "INSERT OR REPLACE INTO advanced (a, d) VALUES (:key, :value)"</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.sdb.sqlite3.get">
+                              <h3 class="title topictitle3">get</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.sdb.sqlite3.get(
+								key,
+								profile=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Get a value from sqlite3</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.sdb.sqlite3.set_">
+                              <h3 class="title topictitle3">set_</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.sdb.sqlite3.set_(
+								key,
+								value,
+								profile=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Set a key/value pair in sqlite3</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

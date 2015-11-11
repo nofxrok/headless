@@ -1,0 +1,984 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.archive</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.archive">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-archive">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-archive">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.archive</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-archive__module-salt.modules.archive"></span></p>
+                              
+                              <p class="p">A module to wrap (non-Windows) archive calls</p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.archive.cmd_unzip">
+                           <h2 class="title topictitle2">cmd_unzip</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.archive.cmd_unzip(
+								zip_file,
+								dest,
+								excludes=None,
+								template=None,
+								options=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2015.2.0: </span>In versions 2014.7.x and earlier, this function was known as
+                                    <tt class="ph tt">archive.unzip</tt>.
+                                 </p>
+                                 
+                                 <p class="p">Uses the <tt class="ph tt">unzip</tt> command to unpack zip files. This command is part of the
+                                    <a class="xref" href="http://www.info-zip.org/" target="_blank">Info-ZIP</a> suite of tools, and is typically packaged as simply <tt class="ph tt">unzip</tt>.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d51757e67" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d51757e69" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e67" class="stentry propvalue">zip_file</td>
+                                    
+                                    <td valign="top" headers="d51757e69" class="stentry propdesc">
+                                       <p class="p">Path of zip file to be unpacked</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e67" class="stentry propvalue">dest</td>
+                                    
+                                    <td valign="top" headers="d51757e69" class="stentry propdesc">
+                                       <p class="p">The destination directory into which the file should be unpacked</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e67" class="stentry propvalue">excludes</td>
+                                    
+                                    <td valign="top" headers="d51757e69" class="stentry propdesc">
+                                       <p class="p">Comma-separated list of files not to unpack. Can also be passed in a
+                                          Python list.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e67" class="stentry propvalue">template</td>
+                                    
+                                    <td valign="top" headers="d51757e69" class="stentry propdesc">
+                                       <p class="p">Can be set to 'jinja' or another supported template engine to render
+                                          the command arguments before execution:
+                                       </p>
+                                       <pre class="pre codeblock language-bash">salt '*' archive.cmd_unzip template=jinja /tmp/zipfile.zip /tmp/{{grains.id}}/ excludes=file_1,file_2</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e67" class="stentry propvalue">options</td>
+                                    
+                                    <td valign="top" headers="d51757e69" class="stentry propdesc">
+                                       <p class="p">Additional command-line options to pass to the <tt class="ph tt">unzip</tt> binary.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e67" class="stentry propvalue">runas</td>
+                                    
+                                    <td valign="top" headers="d51757e69" class="stentry propdesc">
+                                       <p class="p">Unpack the zip file as the specified user. Defaults to the user under
+                                          which the minion is running.
+                                       </p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e67" class="stentry propvalue">options</td>
+                                    
+                                    <td valign="top" headers="d51757e69" class="stentry propdesc">
+                                       <p class="p">Additional command-line options to pass to the <tt class="ph tt">unzip</tt> binary.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' archive.cmd_unzip /tmp/zipfile.zip /home/strongbad/ excludes=file_1,file_2</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.archive.cmd_zip">
+                           <h2 class="title topictitle2">cmd_zip</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.archive.cmd_zip(
+								zip_file,
+								sources,
+								template=None,
+								cwd=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2015.2.0: </span>In versions 2014.7.x and earlier, this function was known as
+                                    <tt class="ph tt">archive.zip</tt>.
+                                 </p>
+                                 
+                                 <p class="p">Uses the <tt class="ph tt">zip</tt> command to create zip files. This command is part of the
+                                    <a class="xref" href="http://www.info-zip.org/" target="_blank">Info-ZIP</a> suite of tools, and is typically packaged as simply <tt class="ph tt">zip</tt>.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d51757e176" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d51757e178" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e176" class="stentry propvalue">zip_file</td>
+                                    
+                                    <td valign="top" headers="d51757e178" class="stentry propdesc">
+                                       <p class="p">Path of zip file to be created</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e176" class="stentry propvalue">sources</td>
+                                    
+                                    <td valign="top" headers="d51757e178" class="stentry propdesc">
+                                       <p class="p">Comma-separated list of sources to include in the zip file. Sources can
+                                          also be passed in a Python list.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e176" class="stentry propvalue">template</td>
+                                    
+                                    <td valign="top" headers="d51757e178" class="stentry propdesc">
+                                       <p class="p">Can be set to 'jinja' or another supported template engine to render
+                                          the command arguments before execution:
+                                       </p>
+                                       <pre class="pre codeblock language-bash">salt '*' archive.cmd_zip template=jinja /tmp/zipfile.zip /tmp/sourcefile1,/tmp/{{grains.id}}.txt</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e176" class="stentry propvalue">cwd</td>
+                                    
+                                    <td valign="top" headers="d51757e178" class="stentry propdesc">
+                                       <p class="p">Use this argument along with relative paths in <tt class="ph tt">sources</tt> to create
+                                          zip files which do not contain the leading directories. If not
+                                          specified, the zip file will be created as if the cwd was <tt class="ph tt">/</tt>, and
+                                          creating a zip file of <tt class="ph tt">/foo/bar/baz.txt</tt> will contain the parent
+                                          directories <tt class="ph tt">foo</tt> and <tt class="ph tt">bar</tt>. To create a zip file containing just
+                                          <tt class="ph tt">baz.txt</tt>, the following command would be used:
+                                       </p>
+                                       <pre class="pre codeblock language-bash">salt '*' archive.cmd_zip /tmp/baz.zip baz.txt cwd=/foo/bar</pre>
+                                       <p class="p"><span class="keyword versionmodified">New in version 2014.7.1.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e176" class="stentry propvalue">runas</td>
+                                    
+                                    <td valign="top" headers="d51757e178" class="stentry propdesc">
+                                       <p class="p">Create the zip file as the specified user. Defaults to the user under
+                                          which the minion is running.
+                                       </p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' archive.cmd_zip /tmp/zipfile.zip /tmp/sourcefile1,/tmp/sourcefile2</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.archive.gunzip">
+                           <h2 class="title topictitle2">gunzip</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.archive.gunzip(
+								gzipfile,
+								template=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Uses the gunzip command to unpack gzip files</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d51757e274" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d51757e276" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e274" class="stentry propvalue">template</td>
+                                    
+                                    <td valign="top" headers="d51757e276" class="stentry propdesc">
+                                       <p class="p">Can be set to 'jinja' or another supported template engine to render
+                                          the command arguments before execution:
+                                       </p>
+                                       <pre class="pre codeblock language-bash">salt '*' archive.gunzip template=jinja /tmp/{{grains.id}}.txt.gz</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash"># Create /tmp/sourcefile.txt
+salt '*' archive.gunzip /tmp/sourcefile.txt.gz</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.archive.gzip">
+                           <h2 class="title topictitle2">gzip</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.archive.gzip(
+								sourcefile,
+								template=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Uses the gzip command to create gzip files</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d51757e321" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d51757e323" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e321" class="stentry propvalue">template</td>
+                                    
+                                    <td valign="top" headers="d51757e323" class="stentry propdesc">
+                                       <p class="p">Can be set to 'jinja' or another supported template engine to render
+                                          the command arguments before execution:
+                                       </p>
+                                       <pre class="pre codeblock language-bash">salt '*' archive.gzip template=jinja /tmp/{{grains.id}}.txt</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash"># Create /tmp/sourcefile.txt.gz
+salt '*' archive.gzip /tmp/sourcefile.txt</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.archive.rar">
+                           <h2 class="title topictitle2">rar</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.archive.rar(
+								rarfile,
+								sources,
+								template=None,
+								cwd=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Uses <a class="xref" href="http://www.rarlab.com/" target="_blank">rar for Linux</a> to create rar files
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d51757e372" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d51757e374" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e372" class="stentry propvalue">rarfile</td>
+                                    
+                                    <td valign="top" headers="d51757e374" class="stentry propdesc">
+                                       <p class="p">Path of rar file to be created</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e372" class="stentry propvalue">sources</td>
+                                    
+                                    <td valign="top" headers="d51757e374" class="stentry propdesc">
+                                       <p class="p">Comma-separated list of sources to include in the rar file. Sources can
+                                          also be passed in a Python list.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e372" class="stentry propvalue">cwd</td>
+                                    
+                                    <td valign="top" headers="d51757e374" class="stentry propdesc">
+                                       <p class="p">Run the rar command from the specified directory. Use this argument
+                                          along with relative file paths to create rar files which do not
+                                          contain the leading directories. If not specified, this will default
+                                          to the home directory of the user under which the salt minion process
+                                          is running.
+                                       </p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2014.7.1.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e372" class="stentry propvalue">template</td>
+                                    
+                                    <td valign="top" headers="d51757e374" class="stentry propdesc">
+                                       <p class="p">Can be set to 'jinja' or another supported template engine to render
+                                          the command arguments before execution:
+                                       </p>
+                                       <pre class="pre codeblock language-bash">salt '*' archive.rar template=jinja /tmp/rarfile.rar '/tmp/sourcefile1,/tmp/{{grains.id}}.txt'</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' archive.rar /tmp/rarfile.rar /tmp/sourcefile1,/tmp/sourcefile2</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.archive.tar">
+                           <h2 class="title topictitle2">tar</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.archive.tar(
+								options,
+								tarfile,
+								sources=None,
+								dest=None,
+								cwd=None,
+								template=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p">This function has changed for version 0.17.0. In prior versions, the
+                                       <tt class="ph tt">cwd</tt> and <tt class="ph tt">template</tt> arguments must be specified, with the source
+                                       directories/files coming as a space-separated list at the end of the
+                                       command. Beginning with 0.17.0, <tt class="ph tt">sources</tt> must be a comma-separated
+                                       list, and the <tt class="ph tt">cwd</tt> and <tt class="ph tt">template</tt> arguments are optional.
+                                    </p>
+                                    
+                                 </aside>
+                                 
+                                 <p class="p">Uses the tar command to pack, unpack, etc. tar files</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d51757e458" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d51757e460" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e458" class="stentry propvalue">options</td>
+                                    
+                                    <td valign="top" headers="d51757e460" class="stentry propdesc">
+                                       <p class="p">Options to pass to the tar command</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e458" class="stentry propvalue">tarfile</td>
+                                    
+                                    <td valign="top" headers="d51757e460" class="stentry propdesc">
+                                       <p class="p">The filename of the tar archive to pack/unpack</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e458" class="stentry propvalue">sources</td>
+                                    
+                                    <td valign="top" headers="d51757e460" class="stentry propdesc">
+                                       <p class="p">Comma delimited list of files to <strong class="ph b">pack</strong> into the tarfile. Can also be
+                                          passed as a Python list.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e458" class="stentry propvalue">dest</td>
+                                    
+                                    <td valign="top" headers="d51757e460" class="stentry propdesc">
+                                       <p class="p">The destination directory into which to <strong class="ph b">unpack</strong> the tarfile
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e458" class="stentry propvalue">cwd</td>
+                                    
+                                    <td valign="top" headers="d51757e460" class="stentry propdesc">
+                                       <p class="p">The directory in which the tar command should be executed. If not
+                                          specified, will default to the home directory of the user under which
+                                          the salt minion process is running.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e458" class="stentry propvalue">template</td>
+                                    
+                                    <td valign="top" headers="d51757e460" class="stentry propdesc">
+                                       <p class="p">Can be set to 'jinja' or another supported template engine to render
+                                          the command arguments before execution:
+                                       </p>
+                                       <pre class="pre codeblock language-bash">salt '*' archive.tar cjvf /tmp/salt.tar.bz2 {{grains.saltpath}} template=jinja</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash"># Create a tarfile
+salt '*' archive.tar cjvf /tmp/tarfile.tar.bz2 /tmp/file_1,/tmp/file_2
+# Unpack a tarfile
+salt '*' archive.tar xf foo.tar dest=/target/directory</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.archive.unrar">
+                           <h2 class="title topictitle2">unrar</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.archive.unrar(
+								rarfile,
+								dest,
+								excludes=None,
+								template=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Uses <a class="xref" href="http://www.rarlab.com/" target="_blank">rar for Linux</a> to unpack rar files
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d51757e545" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d51757e547" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e545" class="stentry propvalue">rarfile</td>
+                                    
+                                    <td valign="top" headers="d51757e547" class="stentry propdesc">
+                                       <p class="p">Name of rar file to be unpacked</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e545" class="stentry propvalue">dest</td>
+                                    
+                                    <td valign="top" headers="d51757e547" class="stentry propdesc">
+                                       <p class="p">The destination directory into which to <strong class="ph b">unpack</strong> the rar file
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e545" class="stentry propvalue">template</td>
+                                    
+                                    <td valign="top" headers="d51757e547" class="stentry propdesc">
+                                       <p class="p">Can be set to 'jinja' or another supported template engine to render
+                                          the command arguments before execution:
+                                       </p>
+                                       <pre class="pre codeblock language-bash">salt '*' archive.unrar template=jinja /tmp/rarfile.rar /tmp/{{grains.id}}/ excludes=file_1,file_2</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' archive.unrar /tmp/rarfile.rar /home/strongbad/ excludes=file_1,file_2</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.archive.unzip">
+                           <h2 class="title topictitle2">unzip</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.archive.unzip(
+								zip_file,
+								dest,
+								excludes=None,
+								template=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Uses the <tt class="ph tt">zipfile</tt> Python module to unpack zip files
+                                 </p>
+                                 
+                                 <p class="p"><span class="keyword versionmodified">Changed in version 2015.2.0: </span>This function was rewritten to use Python's native zip file support.
+                                    The old functionality has been preserved in the new function
+                                    <a class="xref" href="salt.modules.archive.html#salt.modules.archive.cmd_unzip">archive.cmd_unzip</a>. For versions
+                                    2014.7.x and earlier, see the <a class="xref" href="salt.modules.archive.html#salt.modules.archive.cmd_zip">archive.cmd_zip</a> documentation.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d51757e622" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d51757e624" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e622" class="stentry propvalue">zip_file</td>
+                                    
+                                    <td valign="top" headers="d51757e624" class="stentry propdesc">
+                                       <p class="p">Path of zip file to be unpacked</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e622" class="stentry propvalue">dest</td>
+                                    
+                                    <td valign="top" headers="d51757e624" class="stentry propdesc">
+                                       <p class="p">The destination directory into which the file should be unpacked</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e622" class="stentry propvalue">excludes</td>
+                                    
+                                    <td valign="top" headers="d51757e624" class="stentry propdesc">
+                                       <p class="p">Comma-separated list of files not to unpack. Can also be passed in a
+                                          Python list.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e622" class="stentry propvalue">template</td>
+                                    
+                                    <td valign="top" headers="d51757e624" class="stentry propdesc">
+                                       <p class="p">Can be set to 'jinja' or another supported template engine to render
+                                          the command arguments before execution:
+                                       </p>
+                                       <pre class="pre codeblock language-bash">salt '*' archive.unzip template=jinja /tmp/zipfile.zip /tmp/{{grains.id}}/ excludes=file_1,file_2</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e622" class="stentry propvalue">runas</td>
+                                    
+                                    <td valign="top" headers="d51757e624" class="stentry propdesc">
+                                       <p class="p">Unpack the zip file as the specified user. Defaults to the user under
+                                          which the minion is running.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' archive.unzip /tmp/zipfile.zip /home/strongbad/ excludes=file_1,file_2</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.archive.zip_">
+                           <h2 class="title topictitle2">zip_</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.archive.zip_(
+								zip_file,
+								sources,
+								template=None,
+								cwd=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Uses the <tt class="ph tt">zipfile</tt> Python module to create zip files
+                                 </p>
+                                 
+                                 <p class="p"><span class="keyword versionmodified">Changed in version 2015.2.0: </span>This function was rewritten to use Python's native zip file support.
+                                    The old functionality has been preserved in the new function
+                                    <a class="xref" href="salt.modules.archive.html#salt.modules.archive.cmd_zip">archive.cmd_zip</a>. For versions
+                                    2014.7.x and earlier, see the <a class="xref" href="salt.modules.archive.html#salt.modules.archive.cmd_zip">archive.cmd_zip</a> documentation.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d51757e709" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d51757e711" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e709" class="stentry propvalue">zip_file</td>
+                                    
+                                    <td valign="top" headers="d51757e711" class="stentry propdesc">
+                                       <p class="p">Path of zip file to be created</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e709" class="stentry propvalue">sources</td>
+                                    
+                                    <td valign="top" headers="d51757e711" class="stentry propdesc">
+                                       <p class="p">Comma-separated list of sources to include in the zip file. Sources can
+                                          also be passed in a Python list.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e709" class="stentry propvalue">template</td>
+                                    
+                                    <td valign="top" headers="d51757e711" class="stentry propdesc">
+                                       <p class="p">Can be set to 'jinja' or another supported template engine to render
+                                          the command arguments before execution:
+                                       </p>
+                                       <pre class="pre codeblock language-bash">salt '*' archive.zip template=jinja /tmp/zipfile.zip /tmp/sourcefile1,/tmp/{{grains.id}}.txt</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e709" class="stentry propvalue">cwd</td>
+                                    
+                                    <td valign="top" headers="d51757e711" class="stentry propdesc">
+                                       <p class="p">Use this argument along with relative paths in <tt class="ph tt">sources</tt> to create
+                                          zip files which do not contain the leading directories. If not
+                                          specified, the zip file will be created as if the cwd was <tt class="ph tt">/</tt>, and
+                                          creating a zip file of <tt class="ph tt">/foo/bar/baz.txt</tt> will contain the parent
+                                          directories <tt class="ph tt">foo</tt> and <tt class="ph tt">bar</tt>. To create a zip file containing just
+                                          <tt class="ph tt">baz.txt</tt>, the following command would be used:
+                                       </p>
+                                       <pre class="pre codeblock language-bash">salt '*' archive.zip /tmp/baz.zip baz.txt cwd=/foo/bar</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d51757e709" class="stentry propvalue">runas</td>
+                                    
+                                    <td valign="top" headers="d51757e711" class="stentry propdesc">
+                                       <p class="p">Create the zip file as the specified user. Defaults to the user under
+                                          which the minion is running.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' archive.zip /tmp/zipfile.zip /tmp/sourcefile1,/tmp/sourcefile2</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.boto_dynamodb</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.boto_dynamodb">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-boto-dynamodb">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-boto-dynamodb">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.boto_dynamodb</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-boto-dynamodb__module-salt.states.boto_dynamodb"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="manage-dynamodb-tables">
+                           <h2 class="title topictitle2">Manage DynamoDB Tables</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2015.2.</span></p>
+                                 
+                                 <p class="p">Create and destroy DynamoDB tables. Be aware that this interacts with Amazon's
+                                    services, and so may incur charges.
+                                 </p>
+                                 
+                                 <p class="p">This module uses <tt class="ph tt">boto</tt>, which can be installed via package, or pip.
+                                 </p>
+                                 
+                                 <p class="p">This module accepts explicit DynamoDB credentials but can also utilize
+                                    IAM roles assigned to the instance through Instance Profiles. Dynamic
+                                    credentials are then automatically obtained from AWS API and no further
+                                    configuration is necessary. More information available <a class="xref" href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html" target="_blank">here</a>.
+                                 </p>
+                                 
+                                 <p class="p">If IAM roles are not used you need to specify them either in a pillar file or
+                                    in the minion's config file:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">keyid: GKTADJGHEIQSXMKKRBJ08H
+key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs
+region: us-east-1</pre>
+                                 <p class="p">It's also possible to specify <tt class="ph tt">key</tt>, <tt class="ph tt">keyid</tt> and <tt class="ph tt">region</tt> via a
+                                    profile, either passed in as a dict, or as a string to pull from
+                                    pillars or minion config:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">myprofile:
+    keyid: GKTADJGHEIQSXMKKRBJ08H
+    key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs
+        region: us-east-1</pre>
+                                 <pre class="pre codeblock language-yaml"></pre>
+                                 <dl class="dl definition_list">
+                                    <dt class="dt dlterm">Ensure DynamoDB table does not exist:</dt>
+                                    
+                                    <dd class="dd">
+                                       <dl class="dl definition_list">
+                                          <dt class="dt dlterm">boto_dynamodb.absent:</dt>
+                                          
+                                          <dd class="dd">
+                                             <ul class="ul">
+                                                <li class="li">
+                                                   <p class="p">table_name: new_table</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">keyid: GKTADJGHEIQSXMKKRBJ08H</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">region: us-east-1</p>
+                                                   
+                                                </li>
+                                                
+                                             </ul>
+                                             
+                                          </dd>
+                                          
+                                       </dl>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">Ensure DynamoDB table exists:</dt>
+                                    
+                                    <dd class="dd">
+                                       <dl class="dl definition_list">
+                                          <dt class="dt dlterm">boto_dynamodb.present:</dt>
+                                          
+                                          <dd class="dd">
+                                             <ul class="ul">
+                                                <li class="li">
+                                                   <p class="p">table_name: new_table</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">read_capacity_units: 1</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">write_capacity_units: 2</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">hash_key: primary_id</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">hash_key_data_type: N</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">range_key: start_timestamp</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">range_key_data_type: N</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">keyid: GKTADJGHEIQSXMKKRBJ08H</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">region: us-east-1</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <dl class="dl definition_list">
+                                                      <dt class="dt dlterm">local_indexes:</dt>
+                                                      
+                                                      <dd class="dd">
+                                                         <ul class="ul">
+                                                            <li class="li">
+                                                               <dl class="dl definition_list">
+                                                                  <dt class="dt dlterm">index:</dt>
+                                                                  
+                                                                  <dd class="dd">
+                                                                     <ul class="ul">
+                                                                        <li class="li">
+                                                                           <p class="p">name: "primary_id_end_timestamp_index"</p>
+                                                                           
+                                                                        </li>
+                                                                        
+                                                                        <li class="li">
+                                                                           <p class="p">hash_key: primary_id</p>
+                                                                           
+                                                                        </li>
+                                                                        
+                                                                        <li class="li">
+                                                                           <p class="p">hash_key_data_type: N</p>
+                                                                           
+                                                                        </li>
+                                                                        
+                                                                        <li class="li">
+                                                                           <p class="p">range_key: end_timestamp</p>
+                                                                           
+                                                                        </li>
+                                                                        
+                                                                        <li class="li">
+                                                                           <p class="p">range_key_data_type: N</p>
+                                                                           
+                                                                        </li>
+                                                                        
+                                                                     </ul>
+                                                                     
+                                                                  </dd>
+                                                                  
+                                                               </dl>
+                                                               
+                                                            </li>
+                                                            
+                                                         </ul>
+                                                         
+                                                      </dd>
+                                                      
+                                                   </dl>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <dl class="dl definition_list">
+                                                      <dt class="dt dlterm">global_indexes:</dt>
+                                                      
+                                                      <dd class="dd">
+                                                         <ul class="ul">
+                                                            <li class="li">
+                                                               <dl class="dl definition_list">
+                                                                  <dt class="dt dlterm">index:</dt>
+                                                                  
+                                                                  <dd class="dd">
+                                                                     <ul class="ul">
+                                                                        <li class="li">
+                                                                           <p class="p">name: "name_end_timestamp_index"</p>
+                                                                           
+                                                                        </li>
+                                                                        
+                                                                        <li class="li">
+                                                                           <p class="p">hash_key: name</p>
+                                                                           
+                                                                        </li>
+                                                                        
+                                                                        <li class="li">
+                                                                           <p class="p">hash_key_data_type: S</p>
+                                                                           
+                                                                        </li>
+                                                                        
+                                                                        <li class="li">
+                                                                           <p class="p">range_key: end_timestamp</p>
+                                                                           
+                                                                        </li>
+                                                                        
+                                                                        <li class="li">
+                                                                           <p class="p">range_key_data_type: N</p>
+                                                                           
+                                                                        </li>
+                                                                        
+                                                                        <li class="li">
+                                                                           <p class="p">read_capacity_units: 3</p>
+                                                                           
+                                                                        </li>
+                                                                        
+                                                                        <li class="li">
+                                                                           <p class="p">write_capacity_units: 4</p>
+                                                                           
+                                                                        </li>
+                                                                        
+                                                                     </ul>
+                                                                     
+                                                                  </dd>
+                                                                  
+                                                               </dl>
+                                                               
+                                                            </li>
+                                                            
+                                                         </ul>
+                                                         
+                                                      </dd>
+                                                      
+                                                   </dl>
+                                                   
+                                                </li>
+                                                
+                                             </ul>
+                                             
+                                          </dd>
+                                          
+                                       </dl>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.boto_dynamodb.absent">
+                              <h3 class="title topictitle3">absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.boto_dynamodb.absent(
+								table_name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure the DynamoDB table does not exist.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d356475e215" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d356475e217" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e215" class="stentry propvalue">table_name</td>
+                                       
+                                       <td valign="top" headers="d356475e217" class="stentry propdesc">
+                                          <p class="p">Name of the DynamoDB table.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e215" class="stentry propvalue">region</td>
+                                       
+                                       <td valign="top" headers="d356475e217" class="stentry propdesc">
+                                          <p class="p">Region to connect to.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e215" class="stentry propvalue">key</td>
+                                       
+                                       <td valign="top" headers="d356475e217" class="stentry propdesc">
+                                          <p class="p">Secret key to be used.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e215" class="stentry propvalue">keyid</td>
+                                       
+                                       <td valign="top" headers="d356475e217" class="stentry propdesc">
+                                          <p class="p">Access key to be used.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e215" class="stentry propvalue">profile</td>
+                                       
+                                       <td valign="top" headers="d356475e217" class="stentry propdesc">
+                                          <p class="p">A dict with region, key and keyid, or a pillar key (string)
+                                             that contains a dict with region, key and keyid.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.boto_dynamodb.present">
+                              <h3 class="title topictitle3">present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.boto_dynamodb.present(
+								table_name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None,
+								read_capacity_units=None,
+								write_capacity_units=None,
+								hash_key=None,
+								hash_key_data_type=None,
+								range_key=None,
+								range_key_data_type=None,
+								local_indexes=None,
+								global_indexes=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure the DynamoDB table exists.  Note: all properties of the table
+                                       can only be set during table creation.  Adding or changing
+                                       indexes or key schema cannot be done after table creation
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d356475e277" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d356475e279" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e277" class="stentry propvalue">table_name</td>
+                                       
+                                       <td valign="top" headers="d356475e279" class="stentry propdesc">
+                                          <p class="p">Name of the DynamoDB table</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e277" class="stentry propvalue">region</td>
+                                       
+                                       <td valign="top" headers="d356475e279" class="stentry propdesc">
+                                          <p class="p">Region to connect to.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e277" class="stentry propvalue">key</td>
+                                       
+                                       <td valign="top" headers="d356475e279" class="stentry propdesc">
+                                          <p class="p">Secret key to be used.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e277" class="stentry propvalue">keyid</td>
+                                       
+                                       <td valign="top" headers="d356475e279" class="stentry propdesc">
+                                          <p class="p">Access key to be used.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e277" class="stentry propvalue">profile</td>
+                                       
+                                       <td valign="top" headers="d356475e279" class="stentry propdesc">
+                                          <p class="p">A dict with region, key and keyid, or a pillar key (string)
+                                             that contains a dict with region, key and keyid.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e277" class="stentry propvalue">read_capacity_units</td>
+                                       
+                                       <td valign="top" headers="d356475e279" class="stentry propdesc">
+                                          <p class="p">The read throughput for this table</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e277" class="stentry propvalue">write_capacity_units</td>
+                                       
+                                       <td valign="top" headers="d356475e279" class="stentry propdesc">
+                                          <p class="p">The write throughput for this table</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e277" class="stentry propvalue">hash_key</td>
+                                       
+                                       <td valign="top" headers="d356475e279" class="stentry propdesc">
+                                          <p class="p">The name of the attribute that will be used as the hash key
+                                             for this table
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e277" class="stentry propvalue">hash_key_data_type</td>
+                                       
+                                       <td valign="top" headers="d356475e279" class="stentry propdesc">
+                                          <p class="p">The DynamoDB datatype of the hash key</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e277" class="stentry propvalue">range_key</td>
+                                       
+                                       <td valign="top" headers="d356475e279" class="stentry propdesc">
+                                          <p class="p">The name of the attribute that will be used as the range key
+                                             for this table
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e277" class="stentry propvalue">range_key_data_type</td>
+                                       
+                                       <td valign="top" headers="d356475e279" class="stentry propdesc">
+                                          <p class="p">The DynamoDB datatype of the range key</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e277" class="stentry propvalue">local_indexes</td>
+                                       
+                                       <td valign="top" headers="d356475e279" class="stentry propdesc">
+                                          <p class="p">The local indexes you would like to create</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d356475e277" class="stentry propvalue">global_indexes</td>
+                                       
+                                       <td valign="top" headers="d356475e279" class="stentry propdesc">
+                                          <p class="p">The local indexes you would like to create</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

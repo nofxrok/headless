@@ -1,0 +1,169 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Automatic Updates / Frozen Deployments</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Automatic Updates / Frozen Deployments">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/administration.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="automatic-updates-frozen-deployments">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="automatic-updates-frozen-deployments">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Automatic Updates / Frozen Deployments</h1>
+                        <div class="body conbody">
+                           <p class="p"><span class="keyword versionmodified">New in version 0.10.3.d.</span></p>
+                           
+                           <p class="p">Salt has support for the
+                              <a class="xref" href="https://github.com/cloudmatrix/esky" target="_blank">Esky</a> application freezing and update
+                              tool. This tool allows one to build a complete zipfile out of the salt scripts
+                              and all their dependencies - including shared objects / DLLs.
+                           </p>
+                           
+                           <div class="section" id="automatic-updates-frozen-deployments__getting-started">
+                              <h2 class="title sectiontitle">Getting Started</h2>
+                              <p class="p">To build frozen applications, suitable build environment will be needed for
+                                 each platform. You should probably set up a virtualenv in order to limit the
+                                 scope of Q/A.
+                              </p>
+                              
+                              <p class="p">This process does work on Windows. Directions are available at
+                                 <a class="xref" href="https://github.com/saltstack/salt-windows-install" target="_blank">https://github.com/saltstack/salt-windows-install</a> for details on
+                                 installing Salt in Windows. Only the 32-bit Python and dependencies have been
+                                 tested, but they have been tested on 64-bit Windows.
+                              </p>
+                              
+                              <p class="p">Install <tt class="ph tt">bbfreeze</tt>, and then <tt class="ph tt">esky</tt> from PyPI in order to enable the
+                                 <tt class="ph tt">bdist_esky</tt> command in <tt class="ph tt">setup.py</tt>. Salt itself must also be installed, in
+                                 addition to its dependencies.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="automatic-updates-frozen-deployments__building-and-freezing">
+                              <h2 class="title sectiontitle">Building and Freezing</h2>
+                              <p class="p">Once you have your tools installed and the environment configured, use
+                                 <tt class="ph tt">setup.py</tt> to prepare the distribution files.
+                              </p>
+                              <pre class="pre codeblock language-bash">python setup.py sdist
+python setup.py bdist</pre>
+                              <p class="p">Once the distribution files are in place, Esky can be used traverse the module
+                                 tree and pack all the scripts up into a redistributable.
+                              </p>
+                              <pre class="pre codeblock language-bash">python setup.py bdist_esky</pre>
+                              <p class="p">There will be an appropriately versioned <tt class="ph tt">salt-VERSION.zip</tt> in <tt class="ph tt">dist/</tt> if
+                                 everything went smoothly.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="automatic-updates-frozen-deployments__windows">
+                              <h2 class="title sectiontitle">Windows</h2>
+                              <p class="p"><tt class="ph tt">C:\Python27\lib\site-packages\zmq</tt> will need to be added to the PATH
+                                 variable. This helps bbfreeze find the zmq DLL so it can pack it up.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="automatic-updates-frozen-deployments__using-the-frozen-build">
+                              <h2 class="title sectiontitle">Using the Frozen Build</h2>
+                              <p class="p">Unpack the zip file in the desired install location. Scripts like
+                                 <tt class="ph tt">salt-minion</tt> and <tt class="ph tt">salt-call</tt> will be in the root of the zip file. The
+                                 associated libraries and bootstrapping will be in the directories at the same
+                                 level. (Check the <a class="xref" href="https://github.com/cloudmatrix/esky" target="_blank">Esky</a> documentation
+                                 for more information)
+                              </p>
+                              
+                              <p class="p">To support updating your minions in the wild, put the builds on a web server
+                                 that the minions can reach. 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.saltutil.html#salt.modules.saltutil.update">salt.modules.saltutil.update()</a> will
+                                 trigger an update and (optionally) a restart of the minion service under the
+                                 new version.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="automatic-updates-frozen-deployments__troubleshooting">
+                              <h2 class="title sectiontitle">Troubleshooting</h2>
+                           </div>
+                           
+                           <div class="section head3" id="automatic-updates-frozen-deployments__a-windows-minion-isn-t-responding">
+                              <h2 class="title sectiontitle">A Windows minion isn't responding</h2>
+                              <p class="p">The process dispatch on Windows is slower than it is on *nix. It may be
+                                 necessary to add '-t 15' to salt commands to give minions plenty of time to
+                                 return.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="automatic-updates-frozen-deployments__windows-and-the-visual-studio-redist">
+                              <h2 class="title sectiontitle">Windows and the Visual Studio Redist</h2>
+                              <p class="p">The Visual C++ 2008 32-bit redistributable will need to be installed on all
+                                 Windows minions. Esky has an option to pack the library into the zipfile,
+                                 but OpenSSL does not seem to acknowledge the new location. If a
+                                 <tt class="ph tt">no OPENSSL_Applink</tt> error appears on the console when trying to start a
+                                 frozen minion, the redistributable is not installed.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="automatic-updates-frozen-deployments__mixed-linux-environments-and-yum">
+                              <h2 class="title sectiontitle">Mixed Linux environments and Yum</h2>
+                              <p class="p">The Yum Python module doesn't appear to be available on any of the standard
+                                 Python package mirrors. If RHEL/CentOS systems need to be supported, the frozen
+                                 build should created on that platform to support all the Linux nodes. Remember
+                                 to build the virtualenv with <tt class="ph tt">--system-site-packages</tt> so that the <tt class="ph tt">yum</tt>
+                                 module is included.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="automatic-updates-frozen-deployments__automatic-python-module-discovery">
+                              <h2 class="title sectiontitle">Automatic (Python) module discovery</h2>
+                              <p class="p">Automatic (Python) module discovery does not work with the late-loaded scheme
+                                 that Salt uses for (Salt) modules. Any misbehaving modules will need to be
+                                 explicitly added to the <tt class="ph tt">freezer_includes</tt> in Salt's <tt class="ph tt">setup.py</tt>.  Always
+                                 check the zipped application to make sure that the necessary modules were
+                                 included.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.roster.ansible</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.roster.ansible">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ssh-roster.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-roster-ansible">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-roster-ansible">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.roster.ansible</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-roster-ansible__module-salt.roster.ansible"></span></p>
+                              
+                              <p class="p">Read in an Ansible inventory file or script</p>
+                              
+                              <p class="p">Flat inventory files should be in the regular ansible inventory format.</p>
+                              <pre class="pre codeblock language-ini">[servers]
+salt.gtmanfred.com ansible_ssh_user=gtmanfred ansible_ssh_host=127.0.0.1 ansible_ssh_port=22 ansible_ssh_pass='password'
+
+[desktop]
+home ansible_ssh_user=gtmanfred ansible_ssh_host=12.34.56.78 ansible_ssh_port=23 ansible_ssh_pass='password'
+
+[computers:children]
+desktop
+servers
+
+[names:vars]
+http_port=80</pre>
+                              <p class="p">then salt-ssh can be used to hit any of them</p>
+                              <pre class="pre codeblock language-bash">[~]# salt-ssh all test.ping
+salt.gtmanfred.com:
+    True
+home:
+    True
+[~]# salt-ssh desktop test.ping
+home:
+    True
+[~]# salt-ssh computers test.ping
+salt.gtmanfred.com:
+    True
+home:
+    True
+[~]# salt-ssh salt.gtmanfred.com test.ping
+salt.gtmanfred.com:
+    True</pre>
+                              <p class="p">There is also the option of specifying a dynamic inventory, and generating it on the
+                                 fly
+                              </p>
+                              <pre class="pre codeblock language-bash">#!/bin/bash
+echo '{
+  "servers": {
+    "hosts": [
+      "salt.gtmanfred.com"
+    ]
+  },
+  "desktop": {
+    "hosts": [
+      "home"
+    ]
+  },
+  "computers": {
+    "hosts":{},
+    "children": [
+      "desktop",
+      "servers"
+    ]
+  },
+  "_meta": {
+    "hostvars": {
+      "salt.gtmanfred.com": {
+        "ansible_ssh_user": "gtmanfred",
+        "ansible_ssh_host": "127.0.0.1",
+        "ansible_sudo_pass": "password",
+        "ansible_ssh_port": 22
+      },
+      "home": {
+        "ansible_ssh_user": "gtmanfred",
+        "ansible_ssh_host": "12.34.56.78",
+        "ansible_sudo_pass": "password",
+        "ansible_ssh_port": 23
+      }
+    }
+  }
+}'</pre>
+                              <p class="p">This is the format that an inventory script needs to output to work with ansible,
+                                 and thus here.
+                              </p>
+                              
+                              <p class="p">Any of the [groups] or direct hostnames will return.  The 'all' is special, and returns
+                                 everything.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.roster.ansible.targets">
+                           <h2 class="title topictitle2">targets</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.roster.ansible.targets(
+								tgt,
+								tgt_type='glob',
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the targets from the ansible inventory_file
+                                    Default: /etc/salt/roster
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.roster.ansible.Inventory">
+                           <h2 class="title topictitle2">Inventory Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.roster.ansible.Inventory(
+									tgt,
+									tgt_type='glob',
+									inventory_file='/etc/salt/roster'
+									)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Matcher for static inventory files</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.roster.ansible.Script">
+                           <h2 class="title topictitle2">Script Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.roster.ansible.Script(
+									tgt,
+									tgt_type='glob',
+									inventory_file='/etc/salt/roster'
+									)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Matcher for Inventory scripts</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.roster.ansible.Target">
+                           <h2 class="title topictitle2">Target Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.roster.ansible.Target</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.roster.ansible.Target.get_glob">
+                              <h3 class="title topictitle3">Target.get_glob Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">get_glob( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return minions that match via glob</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.roster.ansible.Target.targets">
+                              <h3 class="title topictitle3">Target.targets Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">targets( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Execute the correct tgt_type routine and return</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Enterprise Help Center</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="schema.DC" href="http://purl.org/dc/terms/">
+
+<script type="text/javascript">
+    debugger;
+    var ref = getParameterByName("r",window.location.href);
+    if (ref) {
+        var hr = "ent/"; //help root path from the /help/ folder
+        var linking = false; // determines if a link was found for default action
+        var links = {};
+        links["resources/minions"] = hr + "minions.html";
+        links["resources/masters"] = hr + "masters.html";
+        links["resources/quicktargets"] = hr + "targets.html#QuickTarget";
+        links["resources/targets/"] = hr + "targets.html#SavedTargets";
+        links["dashboard/jobs"] = hr + "jobs.html";
+        links["jobs/jobs/list"] = hr + "jobs-all.html";
+        links["dashboard/reports"] = hr + "reports.html";
+        links["settings/masters/list"] = hr + "cfg-masters.html";
+        links["settings/masters/add"] = hr + "cfg-masters.html";
+        links["settings/users/add"] = hr + "cfg-masters.html";
+        links["settings/users/list"] = hr + "cfg-users.html";
+
+        for (var key in links) {
+            if (ref.indexOf(key) != -1) {
+                window.location.replace(links[key]);
+                linking = true;
+            }
+        }
+        if (!linking) window.location.replace("enterprise.html");
+    }
+    else window.location.replace("enterprise.html");
+
+    function getParameterByName(name, URL) {
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regexS = "[\\?&]" + name + "=([^&#]*)";
+        var regex = new RegExp(regexS);
+        var results = regex.exec(URL);
+        if (results == null) return "";
+        else return decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+</script>
+</head>
+<body></body>
+</html>

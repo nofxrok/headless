@@ -1,0 +1,1410 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.cmd</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.cmd">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-cmd">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-cmd">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.cmd</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-cmd__module-salt.states.cmd"></span></p>
+                              
+                           </div>
+                           
+                           <div class="section" id="salt-states-cmd__execution-of-arbitrary-commands">
+                              <h2 class="title sectiontitle">Execution of arbitrary commands</h2>
+                              <p class="p">The cmd state module manages the enforcement of executed commands, this
+                                 state can tell a command to run under certain circumstances.
+                              </p>
+                              
+                              <p class="p">A simple example to execute a command:</p>
+                              <pre class="pre codeblock language-yaml">date &gt; /tmp/salt-run:
+  cmd.run</pre>
+                              <p class="p">Only run if another execution failed, in this case truncate syslog if there is
+                                 no disk space:
+                              </p>
+                              <pre class="pre codeblock language-yaml">&gt; /var/log/messages:
+  cmd.run:
+    - unless: echo 'foo' &gt; /tmp/.test &amp;&amp; rm -f /tmp/.test</pre>
+                              <p class="p">Only run if the file specified by <tt class="ph tt">creates</tt> does not exist, in this case
+                                 touch /tmp/foo if it does not exist.
+                              </p>
+                              <pre class="pre codeblock language-yaml">touch /tmp/foo:
+  cmd.run:
+    - creates: /tmp/foo</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The <tt class="ph tt">creates</tt> option was added to version 2014.7.0
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Salt determines whether the <tt class="ph tt">cmd</tt> state is successfully enforced based on the exit
+                                 code returned by the command. If the command returns a zero exit code, then salt
+                                 determines that the state was successfully enforced. If the script returns a non-zero
+                                 exit code, then salt determines that it failed to successfully enforce the state.
+                                 If a command returns a non-zero exit code but you wish to treat this as a success,
+                                 then you must place the command in a script and explicitly set the exit code of
+                                 the script to zero.
+                              </p>
+                              
+                              <p class="p">Please note that the success or failure of the state is not affected by whether a
+                                 state
+                                 change occurred nor the stateful argument.
+                              </p>
+                              
+                              <p class="p">When executing a command or script, the state (i.e., changed or not)
+                                 of the command is unknown to Salt's state system. Therefore, by default, the
+                                 <tt class="ph tt">cmd</tt> state assumes that any command execution results in a changed state.
+                              </p>
+                              
+                              <p class="p">This means that if a <tt class="ph tt">cmd</tt> state is watched by another state then the
+                                 state that's watching will always be executed due to the <span class="keyword title_reference">changed</span> state in
+                                 the <tt class="ph tt">cmd</tt> state.
+                              </p>
+                              
+                              <p class="p">Many state functions in this module now also accept a <tt class="ph tt">stateful</tt> argument.
+                                 If <tt class="ph tt">stateful</tt> is specified to be true then it is assumed that the command
+                                 or script will determine its own state and communicate it back by following
+                                 a simple protocol described below:
+                              </p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p"><strong class="ph b">If there's nothing in the stdout of the command, then assume no
+                                          changes.</strong> Otherwise, the stdout must be either in JSON or its <span class="keyword title_reference">last</span>
+                                       non-empty line must be a string of key=value pairs delimited by spaces (no
+                                       spaces on either side of <tt class="ph tt">=</tt>).
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><strong class="ph b">If it's JSON then it must be a JSON object (e.g., {}).</strong> If it's
+                                       key=value pairs then quoting may be used to include spaces.  (Python's shlex
+                                       module is used to parse the key=value string)
+                                    </p>
+                                    
+                                    <p class="p">Two special keys or attributes are recognized in the output:</p>
+                                    <pre class="pre codeblock language-">changed: bool (i.e., 'yes', 'no', 'true', 'false', case-insensitive)
+comment: str  (i.e., any string)</pre>
+                                    <p class="p">So, only if <tt class="ph tt">changed</tt> is <tt class="ph tt">True</tt> then assume the command execution has
+                                       changed the state, and any other key values or attributes in the output will
+                                       be set as part of the changes.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><strong class="ph b">If there's a comment then it will be used as the comment of the
+                                          state.</strong></p>
+                                    
+                                    <p class="p">Here's an example of how one might write a shell script for use with a
+                                       stateful command:
+                                    </p>
+                                    <pre class="pre codeblock language-bash">#!/bin/bash
+#
+echo "Working hard..."
+
+# writing the state line
+echo  # an empty line here so the next line will be the last.
+echo "changed=yes comment='something has changed' whatever=123"</pre>
+                                    <p class="p">And an example SLS file using this module:</p>
+                                    <pre class="pre codeblock language-yaml">Run myscript:
+  cmd.run:
+    - name: /path/to/myscript
+    - cwd: /
+    - stateful: True
+
+Run only if myscript changed something:
+  cmd.wait:
+    - name: echo hello
+    - cwd: /
+    - watch:
+        - cmd: Run myscript</pre>
+                                    <p class="p">Note that if the <tt class="ph tt">cmd.wait</tt> state also specifies <tt class="ph tt">stateful: True</tt> it can
+                                       then be watched by some other states as well.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                              <p class="p"><tt class="ph tt">cmd.wait</tt> is not restricted to watching only cmd states. For example
+                                 it can also watch a git state for changes
+                              </p>
+                              <pre class="pre codeblock language-yaml"># Watch for changes to a git repo and rebuild the project on updates
+my-project:
+  git.latest:
+    - name: git@github.com/repo/foo
+    - target: /opt/foo
+    - rev: master
+  cmd.wait:
+    - name: make install
+    - cwd: /opt/foo
+    - watch:
+      - git: my-project</pre>
+                              <p class="p">Should I use <a class="xref" href="salt.states.cmd.html#salt.states.cmd.run">cmd.run</a> or <a class="xref" href="salt.states.cmd.html#salt.states.cmd.wait">cmd.wait</a>?
+                                 -------------------------------------------------------------------------------
+                              </p>
+                              
+                              <p class="p">These two states are often confused. The important thing to remember about them
+                                 is that <a class="xref" href="salt.states.cmd.html#salt.states.cmd.run">cmd.run</a> states are run each time the SLS
+                                 file that contains them is applied. If it is more desirable to have a command
+                                 that only runs after some other state changes, then <a class="xref" href="salt.states.cmd.html#salt.states.cmd.wait">cmd.wait</a> does just that. <a class="xref" href="salt.states.cmd.html#salt.states.cmd.wait">cmd.wait</a>
+                                 is designed to 
+                                 		
+                                 			&nbsp;<a class="xref" href="../requisites.html#requisites">watch</a> other states, and is
+                                 executed when the state it is watching changes. Example:
+                              </p>
+                              <pre class="pre codeblock language-yaml">/usr/local/bin/postinstall.sh:
+  cmd.wait:
+    - watch:
+      - pkg: mycustompkg
+  file.managed:
+    - source: salt://utils/scripts/postinstall.sh
+
+mycustompkg:
+  pkg.installed:
+    - require:
+      - file: /usr/local/bin/postinstall.sh</pre>
+                              </div>
+                           
+                           <div class="section" id="salt-states-cmd__how-do-i-create-an-environment-from-a-pillar-map">
+                              <h2 class="title sectiontitle">How do I create an environment from a pillar map?</h2>
+                              <p class="p">The map that comes from a pillar cannot be directly consumed by the env option.
+                                 To use it one must convert it to a list. Example:
+                              </p>
+                              <pre class="pre codeblock language-yaml">printenv:
+  cmd.run:
+    - env:
+      {% for key, value in pillar['keys'].iteritems() %}
+      - '{{ key }}': '{{ value }}'
+      {% endfor %}</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.states.cmd.call">
+                           <h2 class="title topictitle2">call</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cmd.call(
+								name,
+								func,
+								args=(),
+								kws=None,
+								onlyif=None,
+								unless=None,
+								creates=None,
+								output_loglevel='debug',
+								use_vt=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Invoke a pre-defined Python function with arguments specified in the state
+                                    declaration. This function is mainly used by the
+                                    
+                                    		
+                                    			&nbsp;<a class="xref" href="../../renderers/all/salt.renderers.pydsl.html#salt.renderers.pydsl">salt.renderers.pydsl</a> renderer.
+                                 </p>
+                                 
+                                 <p class="p">The interpretation of <tt class="ph tt">onlyif</tt> and <tt class="ph tt">unless</tt> arguments are identical to
+                                    those of <a class="xref" href="salt.states.cmd.html#salt.states.cmd.run">cmd.run</a>, and all other
+                                    arguments(<tt class="ph tt">cwd</tt>, <tt class="ph tt">runas</tt>, ...) allowed by <a class="xref" href="salt.states.cmd.html#salt.states.cmd.run">cmd.run</a> are allowed here, except that their effects apply
+                                    only to the commands specified in <span class="keyword title_reference">onlyif</span> and <span class="keyword title_reference">unless</span> rather than to the
+                                    function to be invoked.
+                                 </p>
+                                 
+                                 <p class="p">In addition, the <tt class="ph tt">stateful</tt> argument has no effects here.
+                                 </p>
+                                 
+                                 <p class="p">The return value of the invoked function will be interpreted as follows.</p>
+                                 
+                                 <p class="p">If it's a dictionary then it will be passed through to the state system,
+                                    which expects it to have the usual structure returned by any salt state
+                                    function.
+                                 </p>
+                                 
+                                 <p class="p">Otherwise, the return value (denoted as <tt class="ph tt">result</tt> in the code below) is
+                                    expected to be a JSON serializable object, and this dictionary is returned:
+                                 </p>
+                                 <pre class="pre codeblock language-python">{
+    'name': name
+    'changes': {'retval': result},
+    'result': True if result is None else bool(result),
+    'comment': result if isinstance(result, string_types) else ''
+}</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.cmd.mod_run_check">
+                           <h2 class="title topictitle2">mod_run_check</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cmd.mod_run_check(
+								cmd_kwargs,
+								onlyif,
+								unless,
+								group,
+								creates
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Execute the onlyif and unless logic.
+                                    Return a result dict if:
+                                    * group is not available
+                                    * onlyif failed (onlyif != 0)
+                                    * unless succeeded (unless == 0)
+                                    else return True
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.cmd.mod_watch">
+                           <h2 class="title topictitle2">mod_watch</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cmd.mod_watch(
+								name,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Execute a cmd function based on a watch call</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.cmd.run">
+                           <h2 class="title topictitle2">run</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cmd.run(
+								name,
+								onlyif=None,
+								unless=None,
+								creates=None,
+								cwd=None,
+								user=None,
+								group=None,
+								shell=None,
+								env=None,
+								stateful=False,
+								umask=None,
+								output_loglevel='debug',
+								quiet=False,
+								timeout=None,
+								use_vt=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Run a command if certain circumstances are met.  Use <tt class="ph tt">cmd.wait</tt> if you
+                                    want to use the <tt class="ph tt">watch</tt> requisite.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d364105e325" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d364105e327" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e325" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d364105e327" class="stentry propdesc">
+                                       <p class="p">The command to execute, remember that the command will execute with the
+                                          path and permissions of the salt-minion.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e325" class="stentry propvalue">onlyif</td>
+                                    
+                                    <td valign="top" headers="d364105e327" class="stentry propdesc">
+                                       <p class="p">A command to run as a check, run the named command only if the command
+                                          passed to the <tt class="ph tt">onlyif</tt> option returns true
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e325" class="stentry propvalue">unless</td>
+                                    
+                                    <td valign="top" headers="d364105e327" class="stentry propdesc">
+                                       <p class="p">A command to run as a check, only run the named command if the command
+                                          passed to the <tt class="ph tt">unless</tt> option returns false
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e325" class="stentry propvalue">cwd</td>
+                                    
+                                    <td valign="top" headers="d364105e327" class="stentry propdesc">
+                                       <p class="p">The current working directory to execute the command in, defaults to
+                                          /root
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e325" class="stentry propvalue">user</td>
+                                    
+                                    <td valign="top" headers="d364105e327" class="stentry propdesc">
+                                       <p class="p">The user name to run the command as</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e325" class="stentry propvalue">group</td>
+                                    
+                                    <td valign="top" headers="d364105e327" class="stentry propdesc">
+                                       <p class="p">The group context to run the command as</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e325" class="stentry propvalue">shell</td>
+                                    
+                                    <td valign="top" headers="d364105e327" class="stentry propdesc">
+                                       <p class="p">The shell to use for execution, defaults to the shell grain</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e325" class="stentry propvalue">env</td>
+                                    
+                                    <td valign="top" headers="d364105e327" class="stentry propdesc">
+                                       <p class="p">A list of environment variables to be set prior to execution.
+                                          Example:
+                                       </p>
+                                       <pre class="pre codeblock language-yaml">salt://scripts/foo.sh:
+  cmd.script:
+    - env:
+      - BATCH: 'yes'</pre>
+                                       <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                          <p class="p">The above illustrates a common PyYAML pitfall, that <strong class="ph b">yes</strong>,
+                                             <strong class="ph b">no</strong>, <strong class="ph b">on</strong>, <strong class="ph b">off</strong>, <strong class="ph b">true</strong>, and <strong class="ph b">false</strong> are all loaded as
+                                             boolean <tt class="ph tt">True</tt> and <tt class="ph tt">False</tt> values, and must be enclosed in
+                                             quotes to be used as strings. More info on this (and other) PyYAML
+                                             idiosyncrasies can be found 
+                                             		
+                                             			&nbsp;<a class="xref" href="../../../topics/troubleshooting/yaml_idiosyncrasies.html#yaml-idiosyncrasies">here</a>.
+                                          </p>
+                                          
+                                       </aside>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e325" class="stentry propvalue">stateful</td>
+                                    
+                                    <td valign="top" headers="d364105e327" class="stentry propdesc">
+                                       <p class="p">The command being executed is expected to return data about executing
+                                          a state
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e325" class="stentry propvalue">umask</td>
+                                    
+                                    <td valign="top" headers="d364105e327" class="stentry propdesc">
+                                       <p class="p">The umask (in octal) to use when running the command.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e325" class="stentry propvalue">output_loglevel</td>
+                                    
+                                    <td valign="top" headers="d364105e327" class="stentry propdesc">
+                                       <p class="p">Control the loglevel at which the output from the command is logged.
+                                          Note that the command being run will still be logged (loglevel: DEBUG)
+                                          regardless, unless <tt class="ph tt">quiet</tt> is used for this value.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e325" class="stentry propvalue">quiet</td>
+                                    
+                                    <td valign="top" headers="d364105e327" class="stentry propdesc">
+                                       <p class="p">The command will be executed quietly, meaning no log entries of the
+                                          actual command or its return data. This is deprecated as of the
+                                          <strong class="ph b">2014.1.0</strong> release, and is being replaced with
+                                          <tt class="ph tt">output_loglevel: quiet</tt>.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e325" class="stentry propvalue">timeout</td>
+                                    
+                                    <td valign="top" headers="d364105e327" class="stentry propdesc">
+                                       <p class="p">If the command has not terminated after timeout seconds, send the
+                                          subprocess sigterm, and if sigterm is ignored, follow up with sigkill
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e325" class="stentry propvalue">creates</td>
+                                    
+                                    <td valign="top" headers="d364105e327" class="stentry propdesc">
+                                       <p class="p">Only run if the file specified by <tt class="ph tt">creates</tt> does not exist.
+                                       </p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e325" class="stentry propvalue">use_vt</td>
+                                    
+                                    <td valign="top" headers="d364105e327" class="stentry propdesc">
+                                       <p class="p">Use VT utils (saltstack) to stream the command output more
+                                          interactively to the console and the logs.
+                                          This is experimental.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p">cmd.run supports the usage of <tt class="ph tt">reload_modules</tt>. This functionality
+                                       allows you to force Salt to reload all modules. You should only use
+                                       <tt class="ph tt">reload_modules</tt> if your cmd.run does some sort of installation
+                                       (such as <tt class="ph tt">pip</tt>), if you do not reload the modules future items in
+                                       your state which rely on the software being installed will fail.
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">getpip:
+  cmd.run:
+    - name: /usr/bin/python /usr/local/sbin/get-pip.py
+    - unless: which pip
+    - require:
+      - pkg: python
+      - file: /usr/local/sbin/get-pip.py
+    - reload_modules: True</pre>
+                                    </aside>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.cmd.script">
+                           <h2 class="title topictitle2">script</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cmd.script(
+								name,
+								source=None,
+								template=None,
+								onlyif=None,
+								unless=None,
+								creates=None,
+								cwd=None,
+								user=None,
+								group=None,
+								shell=None,
+								env=None,
+								stateful=False,
+								umask=None,
+								timeout=None,
+								use_vt=False,
+								output_loglevel='debug',
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Download a script and execute it with specified arguments.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d364105e520" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d364105e522" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e520" class="stentry propvalue">source</td>
+                                    
+                                    <td valign="top" headers="d364105e522" class="stentry propdesc">
+                                       <p class="p">The location of the script to download. If the file is located on the
+                                          master in the directory named spam, and is called eggs, the source
+                                          string is salt://spam/eggs
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e520" class="stentry propvalue">template</td>
+                                    
+                                    <td valign="top" headers="d364105e522" class="stentry propdesc">
+                                       <p class="p">If this setting is applied then the named templating engine will be
+                                          used to render the downloaded file. Currently jinja, mako, and wempy
+                                          are supported
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e520" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d364105e522" class="stentry propdesc">
+                                       <p class="p">Either "cmd arg1 arg2 arg3..." (cmd is not used) or a source
+                                          "salt://...".
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e520" class="stentry propvalue">onlyif</td>
+                                    
+                                    <td valign="top" headers="d364105e522" class="stentry propdesc">
+                                       <p class="p">Run the named command only if the command passed to the <tt class="ph tt">onlyif</tt>
+                                          option returns true
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e520" class="stentry propvalue">unless</td>
+                                    
+                                    <td valign="top" headers="d364105e522" class="stentry propdesc">
+                                       <p class="p">Run the named command only if the command passed to the <tt class="ph tt">unless</tt>
+                                          option returns false
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e520" class="stentry propvalue">cwd</td>
+                                    
+                                    <td valign="top" headers="d364105e522" class="stentry propdesc">
+                                       <p class="p">The current working directory to execute the command in, defaults to
+                                          /root
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e520" class="stentry propvalue">user</td>
+                                    
+                                    <td valign="top" headers="d364105e522" class="stentry propdesc">
+                                       <p class="p">The name of the user to run the command as</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e520" class="stentry propvalue">group</td>
+                                    
+                                    <td valign="top" headers="d364105e522" class="stentry propdesc">
+                                       <p class="p">The group context to run the command as</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e520" class="stentry propvalue">shell</td>
+                                    
+                                    <td valign="top" headers="d364105e522" class="stentry propdesc">
+                                       <p class="p">The shell to use for execution. The default is set in grains['shell']</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e520" class="stentry propvalue">env</td>
+                                    
+                                    <td valign="top" headers="d364105e522" class="stentry propdesc">
+                                       <p class="p">A list of environment variables to be set prior to execution.
+                                          Example:
+                                       </p>
+                                       <pre class="pre codeblock language-yaml">salt://scripts/foo.sh:
+  cmd.script:
+    - env:
+      - BATCH: 'yes'</pre>
+                                       <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                          <p class="p">The above illustrates a common PyYAML pitfall, that <strong class="ph b">yes</strong>,
+                                             <strong class="ph b">no</strong>, <strong class="ph b">on</strong>, <strong class="ph b">off</strong>, <strong class="ph b">true</strong>, and <strong class="ph b">false</strong> are all loaded as
+                                             boolean <tt class="ph tt">True</tt> and <tt class="ph tt">False</tt> values, and must be enclosed in
+                                             quotes to be used as strings. More info on this (and other) PyYAML
+                                             idiosyncrasies can be found 
+                                             		
+                                             			&nbsp;<a class="xref" href="../../../topics/troubleshooting/yaml_idiosyncrasies.html#yaml-idiosyncrasies">here</a>.
+                                          </p>
+                                          
+                                       </aside>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e520" class="stentry propvalue">umask</td>
+                                    
+                                    <td valign="top" headers="d364105e522" class="stentry propdesc">
+                                       <p class="p">The umask (in octal) to use when running the command.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e520" class="stentry propvalue">stateful</td>
+                                    
+                                    <td valign="top" headers="d364105e522" class="stentry propdesc">
+                                       <p class="p">The command being executed is expected to return data about executing
+                                          a state
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e520" class="stentry propvalue">timeout</td>
+                                    
+                                    <td valign="top" headers="d364105e522" class="stentry propdesc">
+                                       <p class="p">If the command has not terminated after timeout seconds, send the
+                                          subprocess sigterm, and if sigterm is ignored, follow up with sigkill
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e520" class="stentry propvalue">args</td>
+                                    
+                                    <td valign="top" headers="d364105e522" class="stentry propdesc">
+                                       <p class="p">String of command line args to pass to the script.  Only used if no
+                                          args are specified as part of the <span class="keyword title_reference">name</span> argument. To pass a string
+                                          containing spaces in YAML, you will need to doubly-quote it:  "arg1
+                                          'arg two' arg3"
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e520" class="stentry propvalue">creates</td>
+                                    
+                                    <td valign="top" headers="d364105e522" class="stentry propdesc">
+                                       <p class="p">Only run if the file specified by <tt class="ph tt">creates</tt> does not exist.
+                                       </p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e520" class="stentry propvalue">use_vt</td>
+                                    
+                                    <td valign="top" headers="d364105e522" class="stentry propdesc">
+                                       <p class="p">Use VT utils (saltstack) to stream the command output more
+                                          interactively to the console and the logs.
+                                          This is experimental.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e520" class="stentry propvalue">output_loglevel</td>
+                                    
+                                    <td valign="top" headers="d364105e522" class="stentry propdesc">
+                                       <p class="p">Control the loglevel at which the output from the command is logged.
+                                          Note that the command being run will still be logged (loglevel: DEBUG)
+                                          regardless, unless <tt class="ph tt">quiet</tt> is used for this value.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.cmd.wait">
+                           <h2 class="title topictitle2">wait</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cmd.wait(
+								name,
+								onlyif=None,
+								unless=None,
+								creates=None,
+								cwd=None,
+								user=None,
+								group=None,
+								shell=None,
+								env=(),
+								stateful=False,
+								umask=None,
+								output_loglevel='debug',
+								use_vt=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Run the given command only if the watch statement calls it</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d364105e707" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d364105e709" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e707" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d364105e709" class="stentry propdesc">
+                                       <p class="p">The command to execute, remember that the command will execute with the
+                                          path and permissions of the salt-minion.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e707" class="stentry propvalue">onlyif</td>
+                                    
+                                    <td valign="top" headers="d364105e709" class="stentry propdesc">
+                                       <p class="p">A command to run as a check, run the named command only if the command
+                                          passed to the <tt class="ph tt">onlyif</tt> option returns true
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e707" class="stentry propvalue">unless</td>
+                                    
+                                    <td valign="top" headers="d364105e709" class="stentry propdesc">
+                                       <p class="p">A command to run as a check, only run the named command if the command
+                                          passed to the <tt class="ph tt">unless</tt> option returns false
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e707" class="stentry propvalue">cwd</td>
+                                    
+                                    <td valign="top" headers="d364105e709" class="stentry propdesc">
+                                       <p class="p">The current working directory to execute the command in, defaults to
+                                          /root
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e707" class="stentry propvalue">user</td>
+                                    
+                                    <td valign="top" headers="d364105e709" class="stentry propdesc">
+                                       <p class="p">The user name to run the command as</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e707" class="stentry propvalue">group</td>
+                                    
+                                    <td valign="top" headers="d364105e709" class="stentry propdesc">
+                                       <p class="p">The group context to run the command as</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e707" class="stentry propvalue">shell</td>
+                                    
+                                    <td valign="top" headers="d364105e709" class="stentry propdesc">
+                                       <p class="p">The shell to use for execution, defaults to /bin/sh</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e707" class="stentry propvalue">env</td>
+                                    
+                                    <td valign="top" headers="d364105e709" class="stentry propdesc">
+                                       <p class="p">A list of environment variables to be set prior to execution.
+                                          Example:
+                                       </p>
+                                       <pre class="pre codeblock language-yaml">salt://scripts/foo.sh:
+  cmd.script:
+    - env:
+      - BATCH: 'yes'</pre>
+                                       <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                          <p class="p">The above illustrates a common PyYAML pitfall, that <strong class="ph b">yes</strong>,
+                                             <strong class="ph b">no</strong>, <strong class="ph b">on</strong>, <strong class="ph b">off</strong>, <strong class="ph b">true</strong>, and <strong class="ph b">false</strong> are all loaded as
+                                             boolean <tt class="ph tt">True</tt> and <tt class="ph tt">False</tt> values, and must be enclosed in
+                                             quotes to be used as strings. More info on this (and other) PyYAML
+                                             idiosyncrasies can be found 
+                                             		
+                                             			&nbsp;<a class="xref" href="../../../topics/troubleshooting/yaml_idiosyncrasies.html#yaml-idiosyncrasies">here</a>.
+                                          </p>
+                                          
+                                       </aside>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e707" class="stentry propvalue">umask</td>
+                                    
+                                    <td valign="top" headers="d364105e709" class="stentry propdesc">
+                                       <p class="p">The umask (in octal) to use when running the command.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e707" class="stentry propvalue">stateful</td>
+                                    
+                                    <td valign="top" headers="d364105e709" class="stentry propdesc">
+                                       <p class="p">The command being executed is expected to return data about executing
+                                          a state
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e707" class="stentry propvalue">creates</td>
+                                    
+                                    <td valign="top" headers="d364105e709" class="stentry propdesc">
+                                       <p class="p">Only run if the file specified by <tt class="ph tt">creates</tt> does not exist.
+                                       </p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e707" class="stentry propvalue">output_loglevel</td>
+                                    
+                                    <td valign="top" headers="d364105e709" class="stentry propdesc">
+                                       <p class="p">Control the loglevel at which the output from the command is logged.
+                                          Note that the command being run will still be logged (loglevel: DEBUG)
+                                          regardless, unless <tt class="ph tt">quiet</tt> is used for this value.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e707" class="stentry propvalue">use_vt</td>
+                                    
+                                    <td valign="top" headers="d364105e709" class="stentry propdesc">
+                                       <p class="p">Use VT utils (saltstack) to stream the command output more
+                                          interactively to the console and the logs.
+                                          This is experimental.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.cmd.wait_call">
+                           <h2 class="title topictitle2">wait_call</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cmd.wait_call(
+								name,
+								func,
+								args=(),
+								kws=None,
+								onlyif=None,
+								unless=None,
+								creates=None,
+								stateful=False,
+								use_vt=False,
+								output_loglevel='debug',
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.cmd.wait_script">
+                           <h2 class="title topictitle2">wait_script</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cmd.wait_script(
+								name,
+								source=None,
+								template=None,
+								onlyif=None,
+								unless=None,
+								cwd=None,
+								user=None,
+								group=None,
+								shell=None,
+								env=None,
+								stateful=False,
+								umask=None,
+								use_vt=False,
+								output_loglevel='debug',
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Download a script from a remote source and execute it only if a watch
+                                    statement calls it.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d364105e887" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d364105e889" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e887" class="stentry propvalue">source</td>
+                                    
+                                    <td valign="top" headers="d364105e889" class="stentry propdesc">
+                                       <p class="p">The source script being downloaded to the minion, this source script is
+                                          hosted on the salt master server.  If the file is located on the master
+                                          in the directory named spam, and is called eggs, the source string is
+                                          salt://spam/eggs
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e887" class="stentry propvalue">template</td>
+                                    
+                                    <td valign="top" headers="d364105e889" class="stentry propdesc">
+                                       <p class="p">If this setting is applied then the named templating engine will be
+                                          used to render the downloaded file, currently jinja, mako, and wempy
+                                          are supported
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e887" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d364105e889" class="stentry propdesc">
+                                       <p class="p">The command to execute, remember that the command will execute with the
+                                          path and permissions of the salt-minion.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e887" class="stentry propvalue">onlyif</td>
+                                    
+                                    <td valign="top" headers="d364105e889" class="stentry propdesc">
+                                       <p class="p">A command to run as a check, run the named command only if the command
+                                          passed to the <tt class="ph tt">onlyif</tt> option returns true
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e887" class="stentry propvalue">unless</td>
+                                    
+                                    <td valign="top" headers="d364105e889" class="stentry propdesc">
+                                       <p class="p">A command to run as a check, only run the named command if the command
+                                          passed to the <tt class="ph tt">unless</tt> option returns false
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e887" class="stentry propvalue">cwd</td>
+                                    
+                                    <td valign="top" headers="d364105e889" class="stentry propdesc">
+                                       <p class="p">The current working directory to execute the command in, defaults to
+                                          /root
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e887" class="stentry propvalue">user</td>
+                                    
+                                    <td valign="top" headers="d364105e889" class="stentry propdesc">
+                                       <p class="p">The user name to run the command as</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e887" class="stentry propvalue">group</td>
+                                    
+                                    <td valign="top" headers="d364105e889" class="stentry propdesc">
+                                       <p class="p">The group context to run the command as</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e887" class="stentry propvalue">shell</td>
+                                    
+                                    <td valign="top" headers="d364105e889" class="stentry propdesc">
+                                       <p class="p">The shell to use for execution, defaults to the shell grain</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e887" class="stentry propvalue">env</td>
+                                    
+                                    <td valign="top" headers="d364105e889" class="stentry propdesc">
+                                       <p class="p">A list of environment variables to be set prior to execution.
+                                          Example:
+                                       </p>
+                                       <pre class="pre codeblock language-yaml">salt://scripts/foo.sh:
+  cmd.script:
+    - env:
+      - BATCH: 'yes'</pre>
+                                       <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                          <p class="p">The above illustrates a common PyYAML pitfall, that <strong class="ph b">yes</strong>,
+                                             <strong class="ph b">no</strong>, <strong class="ph b">on</strong>, <strong class="ph b">off</strong>, <strong class="ph b">true</strong>, and <strong class="ph b">false</strong> are all loaded as
+                                             boolean <tt class="ph tt">True</tt> and <tt class="ph tt">False</tt> values, and must be enclosed in
+                                             quotes to be used as strings. More info on this (and other) PyYAML
+                                             idiosyncrasies can be found 
+                                             		
+                                             			&nbsp;<a class="xref" href="../../../topics/troubleshooting/yaml_idiosyncrasies.html#yaml-idiosyncrasies">here</a>.
+                                          </p>
+                                          
+                                       </aside>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e887" class="stentry propvalue">umask</td>
+                                    
+                                    <td valign="top" headers="d364105e889" class="stentry propdesc">
+                                       <p class="p">The umask (in octal) to use when running the command.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e887" class="stentry propvalue">stateful</td>
+                                    
+                                    <td valign="top" headers="d364105e889" class="stentry propdesc">
+                                       <p class="p">The command being executed is expected to return data about executing
+                                          a state
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d364105e887" class="stentry propvalue">use_vt</td>
+                                    
+                                    <td valign="top" headers="d364105e889" class="stentry propdesc">
+                                       <blockquote class="lq">
+                                          <p class="p">Use VT utils (saltstack) to stream the command output more
+                                             interactively to the console and the logs.
+                                             This is experimental.
+                                          </p>
+                                          
+                                       </blockquote>
+                                       
+                                       <dl class="dl definition_list">
+                                          <dt class="dt dlterm">output_loglevel</dt>
+                                          
+                                          <dd class="dd">
+                                             <p class="p">Control the loglevel at which the output from the command is logged.
+                                                Note that the command being run will still be logged (loglevel: DEBUG)
+                                                regardless, unless <tt class="ph tt">quiet</tt> is used for this value.
+                                             </p>
+                                             
+                                          </dd>
+                                          
+                                       </dl>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

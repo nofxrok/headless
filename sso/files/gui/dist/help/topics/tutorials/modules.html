@@ -1,0 +1,146 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Remote execution tutorial</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Remote execution tutorial">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/remote-execution.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="remote-execution-tutorial">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="remote-execution-tutorial">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Remote execution tutorial</h1>
+                        <div class="body conbody">
+                           <p class="p"><strong class="ph b">Before continuing</strong> make sure you have a working Salt installation by
+                              following the 
+                              		
+                              			&nbsp;<a class="xref" href="../installation/index.html#id1">installation</a> and the
+                              
+                              		
+                              			&nbsp;<a class="xref" href="../../ref/configuration/index.html#configuring-salt">configuration</a> instructions.
+                           </p>
+                           
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">Stuck?</strong><p class="p">There are many ways to 
+                                 		
+                                 			&nbsp;<a class="xref" href="../index.html#introduction-to-salt__salt-community">get help from the Salt community</a> including our
+                                 <a class="xref" href="https://groups.google.com/forum/#!forum/salt-users" target="_blank">mailing list</a>
+                                 and our <a class="xref" href="http://webchat.freenode.net/?channels=salt" target="_blank">IRC channel</a> #salt.
+                              </p>
+                              
+                           </aside>
+                           
+                           <div class="section" id="remote-execution-tutorial__order-your-minions-around">
+                              <h2 class="title sectiontitle">Order your minions around</h2>
+                              <p class="p">Now that you have a 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../glossary.html#glossary__term-master">master</a> and at least one 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../glossary.html#glossary__term-minion">minion</a>
+                                 communicating with each other you can perform commands on the minion via the
+                                 salt command. Salt calls are comprised of three main components:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '&lt;target&gt;' &lt;function&gt; [arguments]</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/cli/salt.html#salt">salt manpage</a></p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="remote-execution-tutorial__target">
+                              <h2 class="title sectiontitle">target</h2>
+                              <p class="p">The target component allows you to filter which minions should run the
+                                 following function. The default filter is a glob on the minion id. For example:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' test.ping
+salt '*.example.org' test.ping</pre>
+                              <p class="p">Targets can be based on minion system information using the Grains system:</p>
+                              <pre class="pre codeblock language-bash">salt -G 'os:Ubuntu' test.ping</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="../targeting/grains.html#targeting-grains">Grains system</a></p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Targets can be filtered by regular expression:</p>
+                              <pre class="pre codeblock language-bash">salt -E 'virtmach[0-9]' test.ping</pre>
+                              <p class="p">Targets can be explicitly specified in a list:</p>
+                              <pre class="pre codeblock language-bash">salt -L 'foo,bar,baz,quo' test.ping</pre>
+                              <p class="p">Or Multiple target types can be combined in one command:</p>
+                              <pre class="pre codeblock language-bash">salt -C 'G@os:Ubuntu and webser* or E@database.*' test.ping</pre>
+                              </div>
+                           
+                           <div class="section head3" id="remote-execution-tutorial__function">
+                              <h2 class="title sectiontitle">function</h2>
+                              <p class="p">A function is some functionality provided by a module. Salt ships with a large
+                                 collection of available functions. List all available functions on your
+                                 minions:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' sys.doc</pre>
+                              <p class="p">Here are some examples:</p>
+                              
+                              <p class="p">Show all currently available minions:</p>
+                              <pre class="pre codeblock language-bash">salt '*' test.ping</pre>
+                              <p class="p">Run an arbitrary shell command:</p>
+                              <pre class="pre codeblock language-bash">salt '*' cmd.run 'uname -a'</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/modules/index.html#execution-modules">the full list of modules</a></p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="remote-execution-tutorial__arguments">
+                              <h2 class="title sectiontitle">arguments</h2>
+                              <p class="p">Space-delimited arguments to the function:</p>
+                              <pre class="pre codeblock language-bash">salt '*' cmd.exec_code python 'import sys; print sys.version'</pre>
+                              <p class="p">Optional, keyword arguments are also supported:</p>
+                              <pre class="pre codeblock language-bash">salt '*' pip.install salt timeout=5 upgrade=True</pre>
+                              <p class="p">They are always in the form of <tt class="ph tt">kwarg=argument</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

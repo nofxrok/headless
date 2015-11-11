@@ -1,0 +1,65 @@
+
+    <div class="modal-header">
+    <h3 class="modal-title">Enter a Target Name</h3>
+    </div>
+    <div class="modal-body">
+        <form name="createTarget" id="create-target-form" class="form-horizontal" role="form" ng-submit="addToTargetOk(target)" novalidate>
+            <div class="form-group">
+                <label class="col-xs-3 control-label">Target Name</label>
+                <div class="col-xs-9" ng-class="{'has-error': createTarget.targetname.$error.required}">
+                    <input name="targetname" class="form-control" ng-model="target.name" ng-pattern="/^[a-zA-Z0-9 ]+$/" maxlength="65" ng-trim="false" required salt-form-focus>
+                </div>
+            </div>
+            <div class="form-group">
+                <div id="radio-btn-holder">
+                    <div  class="pull-left">
+                        <label id="fav-target-text"><input id="fav-target-check" type="radio" name="fav-target" ng-model="target.is_fav" ng-value="true" ng-change="radioBtnChange(true);"></input> Create Private Target</label>
+                    </div>
+                    <div class="pull-left">
+                        <label id="public-target-text"><input id="public-target-check" type="radio" name="public-target" ng-model="target.is_fav" ng-value="false" ng-change="radioBtnChange(false);"></input> Create Public Target</label>
+                    </div>
+                </div>
+                <div id="target-folder-list">
+                    <div class="col-xs-3"></div>
+                    <div class="col-xs-9" ng-class="{'has-error': createTarget.foldername.$error.required}">
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" href="">
+                                <input id="target-folder-name" name="foldername" class="form-control" ng-model="target.foldername" placeholder="Please select a folder" readonly required />
+                                <input type="hidden" ng-model="target.parent_id" />
+                                <span id="target-folder-dropdown-icon"><b class="caret"></b></span>
+                            </a>
+
+                            <ul class="dropdown-menu user-dropdown-details">
+                                <div ng-show="target.is_fav" ng-hide="!target.is_fav" id="target-folder-dropdown" 
+                                    data-angular-treeview="true"
+                                    data-tree-id="privateFolders"
+                                    data-tree-model="targetPrivateFolderStructure"
+                                    data-node-id="id"
+                                    data-node-label="name"
+                                    data-node-children="children" 
+                                    data-tree-type="foldersonly">
+                                </div>
+                                <div ng-show="!target.is_fav" ng-hide="target.is_fav" id="target-folder-dropdown" 
+                                    data-angular-treeview="true"
+                                    data-tree-id="publicFolders"
+                                    data-tree-model="targetPublicFolderStructure"
+                                    data-node-id="id"
+                                    data-node-label="name"
+                                    data-node-children="children" 
+                                    data-tree-type="foldersonly">
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="clear-target-txt-holder">
+                    <label id="clear-target-text"><input id="clear-target-check" type="checkbox" name="clear-target" ng-model="target.deleteqt"></input> Clear Quick Target</label>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <div class="modal-footer">
+        <button class="btn btn-primary site-btn-form" ng-click="addToTargetOk(target)" ng-disabled="createTarget.$invalid">Save</button>
+        <button class="btn btn-primary site-btn-form" ng-click="addToTargetCancel()">Cancel</button>
+    </div>

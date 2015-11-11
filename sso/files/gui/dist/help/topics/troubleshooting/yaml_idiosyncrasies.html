@@ -1,0 +1,350 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>YAML Idiosyncrasies</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="YAML Idiosyncrasies">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="yaml-idiosyncrasies">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="yaml-idiosyncrasies">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">YAML Idiosyncrasies</h1>
+                        <div class="body conbody">
+                           <p class="p">One of Salt's strengths, the use of existing serialization systems for
+                              representing SLS data, can also backfire. <a class="xref" href="http://yaml.org/spec/1.1/" target="_blank">YAML</a> is a general purpose system
+                              and there are a number of things that would seem to make sense in an sls
+                              file that cause YAML issues. It is wise to be aware of these issues. While
+                              reports or running into them are generally rare they can still crop up at
+                              unexpected times.
+                           </p>
+                           
+                           <div class="section" id="yaml-idiosyncrasies__spaces-vs-tabs">
+                              <h2 class="title sectiontitle">Spaces vs Tabs</h2>
+                              <p class="p"><a class="xref" href="http://yaml.org/spec/1.1/#id871998" target="_blank">YAML uses spaces</a>, period. Do not use tabs in your SLS files! If strange
+                                 errors are coming up in rendering SLS files, make sure to check that
+                                 no tabs have crept in! In Vim, after enabling search highlighting
+                                 with: <tt class="ph tt">:set hlsearch</tt>,  you can check with the following key sequence in
+                                 normal mode(you can hit <span class="keyword title_reference">ESC</span> twice to be sure): <tt class="ph tt">/</tt>, <span class="keyword title_reference">Ctrl-v</span>, <span class="keyword title_reference">Tab</span>, then
+                                 hit <span class="keyword title_reference">Enter</span>. Also, you can convert tabs to 2 spaces by these commands in Vim:
+                                 <tt class="ph tt">:set tabstop=2 expandtab</tt> and then <tt class="ph tt">:retab</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="yaml-idiosyncrasies__indentation">
+                              <h2 class="title sectiontitle">Indentation</h2>
+                              <p class="p">The suggested syntax for YAML files is to use 2 spaces for indentation,
+                                 but YAML will follow whatever indentation system that the individual file
+                                 uses. Indentation of two spaces works very well for SLS files given the
+                                 fact that the data is uniform and not deeply nested.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="yaml-idiosyncrasies__nested-dict-indentation">
+                              <h2 class="title sectiontitle">Nested Dictionaries</h2>
+                              <p class="p">When <a class="xref" href="http://docs.python.org/2/library/stdtypes.html#typesmapping" target="_blank">dicts</a> are nested within other data
+                                 structures (particularly lists), the indentation logic sometimes changes.
+                                 Examples of where this might happen include <tt class="ph tt">context</tt> and <tt class="ph tt">default</tt> options
+                                 from the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/all/salt.states.file.html#salt-states-file">file.managed</a> state:
+                              </p>
+                              <pre class="pre codeblock language-yaml">/etc/http/conf/http.conf:
+  file:
+    - managed
+    - source: salt://apache/http.conf
+    - user: root
+    - group: root
+    - mode: 644
+    - template: jinja
+    - context:
+        custom_var: "override"
+    - defaults:
+        custom_var: "default value"
+        other_var: 123</pre>
+                              <p class="p">Notice that while the indentation is two spaces per level, for the values under
+                                 the <tt class="ph tt">context</tt> and <tt class="ph tt">defaults</tt> options there is a four-space indent. If only
+                                 two spaces are used to indent, then those keys will be considered part of the
+                                 same dictionary that contains the <tt class="ph tt">context</tt> key, and so the data will not be
+                                 loaded correctly. If using a double indent is not desirable, then a
+                                 deeply-nested dict can be declared with curly braces:
+                              </p>
+                              <pre class="pre codeblock language-yaml">/etc/http/conf/http.conf:
+  file:
+    - managed
+    - source: salt://apache/http.conf
+    - user: root
+    - group: root
+    - mode: 644
+    - template: jinja
+    - context: {
+      custom_var: "override" }
+    - defaults: {
+      custom_var: "default value",
+      other_var: 123 }</pre>
+                              <p class="p">Here is a more concrete example of how YAML actually handles these
+                                 indentations, using the Python interpreter on the command line:
+                              </p>
+                              <pre class="pre codeblock language-python">&gt;&gt;&gt; import yaml
+&gt;&gt;&gt; yaml.safe_load('''mystate:
+...   file.managed:
+...     - context:
+...         some: var''')
+{'mystate': {'file.managed': [{'context': {'some': 'var'}}]}}
+&gt;&gt;&gt; yaml.safe_load('''mystate:
+...   file.managed:
+...     - context:
+...       some: var''')
+{'mystate': {'file.managed': [{'some': 'var', 'context': None}]}}</pre>
+                              <p class="p">Note that in the second example, <tt class="ph tt">some</tt> is added as another key in the same
+                                 dictionary, whereas in the first example, it's the start of a new dictionary.
+                                 That's the distinction. <tt class="ph tt">context</tt> is a common example because it is a keyword
+                                 arg for many functions, and should contain a dictionary.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="yaml-idiosyncrasies__true-false-yes-no-on-off">
+                              <h2 class="title sectiontitle">True/False, Yes/No, On/Off</h2>
+                              <p class="p">PyYAML will load these values as boolean <tt class="ph tt">True</tt> or <tt class="ph tt">False</tt>. Un-capitalized
+                                 versions will also be loaded as booleans (<tt class="ph tt">true</tt>, <tt class="ph tt">false</tt>, <tt class="ph tt">yes</tt>, <tt class="ph tt">no</tt>,
+                                 <tt class="ph tt">on</tt>, and <tt class="ph tt">off</tt>). This can be especially problematic when constructing
+                                 Pillar data. Make sure that your Pillars which need to use the string versions
+                                 of these values are enclosed in quotes.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="yaml-idiosyncrasies__integers-are-parsed-as-integers">
+                              <h2 class="title sectiontitle">Integers are Parsed as Integers</h2>
+                              <p class="p">NOTE: This has been fixed in salt 0.10.0, as of this release passing an
+                                 integer that is preceded by a 0 will be correctly parsed
+                              </p>
+                              
+                              <p class="p">When passing <tt class="ph tt">integers</tt> into an SLS file, they are
+                                 passed as integers. This means that if a state accepts a string value
+                                 and an integer is passed, that an integer will be sent. The solution here
+                                 is to send the integer as a string.
+                              </p>
+                              
+                              <p class="p">This is best explained when setting the mode for a file:</p>
+                              <pre class="pre codeblock language-yaml">/etc/vimrc:
+  file:
+    - managed
+    - source: salt://edit/vimrc
+    - user: root
+    - group: root
+    - mode: 644</pre>
+                              <p class="p">Salt manages this well, since the mode is passed as 644, but if the mode is
+                                 zero padded as 0644, then it is read by YAML as an integer and evaluated as
+                                 an octal value, 0644 becomes 420. Therefore, if the file mode is
+                                 preceded by a 0 then it needs to be passed as a string:
+                              </p>
+                              <pre class="pre codeblock language-yaml">/etc/vimrc:
+  file:
+    - managed
+    - source: salt://edit/vimrc
+    - user: root
+    - group: root
+    - mode: '0644'</pre>
+                              </div>
+                           
+                           <div class="section" id="yaml-idiosyncrasies__yaml-does-not-like-double-short-decs">
+                              <h2 class="title sectiontitle">YAML does not like "Double Short Decs"</h2>
+                              <p class="p">If I can find a way to make YAML accept "Double Short Decs" then I will, since
+                                 I think that double short decs would be awesome. So what is a "Double Short
+                                 Dec"? It is when you declare a multiple short decs in one ID. Here is a
+                                 standard short dec, it works great:
+                              </p>
+                              <pre class="pre codeblock language-yaml">vim:
+  pkg.installed</pre>
+                              <p class="p">The short dec means that there are no arguments to pass, so it is not required
+                                 to add any arguments, and it can save space.
+                              </p>
+                              
+                              <p class="p">YAML though, gets upset when declaring multiple short decs, for the record...</p>
+                              
+                              <p class="p">THIS DOES NOT WORK:</p>
+                              <pre class="pre codeblock language-yaml">vim:
+  pkg.installed
+  user.present</pre>
+                              <p class="p">Similarly declaring a short dec in the same ID dec as a standard dec does not
+                                 work either...
+                              </p>
+                              
+                              <p class="p">ALSO DOES NOT WORK:</p>
+                              <pre class="pre codeblock language-yaml">fred:
+  user.present
+  ssh_auth.present:
+    - name: AAAAB3NzaC...
+    - user: fred
+    - enc: ssh-dss
+    - require:
+      - user: fred</pre>
+                              <p class="p">The correct way is to define them like this:</p>
+                              <pre class="pre codeblock language-yaml">vim:
+  pkg.installed: []
+  user.present: []
+
+fred:
+  user.present: []
+  ssh_auth.present:
+    - name: AAAAB3NzaC...
+    - user: fred
+    - enc: ssh-dss
+    - require:
+      - user: fred</pre>
+                              <p class="p">Alternatively,  they can be defined the "old way",  or with multiple
+                                 "full decs":
+                              </p>
+                              <pre class="pre codeblock language-yaml">vim:
+  pkg:
+    - installed
+  user:
+    - present
+
+fred:
+  user:
+    - present
+  ssh_auth:
+    - present
+    - name: AAAAB3NzaC...
+    - user: fred
+    - enc: ssh-dss
+    - require:
+      - user: fred</pre>
+                              </div>
+                           
+                           <div class="section" id="yaml-idiosyncrasies__yaml-support-only-plain-ascii">
+                              <h2 class="title sectiontitle">YAML support only plain ASCII</h2>
+                              <p class="p">According to YAML specification, only ASCII characters can be used.</p>
+                              
+                              <p class="p">Within double-quotes, special characters may be represented with C-style
+                                 escape sequences starting with a backslash ( \ ).
+                              </p>
+                              
+                              <p class="p">Examples:</p>
+                              <pre class="pre codeblock language-yaml">- micro: "\u00b5"
+- copyright: "\u00A9"
+- A: "\x41"
+- alpha: "\u0251"
+- Alef: "\u05d0"</pre>
+                              <p class="p">List of usable <a class="xref" href="http://en.wikipedia.org/wiki/List_of_Unicode_characters" target="_blank">Unicode characters</a>  will help you to identify correct numbers.
+                              </p>
+                              
+                              <p class="p">Python can also be used to discover the Unicode number for a character:</p>
+                              <pre class="pre codeblock language-python">repr(u"Text with wrong characters i need to figure out")</pre>
+                              <p class="p">This shell command can find wrong characters in your SLS files:</p>
+                              <pre class="pre codeblock language-bash">find . -name '*.sls'  -exec  grep --color='auto' -P -n '[^\x00-\x7F]' \{} \;</pre>
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm">Alternatively you can toggle the <span class="keyword title_reference">yaml_utf8</span> setting in your master configuration
+                                 </dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">file. This is still an experimental setting but it should manage the right
+                                       encoding conversion in salt after yaml states compilations.
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                           <div class="section" id="yaml-idiosyncrasies__underscores-stripped-in-integer-definitions">
+                              <h2 class="title sectiontitle">Underscores stripped in Integer Definitions</h2>
+                              <p class="p">If a definition only includes numbers and underscores, it is parsed by YAML as
+                                 an integer and all underscores are stripped.  To ensure the object becomes a
+                                 string, it should be surrounded by quotes.  <a class="xref" href="http://stackoverflow.com/questions/2723321/snakeyaml-how-to-disable-underscore-stripping-when-parsing" target="_blank">More information here</a>.
+                              </p>
+                              
+                              <p class="p">Here's an example:</p>
+                              <pre class="pre codeblock language-python">&gt;&gt;&gt; import yaml
+&gt;&gt;&gt; yaml.safe_load('2013_05_10')
+20130510
+&gt;&gt;&gt; yaml.safe_load('"2013_05_10"')
+'2013_05_10'</pre>
+                              </div>
+                           
+                           <div class="section" id="yaml-idiosyncrasies__automatic-datetime-conversion">
+                              <h2 class="title sectiontitle">Automatic datetime conversion</h2>
+                              <p class="p">If there is a value in a YAML file formatted <tt class="ph tt">2014-01-20 14:23:23</tt> or
+                                 similar, YAML will automatically convert this to a Python <tt class="ph tt">datetime</tt> object.
+                                 These objects are not msgpack serializable, and so may break core salt
+                                 functionality.  If values such as these are needed in a salt YAML file
+                                 (specifically a configuration file), they should be formatted with surrounding
+                                 strings to force YAML to serialize them as strings:
+                              </p>
+                              <pre class="pre codeblock language-python">&gt;&gt;&gt; import yaml
+&gt;&gt;&gt; yaml.safe_load('2014-01-20 14:23:23')
+datetime.datetime(2014, 1, 20, 14, 23, 23)
+&gt;&gt;&gt; yaml.safe_load('"2014-01-20 14:23:23"')
+'2014-01-20 14:23:23'</pre>
+                              <p class="p">Additionally, numbers formatted like <tt class="ph tt">XXXX-XX-XX</tt> will also be converted (or
+                                 YAML will attempt to convert them, and error out if it doesn't think the date
+                                 is a real one).  Thus, for example, if a minion were to have an ID of
+                                 <tt class="ph tt">4017-16-20</tt> the minion would not start because YAML would complain that the
+                                 date was out of range.  The workaround is the same, surround the offending
+                                 string with quotes:
+                              </p>
+                              <pre class="pre codeblock language-python">&gt;&gt;&gt; import yaml
+&gt;&gt;&gt; yaml.safe_load('4017-16-20')
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+  File "/usr/local/lib/python2.7/site-packages/yaml/__init__.py", line 93, in safe_load
+    return load(stream, SafeLoader)
+  File "/usr/local/lib/python2.7/site-packages/yaml/__init__.py", line 71, in load
+    return loader.get_single_data()
+  File "/usr/local/lib/python2.7/site-packages/yaml/constructor.py", line 39, in get_single_data
+    return self.construct_document(node)
+  File "/usr/local/lib/python2.7/site-packages/yaml/constructor.py", line 43, in construct_document
+    data = self.construct_object(node)
+  File "/usr/local/lib/python2.7/site-packages/yaml/constructor.py", line 88, in construct_object
+    data = constructor(self, node)
+  File "/usr/local/lib/python2.7/site-packages/yaml/constructor.py", line 312, in construct_yaml_timestamp
+    return datetime.date(year, month, day)
+ValueError: month must be in 1..12
+&gt;&gt;&gt; yaml.safe_load('"4017-16-20"')
+'4017-16-20'</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

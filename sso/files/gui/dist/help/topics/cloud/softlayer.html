@@ -1,0 +1,932 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Getting Started With SoftLayer</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Getting Started With SoftLayer">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/cloud-providers.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="getting-started-with-softlayer">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="getting-started-with-softlayer">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Getting Started With SoftLayer</h1>
+                        <div class="body conbody">
+                           <p class="p">SoftLayer is a public cloud provider, and baremetal hardware hosting provider.</p>
+                           
+                           <div class="section" id="getting-started-with-softlayer__dependencies">
+                              <h2 class="title sectiontitle">Dependencies</h2>
+                              <p class="p">The SoftLayer driver for Salt Cloud requires the softlayer package, which is
+                                 available at PyPI:
+                              </p>
+                              
+                              <p class="p"><a class="xref" href="https://pypi.python.org/pypi/SoftLayer" target="_blank">https://pypi.python.org/pypi/SoftLayer</a></p>
+                              
+                              <p class="p">This package can be installed using <span class="keyword title_reference">pip</span> or <span class="keyword title_reference">easy_install</span>:
+                              </p>
+                              <pre class="pre codeblock language-bash"># pip install softlayer
+# easy_install softlayer</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-softlayer__configuration">
+                              <h2 class="title sectiontitle">Configuration</h2>
+                              <p class="p">Set up the cloud config at <tt class="ph tt">/etc/salt/cloud.providers</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml"># Note: These examples are for /etc/salt/cloud.providers
+
+  my-softlayer:
+    # Set up the location of the salt master
+    minion:
+      master: saltmaster.example.com
+
+    # Set the SoftLayer access credentials (see below)
+    user: MYUSER1138
+    apikey: 'e3b68aa711e6deadc62d5b76355674beef7cc3116062ddbacafe5f7e465bfdc9'
+
+    provider: softlayer
+
+
+  my-softlayer-hw:
+    # Set up the location of the salt master
+    minion:
+      master: saltmaster.example.com
+
+    # Set the SoftLayer access credentials (see below)
+    user: MYUSER1138
+    apikey: 'e3b68aa711e6deadc62d5b76355674beef7cc3116062ddbacafe5f7e465bfdc9'
+
+    provider: softlayer_hw</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-softlayer__access-credentials">
+                              <h2 class="title sectiontitle">Access Credentials</h2>
+                              <p class="p">The <span class="keyword title_reference">user</span> setting is the same user as is used to log into the SoftLayer
+                                 Administration area. The <span class="keyword title_reference">apikey</span> setting is found inside the Admin area after
+                                 logging in:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Hover over the <span class="keyword title_reference">Administrative</span> menu item.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Click the <span class="keyword title_reference">API Access</span> link.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">The <span class="keyword title_reference">apikey</span> is located next to the <span class="keyword title_reference">user</span> setting.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="getting-started-with-softlayer__profiles">
+                              <h2 class="title sectiontitle">Profiles</h2>
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__cloud-profiles">
+                              <h2 class="title sectiontitle">Cloud Profiles</h2>
+                              <p class="p">Set up an initial profile at <tt class="ph tt">/etc/salt/cloud.profiles</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">base_softlayer_ubuntu:
+  provider: my-softlayer
+  image: UBUNTU_LATEST
+  cpu_number: 1
+  ram: 1024
+  disk_size: 100
+  local_disk: True
+  hourly_billing: True
+  domain: example.com
+  location: sjc01
+  # Optional
+  max_net_speed: 1000
+  private_vlan: 396
+  private_network: True
+  private_ssh: True
+  # May be used _instead_of_ image
+  global_identifier: 320d8be5-46c0-dead-cafe-13e3c51</pre>
+                              <p class="p">Most of the above items are required; optional items are specified below.</p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__image">
+                              <h2 class="title sectiontitle">image</h2>
+                              <p class="p">Images to build an instance can be found using the <span class="keyword title_reference">--list-images</span> option:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-cloud --list-images my-softlayer</pre>
+                              <p class="p">The setting used will be labeled as <span class="keyword title_reference">template</span>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__cpu-number">
+                              <h2 class="title sectiontitle">cpu_number</h2>
+                              <p class="p">This is the number of CPU cores that will be used for this instance. This
+                                 number may be dependent upon the image that is used. For instance:
+                              </p>
+                              <pre class="pre codeblock language-yaml">Red Hat Enterprise Linux 6 - Minimal Install (64 bit) (1 - 4 Core):
+    ----------
+    name:
+        Red Hat Enterprise Linux 6 - Minimal Install (64 bit) (1 - 4 Core)
+    template:
+        REDHAT_6_64
+Red Hat Enterprise Linux 6 - Minimal Install (64 bit) (5 - 100 Core):
+    ----------
+    name:
+        Red Hat Enterprise Linux 6 - Minimal Install (64 bit) (5 - 100 Core)
+    template:
+        REDHAT_6_64</pre>
+                              <p class="p">Note that the template (meaning, the <span class="keyword title_reference">image</span> option) for both of these is the
+                                 same, but the names suggests how many CPU cores are supported.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__ram">
+                              <h2 class="title sectiontitle">ram</h2>
+                              <p class="p">This is the amount of memory, in megabytes, that will be allocated to this
+                                 instance.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__disk-size">
+                              <h2 class="title sectiontitle">disk_size</h2>
+                              <p class="p">The amount of disk space that will be allocated to this image, in megabytes.</p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__local-disk">
+                              <h2 class="title sectiontitle">local_disk</h2>
+                              <p class="p">When true the disks for the computing instance will be provisioned on the host
+                                 which it runs, otherwise SAN disks will be provisioned.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__hourly-billing">
+                              <h2 class="title sectiontitle">hourly_billing</h2>
+                              <p class="p">When true the computing instance will be billed on hourly usage, otherwise it
+                                 will be billed on a monthly basis.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__domain">
+                              <h2 class="title sectiontitle">domain</h2>
+                              <p class="p">The domain name that will be used in the FQDN (Fully Qualified Domain Name) for
+                                 this instance. The <span class="keyword title_reference">domain</span> setting will be used in conjunction with the
+                                 instance name to form the FQDN.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__location">
+                              <h2 class="title sectiontitle">location</h2>
+                              <p class="p">Images to build an instance can be found using the <span class="keyword title_reference">--list-locations</span> option:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-cloud --list-location my-softlayer</pre>
+                              </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__max-net-speed">
+                              <h2 class="title sectiontitle">max_net_speed</h2>
+                              <p class="p">Specifies the connection speed for the instance's network components. This
+                                 setting is optional. By default, this is set to 10.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__public-vlan">
+                              <h2 class="title sectiontitle">public_vlan</h2>
+                              <p class="p">If it is necessary for an instance to be created within a specific frontend
+                                 VLAN, the ID for that VLAN can be specified in either the provider or profile
+                                 configuration.
+                              </p>
+                              
+                              <p class="p">This ID can be queried using the <span class="keyword title_reference">list_vlans</span> function, as described below. This
+                                 setting is optional.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__private-vlan">
+                              <h2 class="title sectiontitle">private_vlan</h2>
+                              <p class="p">If it is necessary for an instance to be created within a specific backend VLAN,
+                                 the ID for that VLAN can be specified in either the provider or profile
+                                 configuration.
+                              </p>
+                              
+                              <p class="p">This ID can be queried using the <span class="keyword title_reference">list_vlans</span> function, as described below. This
+                                 setting is optional.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__private-network">
+                              <h2 class="title sectiontitle">private_network</h2>
+                              <p class="p">If a server is to only be used internally, meaning it does not have a public
+                                 VLAN associated with it, this value would be set to True. This setting is
+                                 optional. The default is False.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__private-ssh">
+                              <h2 class="title sectiontitle">private_ssh</h2>
+                              <p class="p">Whether to run the deploy script on the server using the public IP address
+                                 or the private IP address. If set to True, Salt Cloud will attempt to SSH into
+                                 the new server using the private IP address. The default is False. This
+                                 settiong is optional.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__global-identifier">
+                              <h2 class="title sectiontitle">global_identifier</h2>
+                              <p class="p">When creating an instance using a custom template, this option is set to the
+                                 corresponding value obtained using the <span class="keyword title_reference">list_custom_images</span> function. This
+                                 option will not be used if an <span class="keyword title_reference">image</span> is set, and if an <span class="keyword title_reference">image</span> is not set, it
+                                 is required.
+                              </p>
+                              
+                              <p class="p">The profile can be realized now with a salt command:</p>
+                              <pre class="pre codeblock language-bash"># salt-cloud -p base_softlayer_ubuntu myserver</pre>
+                              <p class="p">Using the above configuration, this will create <span class="keyword title_reference">myserver.example.com</span>.
+                              </p>
+                              
+                              <p class="p">Once the instance has been created with salt-minion installed, connectivity to
+                                 it can be verified with Salt:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt 'myserver.example.com' test.ping</pre>
+                              </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__id1">
+                              <h2 class="title sectiontitle">Cloud Profiles</h2>
+                              <p class="p">Set up an initial profile at <tt class="ph tt">/etc/salt/cloud.profiles</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">base_softlayer_hw_centos:
+  provider: my-softlayer-hw
+  # CentOS 6.0 - Minimal Install (64 bit)
+  image: 13963
+  # 2 x 2.0 GHz Core Bare Metal Instance - 2 GB Ram
+  size: 1921
+  # 250GB SATA II
+  hdd: 19
+  # San Jose 01
+  location: 168642
+  domain: example.com
+  # Optional
+  vlan: 396
+  port_speed: 273
+  banwidth: 248</pre>
+                              <p class="p">Most of the above items are required; optional items are specified below.</p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__id2">
+                              <h2 class="title sectiontitle">image</h2>
+                              <p class="p">Images to build an instance can be found using the <span class="keyword title_reference">--list-images</span> option:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-cloud --list-images my-softlayer-hw</pre>
+                              <p class="p">A list of <span class="keyword title_reference">id`s and names will be provided. The `name</span> will describe the
+                                 operating system and architecture. The <span class="keyword title_reference">id</span> will be the setting to be used in
+                                 the profile.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__size">
+                              <h2 class="title sectiontitle">size</h2>
+                              <p class="p">Sizes to build an instance can be found using the <span class="keyword title_reference">--list-sizes</span> option:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-cloud --list-sizes my-softlayer-hw</pre>
+                              <p class="p">A list of <span class="keyword title_reference">id`s and names will be provided. The `name</span> will describe the speed
+                                 and quantity of CPU cores, and the amount of memory that the hardware will
+                                 contain. The <span class="keyword title_reference">id</span> will be the setting to be used in the profile.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__hdd">
+                              <h2 class="title sectiontitle">hdd</h2>
+                              <p class="p">There are currently two sizes of hard disk drive (HDD) that are available for
+                                 hardware instances on SoftLayer:
+                              </p>
+                              <pre class="pre codeblock language-yaml">19: 250GB SATA II
+1267: 500GB SATA II</pre>
+                              <p class="p">The <span class="keyword title_reference">hdd</span> setting in the profile will be either 19 or 1267. Other sizes may be
+                                 added in the future.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__id3">
+                              <h2 class="title sectiontitle">location</h2>
+                              <p class="p">Locations to build an instance can be found using the <span class="keyword title_reference">--list-images</span> option:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-cloud --list-locations my-softlayer-hw</pre>
+                              <p class="p">A list of IDs and names will be provided. The <span class="keyword title_reference">location</span> will describe the
+                                 location in human terms. The <span class="keyword title_reference">id</span> will be the setting to be used in the profile.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__id4">
+                              <h2 class="title sectiontitle">domain</h2>
+                              <p class="p">The domain name that will be used in the FQDN (Fully Qualified Domain Name) for
+                                 this instance. The <span class="keyword title_reference">domain</span> setting will be used in conjunction with the
+                                 instance name to form the FQDN.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__vlan">
+                              <h2 class="title sectiontitle">vlan</h2>
+                              <p class="p">If it is necessary for an instance to be created within a specific VLAN, the ID
+                                 for that VLAN can be specified in either the provider or profile configuration.
+                              </p>
+                              
+                              <p class="p">This ID can be queried using the <span class="keyword title_reference">list_vlans</span> function, as described below.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__port-speed">
+                              <h2 class="title sectiontitle">port_speed</h2>
+                              <p class="p">Specifies the speed for the instance's network port. This setting refers to an
+                                 ID within the SoftLayer API, which sets the port speed. This setting is
+                                 optional. The default is 273, or, 100 Mbps Public &amp; Private Networks. The
+                                 following settings are available:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">273: 100 Mbps Public &amp; Private Networks</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">274: 1 Gbps Public &amp; Private Networks</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">21509: 10 Mbps Dual Public &amp; Private Networks (up to 20 Mbps)</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">21513: 100 Mbps Dual Public &amp; Private Networks (up to 200 Mbps)</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">2314: 1 Gbps Dual Public &amp; Private Networks (up to 2 Gbps)</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">272: 10 Mbps Public &amp; Private Networks</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="getting-started-with-softlayer__bandwidth">
+                              <h2 class="title sectiontitle">bandwidth</h2>
+                              <p class="p">Specifies the network bandwidth available for the instance. This setting refers
+                                 to an ID within the SoftLayer API, which sets the bandwidth. This setting is
+                                 optional. The default is 248, or, 5000 GB Bandwidth. The following settings are
+                                 available:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">248: 5000 GB Bandwidth</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">129: 6000 GB Bandwidth</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">130: 8000 GB Bandwidth</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">131: 10000 GB Bandwidth</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">36: Unlimited Bandwidth (10 Mbps Uplink)</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">125: Unlimited Bandwidth (100 Mbps Uplink)</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="getting-started-with-softlayer__actions">
+                              <h2 class="title sectiontitle">Actions</h2>
+                              <p class="p">The following actions are currently supported by the SoftLayer Salt Cloud
+                                 driver.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__show-instance">
+                              <h2 class="title sectiontitle">show_instance</h2>
+                              <p class="p">This action is a thin wrapper around <span class="keyword title_reference">--full-query</span>, which displays details on a
+                                 single instance only. In an environment with several machines, this will save a
+                                 user from having to sort through all instance data, just to examine a single
+                                 instance.
+                              </p>
+                              <pre class="pre codeblock language-bash">$ salt-cloud -a show_instance myinstance</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-softlayer__functions">
+                              <h2 class="title sectiontitle">Functions</h2>
+                              <p class="p">The following functions are currently supported by the SoftLayer Salt Cloud
+                                 driver.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__list-vlans">
+                              <h2 class="title sectiontitle">list_vlans</h2>
+                              <p class="p">This function lists all VLANs associated with the account, and all known data
+                                 from the SoftLayer API concerning those VLANs.
+                              </p>
+                              <pre class="pre codeblock language-bash">$ salt-cloud -f list_vlans my-softlayer
+$ salt-cloud -f list_vlans my-softlayer-hw</pre>
+                              <p class="p">The <span class="keyword title_reference">id</span> returned in this list is necessary for the <span class="keyword title_reference">vlan</span> option when creating
+                                 an instance.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__list-custom-images">
+                              <h2 class="title sectiontitle">list_custom_images</h2>
+                              <p class="p">This function lists any custom templates associated with the account, that can
+                                 be used to create a new instance.
+                              </p>
+                              <pre class="pre codeblock language-bash">$ salt-cloud -f list_custom_images my-softlayer</pre>
+                              <p class="p">The <span class="keyword title_reference">globalIdentifier</span> returned in this list is necessary for the
+                                 <span class="keyword title_reference">global_identifier</span> option when creating an image using a custom template.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="getting-started-with-softlayer__optional-products-for-softlayer-hw">
+                              <h2 class="title sectiontitle">Optional Products for SoftLayer HW</h2>
+                              <p class="p">The softlayer_hw provider supports the ability to add optional products, which
+                                 are supported by SoftLayer's API. These products each have an ID associated with
+                                 them, that can be passed into Salt Cloud with the <span class="keyword title_reference">optional_products</span> option:
+                              </p>
+                              <pre class="pre codeblock language-yaml">softlayer_hw_test:
+  provider: my-softlayer-hw
+  # CentOS 6.0 - Minimal Install (64 bit)
+  image: 13963
+  # 2 x 2.0 GHz Core Bare Metal Instance - 2 GB Ram
+  size: 1921
+  # 250GB SATA II
+  hdd: 19
+  # San Jose 01
+  location: 168642
+  domain: example.com
+  optional_products:
+    # MySQL for Linux
+    - id: 28
+    # Business Continuance Insurance
+    - id: 104</pre>
+                              <p class="p">These values can be manually obtained by looking at the source of an order page
+                                 on the SoftLayer web interface. For convenience, many of these values are listed
+                                 here:
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__public-secondary-ip-addresses">
+                              <h2 class="title sectiontitle">Public Secondary IP Addresses</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">22: 4 Public IP Addresses</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">23: 8 Public IP Addresses</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__primary-ipv6-addresses">
+                              <h2 class="title sectiontitle">Primary IPv6 Addresses</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">17129: 1 IPv6 Address</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__public-static-ipv6-addresses">
+                              <h2 class="title sectiontitle">Public Static IPv6 Addresses</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">1481: /64 Block Static Public IPv6 Addresses</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__os-specific-addon">
+                              <h2 class="title sectiontitle">OS-Specific Addon</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">17139: XenServer Advanced for XenServer 6.x</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">17141: XenServer Enterprise for XenServer 6.x</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">2334: XenServer Advanced for XenServer 5.6</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">2335: XenServer Enterprise for XenServer 5.6</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">13915: Microsoft WebMatrix</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">21276: VMware vCenter 5.1 Standard</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__control-panel-software">
+                              <h2 class="title sectiontitle">Control Panel Software</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">121: cPanel/WHM with Fantastico and RVskin</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">20778: Parallels Plesk Panel 11 (Linux) 100 Domain w/ Power Pack</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">20786: Parallels Plesk Panel 11 (Windows) 100 Domain w/ Power Pack</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">20787: Parallels Plesk Panel 11 (Linux) Unlimited Domain w/ Power Pack</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">20792: Parallels Plesk Panel 11 (Windows) Unlimited Domain w/ Power Pack</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">2340: Parallels Plesk Panel 10 (Linux) 100 Domain w/ Power Pack</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">2339: Parallels Plesk Panel 10 (Linux) Unlimited Domain w/ Power Pack</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">13704: Parallels Plesk Panel 10 (Windows) Unlimited Domain w/ Power Pack</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__database-software">
+                              <h2 class="title sectiontitle">Database Software</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">29: MySQL 5.0 for Windows</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">28: MySQL for Linux</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">21501: Riak 1.x</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">20893: MongoDB</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">30: Microsoft SQL Server 2005 Express</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">92: Microsoft SQL Server 2005 Workgroup</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">90: Microsoft SQL Server 2005 Standard</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">94: Microsoft SQL Server 2005 Enterprise</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">1330: Microsoft SQL Server 2008 Express</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">1340: Microsoft SQL Server 2008 Web</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">1337: Microsoft SQL Server 2008 Workgroup</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">1334: Microsoft SQL Server 2008 Standard</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">1331: Microsoft SQL Server 2008 Enterprise</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">2179: Microsoft SQL Server 2008 Express R2</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">2173: Microsoft SQL Server 2008 Web R2</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">2183: Microsoft SQL Server 2008 Workgroup R2</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">2180: Microsoft SQL Server 2008 Standard R2</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">2176: Microsoft SQL Server 2008 Enterprise R2</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__anti-virus-spyware-protection">
+                              <h2 class="title sectiontitle">Anti-Virus &amp; Spyware Protection</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">594: McAfee VirusScan Anti-Virus - Windows</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">414: McAfee Total Protection - Windows</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__insurance">
+                              <h2 class="title sectiontitle">Insurance</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">104: Business Continuance Insurance</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__monitoring">
+                              <h2 class="title sectiontitle">Monitoring</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">55: Host Ping</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">56: Host Ping and TCP Service Monitoring</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__notification">
+                              <h2 class="title sectiontitle">Notification</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">57: Email and Ticket</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__advanced-monitoring">
+                              <h2 class="title sectiontitle">Advanced Monitoring</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">2302: Monitoring Package - Basic</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">2303: Monitoring Package - Advanced</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">2304: Monitoring Package - Premium Application</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__response">
+                              <h2 class="title sectiontitle">Response</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">58: Automated Notification</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">59: Automated Reboot from Monitoring</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">60: 24x7x365 NOC Monitoring, Notification, and Response</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__intrusion-detection-protection">
+                              <h2 class="title sectiontitle">Intrusion Detection &amp; Protection</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">413: McAfee Host Intrusion Protection w/Reporting</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-softlayer__hardware-software-firewalls">
+                              <h2 class="title sectiontitle">Hardware &amp; Software Firewalls</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">411: APF Software Firewall for Linux</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">894: Microsoft Windows Firewall</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">410: 10Mbps Hardware Firewall</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">409: 100Mbps Hardware Firewall</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">408: 1000Mbps Hardware Firewall</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

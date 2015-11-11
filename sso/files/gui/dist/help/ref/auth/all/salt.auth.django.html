@@ -1,0 +1,372 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.auth.django</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.auth.django">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../auth-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-auth-django">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-auth-django">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.auth.django</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-auth-django__module-salt.auth.django"></span></p>
+                              
+                              <p class="p">Provide authentication using Django Web Framework</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">Django Web Framework</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">Django authentication depends on the presence of the django framework in the
+                                 <tt class="ph tt">PYTHONPATH</tt>, the Django project's <tt class="ph tt">settings.py</tt> file being in the
+                                 <tt class="ph tt">PYTHONPATH</tt> and accessible via the <tt class="ph tt">DJANGO_SETTINGS_MODULE</tt> environment
+                                 variable.
+                              </p>
+                              
+                              <p class="p">Django auth can be defined like any other eauth module:</p>
+                              <pre class="pre codeblock language-yaml">external_auth:
+  django:
+    fred:
+      - .*
+      - '@runner'</pre>
+                              <p class="p">This will authenticate Fred via Django and allow him to run any execution
+                                 module and all runners.
+                              </p>
+                              
+                              <p class="p">The authorization details can optionally be located inside the Django database.
+                                 The relevant entry in the <tt class="ph tt">models.py</tt> file would look like this:
+                              </p>
+                              <pre class="pre codeblock language-python">class SaltExternalAuthModel(models.Model):
+    user_fk = models.ForeignKey(auth.User)
+    minion_matcher = models.CharField()
+    minion_fn = models.CharField()</pre>
+                              <p class="p">The 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../configuration/master.html#configuration-salt-master__external_auth">external_auth</a> clause in the master config would then look
+                                 like this:
+                              </p>
+                              <pre class="pre codeblock language-yaml">external_auth:
+  django:
+    ^model: &lt;fully-qualified reference to model class&gt;</pre>
+                              <p class="p">When a user attempts to authenticate via Django, Salt will import the package
+                                 indicated via the keyword <tt class="ph tt">^model</tt>.  That model must have the fields
+                                 indicated above, though the model DOES NOT have to be named
+                                 'SaltExternalAuthModel'.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.auth.django.auth">
+                           <h2 class="title topictitle2">auth</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.auth.django.auth(
+								username,
+								password
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Simple Django auth</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.auth.django.django_auth_setup">
+                           <h2 class="title topictitle2">django_auth_setup</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.auth.django.django_auth_setup( )</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.auth.django.retrieve_auth_entries">
+                           <h2 class="title topictitle2">retrieve_auth_entries</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.auth.django.retrieve_auth_entries(
+								u=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section"></div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr>
+                                    
+                                    <th id="d15697e141-value" valign="bottom" align="left">Value</th>
+                                    
+                                    <th id="d15697e141-desc" valign="bottom" align="left">Description</th>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d15697e141-value" class="stentry propvalue">Parameters</td>
+                                    
+                                    <td valign="top" headers="d15697e141-desc" class="stentry propdesc">
+                                       <ul class="ul">
+                                          <li class="li">
+                                             <p class="p">django_auth_class -- Reference to the django model class for auth</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">u -- Username to filter for</p>
+                                             
+                                          </li>
+                                          
+                                       </ul>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d15697e141-value" class="stentry propvalue">Returns</td>
+                                    
+                                    <td valign="top" headers="d15697e141-desc" class="stentry propdesc">
+                                       <p class="p">Dictionary that can be slotted into the <tt class="ph tt">__opts__</tt> structure for
+                                          eauth that designates the user associated ACL
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Database records such as:</p>
+                                 
+                                 
+                                 <div class="tablenoborder">
+                                    <table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="0" rules="none">
+                                       <thead class="thead" align="left">
+                                          <tr class="row">
+                                             <th class="entry" valign="top" id="d15697e174">
+                                                <p class="p">username</p>
+                                                
+                                             </th>
+                                             
+                                             <th class="entry" valign="top" id="d15697e177">
+                                                <p class="p">minion_or_fn_matcher</p>
+                                                
+                                             </th>
+                                             
+                                             <th class="entry" valign="top" id="d15697e180">
+                                                <p class="p">minion_fn</p>
+                                                
+                                             </th>
+                                             
+                                          </tr>
+                                          
+                                       </thead>
+                                       
+                                       <tbody class="tbody">
+                                          <tr class="row">
+                                             <td class="entry" valign="top" headers="d15697e174 ">
+                                                <p class="p">fred</p>
+                                                
+                                             </td>
+                                             
+                                             <td class="entry" valign="top" headers="d15697e177 ">&nbsp;</td>
+                                             
+                                             <td class="entry" valign="top" headers="d15697e180 ">
+                                                <p class="p">test.ping</p>
+                                                
+                                             </td>
+                                             
+                                          </tr>
+                                          
+                                          <tr class="row">
+                                             <td class="entry" valign="top" headers="d15697e174 ">
+                                                <p class="p">fred</p>
+                                                
+                                             </td>
+                                             
+                                             <td class="entry" valign="top" headers="d15697e177 ">
+                                                <p class="p">server1</p>
+                                                
+                                             </td>
+                                             
+                                             <td class="entry" valign="top" headers="d15697e180 ">
+                                                <p class="p">network.interfaces</p>
+                                                
+                                             </td>
+                                             
+                                          </tr>
+                                          
+                                          <tr class="row">
+                                             <td class="entry" valign="top" headers="d15697e174 ">
+                                                <p class="p">fred</p>
+                                                
+                                             </td>
+                                             
+                                             <td class="entry" valign="top" headers="d15697e177 ">
+                                                <p class="p">server1</p>
+                                                
+                                             </td>
+                                             
+                                             <td class="entry" valign="top" headers="d15697e180 ">
+                                                <p class="p">raid.list</p>
+                                                
+                                             </td>
+                                             
+                                          </tr>
+                                          
+                                          <tr class="row">
+                                             <td class="entry" valign="top" headers="d15697e174 ">
+                                                <p class="p">fred</p>
+                                                
+                                             </td>
+                                             
+                                             <td class="entry" valign="top" headers="d15697e177 ">
+                                                <p class="p">server2</p>
+                                                
+                                             </td>
+                                             
+                                             <td class="entry" valign="top" headers="d15697e180 ">
+                                                <p class="p">.*</p>
+                                                
+                                             </td>
+                                             
+                                          </tr>
+                                          
+                                          <tr class="row">
+                                             <td class="entry" valign="top" headers="d15697e174 ">
+                                                <p class="p">guru</p>
+                                                
+                                             </td>
+                                             
+                                             <td class="entry" valign="top" headers="d15697e177 ">
+                                                <p class="p">.*</p>
+                                                
+                                             </td>
+                                             
+                                             <td class="entry" valign="top" headers="d15697e180 ">&nbsp;</td>
+                                             
+                                          </tr>
+                                          
+                                          <tr class="row">
+                                             <td class="entry" valign="top" headers="d15697e174 ">
+                                                <p class="p">smartadmin</p>
+                                                
+                                             </td>
+                                             
+                                             <td class="entry" valign="top" headers="d15697e177 ">
+                                                <p class="p">server1</p>
+                                                
+                                             </td>
+                                             
+                                             <td class="entry" valign="top" headers="d15697e180 ">
+                                                <p class="p">.*</p>
+                                                
+                                             </td>
+                                             
+                                          </tr>
+                                          
+                                       </tbody>
+                                       
+                                    </table>
+                                    
+                                 </div>
+                                 
+                                 <p class="p">Should result in an eauth config such as:</p>
+                                 <pre class="pre codeblock language-yaml">fred:
+  - test.ping
+  - server1:
+      - network.interfaces
+      - raid.list
+  - server2:
+      - .*
+guru:
+  - .*
+smartadmin:
+  - server1:
+    - .*</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>States tutorial, part 3 - Templating, Includes, Extends</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="States tutorial, part 3 - Templating, Includes, Extends">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/configuration-management.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="states-tutorial-part-3-templating-includes-extends">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="states-tutorial-part-3-templating-includes-extends">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">States tutorial, part 3 - Templating, Includes, Extends</h1>
+                        <div class="body conbody">
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">This tutorial builds on topics covered in 
+                                 		
+                                 			&nbsp;<a class="xref" href="states_pt1.html#states-tutorial-part-1-basic-usage">part 1</a> and
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="states_pt2.html#states-tutorial-part-2-more-complex-states-requisites">part 2</a>. It is recommended that you begin there.
+                              </p>
+                              
+                           </aside>
+                           
+                           <p class="p">This part of the tutorial will cover more advanced templating and
+                              configuration techniques for <tt class="ph tt">sls</tt> files.
+                           </p>
+                           
+                           <div class="section" id="states-tutorial-part-3-templating-includes-extends__templating-sls-modules">
+                              <h2 class="title sectiontitle">Templating SLS modules</h2>
+                              <p class="p">SLS modules may require programming logic or inline execution. This is
+                                 accomplished with module templating. The default module templating system used
+                                 is <a class="xref" href="http://jinja.pocoo.org/" target="_blank">Jinja2</a>  and may be configured by changing the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__renderer">renderer</a>
+                                 value in the master config.
+                              </p>
+                              
+                              <p class="p">All states are passed through a templating system when they are initially read.
+                                 To make use of the templating system, simply add some templating markup.
+                                 An example of an sls module with templating markup may look like this:
+                              </p>
+                              <pre class="pre codeblock language-python jinja">{% for usr in ['moe','larry','curly'] %}
+{{ usr }}:
+  user.present
+{% endfor %}</pre>
+                              <p class="p">This templated sls file once generated will look like this:</p>
+                              <pre class="pre codeblock language-yaml">moe:
+  user.present
+larry:
+  user.present
+curly:
+  user.present</pre>
+                              <p class="p">Here's a more complex example:</p>
+                              <pre class="pre codeblock language-python jinja">{% for usr in 'moe','larry','curly' %}
+{{ usr }}:
+  group:
+    - present
+  user:
+    - present
+    - gid_from_name: True
+    - require:
+      - group: {{ usr }}
+{% endfor %}</pre>
+                              </div>
+                           
+                           <div class="section" id="states-tutorial-part-3-templating-includes-extends__using-grains-in-sls-modules">
+                              <h2 class="title sectiontitle">Using Grains in SLS modules</h2>
+                              <p class="p">Often times a state will need to behave differently on different systems.
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../targeting/grains.html#targeting-grains">Salt grains</a> objects are made available
+                                 in the template context. The <span class="keyword title_reference">grains</span> can be used from within sls modules:
+                              </p>
+                              <pre class="pre codeblock language-python jinja">apache:
+  pkg.installed:
+    {% if grains['os'] == 'RedHat' %}
+    - name: httpd
+    {% elif grains['os'] == 'Ubuntu' %}
+    - name: apache2
+    {% endif %}</pre>
+                              </div>
+                           
+                           <div class="section" id="states-tutorial-part-3-templating-includes-extends__calling-salt-modules-from-templates">
+                              <h2 class="title sectiontitle">Calling Salt modules from templates</h2>
+                              <p class="p">All of the Salt modules loaded by the minion are available within the
+                                 templating system. This allows data to be gathered in real time on the target
+                                 system. It also allows for shell commands to be run easily from within the sls
+                                 modules.
+                              </p>
+                              
+                              <p class="p">The Salt module functions are also made available in the template context as
+                                 <tt class="ph tt">salt:</tt></p>
+                              <pre class="pre codeblock language-python jinja">moe:
+  user.present:
+    - gid: {{ salt['file.group_to_gid']('some_group_that_exists') }}</pre>
+                              <p class="p">Note that for the above example to work, <tt class="ph tt">some_group_that_exists</tt> must exist
+                                 before the state file is processed by the templating engine.
+                              </p>
+                              
+                              <p class="p">Below is an example that uses the <tt class="ph tt">network.hw_addr</tt> function to retrieve the
+                                 MAC address for eth0:
+                              </p>
+                              <pre class="pre codeblock language-python">salt['network.hw_addr']('eth0')</pre>
+                              </div>
+                           
+                           <div class="section" id="states-tutorial-part-3-templating-includes-extends__advanced-sls-module-syntax">
+                              <h2 class="title sectiontitle">Advanced SLS module syntax</h2>
+                              <p class="p">Lastly, we will cover some incredibly useful techniques for more complex State
+                                 trees.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="states-tutorial-part-3-templating-includes-extends__include-declaration">
+                              <h2 class="title sectiontitle">Include declaration</h2>
+                              <p class="p">A previous example showed how to spread a Salt tree across several files.
+                                 Similarly, 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/requisites.html#requisites">requisites</a> span multiple files by
+                                 using an 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/highstate.html#states-highstate__include-declaration">Include declaration</a>. For example:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">python/python-libs.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">python-dateutil:
+  pkg.installed</pre>
+                              <p class="p"><tt class="ph tt">python/django.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">include:
+  - python.python-libs
+
+django:
+  pkg.installed:
+    - require:
+      - pkg: python-dateutil</pre>
+                              </div>
+                           
+                           <div class="section head3" id="states-tutorial-part-3-templating-includes-extends__extend-declaration">
+                              <h2 class="title sectiontitle">Extend declaration</h2>
+                              <p class="p">You can modify previous declarations by using an 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/highstate.html#states-highstate__extend-declaration">Extend declaration</a>. For
+                                 example the following modifies the Apache tree to also restart Apache when the
+                                 vhosts file is changed:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">apache/apache.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">apache:
+  pkg.installed</pre>
+                              <p class="p"><tt class="ph tt">apache/mywebsite.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">include:
+  - apache.apache
+
+extend:
+  apache:
+    service:
+      - running
+      - watch:
+        - file: /etc/httpd/extra/httpd-vhosts.conf
+
+/etc/httpd/extra/httpd-vhosts.conf:
+  file.managed:
+    - source: salt://apache/httpd-vhosts.conf</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">Using extend with require or watch</strong><p class="p">The <tt class="ph tt">extend</tt> statement works differently for <tt class="ph tt">require</tt> or <tt class="ph tt">watch</tt>.
+                                    It appends to, rather than replacing the requisite component.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="states-tutorial-part-3-templating-includes-extends__name-declaration">
+                              <h2 class="title sectiontitle">Name declaration</h2>
+                              <p class="p">You can override the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/highstate.html#states-highstate__id-declaration">ID declaration</a> by using a 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/highstate.html#states-highstate__name-declaration">Name declaration</a>.
+                                 For example, the previous example is a bit more maintainable if rewritten as
+                                 follows:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">apache/mywebsite.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">include:
+  - apache.apache
+
+extend:
+  apache:
+    service:
+      - running
+      - watch:
+        - file: mywebsite
+
+mywebsite:
+  file.managed:
+    - name: /etc/httpd/extra/httpd-vhosts.conf
+    - source: salt://apache/httpd-vhosts.conf</pre>
+                              </div>
+                           
+                           <div class="section head3" id="states-tutorial-part-3-templating-includes-extends__names-declaration">
+                              <h2 class="title sectiontitle">Names declaration</h2>
+                              <p class="p">Even more powerful is using a 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/highstate.html#states-highstate__names-declaration">Names declaration</a> to override the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/highstate.html#states-highstate__id-declaration">ID declaration</a> for multiple states at once. This often can remove the
+                                 need for looping in a template. For example, the first example in this tutorial
+                                 can be rewritten without the loop:
+                              </p>
+                              <pre class="pre codeblock language-yaml">stooges:
+  user.present:
+    - names:
+      - moe
+      - larry
+      - curly</pre>
+                              </div>
+                           
+                           <div class="section" id="states-tutorial-part-3-templating-includes-extends__next-steps">
+                              <h2 class="title sectiontitle">Next steps</h2>
+                              <p class="p">In 
+                                 		
+                                 			&nbsp;<a class="xref" href="states_pt4.html#states-tutorial-part-4">part 4</a> we will discuss how to use salt's
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__file_roots">file_roots</a> to set up a workflow in which states can be
+                                 "promoted" from dev, to QA, to production.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

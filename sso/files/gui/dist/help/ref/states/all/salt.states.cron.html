@@ -1,0 +1,706 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.cron</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.cron">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-cron">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-cron">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.cron</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-cron__module-salt.states.cron"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="management-of-cron-the-unix-command-scheduler">
+                           <h2 class="title topictitle2">Management of cron, the Unix command scheduler</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">Cron declarations require a number of parameters. The following are the
+                                    parameters used by Salt to define the various timing values for a cron job:
+                                 </p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">minute</tt></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">hour</tt></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">daymonth</tt></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">month</tt></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">dayweek</tt> (0 to 6 are Sunday through Saturday, 7 can also be used for
+                                          Sunday)
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                    <p class="p">Any timing arguments not specified take a value of <tt class="ph tt">*</tt>. This means that
+                                       setting <tt class="ph tt">hour</tt> to <tt class="ph tt">5</tt>, while not defining the <tt class="ph tt">minute</tt> param, will
+                                       result in Salt adding a job that will execute every minute between 5 and 6
+                                       A.M.!
+                                    </p>
+                                    
+                                    <p class="p">Additionally, the default user for these states is <tt class="ph tt">root</tt>. Therefore, if
+                                       the cron job is for another user, it is necessary to specify that user with
+                                       the <tt class="ph tt">user</tt> parameter.
+                                    </p>
+                                    
+                                 </aside>
+                                 
+                                 <p class="p">A long time ago (before 2014.2), when making changes to an existing cron job,
+                                    the name declaration is the parameter used to uniquely identify the job,
+                                    so if an existing cron that looks like this:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">date &gt; /tmp/crontest:
+  cron.present:
+    - user: root
+    - minute: 5</pre>
+                                 <p class="p">Is changed to this:</p>
+                                 <pre class="pre codeblock language-yaml">date &gt; /tmp/crontest:
+  cron.present:
+    - user: root
+    - minute: 7
+    - hour: 2</pre>
+                                 <p class="p">Then the existing cron will be updated, but if the cron command is changed,
+                                    then a new cron job will be added to the user's crontab.
+                                 </p>
+                                 
+                                 <p class="p">The current behavior is still relying on that mechanism, but you can also
+                                    specify an identifier to identify your crontabs:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">date &gt; /tmp/crontest:
+  cron.present:
+    - identifier: SUPERCRON
+    - user: root
+    - minute: 7
+    - hour: 2</pre>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.1.2.</span></p>
+                                 
+                                 <p class="p">And, some months later, you modify it:</p>
+                                 <pre class="pre codeblock language-yaml">superscript &gt; /tmp/crontest:
+  cron.present:
+    - identifier: SUPERCRON
+    - user: root
+    - minute: 3
+    - hour: 4</pre>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.1.2.</span></p>
+                                 
+                                 <p class="p">The old <strong class="ph b">date &gt; /tmp/crontest</strong> will be replaced by
+                                    <strong class="ph b">superscript &gt; /tmp/crontest</strong>.
+                                 </p>
+                                 
+                                 <p class="p">Additionally, Salt also supports running a cron every <tt class="ph tt">x minutes</tt> very similarly to the Unix
+                                    convention of using <tt class="ph tt">*/5</tt> to have a job run every five minutes. In Salt, this
+                                    looks like:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">date &gt; /tmp/crontest:
+  cron.present:
+    - user: root
+    - minute: '*/5'</pre>
+                                 <p class="p">The job will now run every 5 minutes.</p>
+                                 
+                                 <p class="p">Additionally, the temporal parameters (minute, hour, etc.) can be randomized by
+                                    using <tt class="ph tt">random</tt> instead of using a specific value. For example, by using the
+                                    <tt class="ph tt">random</tt> keyword in the <tt class="ph tt">minute</tt> parameter of a cron state, the same cron
+                                    job can be pushed to hundreds or thousands of hosts, and they would each use a
+                                    randomly-generated minute. This can be helpful when the cron job accesses a
+                                    network resource, and it is not desirable for all hosts to run the job
+                                    concurrently.
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">/path/to/cron/script:
+  cron.present:
+    - user: root
+    - minute: random
+    - hour: 2</pre>
+                                 <p class="p"><span class="keyword versionmodified">New in version 0.16.0.</span></p>
+                                 
+                                 <p class="p">Since Salt assumes a value of <tt class="ph tt">*</tt> for unspecified temporal parameters, adding
+                                    a parameter to the state and setting it to <tt class="ph tt">random</tt> will change that value
+                                    from <tt class="ph tt">*</tt> to a randomized numeric value. However, if that field in the cron
+                                    entry on the minion already contains a numeric value, then using the <tt class="ph tt">random</tt>
+                                    keyword will not modify it.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.cron.absent">
+                              <h3 class="title topictitle3">absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cron.absent(
+								name,
+								user='root',
+								identifier=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Verifies that the specified cron job is absent for the specified user; only
+                                       the name is matched when removing a cron job.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d365746e175" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d365746e177" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e175" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d365746e177" class="stentry propdesc">
+                                          <p class="p">The command that should be absent in the user crontab.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e175" class="stentry propvalue">user</td>
+                                       
+                                       <td valign="top" headers="d365746e177" class="stentry propdesc">
+                                          <p class="p">The name of the user whose crontab needs to be modified, defaults to
+                                             the root user
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e175" class="stentry propvalue">identifier</td>
+                                       
+                                       <td valign="top" headers="d365746e177" class="stentry propdesc">
+                                          <p class="p">Custom-defined identifier for tracking the cron line for future crontab
+                                             edits. This defaults to the state id
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.cron.env_absent">
+                              <h3 class="title topictitle3">env_absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cron.env_absent(
+								name,
+								user='root'
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Verifies that the specified environment variable is absent from the crontab
+                                       for the specified user
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d365746e225" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d365746e227" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e225" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d365746e227" class="stentry propdesc">
+                                          <p class="p">The name of the environment variable to remove from the user crontab</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e225" class="stentry propvalue">user</td>
+                                       
+                                       <td valign="top" headers="d365746e227" class="stentry propdesc">
+                                          <p class="p">The name of the user whose crontab needs to be modified, defaults to
+                                             the root user
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.cron.env_present">
+                              <h3 class="title topictitle3">env_present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cron.env_present(
+								name,
+								value=None,
+								user='root'
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Verifies that the specified environment variable is present in the crontab
+                                       for the specified user.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d365746e269" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d365746e271" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e269" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d365746e271" class="stentry propdesc">
+                                          <p class="p">The name of the environment variable to set in the user crontab</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e269" class="stentry propvalue">user</td>
+                                       
+                                       <td valign="top" headers="d365746e271" class="stentry propdesc">
+                                          <p class="p">The name of the user whose crontab needs to be modified, defaults to
+                                             the root user
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e269" class="stentry propvalue">value</td>
+                                       
+                                       <td valign="top" headers="d365746e271" class="stentry propdesc">
+                                          <p class="p">The value to set for the given environment variable</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.cron.file">
+                              <h3 class="title topictitle3">file</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cron.file(
+								name,
+								source_hash='',
+								user='root',
+								template=None,
+								context=None,
+								replace=True,
+								defaults=None,
+								env=None,
+								backup='',
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Provides file.managed-like functionality (templating, etc.) for a pre-made
+                                       crontab file, to be assigned to a given user.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d365746e319" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d365746e321" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e319" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d365746e321" class="stentry propdesc">
+                                          <p class="p">The source file to be used as the crontab. This source file can be
+                                             hosted on either the salt master server, or on an HTTP or FTP server.
+                                             For files hosted on the salt file server, if the file is located on
+                                             the master in the directory named spam, and is called eggs, the source
+                                             string is <tt class="ph tt">salt://spam/eggs</tt></p>
+                                          
+                                          <p class="p">If the file is hosted on a HTTP or FTP server then the source_hash
+                                             argument is also required
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e319" class="stentry propvalue">source_hash</td>
+                                       
+                                       <td valign="top" headers="d365746e321" class="stentry propdesc">
+                                          <p class="p">This can be either a file which contains a source hash string for
+                                             the source, or a source hash string. The source hash string is the
+                                             hash algorithm followed by the hash of the file:
+                                             <tt class="ph tt">md5=e138491e9d5b97023cea823fe17bac22</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e319" class="stentry propvalue">user</td>
+                                       
+                                       <td valign="top" headers="d365746e321" class="stentry propdesc">
+                                          <p class="p">The user to whom the crontab should be assigned. This defaults to
+                                             root.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e319" class="stentry propvalue">template</td>
+                                       
+                                       <td valign="top" headers="d365746e321" class="stentry propdesc">
+                                          <p class="p">If this setting is applied then the named templating engine will be
+                                             used to render the downloaded file. Currently, jinja and mako are
+                                             supported.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e319" class="stentry propvalue">context</td>
+                                       
+                                       <td valign="top" headers="d365746e321" class="stentry propdesc">
+                                          <p class="p">Overrides default context variables passed to the template.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e319" class="stentry propvalue">replace</td>
+                                       
+                                       <td valign="top" headers="d365746e321" class="stentry propdesc">
+                                          <p class="p">If the crontab should be replaced, if False then this command will
+                                             be ignored if a crontab exists for the specified user. Default is True.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e319" class="stentry propvalue">defaults</td>
+                                       
+                                       <td valign="top" headers="d365746e321" class="stentry propdesc">
+                                          <p class="p">Default context passed to the template.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e319" class="stentry propvalue">backup</td>
+                                       
+                                       <td valign="top" headers="d365746e321" class="stentry propdesc">
+                                          <p class="p">Overrides the default backup mode for the user's crontab.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.cron.present">
+                              <h3 class="title topictitle3">present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cron.present(
+								name,
+								user='root',
+								minute='*',
+								hour='*',
+								daymonth='*',
+								month='*',
+								dayweek='*',
+								comment=None,
+								identifier=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Verifies that the specified cron job is present for the specified user.
+                                       For more advanced information about what exactly can be set in the cron
+                                       timing parameters, check your cron system's documentation. Most Unix-like
+                                       systems' cron documentation can be found via the crontab man page:
+                                       <tt class="ph tt">man 5 crontab</tt>.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d365746e408" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d365746e410" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e408" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d365746e410" class="stentry propdesc">
+                                          <p class="p">The command that should be executed by the cron job.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e408" class="stentry propvalue">user</td>
+                                       
+                                       <td valign="top" headers="d365746e410" class="stentry propdesc">
+                                          <p class="p">The name of the user whose crontab needs to be modified, defaults to
+                                             the root user
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e408" class="stentry propvalue">minute</td>
+                                       
+                                       <td valign="top" headers="d365746e410" class="stentry propdesc">
+                                          <p class="p">The information to be set into the minute section, this can be any
+                                             string supported by your cron system's the minute field. Default is
+                                             <tt class="ph tt">*</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e408" class="stentry propvalue">hour</td>
+                                       
+                                       <td valign="top" headers="d365746e410" class="stentry propdesc">
+                                          <p class="p">The information to be set in the hour section. Default is <tt class="ph tt">*</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e408" class="stentry propvalue">daymonth</td>
+                                       
+                                       <td valign="top" headers="d365746e410" class="stentry propdesc">
+                                          <p class="p">The information to be set in the day of month section. Default is <tt class="ph tt">*</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e408" class="stentry propvalue">month</td>
+                                       
+                                       <td valign="top" headers="d365746e410" class="stentry propdesc">
+                                          <p class="p">The information to be set in the month section. Default is <tt class="ph tt">*</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e408" class="stentry propvalue">dayweek</td>
+                                       
+                                       <td valign="top" headers="d365746e410" class="stentry propdesc">
+                                          <p class="p">The information to be set in the day of week section. Default is <tt class="ph tt">*</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e408" class="stentry propvalue">comment</td>
+                                       
+                                       <td valign="top" headers="d365746e410" class="stentry propdesc">
+                                          <p class="p">User comment to be added on line previous the cron job</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d365746e408" class="stentry propvalue">identifier</td>
+                                       
+                                       <td valign="top" headers="d365746e410" class="stentry propdesc">
+                                          <p class="p">Custom-defined identifier for tracking the cron line for future crontab
+                                             edits. This defaults to the state id
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.boto_iam_role</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.boto_iam_role">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-boto-iam-role">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-boto-iam-role">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.boto_iam_role</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-boto-iam-role__module-salt.states.boto_iam_role"></span></p>
+                              
+                              <p class="p">Manage IAM roles</p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">This module uses <tt class="ph tt">boto</tt>, which can be installed via package, or pip.
+                              </p>
+                              
+                              <p class="p">This module accepts explicit IAM credentials but can also utilize
+                                 IAM roles assigned to the instance through Instance Profiles. Dynamic
+                                 credentials are then automatically obtained from AWS API and no further
+                                 configuration is necessary. More information available <a class="xref" href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html" target="_blank">here</a>.
+                              </p>
+                              
+                              <p class="p">If IAM roles are not used you need to specify them either in a pillar file or
+                                 in the minion's config file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">iam.keyid: GKTADJGHEIQSXMKKRBJ08H
+iam.key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs</pre>
+                              <p class="p">It's also possible to specify <tt class="ph tt">key</tt>, <tt class="ph tt">keyid</tt> and <tt class="ph tt">region</tt> via a profile, either
+                                 passed in as a dict, or as a string to pull from pillars or minion config:
+                              </p>
+                              <pre class="pre codeblock language-yaml">myprofile:
+    keyid: GKTADJGHEIQSXMKKRBJ08H
+    key: askjghsdfjkghWupUjasdflkdfklgjsdfjajkghs
+    region: us-east-1</pre>
+                              <p class="p">Creating a role will automatically create an instance profile and associate it
+                                 with the role. This is the default behavior of the AWS console.
+                              </p>
+                              <pre class="pre codeblock language-yaml">myrole:
+    boto_iam_role.present:
+        - region: us-east-1
+        - key: GKTADJGHEIQSXMKKRBJ08H
+        - keyid: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs
+        - policies_from_pillars:
+            - shared_iam_bootstrap_policy
+        - policies:
+            MySQSPolicy:
+                Statement:
+                  - Action:
+                        - sqs:*
+                    Effect: Allow
+                    Resource:
+                        - arn:aws:sqs:*:*:*
+                    Sid: MyPolicySQS1
+            MyS3Policy:
+                Statement:
+                  - Action:
+                        - s3:GetObject
+                    Effect: Allow
+                    Resource:
+                        - arn:aws:s3:*:*:mybucket/*
+
+# Using a credentials profile from pillars
+myrole:
+    boto_iam_role.present:
+        - region: us-east-1
+        - profile: myiamprofile
+
+# Passing in a credentials profile
+myrole:
+    boto_iam_role.present:
+        - region: us-east-1
+        - profile:
+            key: GKTADJGHEIQSXMKKRBJ08H
+            keyid: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.states.boto_iam_role.absent">
+                           <h2 class="title topictitle2">absent</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.boto_iam_role.absent(
+								name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Ensure the IAM role is deleted.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d357765e82" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d357765e84" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357765e82" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d357765e84" class="stentry propdesc">
+                                       <p class="p">Name of the IAM role.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357765e82" class="stentry propvalue">region</td>
+                                    
+                                    <td valign="top" headers="d357765e84" class="stentry propdesc">
+                                       <p class="p">Region to connect to.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357765e82" class="stentry propvalue">key</td>
+                                    
+                                    <td valign="top" headers="d357765e84" class="stentry propdesc">
+                                       <p class="p">Secret key to be used.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357765e82" class="stentry propvalue">keyid</td>
+                                    
+                                    <td valign="top" headers="d357765e84" class="stentry propdesc">
+                                       <p class="p">Access key to be used.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357765e82" class="stentry propvalue">profile</td>
+                                    
+                                    <td valign="top" headers="d357765e84" class="stentry propdesc">
+                                       <p class="p">A dict with region, key and keyid, or a pillar key (string)
+                                          that contains a dict with region, key and keyid.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.boto_iam_role.present">
+                           <h2 class="title topictitle2">present</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.boto_iam_role.present(
+								name,
+								policy_document=None,
+								path=None,
+								policies=None,
+								policies_from_pillars=None,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Ensure the IAM role exists.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d357765e144" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d357765e146" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357765e144" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d357765e146" class="stentry propdesc">
+                                       <p class="p">Name of the IAM role.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357765e144" class="stentry propvalue">policy_document</td>
+                                    
+                                    <td valign="top" headers="d357765e146" class="stentry propdesc">
+                                       <p class="p">The policy that grants an entity permission to assume the role. (See <a class="xref" href="http://boto.readthedocs.org/en/latest/ref/iam.html#boto.iam.connection.IAMConnection.create_role" target="_blank">http://boto.readthedocs.org/en/latest/ref/iam.html#boto.iam.connection.IAMConnection.create_role</a>)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357765e144" class="stentry propvalue">path</td>
+                                    
+                                    <td valign="top" headers="d357765e146" class="stentry propdesc">
+                                       <p class="p">The path to the instance profile. (See <a class="xref" href="http://boto.readthedocs.org/en/latest/ref/iam.html#boto.iam.connection.IAMConnection.create_role" target="_blank">http://boto.readthedocs.org/en/latest/ref/iam.html#boto.iam.connection.IAMConnection.create_role</a>)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357765e144" class="stentry propvalue">policies</td>
+                                    
+                                    <td valign="top" headers="d357765e146" class="stentry propdesc">
+                                       <p class="p">A dict of IAM role policies.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357765e144" class="stentry propvalue">policies_from_pillars</td>
+                                    
+                                    <td valign="top" headers="d357765e146" class="stentry propdesc">
+                                       <p class="p">A list of pillars that contain role policy dicts. Policies in the
+                                          pillars will be merged in the order defined in the list and key
+                                          conflicts will be handled by later defined keys overriding earlier
+                                          defined keys. The policies defined here will be merged with the
+                                          policies defined in the policies argument. If keys conflict, the keys
+                                          in the policies argument will override the keys defined in
+                                          policies_from_pillars.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357765e144" class="stentry propvalue">region</td>
+                                    
+                                    <td valign="top" headers="d357765e146" class="stentry propdesc">
+                                       <p class="p">Region to connect to.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357765e144" class="stentry propvalue">key</td>
+                                    
+                                    <td valign="top" headers="d357765e146" class="stentry propdesc">
+                                       <p class="p">Secret key to be used.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357765e144" class="stentry propvalue">keyid</td>
+                                    
+                                    <td valign="top" headers="d357765e146" class="stentry propdesc">
+                                       <p class="p">Access key to be used.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d357765e144" class="stentry propvalue">profile</td>
+                                    
+                                    <td valign="top" headers="d357765e146" class="stentry propdesc">
+                                       <p class="p">A dict with region, key and keyid, or a pillar key (string)
+                                          that contains a dict with region, key and keyid.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

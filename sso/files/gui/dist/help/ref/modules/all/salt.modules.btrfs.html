@@ -1,0 +1,547 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.btrfs</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.btrfs">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-btrfs">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-btrfs">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.btrfs</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-btrfs__module-salt.modules.btrfs"></span></p>
+                              
+                              <p class="p">Module for managing BTRFS file systems.</p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.btrfs.add">
+                           <h2 class="title topictitle2">add</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.btrfs.add(
+								mountpoint,
+								*devices,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Add a devices to a BTRFS filesystem.</p>
+                                 
+                                 <p class="p">General options:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p"><strong class="ph b">nodiscard</strong>: Do not perform whole device TRIM
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><strong class="ph b">force</strong>: Force overwrite existing filesystem on the disk
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' btrfs.add /mountpoint /dev/sda1 /dev/sda2</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.btrfs.convert">
+                           <h2 class="title topictitle2">convert</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.btrfs.convert(
+								device,
+								permanent=False,
+								keeplf=False
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Convert ext2/3/4 to BTRFS. Device should be mounted.</p>
+                                 
+                                 <p class="p">Filesystem can be converted temporarily so the further processing and rollback is
+                                    possible,
+                                    or permanently, where previous extended filesystem image gets deleted. Please note,
+                                    permanent
+                                    conversion takes a while as BTRFS filesystem needs to be properly rebalanced afterwards.
+                                 </p>
+                                 
+                                 <p class="p">General options:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p"><strong class="ph b">permanent</strong>: Specify if the migration should be permanent (false by default)
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <dl class="dl definition_list">
+                                          <dt class="dt dlterm"><strong class="ph b">keeplf</strong>: Keep <tt class="ph tt">lost+found</tt> of the partition (removed by default,
+                                          </dt>
+                                          
+                                          <dd class="dd">
+                                             <p class="p">but still in the image, if not permanent migration)</p>
+                                             
+                                          </dd>
+                                          
+                                       </dl>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' btrfs.convert /dev/sda1
+salt '*' btrfs.convert /dev/sda1 permanent=True</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.btrfs.defragment">
+                           <h2 class="title topictitle2">defragment</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.btrfs.defragment(
+								path
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Defragment mounted BTRFS filesystem.
+                                    In order to defragment a filesystem, device should be properly mounted and writable.
+                                 </p>
+                                 
+                                 <p class="p">If passed a device name, then defragmented whole filesystem, mounted on in.
+                                    If passed a moun tpoint of the filesystem, then only this mount point is defragmented.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' btrfs.defragment /dev/sda1
+salt '*' btrfs.defragment /path/on/filesystem</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.btrfs.delete">
+                           <h2 class="title topictitle2">delete</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.btrfs.delete(
+								mountpoint,
+								*devices,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Remove devices from a BTRFS filesystem.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' btrfs.delete /mountpoint /dev/sda1 /dev/sda2</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.btrfs.devices">
+                           <h2 class="title topictitle2">devices</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.btrfs.devices( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Get known BTRFS formatted devices on the system.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' btrfs.devices</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.btrfs.features">
+                           <h2 class="title topictitle2">features</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.btrfs.features( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List currently available BTRFS features.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' btrfs.mkfs_features</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.btrfs.info">
+                           <h2 class="title topictitle2">info</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.btrfs.info(
+								device
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Get BTRFS filesystem information.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' btrfs.info /dev/sda1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.btrfs.mkfs">
+                           <h2 class="title topictitle2">mkfs</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.btrfs.mkfs(
+								*devices,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Create a file system on the specified device. By default wipes out with force.</p>
+                                 
+                                 <p class="p">General options:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p"><strong class="ph b">allocsize</strong>: Specify the BTRFS offset from the start of the device.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><strong class="ph b">bytecount</strong>: Specify the size of the resultant filesystem.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><strong class="ph b">nodesize</strong>: Node size.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><strong class="ph b">leafsize</strong>: Specify the nodesize, the tree block size in which btrfs stores data.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><strong class="ph b">noforce</strong>: Prevent force overwrite when an existing filesystem is detected on the device.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><strong class="ph b">sectorsize</strong>: Specify the sectorsize, the minimum data block allocation unit.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><strong class="ph b">nodiscard</strong>: Do not perform whole device TRIM operation by default.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><strong class="ph b">uuid</strong>: Pass UUID or pass True to generate one.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">Options:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <dl class="dl definition_list">
+                                          <dt class="dt dlterm"><strong class="ph b">dto</strong>: (raid0|raid1|raid5|raid6|raid10|single|dup)
+                                          </dt>
+                                          
+                                          <dd class="dd">
+                                             <p class="p">Specify how the data must be spanned across the devices specified.</p>
+                                             
+                                          </dd>
+                                          
+                                       </dl>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <dl class="dl definition_list">
+                                          <dt class="dt dlterm"><strong class="ph b">mto</strong>: (raid0|raid1|raid5|raid6|raid10|single|dup)
+                                          </dt>
+                                          
+                                          <dd class="dd">
+                                             <p class="p">Specify how metadata must be spanned across the devices specified.</p>
+                                             
+                                          </dd>
+                                          
+                                       </dl>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><strong class="ph b">fts</strong>: Features (call <tt class="ph tt">salt &lt;host&gt; btrfs.features</tt> for full list of available features)
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">See the <tt class="ph tt">mkfs.btrfs(8)</tt> manpage for a more complete description of corresponding options description.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' btrfs.mkfs /dev/sda1
+salt '*' btrfs.mkfs /dev/sda1 noforce=True</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.btrfs.properties">
+                           <h2 class="title topictitle2">properties</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.btrfs.properties(
+								obj,
+								type=None,
+								set=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List properties for given btrfs object. The object can be path of BTRFS device,
+                                    mount point, or any directories/files inside the BTRFS filesystem.
+                                 </p>
+                                 
+                                 <p class="p">General options:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p"><strong class="ph b">type</strong>: Possible types are s[ubvol], f[ilesystem], i[node] and d[evice].
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><strong class="ph b">force</strong>: Force overwrite existing filesystem on the disk
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><strong class="ph b">set</strong>: &lt;key=value,key1=value1...&gt; Options for a filesystem properties.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' btrfs.properties /mountpoint
+salt '*' btrfs.properties /dev/sda1 type=subvol set='ro=false,label="My Storage"'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.btrfs.resize">
+                           <h2 class="title topictitle2">resize</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.btrfs.resize(
+								mountpoint,
+								size
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Resize filesystem.</p>
+                                 
+                                 <p class="p">General options:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p"><strong class="ph b">mountpoint</strong>: Specify the BTRFS mountpoint to resize.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><strong class="ph b">size</strong>: ([+/-]&lt;newsize&gt;[kKmMgGtTpPeE]|max) Specify the new size of the target.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' btrfs.resize /mountpoint size=+1g
+salt '*' btrfs.resize /dev/sda1 size=max</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.btrfs.usage">
+                           <h2 class="title topictitle2">usage</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.btrfs.usage(
+								path
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Show in which disk the chunks are allocated.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' btrfs.usage /your/mountpoint</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.btrfs.version">
+                           <h2 class="title topictitle2">version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.btrfs.version( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return BTRFS version.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' btrfs.version</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

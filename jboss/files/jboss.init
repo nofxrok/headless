@@ -1,0 +1,31 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides: jboss
+# Required-Start: $local_fs $remote_fs $network $syslog
+# Required-Stop: $local_fs $remote_fs $network $syslog
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Management of JBoss AS v7.x
+### END INIT INFO
+ 
+#Defining JBOSS_HOME
+JBOSS_HOME=/usr/local/share/jboss/jboss-as-web-7.0.2.Final
+ 
+case "$1" in
+start)
+echo "Starting JBoss AS7..."
+sh ${JBOSS_HOME}/bin/standalone.sh &
+;;
+stop)
+echo "Stopping JBoss AS7..."
+sh ${JBOSS_HOME}/bin/jboss-admin.sh --connect command=:shutdown
+;;
+log)
+echo "Showing server.log..."
+tail -1000f ${JBOSS_HOME}/standalone/log/server.log
+;;
+*)
+echo "Usage: /etc/init.d/jboss {start|stop|log}"
+exit 1
+;; esac
+exit 0

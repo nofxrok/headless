@@ -1,0 +1,55 @@
+<div class="views-forms">
+<div class="modal-header">
+    <h3 class="modal-title">Edit Master</h3>
+</div>
+<div class="modal-body">
+    <form name="editMasterForm" id="add-master-form" class="form-horizontal" role="form" ng-submit="editMaster(currentMasterEdit)" novalidate>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Host Name</label>
+            <div class="col-xs-9" ng-class="{'has-error': editMasterForm.hostname.$error.required}">
+                <input name="hostname" class="form-control" ng-model="currentMasterEdit.hostname" required salt-form-focus ng-click="editMasterForm.hostname.$touched = false">
+                <div class="validation-error" ng-show="editMasterForm.hostname.$touched && !editMasterForm.hostname.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="editMasterForm.hostname.$viewValue && !editMasterForm.hostname.$valid">Hostname invalid</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">NetAPI Port</label>
+            <div class="col-xs-9" ng-class="{'has-error': editMasterForm.netapi.$error.required}">
+                <input name="netapi" class="form-control" ng-model="currentMasterEdit.netapi_port" required ng-click="editMasterForm.netapi.$touched = false">
+                <div class="validation-error" ng-show="editMasterForm.netapi.$touched && !editMasterForm.netapi.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="editMasterForm.netapi.$viewValue && !editMasterForm.netapi.$valid">Port invalid</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Auth Mode</label>
+            <div class="col-xs-9" ng-class="{'has-error': editMasterForm.authmode.$error.required}">
+                <select name="authmode" class="form-control" ng-model="currentMasterEdit.auth_mode" required ng-click="editMasterForm.authmode.$touched = false">
+                    <option value="pam">pam</option>
+                    <option value="ldap">ldap</option>
+                </select>
+                <div class="validation-error" ng-show="editMasterForm.authmode.$touched && !editMasterForm.authmode.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="editMasterForm.authmode.$viewValue && !editMasterForm.authmode.$valid">Authmode invalid</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Master Username</label>
+            <div class="col-xs-9" ng-class="{'has-error': editMasterForm.username.$error.required}">
+                <input name="username" class="form-control" ng-model="currentMasterEdit.master_username" required ng-click="editMasterForm.username.$touched = false">
+                <div class="validation-error" ng-show="editMasterForm.username.$touched && !editMasterForm.username.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="editMasterForm.username.$viewValue && !editMasterForm.username.$valid">Username invalid</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-3 control-label">Master Password</label>
+            <div class="col-xs-9" ng-class="{'has-error': editMasterForm.password.$error.required}">
+                <input name="password" type="password" class="form-control" id="inputPassword3" ng-model="currentMasterEdit.master_password" required ng-click="editMasterForm.password.$touched = false">
+                <div class="validation-error" ng-show="editMasterForm.password.$touched && !editMasterForm.password.$viewValue">Required field</div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary site-btn-form" ng-click="editMaster(currentMasterEdit)" ng-disabled="editMasterForm.$invalid">Save</button>
+    <button class="btn btn-primary site-btn-form" ui-sref="salt.dashboard.settings.masters.list" ui-sref-opts="{reload: true}">Cancel</button>
+</div>
+</div>

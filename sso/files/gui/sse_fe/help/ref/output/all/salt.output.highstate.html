@@ -1,0 +1,162 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.output.highstate</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.output.highstate">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../outputters.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-output-highstate">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-output-highstate">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.output.highstate</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-output-highstate__module-salt.output.highstate"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="outputter-for-displaying-results-of-state-runs">
+                           <h2 class="title topictitle2">Outputter for displaying results of state runs</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">The return data from the Highstate command is a standard data structure
+                                    which is parsed by the highstate outputter to deliver a clean and readable
+                                    set of information about the HighState run on minions.
+                                 </p>
+                                 
+                                 <p class="p">Two configurations can be set to modify the highstate outputter. These values
+                                    can be set in the master config to change the output of the <tt class="ph tt">salt</tt> command or
+                                    set in the minion config to change the output of the <tt class="ph tt">salt-call</tt> command.
+                                 </p>
+                                 
+                                 <dl class="dl definition_list">
+                                    <dt class="dt dlterm">state_verbose:</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">By default <span class="keyword title_reference">state_verbose</span> is set to <span class="keyword title_reference">True</span>, setting this to <span class="keyword title_reference">False</span> will
+                                          instruct the highstate outputter to omit displaying anything in green, this
+                                          means that nothing with a result of True and no changes will not be printed
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">state_output:</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">The highstate outputter has five output modes, <span class="keyword title_reference">full</span>, <span class="keyword title_reference">terse</span>, <span class="keyword title_reference">mixed</span>,
+                                          <span class="keyword title_reference">changes</span> and <span class="keyword title_reference">filter</span>. The default is set to full, which will display many
+                                          lines of detailed information for each executed chunk. If the <span class="keyword title_reference">state_output</span>
+                                          option is set to <span class="keyword title_reference">terse</span> then the output is greatly simplified and shown in
+                                          only one line.  If <span class="keyword title_reference">mixed</span> is used, then terse output will be used unless a
+                                          state failed, in which case full output will be used.  If <span class="keyword title_reference">changes</span> is used,
+                                          then terse output will be used if there was no error and no changes,
+                                          otherwise full output will be used. If <span class="keyword title_reference">filter</span> is used, then either or both
+                                          of two different filters can be used: <span class="keyword title_reference">exclude</span> or <span class="keyword title_reference">terse</span>. These can be set
+                                          as such from the command line, or in the Salt config as
+                                          <span class="keyword title_reference">state_output_exclude</span> or <span class="keyword title_reference">state_output_terse</span>, respectively. The values to
+                                          exclude must be a comma-separated list of <span class="keyword title_reference">True</span>, <span class="keyword title_reference">False</span> and/or <span class="keyword title_reference">None</span>.
+                                          Because of parsing nuances, if only one of these is used, it must still
+                                          contain a comma. For instance: <span class="keyword title_reference">exclude=True,</span>.
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">state_tabular:</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">If <span class="keyword title_reference">state_output</span> uses the terse output, set this to <span class="keyword title_reference">True</span> for an aligned
+                                          output format.  If you wish to use a custom format, this can be set to a
+                                          string.
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 
+                                 <p class="p">Example output:</p>
+                                 <pre class="pre codeblock language-text">myminion:
+----------
+          ID: test.ping
+    Function: module.run
+      Result: True
+     Comment: Module function test.ping executed
+     Changes:
+              ----------
+              ret:
+                  True
+
+Summary
+------------
+Succeeded: 1
+Failed:    0
+------------
+Total:     0</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.output.highstate.output">
+                              <h3 class="title topictitle3">output</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.output.highstate.output(
+								data
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">The HighState Outputter is only meant to be used with the state.highstate
+                                       function, or a function that returns highstate return data.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

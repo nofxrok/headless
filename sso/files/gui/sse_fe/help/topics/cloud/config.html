@@ -1,0 +1,688 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Core Configuration</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Core Configuration">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="core-configuration">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="core-configuration">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Core Configuration</h1>
+                        <div class="body conbody">
+                           <p class="p">A number of core configuration options and some options that are global to the
+                              VM profiles can be set in the cloud configuration file. By default this file is
+                              located at <tt class="ph tt">/etc/salt/cloud</tt>.
+                           </p>
+                           
+                           <div class="section" id="core-configuration__thread-pool-size">
+                              <h2 class="title sectiontitle">Thread Pool Size</h2>
+                              <p class="p">When salt cloud is operating in parallel mode via the <tt class="ph tt">-P</tt> argument, you can
+                                 control the thread pool size by specifying the <tt class="ph tt">pool_size</tt> parameter with
+                                 a positive integer value.
+                              </p>
+                              
+                              <p class="p">By default, the thread pool size will be set to the number of VMs that salt
+                                 cloud is operating on.
+                              </p>
+                              <pre class="pre codeblock language-yaml">pool_size: 10</pre>
+                              </div>
+                           
+                           <div class="section" id="core-configuration__minion-configuration">
+                              <h2 class="title sectiontitle">Minion Configuration</h2>
+                              <p class="p">The default minion configuration is set up in this file. Minions created by
+                                 salt-cloud derive their configuration from this file.  Almost all parameters
+                                 found in 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/minion.html#configuration-salt-minion">Configuring the Salt Minion</a> can
+                                 be used here.
+                              </p>
+                              <pre class="pre codeblock language-yaml">minion:
+  master: saltmaster.example.com</pre>
+                              <p class="p">In particular, this is the location to specify the location of the salt master
+                                 and its listening port, if the port is not set to the default.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="core-configuration__cloud-configuration-syntax">
+                              <h2 class="title sectiontitle">Cloud Configuration Syntax</h2>
+                              <p class="p">The data specific to interacting with public clouds is set up here.</p>
+                              
+                              <p class="p">Cloud provider configuration syntax can live in several places. The first is in
+                                 <tt class="ph tt">/etc/salt/cloud</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml"># /etc/salt/cloud
+providers:
+  my-aws-migrated-config:
+    id: HJGRYCILJLKJYG
+    key: 'kdjgfsgm;woormgl/aserigjksjdhasdfgn'
+    keyname: test
+    securitygroup: quick-start
+    private_key: /root/test.pem
+    provider: aws</pre>
+                              <p class="p">Cloud provider configuration data can also be housed in <tt class="ph tt">/etc/salt/cloud.providers</tt>
+                                 or any file matching <tt class="ph tt">/etc/salt/cloud.providers.d/*.conf</tt>. All files in any of these
+                                 locations will be parsed for cloud provider data.
+                              </p>
+                              
+                              <p class="p">Using the example configuration above:</p>
+                              <pre class="pre codeblock language-yaml"># /etc/salt/cloud.providers
+# or could be /etc/salt/cloud.providers.d/*.conf
+my-aws-config:
+  id: HJGRYCILJLKJYG
+  key: 'kdjgfsgm;woormgl/aserigjksjdhasdfgn'
+  keyname: test
+  securitygroup: quick-start
+  private_key: /root/test.pem
+  provider: aws</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Salt Cloud provider configurations within <tt class="ph tt">/etc/cloud.provider.d/ should not
+                                       specify the ``providers</tt> starting key.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">It is also possible to have multiple cloud configuration blocks within the same alias
+                                 block.
+                                 For example:
+                              </p>
+                              <pre class="pre codeblock language-yaml">production-config:
+  - id: HJGRYCILJLKJYG
+    key: 'kdjgfsgm;woormgl/aserigjksjdhasdfgn'
+    keyname: test
+    securitygroup: quick-start
+    private_key: /root/test.pem
+    provider: aws
+
+  - user: example_user
+    apikey: 123984bjjas87034
+    provider: rackspace</pre>
+                              <p class="p">However, using this configuration method requires a change with profile configuration
+                                 blocks.
+                                 The provider alias needs to have the provider key value appended as in the following
+                                 example:
+                              </p>
+                              <pre class="pre codeblock language-yaml">rhel_aws_dev:
+  provider: production-config:aws
+  image: ami-e565ba8c
+  size: t1.micro
+
+rhel_aws_prod:
+  provider: production-config:aws
+  image: ami-e565ba8c
+  size: High-CPU Extra Large Instance
+
+database_prod:
+  provider: production-config:rackspace
+  image: Ubuntu 12.04 LTS
+  size: 256 server</pre>
+                              <p class="p">Notice that because of the multiple entries, one has to be explicit about the provider
+                                 alias and
+                                 name, from the above example, <tt class="ph tt">production-config: aws</tt>.
+                              </p>
+                              
+                              <p class="p">This data interactions with the <tt class="ph tt">salt-cloud</tt> binary regarding its <tt class="ph tt">--list-location</tt>,
+                                 <tt class="ph tt">--list-images</tt>, and <tt class="ph tt">--list-sizes</tt> which needs a cloud provider as an argument. The argument
+                                 used should be the configured cloud provider alias. If the provider alias has multiple
+                                 entries,
+                                 <tt class="ph tt">&lt;provider-alias&gt;: &lt;provider-name&gt;</tt> should be used.
+                              </p>
+                              
+                              <p class="p">To allow for a more extensible configuration, <tt class="ph tt">--providers-config</tt>, which defaults to
+                                 <tt class="ph tt">/etc/salt/cloud.providers</tt>, was added to the cli parser.  It allows for the providers'
+                                 configuration to be added on a per-file basis.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="core-configuration__pillar-configuration">
+                              <h2 class="title sectiontitle">Pillar Configuration</h2>
+                              <p class="p">It is possible to configure cloud providers using pillars. This is only used when
+                                 inside the cloud
+                                 module. You can setup a variable called <tt class="ph tt">cloud</tt> that contains your profile and provider to pass
+                                 that information to the cloud servers instead of having to copy the full configuration
+                                 to every
+                                 minion. In your pillar file, you would use something like this:
+                              </p>
+                              <pre class="pre codeblock language-yaml">cloud:
+  ssh_key_name: saltstack
+  ssh_key_file: /root/.ssh/id_rsa
+  update_cachedir: True
+  diff_cache_events: True
+  change_password: True
+
+  providers:
+    my-nova:
+      identity_url: https://identity.api.rackspacecloud.com/v2.0/
+      compute_region: IAD
+      user: myuser
+      api_key: apikey
+      tenant: 123456
+      provider: nova
+
+    my-openstack:
+      identity_url: https://identity.api.rackspacecloud.com/v2.0/tokens
+      user: user2
+      apikey: apikey2
+      tenant: 654321
+      compute_region: DFW
+      provider: openstack
+      compute_name: cloudServersOpenStack
+
+  profiles:
+    ubuntu-nova:
+      provider: my-nova
+      size: performance1-8
+      image: bb02b1a3-bc77-4d17-ab5b-421d89850fca
+      script_args: git develop
+
+    ubuntu-openstack:
+      provider: my-openstack
+      size: performance1-8
+      image: bb02b1a3-bc77-4d17-ab5b-421d89850fca
+      script_args: git develop</pre>
+                              </div>
+                           
+                           <div class="section" id="core-configuration__cloud-configurations">
+                              <h2 class="title sectiontitle">Cloud Configurations</h2>
+                           </div>
+                           
+                           <div class="section head3" id="core-configuration__rackspace">
+                              <h2 class="title sectiontitle">Rackspace</h2>
+                              <p class="p">Rackspace cloud requires two configuration options; a <tt class="ph tt">user</tt> and an <tt class="ph tt">apikey</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">my-rackspace-config:
+  user: example_user
+  apikey: 123984bjjas87034
+  provider: rackspace-config</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">In the cloud profile that uses this provider configuration, the syntax for the
+                                    <tt class="ph tt">provider</tt> required field would be <tt class="ph tt">provider: my-rackspace-config</tt>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="core-configuration__amazon-aws">
+                              <h2 class="title sectiontitle">Amazon AWS</h2>
+                              <p class="p">A number of configuration options are required for Amazon AWS including <tt class="ph tt">id</tt>,
+                                 <tt class="ph tt">key</tt>, <tt class="ph tt">keyname</tt>, <tt class="ph tt">sercuritygroup</tt>, and <tt class="ph tt">private_key</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">my-aws-quick-start:
+  id: HJGRYCILJLKJYG
+  key: 'kdjgfsgm;woormgl/aserigjksjdhasdfgn'
+  keyname: test
+  securitygroup: quick-start
+  private_key: /root/test.pem
+  provider: aws
+
+my-aws-default:
+  id: HJGRYCILJLKJYG
+  key: 'kdjgfsgm;woormgl/aserigjksjdhasdfgn'
+  keyname: test
+  securitygroup: default
+  private_key: /root/test.pem
+  provider: aws</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">In the cloud profile that uses this provider configuration, the syntax for the
+                                    <tt class="ph tt">provider</tt> required field would be either <tt class="ph tt">provider: my-aws-quick-start</tt>
+                                    or <tt class="ph tt">provider: my-aws-default</tt>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="core-configuration__linode">
+                              <h2 class="title sectiontitle">Linode</h2>
+                              <p class="p">Linode requires a single API key, but the default root password also needs to
+                                 be set:
+                              </p>
+                              <pre class="pre codeblock language-yaml">my-linode-config:
+  apikey: asldkgfakl;sdfjsjaslfjaklsdjf;askldjfaaklsjdfhasldsadfghdkf
+  password: F00barbaz
+  ssh_pubkey: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKHEOLLbeXgaqRQT9NBAopVz366SdYc0KKX33vAnq+2R user@host
+  ssh_key_file: ~/.ssh/id_ed25519
+  provider: linode</pre>
+                              <p class="p">The password needs to be 8 characters and contain lowercase, uppercase, and
+                                 numbers.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">In the cloud profile that uses this provider configuration, the syntax for the
+                                    <tt class="ph tt">provider</tt> required field would be <tt class="ph tt">provider: my-linode-config</tt></p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="core-configuration__joyent-cloud">
+                              <h2 class="title sectiontitle">Joyent Cloud</h2>
+                              <p class="p">The Joyent cloud requires three configuration parameters: The username and
+                                 password that are used to log into the Joyent system, as well as the location
+                                 of the private SSH key associated with the Joyent account. The SSH key is needed
+                                 to send the provisioning commands up to the freshly created virtual machine.
+                              </p>
+                              <pre class="pre codeblock language-yaml">my-joyent-config:
+  user: fred
+  password: saltybacon
+  private_key: /root/joyent.pem
+  provider: joyent</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">In the cloud profile that uses this provider configuration, the syntax for the
+                                    <tt class="ph tt">provider</tt> required field would be <tt class="ph tt">provider: my-joyent-config</tt></p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="core-configuration__gogrid">
+                              <h2 class="title sectiontitle">GoGrid</h2>
+                              <p class="p">To use Salt Cloud with GoGrid, log into the GoGrid web interface and create an
+                                 API key. Do this by clicking on "My Account" and then going to the API Keys
+                                 tab.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">apikey</tt> and the <tt class="ph tt">sharedsecret</tt> configuration parameters need to
+                                 be set in the configuration file to enable interfacing with GoGrid:
+                              </p>
+                              <pre class="pre codeblock language-yaml">my-gogrid-config:
+  apikey: asdff7896asdh789
+  sharedsecret: saltybacon
+  provider: gogrid</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">In the cloud profile that uses this provider configuration, the syntax for the
+                                    <tt class="ph tt">provider</tt> required field would be <tt class="ph tt">provider: my-gogrid-config</tt>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="core-configuration__openstack">
+                              <h2 class="title sectiontitle">OpenStack</h2>
+                              <p class="p">OpenStack configuration differs between providers, and at the moment several
+                                 options need to be specified. This module has been officially tested against
+                                 the HP and the Rackspace implementations, and some examples are provided for
+                                 both.
+                              </p>
+                              <pre class="pre codeblock language-yaml"># For HP
+my-openstack-hp-config:
+  identity_url:
+  'https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/'
+  compute_name: Compute
+  compute_region: 'az-1.region-a.geo-1'
+  tenant: myuser-tenant1
+  user: myuser
+  ssh_key_name: mykey
+  ssh_key_file: '/etc/salt/hpcloud/mykey.pem'
+  password: mypass
+  provider: openstack
+
+# For Rackspace
+my-openstack-rackspace-config:
+  identity_url: 'https://identity.api.rackspacecloud.com/v2.0/tokens'
+  compute_name: cloudServersOpenStack
+  protocol: ipv4
+  compute_region: DFW
+  protocol: ipv4
+  user: myuser
+  tenant: 5555555
+  password: mypass
+  provider: openstack</pre>
+                              <p class="p">If you have an API key for your provider, it may be specified instead of a
+                                 password:
+                              </p>
+                              <pre class="pre codeblock language-yaml">my-openstack-hp-config:
+  apikey: 901d3f579h23c8v73q9
+
+my-openstack-rackspace-config:
+  apikey: 901d3f579h23c8v73q9</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">In the cloud profile that uses this provider configuration, the syntax for the
+                                    <tt class="ph tt">provider</tt> required field would be either <tt class="ph tt">provider: my-openstack-hp-config</tt>
+                                    or <tt class="ph tt">provider: my-openstack-rackspace-config</tt>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">You will certainly need to configure the <tt class="ph tt">user</tt>, <tt class="ph tt">tenant</tt>, and either
+                                 <tt class="ph tt">password</tt> or <tt class="ph tt">apikey</tt>.
+                              </p>
+                              
+                              <p class="p">If your OpenStack instances only have private IP addresses and a CIDR range of
+                                 private addresses are not reachable from the salt-master, you may set your
+                                 preference to have Salt ignore it:
+                              </p>
+                              <pre class="pre codeblock language-yaml">my-openstack-config:
+  ignore_cidr: 192.168.0.0/16</pre>
+                              <p class="p">For in-house OpenStack Essex installation, libcloud needs the service_type :</p>
+                              <pre class="pre codeblock language-yaml">my-openstack-config:
+  identity_url: 'http://control.openstack.example.org:5000/v2.0/'
+  compute_name : Compute Service
+  service_type : compute</pre>
+                              </div>
+                           
+                           <div class="section head3" id="core-configuration__digitalocean">
+                              <h2 class="title sectiontitle">DigitalOcean</h2>
+                              <p class="p">Using Salt for DigitalOcean requires a <tt class="ph tt">client_key</tt> and an <tt class="ph tt">api_key</tt>. These
+                                 can be found in the DigitalOcean web interface, in the "My Settings" section,
+                                 under the API Access tab.
+                                 .. code-block:: yaml
+                              </p>
+                              
+                              <blockquote class="lq">
+                                 <dl class="dl definition_list">
+                                    <dt class="dt dlterm">my-digitalocean-config:</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">provider: digital_ocean
+                                          personal_access_token: xxx
+                                          location: New York 1
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 
+                              </blockquote>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">In the cloud profile that uses this provider configuration, the syntax for the
+                                    <tt class="ph tt">provider</tt> required field would be <tt class="ph tt">provider: my-digital-ocean-config</tt>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="core-configuration__parallels">
+                              <h2 class="title sectiontitle">Parallels</h2>
+                              <p class="p">Using Salt with Parallels requires a <tt class="ph tt">user</tt>, <tt class="ph tt">password</tt> and <tt class="ph tt">URL</tt>. These
+                                 can be obtained from your cloud provider.
+                              </p>
+                              <pre class="pre codeblock language-yaml">my-parallels-config:
+  user: myuser
+  password: xyzzy
+  url: https://api.cloud.xmission.com:4465/paci/v1.0/
+  provider: parallels</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">In the cloud profile that uses this provider configuration, the syntax for the
+                                    <tt class="ph tt">provider</tt> required field would be <tt class="ph tt">provider: my-parallels-config</tt>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="core-configuration__proxmox">
+                              <h2 class="title sectiontitle">Proxmox</h2>
+                              <p class="p">Using Salt with Proxmox requires a <tt class="ph tt">user</tt>, <tt class="ph tt">password</tt>, and <tt class="ph tt">URL</tt>. These can be
+                                 obtained from your cloud provider. Both PAM and PVE users can be used.
+                              </p>
+                              <pre class="pre codeblock language-yaml">my-proxmox-config:
+  provider: proxmox
+  user: saltcloud@pve
+  password: xyzzy
+  url: your.proxmox.host</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">In the cloud profile that uses this provider configuration, the syntax for the
+                                    <tt class="ph tt">provider</tt> required field would be <tt class="ph tt">provider: my-proxmox-config</tt>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="core-configuration__lxc">
+                              <h2 class="title sectiontitle">LXC</h2>
+                              <p class="p">The lxc driver uses saltify to install salt and attach the lxc container as a new
+                                 lxc
+                                 minion. As soon as we can, we manage baremetal operation over SSH. You can also destroy
+                                 those containers via this driver.
+                              </p>
+                              <pre class="pre codeblock language-yaml">devhost10-lxc:
+  target: devhost10
+  provider: lxc</pre>
+                              <p class="p">And in the map file:</p>
+                              <pre class="pre codeblock language-yaml">devhost10-lxc:
+  provider: devhost10-lxc
+  from_container: ubuntu
+  backing: lvm
+  sudo: True
+  size: 3g
+  ip: 10.0.3.9
+  minion:
+    master: 10.5.0.1
+    master_port: 4506
+  lxc_conf:
+    - lxc.utsname: superlxc</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">In the cloud profile that uses this provider configuration, the syntax for the
+                                    <tt class="ph tt">provider</tt> required field would be provdier: devhost10-lxc`.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="core-configuration__config-saltify">
+                              <h2 class="title sectiontitle">Saltify</h2>
+                              <p class="p">The Saltify driver is a new, experimental driver for installing Salt on
+                                 existing machines (virtual or bare metal). Because it does not use an actual
+                                 cloud provider, it needs no configuration in the main cloud config file.
+                                 However, it does still require a profile to be set up, and is most useful when
+                                 used inside a map file. The key parameters to be set are <tt class="ph tt">ssh_host</tt>,
+                                 <tt class="ph tt">ssh_username</tt> and either <tt class="ph tt">ssh_keyfile</tt> or <tt class="ph tt">ssh_password</tt>. These may all
+                                 be set in either the profile or the map. An example configuration might use the
+                                 following in cloud.profiles:
+                              </p>
+                              <pre class="pre codeblock language-yaml">make_salty:
+  provider: saltify</pre>
+                              <p class="p">And in the map file:</p>
+                              <pre class="pre codeblock language-yaml">make_salty:
+  - myinstance:
+    ssh_host: 54.262.11.38
+    ssh_username: ubuntu
+    ssh_keyfile: '/etc/salt/mysshkey.pem'
+    sudo: True</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">In the cloud profile that uses this provider configuration, the syntax for the
+                                    <tt class="ph tt">provider</tt> required field would be <tt class="ph tt">provider: make_salty</tt>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="core-configuration__extending-profiles-and-cloud-providers-configuration">
+                              <h2 class="title sectiontitle">Extending Profiles and Cloud Providers Configuration</h2>
+                              <p class="p">As of 0.8.7, the option to extend both the profiles and cloud providers
+                                 configuration and avoid duplication was added. The extends feature works on the
+                                 current profiles configuration, but, regarding the cloud providers
+                                 configuration, <strong class="ph b">only</strong> works in the new syntax and respective configuration
+                                 files, i.e. <tt class="ph tt">/etc/salt/salt/cloud.providers</tt> or
+                                 <tt class="ph tt">/etc/salt/cloud.providers.d/*.conf</tt>.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Extending cloud profiles and providers is not recursive. For example, a
+                                    profile that is extended by a second profile is possible, but the second
+                                    profile cannot be extended by a third profile.
+                                 </p>
+                                 
+                                 <p class="p">Also, if a profile (or provider) is extending another profile and each
+                                    contains a list of values, the lists from the extending profile will
+                                    override the list from the original profile. The lists are not merged
+                                    together.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="core-configuration__extending-profiles">
+                              <h2 class="title sectiontitle">Extending Profiles</h2>
+                              <p class="p">Some example usage on how to use <tt class="ph tt">extends</tt> with profiles. Consider
+                                 <tt class="ph tt">/etc/salt/salt/cloud.profiles</tt> containing:
+                              </p>
+                              <pre class="pre codeblock language-yaml">development-instances:
+  provider: my-ec2-config
+  size: t1.micro
+  ssh_username: ec2_user
+  securitygroup:
+    - default
+  deploy: False
+
+Amazon-Linux-AMI-2012.09-64bit:
+  image: ami-54cf5c3d
+  extends: development-instances
+
+Fedora-17:
+  image: ami-08d97e61
+  extends: development-instances
+
+CentOS-5:
+  provider: my-aws-config
+  image: ami-09b61d60
+  extends: development-instances</pre>
+                              <p class="p">The above configuration, once parsed would generate the following profiles
+                                 data:
+                              </p>
+                              <pre class="pre codeblock language-python">[{'deploy': False,
+  'image': 'ami-08d97e61',
+  'profile': 'Fedora-17',
+  'provider': 'my-ec2-config',
+  'securitygroup': ['default'],
+  'size': 't1.micro',
+  'ssh_username': 'ec2_user'},
+ {'deploy': False,
+  'image': 'ami-09b61d60',
+  'profile': 'CentOS-5',
+  'provider': 'my-aws-config',
+  'securitygroup': ['default'],
+  'size': 't1.micro',
+  'ssh_username': 'ec2_user'},
+ {'deploy': False,
+  'image': 'ami-54cf5c3d',
+  'profile': 'Amazon-Linux-AMI-2012.09-64bit',
+  'provider': 'my-ec2-config',
+  'securitygroup': ['default'],
+  'size': 't1.micro',
+  'ssh_username': 'ec2_user'},
+ {'deploy': False,
+  'profile': 'development-instances',
+  'provider': 'my-ec2-config',
+  'securitygroup': ['default'],
+  'size': 't1.micro',
+  'ssh_username': 'ec2_user'}]</pre>
+                              <p class="p">Pretty cool right?</p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="core-configuration__extending-providers">
+                              <h2 class="title sectiontitle">Extending Providers</h2>
+                              <p class="p">Some example usage on how to use <tt class="ph tt">extends</tt> within the cloud providers
+                                 configuration.  Consider <tt class="ph tt">/etc/salt/salt/cloud.providers</tt> containing:
+                              </p>
+                              <pre class="pre codeblock language-yaml">my-develop-envs:
+  - id: HJGRYCILJLKJYG
+    key: 'kdjgfsgm;woormgl/aserigjksjdhasdfgn'
+    keyname: test
+    securitygroup: quick-start
+    private_key: /root/test.pem
+    location: ap-southeast-1
+    availability_zone: ap-southeast-1b
+    provider: aws
+
+  - user: myuser@mycorp.com
+    password: mypass
+    ssh_key_name: mykey
+    ssh_key_file: '/etc/salt/ibm/mykey.pem'
+    location: Raleigh
+    provider: ibmsce
+
+
+my-productions-envs:
+  - extends: my-develop-envs:ibmsce
+    user: my-production-user@mycorp.com
+    location: us-east-1
+    availability_zone: us-east-1</pre>
+                              <p class="p">The above configuration, once parsed would generate the following providers
+                                 data:
+                              </p>
+                              <pre class="pre codeblock language-python">'providers': {
+    'my-develop-envs': [
+        {'availability_zone': 'ap-southeast-1b',
+         'id': 'HJGRYCILJLKJYG',
+         'key': 'kdjgfsgm;woormgl/aserigjksjdhasdfgn',
+         'keyname': 'test',
+         'location': 'ap-southeast-1',
+         'private_key': '/root/test.pem',
+         'provider': 'aws',
+         'securitygroup': 'quick-start'
+        },
+        {'location': 'Raleigh',
+         'password': 'mypass',
+         'provider': 'ibmsce',
+         'ssh_key_file': '/etc/salt/ibm/mykey.pem',
+         'ssh_key_name': 'mykey',
+         'user': 'myuser@mycorp.com'
+        }
+    ],
+    'my-productions-envs': [
+        {'availability_zone': 'us-east-1',
+         'location': 'us-east-1',
+         'password': 'mypass',
+         'provider': 'ibmsce',
+         'ssh_key_file': '/etc/salt/ibm/mykey.pem',
+         'ssh_key_name': 'mykey',
+         'user': 'my-production-user@mycorp.com'
+        }
+    ]
+}</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

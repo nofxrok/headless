@@ -1,0 +1,462 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.solarispkg</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.solarispkg">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-solarispkg">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-solarispkg">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.solarispkg</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-solarispkg__module-salt.modules.solarispkg"></span></p>
+                              
+                              <p class="p">Package support for Solaris</p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.solarispkg.install">
+                           <h2 class="title topictitle2">install</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarispkg.install(
+								name=None,
+								sources=None,
+								saltenv='base',
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Install the passed package. Can install packages from the following
+                                    sources:
+                                 </p>
+                                 <pre class="pre codeblock language-">* Locally (package already exists on the minion
+* HTTP/HTTPS server
+* FTP server
+* Salt master</pre>
+                                 <p class="p">Returns a dict containing the new package names and versions:</p>
+                                 <pre class="pre codeblock language-">{'&lt;package&gt;': {'old': '&lt;old-version&gt;',
+               'new': '&lt;new-version&gt;'}}</pre>
+                                 <p class="p">CLI Example, installing a data stream pkg that already exists on the
+                                    minion:
+                                 </p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.install sources='[{"&lt;pkg name&gt;": "/dir/on/minion/&lt;pkg filename&gt;"}]'
+salt '*' pkg.install sources='[{"SMClgcc346": "/var/spool/pkg/gcc-3.4.6-sol10-sparc-local.pkg"}]'</pre>
+                                 <p class="p">CLI Example, installing a data stream pkg that exists on the salt master:</p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.install sources='[{"&lt;pkg name&gt;": "salt://pkgs/&lt;pkg filename&gt;"}]'
+salt '*' pkg.install sources='[{"SMClgcc346": "salt://pkgs/gcc-3.4.6-sol10-sparc-local.pkg"}]'</pre>
+                                 <p class="p">CLI Example, installing a data stream pkg that exists on a HTTP server:</p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.install sources='[{"&lt;pkg name&gt;": "http://packages.server.com/&lt;pkg filename&gt;"}]'
+salt '*' pkg.install sources='[{"SMClgcc346": "http://packages.server.com/gcc-3.4.6-sol10-sparc-local.pkg"}]'</pre>
+                                 <p class="p">If working with solaris zones and you want to install a package only in the
+                                    global zone you can pass 'current_zone_only=True' to salt to have the
+                                    package only installed in the global zone. (Behind the scenes this is
+                                    passing '-G' to the pkgadd command.) Solaris default when installing a
+                                    package in the global zone is to install it in all zones. This overrides
+                                    that and installs the package only in the global.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example, installing a data stream package only in the global zone:</p>
+                                 <pre class="pre codeblock language-">salt 'global_zone' pkg.install sources='[{"SMClgcc346": "/var/spool/pkg/gcc-3.4.6-sol10-sparc-local.pkg"}]' current_zone_only=True</pre>
+                                 <p class="p">By default salt automatically provides an adminfile, to automate package
+                                    installation, with these options set:
+                                 </p>
+                                 <pre class="pre codeblock language-">email=
+instance=quit
+partial=nocheck
+runlevel=nocheck
+idepend=nocheck
+rdepend=nocheck
+space=nocheck
+setuid=nocheck
+conflict=nocheck
+action=nocheck
+basedir=default</pre>
+                                 <p class="p">You can override any of these options in two ways. First you can optionally
+                                    pass any of the options as a kwarg to the module/state to override the
+                                    default value or you can optionally pass the 'admin_source' option
+                                    providing your own adminfile to the minions.
+                                 </p>
+                                 
+                                 <p class="p">Note: You can find all of the possible options to provide to the adminfile
+                                    by reading the admin man page:
+                                 </p>
+                                 <pre class="pre codeblock language-">man -s 4 admin</pre>
+                                 <p class="p">CLI Example - Overriding the 'instance' adminfile option when calling the
+                                    module directly:
+                                 </p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.install sources='[{"&lt;pkg name&gt;": "salt://pkgs/&lt;pkg filename&gt;"}]' instance="overwrite"</pre>
+                                 <p class="p">CLI Example - Overriding the 'instance' adminfile option when used in a
+                                    state:
+                                 </p>
+                                 <pre class="pre codeblock language-">SMClgcc346:
+  pkg.installed:
+    - sources:
+      - SMClgcc346: salt://srv/salt/pkgs/gcc-3.4.6-sol10-sparc-local.pkg
+    - instance: overwrite</pre>
+                                 <p class="p">Note: the ID declaration is ignored, as the package name is read from the
+                                    "sources" parameter.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example - Providing your own adminfile when calling the module
+                                    directly:
+                                 </p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.install sources='[{"&lt;pkg name&gt;": "salt://pkgs/&lt;pkg filename&gt;"}]' admin_source='salt://pkgs/&lt;adminfile filename&gt;'</pre>
+                                 <p class="p">CLI Example - Providing your own adminfile when using states:</p>
+                                 <pre class="pre codeblock language-">&lt;pkg name&gt;:
+  pkg.installed:
+    - sources:
+      - &lt;pkg name&gt;: salt://pkgs/&lt;pkg filename&gt;
+    - admin_source: salt://pkgs/&lt;adminfile filename&gt;</pre>
+                                 <p class="p">Note: the ID declaration is ignored, as the package name is read from the
+                                    "sources" parameter.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarispkg.latest_version">
+                           <h2 class="title topictitle2">latest_version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarispkg.latest_version(
+								*names,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the latest version of the named package available for upgrade or
+                                    installation. If more than one package name is specified, a dict of
+                                    name/version pairs is returned.
+                                 </p>
+                                 
+                                 <p class="p">If the latest version of a given package is already installed, an empty
+                                    string will be returned for that package.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.latest_version &lt;package name&gt;
+salt '*' pkg.latest_version &lt;package1&gt; &lt;package2&gt; &lt;package3&gt; ...</pre>
+                                 <p class="p">NOTE: As package repositories are not presently supported for Solaris
+                                    pkgadd, this function will always return an empty string for a given
+                                    package.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarispkg.list_pkgs">
+                           <h2 class="title topictitle2">list_pkgs</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarispkg.list_pkgs(
+								versions_as_list=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List the packages currently installed as a dict:</p>
+                                 <pre class="pre codeblock language-">{'&lt;package_name&gt;': '&lt;version&gt;'}</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.list_pkgs</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarispkg.purge">
+                           <h2 class="title topictitle2">purge</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarispkg.purge(
+								name=None,
+								pkgs=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Package purges are not supported, this function is identical to
+                                    <tt class="ph tt">remove()</tt>.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d248714e195" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d248714e197" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d248714e195" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d248714e197" class="stentry propdesc">
+                                       <p class="p">The name of the package to be deleted</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <p class="p">Multiple Package Options:</p>
+                                 
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d248714e210" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d248714e212" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d248714e210" class="stentry propvalue">pkgs</td>
+                                    
+                                    <td valign="top" headers="d248714e212" class="stentry propdesc">
+                                       <p class="p">A list of packages to delete. Must be passed as a python list. The
+                                          <tt class="ph tt">name</tt> parameter will be ignored if this option is passed.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 0.16.0.</span></p>
+                                 
+                                 <p class="p">Returns a dict containing the changes.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.purge &lt;package name&gt;
+salt '*' pkg.purge &lt;package1&gt;,&lt;package2&gt;,&lt;package3&gt;
+salt '*' pkg.purge pkgs='["foo", "bar"]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarispkg.remove">
+                           <h2 class="title topictitle2">remove</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarispkg.remove(
+								name=None,
+								pkgs=None,
+								saltenv='base',
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Remove packages with pkgrm</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d248714e263" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d248714e265" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d248714e263" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d248714e265" class="stentry propdesc">
+                                       <p class="p">The name of the package to be deleted</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <p class="p">Multiple Package Options:</p>
+                                 
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d248714e278" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d248714e280" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d248714e278" class="stentry propvalue">pkgs</td>
+                                    
+                                    <td valign="top" headers="d248714e280" class="stentry propdesc">
+                                       <p class="p">A list of packages to delete. Must be passed as a python list. The
+                                          <tt class="ph tt">name</tt> parameter will be ignored if this option is passed.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 0.16.0.</span></p>
+                                 
+                                 <p class="p">Returns a dict containing the changes.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.remove &lt;package name&gt;
+salt '*' pkg.remove SUNWgit
+salt '*' pkg.remove &lt;package1&gt;,&lt;package2&gt;,&lt;package3&gt;
+salt '*' pkg.remove pkgs='["foo", "bar"]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarispkg.upgrade_available">
+                           <h2 class="title topictitle2">upgrade_available</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarispkg.upgrade_available(
+								name
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check whether or not an upgrade is available for a given package</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.upgrade_available &lt;package name&gt;</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarispkg.version">
+                           <h2 class="title topictitle2">version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarispkg.version(
+								*names,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Returns a string representing the package version or an empty string if not
+                                    installed. If more than one package name is specified, a dict of
+                                    name/version pairs is returned.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.version &lt;package name&gt;
+salt '*' pkg.version &lt;package1&gt; &lt;package2&gt; &lt;package3&gt; ...</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

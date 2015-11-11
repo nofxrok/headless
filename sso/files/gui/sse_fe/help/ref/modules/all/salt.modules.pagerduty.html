@@ -1,0 +1,414 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.pagerduty</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.pagerduty">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-pagerduty">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-pagerduty">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.pagerduty</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-pagerduty__module-salt.modules.pagerduty"></span></p>
+                              
+                              <p class="p">Module for Firing Events via PagerDuty</p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">configuration</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">This module can be used by specifying the name of a
+                                       configuration profile in the minion config, minion pillar, or master
+                                       config.
+                                    </p>
+                                    
+                                    <p class="p">For example:</p>
+                                    <pre class="pre codeblock language-yaml">my-pagerduty-account:
+    pagerduty.api_key: F3Rbyjbve43rfFWf2214
+    pagerduty.subdomain: mysubdomain</pre>
+                                    </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.pagerduty.create_event">
+                           <h2 class="title topictitle2">create_event</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pagerduty.create_event(
+								service_key=None,
+								description=None,
+								details=None,
+								incident_key=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Create an event in PagerDuty. Designed for use in states.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-yaml">salt myminion pagerduty.create_event &lt;service_key&gt; &lt;description&gt; &lt;details&gt;         profile=my-pagerduty-account</pre>
+                                 <p class="p">The following parameters are required:</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d191110e67" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d191110e69" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d191110e67" class="stentry propvalue">service_key</td>
+                                    
+                                    <td valign="top" headers="d191110e69" class="stentry propdesc">
+                                       <p class="p">This key can be found by using pagerduty.list_services.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d191110e67" class="stentry propvalue">description</td>
+                                    
+                                    <td valign="top" headers="d191110e69" class="stentry propdesc">
+                                       <p class="p">This is a short description of the event.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d191110e67" class="stentry propvalue">details</td>
+                                    
+                                    <td valign="top" headers="d191110e69" class="stentry propdesc">
+                                       <p class="p">This can be a more detailed description of the event.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d191110e67" class="stentry propvalue">profile</td>
+                                    
+                                    <td valign="top" headers="d191110e69" class="stentry propdesc">
+                                       <p class="p">This refers to the configuration profile to use to connect to the
+                                          PagerDuty service.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.pagerduty.list_escalation_policies">
+                           <h2 class="title topictitle2">list_escalation_policies</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pagerduty.list_escalation_policies(
+								profile=None,
+								api_key=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List escalation policies belonging to this account</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 
+                                 <blockquote class="lq">
+                                    <p class="p">salt myminion pagerduty.list_policies my-pagerduty-account
+                                       salt myminion pagerduty.list_escalation_policies my-pagerduty-account
+                                    </p>
+                                    
+                                 </blockquote>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.pagerduty.list_incidents">
+                           <h2 class="title topictitle2">list_incidents</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pagerduty.list_incidents(
+								profile=None,
+								api_key=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List incidents belonging to this account</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 
+                                 <blockquote class="lq">
+                                    <p class="p">salt myminion pagerduty.list_incidents my-pagerduty-account</p>
+                                    
+                                 </blockquote>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.pagerduty.list_maintenance_windows">
+                           <h2 class="title topictitle2">list_maintenance_windows</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pagerduty.list_maintenance_windows(
+								profile=None,
+								api_key=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List maintenance windows belonging to this account</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 
+                                 <blockquote class="lq">
+                                    <p class="p">salt myminion pagerduty.list_windows my-pagerduty-account
+                                       salt myminion pagerduty.list_maintenance_windows my-pagerduty-account
+                                    </p>
+                                    
+                                 </blockquote>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.pagerduty.list_policies">
+                           <h2 class="title topictitle2">list_policies</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pagerduty.list_policies(
+								profile=None,
+								api_key=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List escalation policies belonging to this account</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 
+                                 <blockquote class="lq">
+                                    <p class="p">salt myminion pagerduty.list_policies my-pagerduty-account
+                                       salt myminion pagerduty.list_escalation_policies my-pagerduty-account
+                                    </p>
+                                    
+                                 </blockquote>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.pagerduty.list_schedules">
+                           <h2 class="title topictitle2">list_schedules</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pagerduty.list_schedules(
+								profile=None,
+								api_key=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List schedules belonging to this account</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 
+                                 <blockquote class="lq">
+                                    <p class="p">salt myminion pagerduty.list_schedules my-pagerduty-account</p>
+                                    
+                                 </blockquote>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.pagerduty.list_services">
+                           <h2 class="title topictitle2">list_services</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pagerduty.list_services(
+								profile=None,
+								api_key=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List services belonging to this account</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 
+                                 <blockquote class="lq">
+                                    <p class="p">salt myminion pagerduty.list_services my-pagerduty-account</p>
+                                    
+                                 </blockquote>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.pagerduty.list_users">
+                           <h2 class="title topictitle2">list_users</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pagerduty.list_users(
+								profile=None,
+								api_key=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List users belonging to this account</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 
+                                 <blockquote class="lq">
+                                    <p class="p">salt myminion pagerduty.list_users my-pagerduty-account</p>
+                                    
+                                 </blockquote>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.pagerduty.list_windows">
+                           <h2 class="title topictitle2">list_windows</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pagerduty.list_windows(
+								profile=None,
+								api_key=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List maintenance windows belonging to this account</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 
+                                 <blockquote class="lq">
+                                    <p class="p">salt myminion pagerduty.list_windows my-pagerduty-account
+                                       salt myminion pagerduty.list_maintenance_windows my-pagerduty-account
+                                    </p>
+                                    
+                                 </blockquote>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

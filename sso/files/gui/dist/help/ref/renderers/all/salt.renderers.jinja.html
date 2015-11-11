@@ -1,0 +1,416 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.renderers.jinja</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.renderers.jinja">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../renderers.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-renderers-jinja">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-renderers-jinja">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.renderers.jinja</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-renderers-jinja__module-salt.renderers.jinja"></span></p>
+                              
+                              <p class="p">Jinja loading utils to enable a more powerful backend for jinja templates</p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference props_audience_jinja props_audience_for-loop" id="jinja-in-states">
+                           <h2 class="title topictitle2">Jinja in States</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">The most basic usage of Jinja in state files is using control structures to
+                                    wrap conditional or redundant state elements:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">{% if grains['os'] != 'FreeBSD' %}
+tcsh:
+    pkg:
+        - installed
+{% endif %}
+
+motd:
+  file.managed:
+    {% if grains['os'] == 'FreeBSD' %}
+    - name: /etc/motd
+    {% elif grains['os'] == 'Debian' %}
+    - name: /etc/motd.tail
+    {% endif %}
+    - source: salt://motd</pre>
+                                 <p class="p">In this example, the first if block will only be evaluated on minions that
+                                    aren't running FreeBSD, and the second block changes the file name based on the
+                                    <em class="ph i">os</em> grain.
+                                 </p>
+                                 
+                                 <p class="p">Writing <strong class="ph b">if-else</strong> blocks can lead to very redundant state files however. In
+                                    this case, using 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../../topics/pillar/index.html#pillar">pillars</a>, or using a previously
+                                    defined variable might be easier:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">{% set motd = ['/etc/motd'] %}
+{% if grains['os'] == 'Debian' %}
+  {% set motd = ['/etc/motd.tail', '/var/run/motd'] %}
+{% endif %}
+
+{% for motdfile in motd %}
+{{ motdfile }}:
+  file.managed:
+    - source: salt://motd
+{% endfor %}</pre>
+                                 <p class="p">Using a variable set by the template, the <a class="xref" href="http://jinja.pocoo.org/docs/templates/#for" target="_blank">for loop</a> will iterate over the
+                                    list of MOTD files to update, adding a state block for each file.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference props_audience_imports" id="include-and-import">
+                           <h2 class="title topictitle2">Include and Import</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">Includes and <a class="xref" href="http://jinja.pocoo.org/docs/templates/#import" target="_blank">imports</a> can be used to share common, reusable state configuration
+                                    between state files and between files.
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">{% from 'lib.sls' import test %}</pre>
+                                 <p class="p">This would import the <tt class="ph tt">test</tt> template variable or macro, not the <tt class="ph tt">test</tt>
+                                    state element, from the file <tt class="ph tt">lib.sls</tt>. In the case that the included file
+                                    performs checks again grains, or something else that requires context, passing
+                                    the context into the included file is required:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">{% from 'lib.sls' import test with context %}</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="macros">
+                           <h2 class="title topictitle2">Macros</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p"><a class="xref" href="http://jinja.pocoo.org/docs/templates/#macros" target="_blank">Macros</a> are helpful for eliminating redundant code, however stripping whitespace
+                                    from the template block, as well as contained blocks, may be necessary to
+                                    emulate a variable return from the macro.
+                                 </p>
+                                 <pre class="pre codeblock language-yaml"># init.sls
+{% from 'lib.sls' import pythonpkg with context %}
+
+python-virtualenv:
+  pkg.installed:
+    - name: {{ pythonpkg('virtualenv') }}
+
+python-fabric:
+  pkg.installed:
+    - name: {{ pythonpkg('fabric') }}</pre>
+                                 <pre class="pre codeblock language-yaml"># lib.sls
+{% macro pythonpkg(pkg) -%}
+  {%- if grains['os'] == 'FreeBSD' -%}
+    py27-{{ pkg }}
+  {%- elif grains['os'] == 'Debian' -%}
+    python-{{ pkg }}
+  {%- endif -%}
+{%- endmacro %}</pre>
+                                 <p class="p">This would define a <a class="xref" href="http://jinja.pocoo.org/docs/templates/#macros" target="_blank">macro</a> that would return a string of the full package name,
+                                    depending on the packaging system's naming convention. The whitespace of the
+                                    macro was eliminated, so that the macro would return a string without line
+                                    breaks, using <a class="xref" href="http://jinja.pocoo.org/docs/templates/#whitespace-control" target="_blank">whitespace control</a>.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference props_audience_id1 props_audience_id2 props_audience_macro props_audience_whitespace-control" id="template-inheritance">
+                           <h2 class="title topictitle2">Template Inheritance</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p"><a class="xref" href="http://jinja.pocoo.org/docs/templates/#template-inheritance" target="_blank">Template inheritance</a> works fine from state files and files. The search path
+                                    starts at the root of the state tree or pillar.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference props_audience_builtin-filters props_audience_timelib" id="filters">
+                           <h2 class="title topictitle2">Filters</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">Saltstack extends <a class="xref" href="http://jinja.pocoo.org/docs/templates/#builtin-filters" target="_blank">builtin filters</a> with these custom filters:
+                                 </p>
+                                 
+                                 <dl class="dl definition_list">
+                                    <dt class="dt dlterm">strftime</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">Converts any time related object into a time based string. It requires a
+                                          valid <a class="xref" href="http://docs.python.org/2/library/datetime.html#strftime-strptime-behavior" target="_blank">strftime directives</a>. An
+                                          <a class="xref" href="http://docs.python.org/2/library/datetime.html#strftime-strptime-behavior" target="_blank">exhaustive list</a> can be found in
+                                          the official Python documentation. Fuzzy dates are parsed by <a class="xref" href="https://github.com/pediapress/timelib/" target="_blank">timelib</a> python
+                                          module. Some examples are available on this pages.
+                                       </p>
+                                       <pre class="pre codeblock language-yaml">{{ "2002/12/25"|strftime("%y") }}
+{{ "1040814000"|strftime("%Y-%m-%d") }}
+{{ datetime|strftime("%u") }}
+{{ "now"|strftime }}</pre>
+                                       </dd>
+                                    
+                                    <dt class="dt dlterm">sequence</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">Ensure that parsed data is a sequence.</p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">yaml_encode</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">Serializes a single object into a YAML scalar with any necessary
+                                          handling for escaping special characters.  This will work for any
+                                          scalar YAML data type: ints, floats, timestamps, booleans, strings,
+                                          unicode.  It will <em class="ph i">not</em> work for multi-objects such as sequences or
+                                          maps.
+                                       </p>
+                                       <pre class="pre codeblock language-yaml">   {%- set bar = 7 %}
+   {%- set baz = none %}
+   {%- set zip = true %}
+   {%- set zap = 'The word of the day is "salty"' %}
+
+   {%- load_yaml as foo %}
+   bar: {{ bar|yaml_encode }}
+   baz: {{ baz|yaml_encode }}
+   baz: {{ zip|yaml_encode }}
+   baz: {{ zap|yaml_encode }}
+   {%- endload %}
+
+In the above case ``{{ bar }}`` and ``{{ foo.bar }}`` should be
+identical and ``{{ baz }}`` and ``{{ foo.baz }}`` should be
+identical.</pre>
+                                       </dd>
+                                    
+                                    <dt class="dt dlterm">yaml_dquote</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">Serializes a string into a properly-escaped YAML double-quoted
+                                          string.  This is useful when the contents of a string are unknown
+                                          and may contain quotes or unicode that needs to be preserved.  The
+                                          resulting string will be emitted with opening and closing double
+                                          quotes.
+                                       </p>
+                                       <pre class="pre codeblock language-yaml">   {%- set bar = '"The quick brown fox . . ."' %}
+   {%- set baz = 'The word of the day is "salty".' %}
+
+   {%- load_yaml as foo %}
+   bar: {{ bar|yaml_dquote }}
+   baz: {{ baz|yaml_dquote }}
+   {%- endload %}
+
+In the above case ``{{ bar }}`` and ``{{ foo.bar }}`` should be
+identical and ``{{ baz }}`` and ``{{ foo.baz }}`` should be
+identical.  If variable contents are not guaranteed to be a string
+then it is better to use ``yaml_encode`` which handles all YAML
+scalar types.</pre>
+                                       </dd>
+                                    
+                                    <dt class="dt dlterm">yaml_squote</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">Similar to the <tt class="ph tt">yaml_dquote</tt> filter but with single quotes.  Note
+                                          that YAML only allows special escapes inside double quotes so
+                                          <tt class="ph tt">yaml_squote</tt> is not nearly as useful (viz. you likely want to
+                                          use <tt class="ph tt">yaml_encode</tt> or <tt class="ph tt">yaml_dquote</tt>).
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="jinja-in-files">
+                           <h2 class="title topictitle2">Jinja in Files</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p"><a class="xref" href="http://jinja.pocoo.org/docs/templates/" target="_blank">Jinja</a> can be used in the same way in managed files:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml"># redis.sls
+/etc/redis/redis.conf:
+    file.managed:
+        - source: salt://redis.conf
+        - template: jinja
+        - context:
+            bind: 127.0.0.1</pre>
+                                 <pre class="pre codeblock language-yaml"># lib.sls
+{% set port = 6379 %}</pre>
+                                 <pre class="pre codeblock language-ini"># redis.conf
+{% from 'lib.sls' import port with context %}
+port {{ port }}
+bind {{ bind }}</pre>
+                                 <p class="p">As an example, configuration was pulled from the file context and from an
+                                    external template file.
+                                 </p>
+                                 
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p">Macros and variables can be shared across templates. They should not be
+                                       starting with one or more underscores, and should be managed by one of the
+                                       following tags: <span class="keyword title_reference">macro</span>, <span class="keyword title_reference">set</span>, <span class="keyword title_reference">load_yaml</span>, <span class="keyword title_reference">load_json</span>, <span class="keyword title_reference">import_yaml</span> and
+                                       <span class="keyword title_reference">import_json</span>.
+                                    </p>
+                                    
+                                 </aside>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="calling-salt-functions">
+                           <h2 class="title topictitle2">Calling Salt Functions</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">The Jinja renderer provides a shorthand lookup syntax for the <tt class="ph tt">salt</tt>
+                                    dictionary of 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../../glossary.html#glossary__term-execution-function">execution function</a>.
+                                 </p>
+                                 
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 <pre class="pre codeblock language-yaml"># The following two function calls are equivalent.
+{{ salt['cmd.run']('whoami') }}
+{{ salt.cmd.run('whoami') }}</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="debugging">
+                           <h2 class="title topictitle2">Debugging</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">The <tt class="ph tt">show_full_context</tt> function can be used to output all variables present
+                                    in the current Jinja context.
+                                 </p>
+                                 
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 <pre class="pre codeblock language-yaml">Context is: {{ show_full_context() }}</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.renderers.jinja.render">
+                              <h3 class="title topictitle3">render</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.renderers.jinja.render(
+								template_file,
+								saltenv='base',
+								sls='',
+								argline='',
+								context=None,
+								tmplpath=None,
+								**kws
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Render the template_file, passing the functions and grains into the
+                                       Jinja rendering system.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr>
+                                       
+                                       <th id="d324716e314-value" valign="bottom" align="left">Value</th>
+                                       
+                                       <th id="d324716e314-desc" valign="bottom" align="left">Description</th>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d324716e314-value" class="stentry propvalue">Return type</td>
+                                       
+                                       <td valign="top" headers="d324716e314-desc" class="stentry propdesc">
+                                          <p class="p">
+                                             		
+                                             			&nbsp;<a class="xref" href="../../states/all/salt.states.redismod.html#salt.states.redismod.string">string</a></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

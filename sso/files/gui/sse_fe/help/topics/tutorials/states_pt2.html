@@ -1,0 +1,220 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>States tutorial, part 2 - More Complex States, Requisites</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="States tutorial, part 2 - More Complex States, Requisites">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/configuration-management.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="states-tutorial-part-2-more-complex-states-requisites">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="states-tutorial-part-2-more-complex-states-requisites">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">States tutorial, part 2 - More Complex States, Requisites</h1>
+                        <div class="body conbody">
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">This tutorial builds on topics covered in 
+                                 		
+                                 			&nbsp;<a class="xref" href="states_pt1.html#states-tutorial-part-1-basic-usage">part 1</a>. It is
+                                 recommended that you begin there.
+                              </p>
+                              
+                           </aside>
+                           
+                           <p class="p">In the 
+                              		
+                              			&nbsp;<a class="xref" href="states_pt1.html#states-tutorial-part-1-basic-usage">last part</a> of the Salt States tutorial we covered the
+                              basics of installing a package. We will now modify our <tt class="ph tt">webserver.sls</tt> file
+                              to have requirements, and use even more Salt States.
+                           </p>
+                           
+                           <div class="section" id="states-tutorial-part-2-more-complex-states-requisites__call-multiple-states">
+                              <h2 class="title sectiontitle">Call multiple States</h2>
+                              <p class="p">You can specify multiple 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/highstate.html#states-highstate__state-declaration">State declaration</a> under an
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/highstate.html#states-highstate__id-declaration">ID declaration</a>. For example, a quick modification to our
+                                 <tt class="ph tt">webserver.sls</tt> to also start Apache if it is not running:
+                              </p>
+                              <pre class="pre codeblock language-yaml">apache:
+  pkg.installed: []
+  service.running:
+    - require:
+      - pkg: apache</pre>
+                              <p class="p">Try stopping Apache before running <tt class="ph tt">state.highstate</tt> once again and observe
+                                 the output.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-tutorial-part-2-more-complex-states-requisites__require-other-states">
+                              <h2 class="title sectiontitle">Require other states</h2>
+                              <p class="p">We now have a working installation of Apache so let's add an HTML file to
+                                 customize our website. It isn't exactly useful to have a website without a
+                                 webserver so we don't want Salt to install our HTML file until Apache is
+                                 installed and running. Include the following at the bottom of your
+                                 <tt class="ph tt">webserver/init.sls</tt> file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">apache:
+  pkg.installed: []
+  service.running:
+    - require:
+      - pkg: apache
+
+/var/www/index.html:                        # ID declaration
+  file:                                     # state declaration
+    - managed                               # function
+    - source: salt://webserver/index.html   # function arg
+    - require:                              # requisite declaration
+      - pkg: apache                         # requisite reference</pre>
+                              <p class="p"><strong class="ph b">line 9</strong> is the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/highstate.html#states-highstate__id-declaration">ID declaration</a>. In this example it is the location we
+                                 want to install our custom HTML file. (<strong class="ph b">Note:</strong> the default location that
+                                 Apache serves may differ from the above on your OS or distro. <tt class="ph tt">/srv/www</tt>
+                                 could also be a likely place to look.)
+                              </p>
+                              
+                              <p class="p"><strong class="ph b">Line 10</strong> the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/highstate.html#states-highstate__state-declaration">State declaration</a>. This example uses the Salt 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/all/salt.states.file.html#salt.states.file">file
+                                    state</a>.
+                              </p>
+                              
+                              <p class="p"><strong class="ph b">Line 11</strong> is the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/highstate.html#states-highstate__function-declaration">Function declaration</a>. The 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/all/salt.states.file.html#salt.states.file.managed">managed function</a> will download a file from the master and install it
+                                 in the location specified.
+                              </p>
+                              
+                              <p class="p"><strong class="ph b">Line 12</strong> is a 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/highstate.html#states-highstate__function-arg-declaration">Function arg declaration</a> which, in this example, passes
+                                 the <tt class="ph tt">source</tt> argument to the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/all/salt.states.file.html#salt.states.file.managed">managed function</a>.
+                              </p>
+                              
+                              <p class="p"><strong class="ph b">Line 13</strong> is a 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/highstate.html#states-highstate__requisite-declaration">Requisite declaration</a>.
+                              </p>
+                              
+                              <p class="p"><strong class="ph b">Line 14</strong> is a 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/highstate.html#states-highstate__requisite-reference">Requisite reference</a> which refers to a state and an ID.
+                                 In this example, it is referring to the <tt class="ph tt">ID declaration</tt> from our example in
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="states_pt1.html#states-tutorial-part-1-basic-usage">part 1</a>. This declaration tells Salt not to install the HTML
+                                 file until Apache is installed.
+                              </p>
+                              
+                              <p class="p">Next, create the <tt class="ph tt">index.html</tt> file and save it in the <tt class="ph tt">webserver</tt>
+                                 directory:
+                              </p>
+                              <pre class="pre codeblock language-html">&lt;html&gt;
+    &lt;head&gt;&lt;title&gt;Salt rocks&lt;/title&gt;&lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;This file brought to you by Salt&lt;/h1&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+                              <p class="p">Last, call 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.state.html#salt.modules.state.highstate">state.highstate</a> again and the
+                                 minion will fetch and execute the highstate as well as our HTML file from the
+                                 master using Salt's File Server:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' state.highstate</pre>
+                              <p class="p">Verify that Apache is now serving your custom HTML.</p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b"> vs. </strong><p class="p">There are two 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/states/highstate.html#states-highstate__requisite-declaration">Requisite declaration</a>, “require”, and “watch”. Not
+                                    every state supports “watch”. The 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/states/all/salt.states.service.html#salt.states.service">service state</a> does support “watch” and will restart a service
+                                    based on the watch condition.
+                                 </p>
+                                 
+                                 <p class="p">For example, if you use Salt to install an Apache virtual host
+                                    configuration file and want to restart Apache whenever that file is changed
+                                    you could modify our Apache example from earlier as follows:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">/etc/httpd/extra/httpd-vhosts.conf:
+  file.managed:
+    - source: salt://webserver/httpd-vhosts.conf
+
+apache:
+  pkg.installed: []
+  service.running:
+    - watch:
+      - file: /etc/httpd/extra/httpd-vhosts.conf
+    - require:
+      - pkg: apache</pre>
+                                 <p class="p">If the pkg and service names differ on your OS or distro of choice you can
+                                    specify each one separately using a 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/states/highstate.html#states-highstate__name-declaration">Name declaration</a> which explained
+                                    in 
+                                    		
+                                    			&nbsp;<a class="xref" href="states_pt3.html#states-tutorial-part-3-templating-includes-extends">Part 3</a>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-tutorial-part-2-more-complex-states-requisites__next-steps">
+                              <h2 class="title sectiontitle">Next steps</h2>
+                              <p class="p">In 
+                                 		
+                                 			&nbsp;<a class="xref" href="states_pt3.html#states-tutorial-part-3-templating-includes-extends">part 3</a> we will discuss how to use includes, extends, and
+                                 templating to make a more complete State Tree configuration.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

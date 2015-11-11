@@ -1,0 +1,140 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Preseed Minion with Accepted Key</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Preseed Minion with Accepted Key">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/administration.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="preseed-minion-with-accepted-key">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="preseed-minion-with-accepted-key">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Preseed Minion with Accepted Key</h1>
+                        <div class="body conbody">
+                           <p class="p">In some situations, it is not convenient to wait for a minion to start before
+                              accepting its key on the master. For instance, you may want the minion to
+                              bootstrap itself as soon as it comes online. You may also want to to let your
+                              developers provision new development machines on the fly.
+                           </p>
+                           
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">Many ways to preseed minion keys</p>
+                              
+                              <p class="p">Salt has other ways to generate and pre-accept minion keys in addition to
+                                 the manual steps outlined below.
+                              </p>
+                              
+                              <p class="p">salt-cloud performs these same steps automatically when new cloud VMs are
+                                 created (unless instructed not to).
+                              </p>
+                              
+                              <p class="p">salt-api exposes an HTTP call to Salt's REST API to 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/netapi/all/salt.netapi.rest_cherrypy.html#salt.netapi.rest_cherrypy.app.Keys">generate and
+                                    download the new minion keys as a tarball</a>.
+                              </p>
+                              
+                           </aside>
+                           
+                           <p class="p">There is a general four step process to do this:</p>
+                           
+                           <ol class="ol">
+                              <li class="li">
+                                 <p class="p">Generate the keys on the master:</p>
+                                 
+                              </li>
+                              
+                           </ol>
+                           <pre class="pre codeblock language-bash">root@saltmaster# salt-key --gen-keys=[key_name]</pre>
+                           <p class="p">Pick a name for the key, such as the minion's id.</p>
+                           
+                           <ol class="ol">
+                              <li class="li">
+                                 <p class="p">Add the public key to the accepted minion folder:</p>
+                                 
+                              </li>
+                              
+                           </ol>
+                           <pre class="pre codeblock language-bash">root@saltmaster# cp key_name.pub /etc/salt/pki/master/minions/[minion_id]</pre>
+                           <p class="p">It is necessary that the public key file has the same name as your minion id.
+                              This is how Salt matches minions with their keys. Also note that the pki folder
+                              could be in a different location, depending on your OS or if specified in the
+                              master config file.
+                           </p>
+                           
+                           <ol class="ol">
+                              <li class="li">
+                                 <p class="p">Distribute the minion keys.</p>
+                                 
+                              </li>
+                              
+                           </ol>
+                           
+                           <p class="p">There is no single method to get the keypair to your minion.  The difficulty is
+                              finding a distribution method which is secure. For Amazon EC2 only, an AWS best
+                              practice is to use IAM Roles to pass credentials. (See blog post,
+                              <a class="xref" href="http://blogs.aws.amazon.com/security/post/Tx610S2MLVZWEA/Using-IAM-roles-to-distribute-non-AWS-credentials-to-your-EC2-instances" target="_blank">http://blogs.aws.amazon.com/security/post/Tx610S2MLVZWEA/Using-IAM-roles-to-distribute-non-AWS-credentials-to-your-EC2-instances</a> )
+                           </p>
+                           
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">Security Warning</strong><p class="p">Since the minion key is already accepted on the master, distributing
+                                 the private key poses a potential security risk. A malicious party
+                                 will have access to your entire state tree and other sensitive data if they
+                                 gain access to a preseeded minion key.
+                              </p>
+                              
+                           </aside>
+                           
+                           <ol class="ol">
+                              <li class="li">
+                                 <p class="p">Preseed the Minion with the keys</p>
+                                 
+                              </li>
+                              
+                           </ol>
+                           
+                           <p class="p">You will want to place the minion keys before starting the salt-minion daemon:</p>
+                           <pre class="pre codeblock language-bash">/etc/salt/pki/minion/minion.pem
+/etc/salt/pki/minion/minion.pub</pre>
+                           <p class="p">Once in place, you should be able to start salt-minion and run
+                              <tt class="ph tt">salt-call state.highstate</tt> or any other salt commands that require master
+                              authentication.
+                           </p>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

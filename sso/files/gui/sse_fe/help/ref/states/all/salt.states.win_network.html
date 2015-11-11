@@ -1,0 +1,245 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.win_network</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.win_network">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-win-network">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-win-network">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.win_network</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-win-network__module-salt.states.win_network"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="configuration-of-network-interfaces-on-windows-hosts">
+                           <h2 class="title topictitle2">Configuration of network interfaces on Windows hosts</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                 
+                                 <p class="p">This module provides the <tt class="ph tt">network</tt> state(s) on Windows hosts. DNS servers, IP
+                                    addresses and default gateways can currently be managed.
+                                 </p>
+                                 
+                                 <p class="p">Below is an example of the configuration for an interface that uses DHCP for
+                                    both DNS servers and IP addresses:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">Local Area Connection #2:
+  network.managed:
+    - dns_proto: dhcp
+    - ip_proto: dhcp</pre>
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p">Both the <tt class="ph tt">dns_proto</tt> and <tt class="ph tt">ip_proto</tt> arguments are required.
+                                    </p>
+                                    
+                                 </aside>
+                                 
+                                 <p class="p">Static DNS and IP addresses can be configured like so:</p>
+                                 <pre class="pre codeblock language-yaml">Local Area Connection #2:
+  network.managed:
+    - dns_proto: static
+    - dns_servers:
+      - 8.8.8.8
+      - 8.8.4.4
+    - ip_proto: static
+    - ip_addrs:
+      - 10.2.3.4/24</pre>
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p">IP addresses are specified using the format
+                                       <tt class="ph tt">&lt;ip-address&gt;/&lt;subnet-length&gt;</tt>. Salt provides a convenience function
+                                       called 
+                                       		
+                                       			&nbsp;<a class="xref" href="../../modules/all/salt.modules.win_ip.html#salt.modules.win_ip.get_subnet_length">ip.get_subnet_length</a>
+                                       to calculate the subnet length from a netmask.
+                                    </p>
+                                    
+                                 </aside>
+                                 
+                                 <p class="p">Optionally, if you are setting a static IP address, you can also specify the
+                                    default gateway using the <tt class="ph tt">gateway</tt> parameter:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">Local Area Connection #2:
+  network.managed:
+    - dns_proto: static
+    - dns_servers:
+      - 8.8.8.8
+      - 8.8.4.4
+    - ip_proto: static
+    - ip_addrs:
+      - 10.2.3.4/24
+    - gateway: 10.2.3.1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.win_network.managed">
+                              <h3 class="title topictitle3">managed</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.win_network.managed(
+								name,
+								dns_proto=None,
+								dns_servers=None,
+								ip_proto=None,
+								ip_addrs=None,
+								gateway=None,
+								enabled=True,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure that the named interface is configured properly.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d428650e95" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d428650e97" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d428650e95" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d428650e97" class="stentry propdesc">
+                                          <p class="p">The name of the interface to manage</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d428650e95" class="stentry propvalue">dns_proto</td>
+                                       
+                                       <td valign="top" headers="d428650e97" class="stentry propdesc">
+                                          <p class="p">Set to <tt class="ph tt">static</tt> and use the <tt class="ph tt">dns_servers</tt> parameter to provide a
+                                             list of DNS nameservers. set to <tt class="ph tt">dhcp</tt> to use DHCP to get the DNS
+                                             servers.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d428650e95" class="stentry propvalue">dns_servers</td>
+                                       
+                                       <td valign="top" headers="d428650e97" class="stentry propdesc">
+                                          <p class="p">A list of static DNS servers.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d428650e95" class="stentry propvalue">ip_proto</td>
+                                       
+                                       <td valign="top" headers="d428650e97" class="stentry propdesc">
+                                          <p class="p">Set to <tt class="ph tt">static</tt> and use the <tt class="ph tt">ip_addrs</tt> and (optionally) <tt class="ph tt">gateway</tt>
+                                             parameters to provide a list of static IP addresses and the default
+                                             gateway. Set to <tt class="ph tt">dhcp</tt> to use DHCP.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d428650e95" class="stentry propvalue">ip_addrs</td>
+                                       
+                                       <td valign="top" headers="d428650e97" class="stentry propdesc">
+                                          <p class="p">A list of static IP addresses.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d428650e95" class="stentry propvalue">gateway</td>
+                                       
+                                       <td valign="top" headers="d428650e97" class="stentry propdesc">
+                                          <p class="p">A list of static IP addresses.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d428650e95" class="stentry propvalue">enabled</td>
+                                       
+                                       <td valign="top" headers="d428650e97" class="stentry propdesc">
+                                          <p class="p">Set to <tt class="ph tt">False</tt> to ensure that this interface is disabled.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

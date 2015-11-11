@@ -1,0 +1,61 @@
+<div class="col-xs-2 nav-container col-height">
+    <accordion id="salt-resources" class="sidebar-accordion" close-others="oneAtATime">
+        <accordion-group id="resources-panel" ng-init="isopenres = true" is-open="isopenres">
+            <accordion-heading ng-click="isopenres=!isopenres"><i class="pull-left glyphicon" ng-class="{ 'ssIcons-icon_close1': isopenres,'ssIcons-icon_open1': !isopenres}"></i> Resources</accordion-heading>
+            <div>
+                <ul class="nav nav-respane">
+                    <li ui-sref-active="active"><a ui-sref="salt.dashboard.resources.masters({view: 'list'})">Masters</a></li>
+                    <li ng-class="{'active': state.current.name =='salt.dashboard.resources.minions'
+                    || state.current.name =='salt.dashboard.resources.minions.detail'
+                    || state.current.name =='salt.dashboard.resources.minions-reports'
+                    || state.current.name =='salt.dashboard.resources.minions-reports'
+                    || state.current.name === 'salt.dashboard.resources.minions-job-history'
+                    }"><a ui-sref="salt.dashboard.resources.minions({view: 'list'})">Minions <span ng-show="!!minionsCount">({{ minionsCount.minions_up }}/{{ minionsCount.total_minions }})</span></a></li>
+                    <li ng-class="{'active': state.current.name =='salt.dashboard.resources.quicktargets'
+                    || state.current.name =='salt.dashboard.resources.quicktargets.minions'
+                    || state.current.name =='salt.dashboard.resources.quicktargtes-reports'
+                    || state.current.name =='salt.dashboard.resources.quicktargets-reports'
+                    || state.current.name === 'salt.dashboard.resources.quicktargets-job-history'
+                    }"><a ui-sref="salt.dashboard.resources.quicktargets({view: 'list'})">Quick Target <span ng-show="quickTargetCount">({{ quickTargetCount }})</span></a></li>
+                </ul>
+            </div>
+        </accordion-group>
+        <accordion-group id="target-groups-panel" ng-init="isopentarget = true" is-open="isopentarget">
+            <accordion-heading ng-click="isopentarget=!isopentarget" class="target-panel-heading"><i class="pull-left glyphicon" ng-class="{ 'ssIcons-icon_close1': isopentarget,'ssIcons-icon_open1': !isopentarget}"></i> Targets</accordion-heading>
+            <div>
+
+                    <div>
+                      <!-- Public TREE -->
+                      <div
+                      data-angular-treeview="true"
+                      data-tree-id="publicTargetTree"
+                      data-tree-model="targetPublicFolderStructure"
+                      data-node-id="id"
+                      data-node-label="name"
+                      data-node-root="is_root"
+                      data-node-children="children"
+                      data-tree-type="all">
+                      </div>
+                  </div>
+
+                   <div>
+                      <!-- Private TREE -->
+                      <div
+                      data-angular-treeview="true"
+                      data-tree-id="privateTargetTree"
+                      data-tree-model="targetPrivateFolderStructure"
+                      data-node-id="id"
+                      data-node-label="name"
+                      data-node-root="is_root"
+                      data-node-children="children"
+                      data-tree-type="all">
+                      </div>
+                  </div>
+
+            </div>
+        </accordion-group>
+    </accordion>
+</div>
+<div class="col-xs-10 padding-zero col-height state-container">
+    <ui-view>
+</div>

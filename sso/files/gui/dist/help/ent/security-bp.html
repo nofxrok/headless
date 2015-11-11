@@ -1,0 +1,103 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Security Best Practices</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="topic">
+      
+      <meta name="DC.Title" content="Security Best Practices">
+      
+      <meta name="DC.Relation" scheme="URI" content="best-practices.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="topic_i5p_h4r_fr">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/bootstrap/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/bootstrap/css/webhelp.min.css">
+      <script type="text/javascript" src="../themes/bootstrap/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page topic  - topic-topic " id="topic_i5p_h4r_fr">
+                        <a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><h1 class="title topictitle1">Security Best Practices</h1>
+                        <div class="body">
+                           <ul class="ul" id="topic_i5p_h4r_fr__ul_czv_y3w_fr">
+                              <li class="li">Access controls</li>
+                              
+                              <li class="li">PKI directory - make sure this is secure - group ownership and permissions so
+                                 unauthorized people can't get these
+                              </li>
+                              
+                              <li class="li">Secure targeting (targeting via grains is not as secure - grains can be set by anyone
+                                 -
+                                 these can be faked)
+                              </li>
+                              
+                              <li class="li">Publish runner - you can grant too much access here</li>
+                              
+                              <li class="li">Reactors can potentially introduce security issues - after a minion submits an event,
+                                 you should check who submitted this. Have any minion trigger the event. Case by case,
+                                 use
+                                 JINJA to double-check the ID of the minion.
+                              </li>
+                              
+                              <li class="li">Hashtypes for the fileserver - MD5 is not allowed under some standards, this can be
+                                 changed.
+                              </li>
+                              
+                              <li class="li">Remove execution modules that you don't want to be used</li>
+                              
+                           </ul>
+                           
+                           <div class="section">
+                              <h2 class="title sectiontitle">Scalability/Efficiency</h2>
+                              <ul class="ul" id="topic_i5p_h4r_fr__ul_ksl_djw_fr">
+                                 <li class="li">Config setting that prevents salt from searching for SLS files if it finds a directory
+                                    without SLS files. - (good setting for lots of files)
+                                 </li>
+                                 
+                                 <li class="li">Over 1000 minions turn on connection cache - master settings</li>
+                                 
+                                 <li class="li">Worker threads - more minions, more threads. (improves 0MQ performance, lets you
+                                    handle more). CPU isn't spiking but things are slowing down, try this. Master side
+                                    returners.
+                                 </li>
+                                 
+                                 <li class="li">Job cache - keep to a reasonable size - this can slow things down. Keep jobs setting
+                                    on the master - consider external job store
+                                 </li>
+                                 
+                                 <li class="li">Upgrade. The latest release usually has many performance improvements.</li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+                        <p class="text-muted pull-right"><small>Copyright © 2015 SaltStack.</small></p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

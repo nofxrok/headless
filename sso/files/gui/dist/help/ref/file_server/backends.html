@@ -1,0 +1,182 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>File Server Backends</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="File Server Backends">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="file-server-backends">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="file-server-backends">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">File Server Backends</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p">In Salt 0.12.0, the modular fileserver was introduced. This feature added the
+                                 ability for the Salt Master to integrate different file server backends. File
+                                 server backends allow the Salt file server to act as a transparent bridge to
+                                 external resources. A good example of this is the <tt class="ph tt">git</tt> backend, which allows Salt to serve files sourced from
+                                 one or more git repositories, but there are several others as well. Click
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="all/index.html#all-salt-fileserver">here</a> for a full list of Salt's fileserver
+                                 backends.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="file-server-backends__enabling-a-fileserver-backend">
+                              <h2 class="title sectiontitle">Enabling a Fileserver Backend</h2>
+                              <p class="p">Fileserver backends can be enabled with the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__fileserver_backend">fileserver_backend</a>
+                                 option.
+                              </p>
+                              <pre class="pre codeblock language-yaml">fileserver_backend:
+  - git</pre>
+                              <p class="p">See the 
+                                 		
+                                 			&nbsp;<a class="xref" href="all/index.html#all-salt-fileserver">documentation</a> for each backend to find the
+                                 correct value to add to 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__fileserver_backend">fileserver_backend</a> in order to enable
+                                 them.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="file-server-backends__using-multiple-backends">
+                              <h2 class="title sectiontitle">Using Multiple Backends</h2>
+                              <p class="p">If 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__fileserver_backend">fileserver_backend</a> is not defined in the Master config file,
+                                 Salt will use the 
+                                 		
+                                 			&nbsp;<a class="xref" href="all/salt.fileserver.roots.html#salt.fileserver.roots">roots</a> backend, but the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__fileserver_backend">fileserver_backend</a> option supports multiple backends. When more
+                                 than one backend is in use, the files from the enabled backends are merged into a
+                                 single virtual filesystem. When a file is requested, the backends will be
+                                 searched in order for that file, and the first backend to match will be the one
+                                 which returns the file.
+                              </p>
+                              <pre class="pre codeblock language-yaml">fileserver_backend:
+  - roots
+  - git</pre>
+                              <p class="p">With this configuration, the environments and files defined in the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__file_roots">file_roots</a> parameter will be searched first, and if the file is
+                                 not found then the git repositories defined in 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__gitfs_remotes">gitfs_remotes</a>
+                                 will be searched.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="file-server-backends__environments">
+                              <h2 class="title sectiontitle">Environments</h2>
+                              <p class="p">Just as the order of the values in 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__fileserver_backend">fileserver_backend</a> matters,
+                                 so too does the order in which different sources are defined within a
+                                 fileserver environment. For example, given the below 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__file_roots">file_roots</a>
+                                 configuration, if both <tt class="ph tt">/srv/salt/dev/foo.txt</tt> and <tt class="ph tt">/srv/salt/prod/foo.txt</tt>
+                                 exist on the Master, then <tt class="ph tt">salt://foo.txt</tt> would point to
+                                 <tt class="ph tt">/srv/salt/dev/foo.txt</tt> in the <tt class="ph tt">dev</tt> environment, but it would point to
+                                 <tt class="ph tt">/srv/salt/prod/foo.txt</tt> in the <tt class="ph tt">base</tt> environment.
+                              </p>
+                              <pre class="pre codeblock language-yaml">file_roots:
+  base:
+    - /srv/salt/prod
+  qa:
+    - /srv/salt/qa
+    - /srv/salt/prod
+  dev:
+    - /srv/salt/dev
+    - /srv/salt/qa
+    - /srv/salt/prod</pre>
+                              <p class="p">Similarly, when using the 
+                                 		
+                                 			&nbsp;<a class="xref" href="all/salt.fileserver.gitfs.html#salt.fileserver.gitfs">git</a> backend, if both
+                                 repositories defined below have a <tt class="ph tt">hotfix23</tt> branch/tag, and both of them
+                                 also contain the file <tt class="ph tt">bar.txt</tt> in the root of the repository at that
+                                 branch/tag, then <tt class="ph tt">salt://bar.txt</tt> in the <tt class="ph tt">hotfix23</tt> environment would be
+                                 served from the <tt class="ph tt">first</tt> repository.
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_remotes:
+  - https://mydomain.tld/repos/first.git
+  - https://mydomain.tld/repos/second.git</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Environments map differently based on the fileserver backend. For instance,
+                                    the mappings are explicitly defined in 
+                                    		
+                                    			&nbsp;<a class="xref" href="all/salt.fileserver.roots.html#salt.fileserver.roots">roots</a>
+                                    backend, while in the VCS backends (
+                                    		
+                                    			&nbsp;<a class="xref" href="all/salt.fileserver.gitfs.html#salt.fileserver.gitfs">git</a>,
+                                    
+                                    		
+                                    			&nbsp;<a class="xref" href="all/salt.fileserver.hgfs.html#salt.fileserver.hgfs">hg</a>, 
+                                    		
+                                    			&nbsp;<a class="xref" href="all/salt.fileserver.svnfs.html#salt.fileserver.svnfs">svn</a>) the
+                                    environments are created from branches/tags/bookmarks/etc. For the
+                                    
+                                    		
+                                    			&nbsp;<a class="xref" href="all/salt.fileserver.minionfs.html#salt.fileserver.minionfs">minion</a> backend, the files are all in a
+                                    single environment, which is specified by the 
+                                    		
+                                    			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__minionfs_env">minionfs_env</a>
+                                    option.
+                                 </p>
+                                 
+                                 <p class="p">See the documentation for each backend for a more detailed explanation of
+                                    how environments are mapped.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

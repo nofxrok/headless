@@ -1,0 +1,162 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.introspect</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.introspect">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-introspect">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-introspect">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.introspect</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-introspect__module-salt.modules.introspect"></span></p>
+                              
+                              <p class="p">Functions to perform introspection on a minion, and return data in a format
+                                 usable by Salt States
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.introspect.enabled_service_owners">
+                           <h2 class="title topictitle2">enabled_service_owners</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.introspect.enabled_service_owners( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return which packages own each of the services that are currently enabled.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 
+                                 <blockquote class="lq">
+                                    <p class="p">salt myminion introspect.enabled_service_owners</p>
+                                    
+                                 </blockquote>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.introspect.running_service_owners">
+                           <h2 class="title topictitle2">running_service_owners</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.introspect.running_service_owners(
+								exclude=('/dev',
+								'/home',
+								'/media',
+								'/proc',
+								'/run',
+								'/sys/',
+								'/tmp',
+								'/var')
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Determine which packages own the currently running services. By default,
+                                    excludes files whose full path starts with <tt class="ph tt">/dev</tt>, <tt class="ph tt">/home</tt>, <tt class="ph tt">/media</tt>,
+                                    <tt class="ph tt">/proc</tt>, <tt class="ph tt">/run</tt>, <tt class="ph tt">/sys</tt>, <tt class="ph tt">/tmp</tt> and <tt class="ph tt">/var</tt>. This can be
+                                    overridden by passing in a new list to <tt class="ph tt">exclude</tt>.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 
+                                 <blockquote class="lq">
+                                    <p class="p">salt myminion introspect.running_service_owners</p>
+                                    
+                                 </blockquote>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.introspect.service_highstate">
+                           <h2 class="title topictitle2">service_highstate</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.introspect.service_highstate(
+								requires=True
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return running and enabled services in a highstate structure. By default
+                                    also returns package dependencies for those services, which means that
+                                    package definitions must be created outside this function. To drop the
+                                    package dependencies, set <tt class="ph tt">requires</tt> to False.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 
+                                 <blockquote class="lq">
+                                    <p class="p">salt myminion introspect.service_highstate
+                                       salt myminion introspect.service_highstate requires=False
+                                    </p>
+                                    
+                                 </blockquote>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,799 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Command Line Reference</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Command Line Reference">
+      
+      <meta name="DC.Relation" scheme="URI" content="salt.html#salt">
+      
+      <meta name="DC.Relation" scheme="URI" content="salt-call.html#salt-call">
+      
+      <meta name="DC.Relation" scheme="URI" content="salt-cloud.html#salt-cloud">
+      
+      <meta name="DC.Relation" scheme="URI" content="salt-cp.html#salt-cp">
+      
+      <meta name="DC.Relation" scheme="URI" content="salt-key.html#salt-key">
+      
+      <meta name="DC.Relation" scheme="URI" content="salt-master.html#salt-master">
+      
+      <meta name="DC.Relation" scheme="URI" content="salt-minion.html#salt-minion">
+      
+      <meta name="DC.Relation" scheme="URI" content="salt-run.html#salt-run">
+      
+      <meta name="DC.Relation" scheme="URI" content="salt-ssh.html#salt-ssh">
+      
+      <meta name="DC.Relation" scheme="URI" content="salt-syndic.html#salt-syndic">
+      
+      <meta name="DC.Relation" scheme="URI" content="salt-api.html#salt-api">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="command-line-reference">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="command-line-reference">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Command Line Reference</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p">Salt can be controlled by a command line client by the root user on the Salt
+                                 master. The Salt command line client uses the Salt client API to communicate
+                                 with the Salt master server. The Salt client is straightforward and simple
+                                 to use.
+                              </p>
+                              
+                              <p class="p">Using the Salt client commands can be easily sent to the minions.</p>
+                              
+                              <p class="p">Each of these commands accepts an explicit <span class="keyword title_reference">--config</span> option to point to either
+                                 the master or minion configuration file.  If this option is not provided and
+                                 the default configuration file does not exist then Salt falls back to use the
+                                 environment variables <tt class="ph tt">SALT_MASTER_CONFIG</tt> and <tt class="ph tt">SALT_MINION_CONFIG</tt>.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="../configuration/index.html#configuring-salt">Configuration</a></p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="command-line-reference__using-the-salt-command">
+                              <h2 class="title sectiontitle">Using the Salt Command</h2>
+                              <p class="p">The Salt command needs a few components to send information to the Salt
+                                 minions. The target minions need to be defined, the function to call and any
+                                 arguments the function requires.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="command-line-reference__defining-the-target-minions">
+                              <h2 class="title sectiontitle">Defining the Target Minions</h2>
+                              <p class="p">The first argument passed to salt, defines the target minions, the target
+                                 minions are accessed via their hostname. The default target type is a bash
+                                 glob:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*foo.com' sys.doc</pre>
+                              <p class="p">Salt can also define the target minions with regular expressions:</p>
+                              <pre class="pre codeblock language-bash">salt -E '.*' cmd.run 'ls -l | grep foo'</pre>
+                              <p class="p">Or to explicitly list hosts, salt can take a list:</p>
+                              <pre class="pre codeblock language-bash">salt -L foo.bar.baz,quo.qux cmd.run 'ps aux | grep foo'</pre>
+                              </div>
+                           
+                           <div class="section" id="command-line-reference__more-powerful-targets">
+                              <h2 class="title sectiontitle">More Powerful Targets</h2>
+                              <p class="p">The simple target specifications, glob, regex, and list will cover many use
+                                 cases, and for some will cover all use cases, but more powerful options exist.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="command-line-reference__targeting-with-grains">
+                              <h2 class="title sectiontitle">Targeting with Grains</h2>
+                              <p class="p">The Grains interface was built into Salt to allow minions to be targeted by
+                                 system properties. So minions running on a particular operating system can
+                                 be called to execute a function, or a specific kernel.
+                              </p>
+                              
+                              <p class="p">Calling via a grain is done by passing the -G option to salt, specifying
+                                 a grain and a glob expression to match the value of the grain. The syntax for
+                                 the target is the grain key followed by a globexpression: "os:Arch*".
+                              </p>
+                              <pre class="pre codeblock language-bash">salt -G 'os:Fedora' test.ping</pre>
+                              <p class="p">Will return True from all of the minions running Fedora.</p>
+                              
+                              <p class="p">To discover what grains are available and what the values are, execute the
+                                 grains.item salt function:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' grains.items</pre>
+                              <p class="p">more info on using targeting with grains can be found 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/targeting/grains.html#targeting-grains">here</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="command-line-reference__targeting-with-executions">
+                              <h2 class="title sectiontitle">Targeting with Executions</h2>
+                              <p class="p">As of 0.8.8 targeting with executions is still under heavy development and this
+                                 documentation is written to reference the behavior of execution matching in the
+                                 future.
+                              </p>
+                              
+                              <p class="p">Execution matching allows for a primary function to be executed, and then based
+                                 on the return of the primary function the main function is executed.
+                              </p>
+                              
+                              <p class="p">Execution matching allows for matching minions based on any arbitrary running
+                                 data on the minions.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="command-line-reference__compound-targeting">
+                              <h2 class="title sectiontitle">Compound Targeting</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 0.9.5.</span></p>
+                              
+                              <p class="p">Multiple target interfaces can be used in conjunction to determine the command
+                                 targets. These targets can then be combined using and or or statements. This
+                                 is well defined with an example:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt -C 'G@os:Debian and webser* or E@db.*' test.ping</pre>
+                              <p class="p">In this example any minion who's id starts with <tt class="ph tt">webser</tt> and is running
+                                 Debian, or any minion who's id starts with db will be matched.
+                              </p>
+                              
+                              <p class="p">The type of matcher defaults to glob, but can be specified with the
+                                 corresponding letter followed by the <tt class="ph tt">@</tt> symbol. In the above example a grain
+                                 is used with <tt class="ph tt">G@</tt> as well as a regular expression with <tt class="ph tt">E@</tt>. The
+                                 <tt class="ph tt">webser*</tt> target does not need to be prefaced with a target type specifier
+                                 because it is a glob.
+                              </p>
+                              
+                              <p class="p">more info on using compound targeting can be found 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/targeting/compound.html#targeting-compound">here</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="command-line-reference__node-group-targeting">
+                              <h2 class="title sectiontitle">Node Group Targeting</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 0.9.5.</span></p>
+                              
+                              <p class="p">For certain cases, it can be convenient to have a predefined group of minions
+                                 on which to execute commands. This can be accomplished using what are called
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/targeting/nodegroups.html#targeting-nodegroups">nodegroups</a>. Nodegroups allow for predefined
+                                 compound targets to be declared in the master configuration file, as a sort of
+                                 shorthand for having to type out complicated compound expressions.
+                              </p>
+                              <pre class="pre codeblock language-yaml">nodegroups:
+ &nbsp;group1: 'L@foo.domain.com,bar.domain.com,baz.domain.com and bl*.domain.com'
+ &nbsp;group2: 'G@os:Debian and foo.domain.com'
+ &nbsp;group3: 'G@os:Debian and N@group1'</pre>
+                              </div>
+                           
+                           <div class="section" id="command-line-reference__calling-the-function">
+                              <h2 class="title sectiontitle">Calling the Function</h2>
+                              <p class="p">The function to call on the specified target is placed after the target
+                                 specification.
+                              </p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 0.9.8.</span></p>
+                              
+                              <p class="p">Functions may also accept arguments, space-delimited:</p>
+                              <pre class="pre codeblock language-bash">salt '*' cmd.exec_code python 'import sys; print sys.version'</pre>
+                              <p class="p">Optional, keyword arguments are also supported:</p>
+                              <pre class="pre codeblock language-bash">salt '*' pip.install salt timeout=5 upgrade=True</pre>
+                              <p class="p">They are always in the form of <tt class="ph tt">kwarg=argument</tt>.
+                              </p>
+                              
+                              <p class="p">Arguments are formatted as YAML:</p>
+                              <pre class="pre codeblock language-bash">salt '*' cmd.run 'echo "Hello: $FIRST_NAME"' env='{FIRST_NAME: "Joe"}'</pre>
+                              <p class="p">Note: dictionaries must have curly braces around them (like the <tt class="ph tt">env</tt>
+                                 keyword argument above).  This was changed in 0.15.1: in the above example,
+                                 the first argument used to be parsed as the dictionary
+                                 <tt class="ph tt">{'echo "Hello': '$FIRST_NAME"'}</tt>. This was generally not the expected
+                                 behavior.
+                              </p>
+                              
+                              <p class="p">If you want to test what parameters are actually passed to a module, use the
+                                 <tt class="ph tt">test.arg_repr</tt> command:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' test.arg_repr 'echo "Hello: $FIRST_NAME"' env='{FIRST_NAME: "Joe"}'</pre>
+                              </div>
+                           
+                           <div class="section" id="command-line-reference__finding-available-minion-functions">
+                              <h2 class="title sectiontitle">Finding available minion functions</h2>
+                              <p class="p">The Salt functions are self documenting, all of the function documentation can
+                                 be retried from the minions via the <tt class="ph tt">sys.doc()</tt> function:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' sys.doc</pre>
+                              </div>
+                           
+                           <div class="section" id="command-line-reference__compound-command-execution">
+                              <h2 class="title sectiontitle">Compound Command Execution</h2>
+                              <p class="p">If a series of commands needs to be sent to a single target specification then
+                                 the commands can be sent in a single publish. This can make gathering
+                                 groups of information faster, and lowers the stress on the network for repeated
+                                 commands.
+                              </p>
+                              
+                              <p class="p">Compound command execution works by sending a list of functions and arguments
+                                 instead of sending a single function and argument. The functions are executed
+                                 on the minion in the order they are defined on the command line, and then the
+                                 data from all of the commands are returned in a dictionary. This means that
+                                 the set of commands are called in a predictable way, and the returned data can
+                                 be easily interpreted.
+                              </p>
+                              
+                              <p class="p">Executing compound commands if done by passing a comma delimited list of
+                                 functions, followed by a comma delimited list of arguments:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' cmd.run,test.ping,test.echo 'cat /proc/cpuinfo',,foo</pre>
+                              <p class="p">The trick to look out for here, is that if a function is being passed no
+                                 arguments, then there needs to be a placeholder for the absent arguments. This
+                                 is why in the above example, there are two commas right next to each other.
+                                 <tt class="ph tt">test.ping</tt> takes no arguments, so we need to add another comma, otherwise
+                                 Salt would attempt to pass "foo" to <tt class="ph tt">test.ping</tt>.
+                              </p>
+                              
+                              <p class="p">If you need to pass arguments that include commas, then make sure you add
+                                 spaces around the commas that separate arguments. For example:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' cmd.run,test.ping,test.echo 'echo "1,2,3"' , , foo</pre>
+                              <p class="p">You may change the arguments separator using the <tt class="ph tt">--args-separator</tt> option:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt --args-separator=:: '*' some.fun,test.echo params with , comma :: foo</pre>
+                              </div>
+                           
+                           <div class="section" id="command-line-reference__salt-call">
+                              <h2 class="title sectiontitle">salt-call</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="salt-call.html#salt-call">salt-call</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-call.html#salt-call__synopsis">Synopsis</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-call.html#salt-call__description">Description</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-call.html#salt-call__options">Options</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-call.html#salt-call__logging-options">Logging Options</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-call.html#salt-call__output-options">Output Options</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-call.html#salt-call__see-also">See also</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="command-line-reference__salt">
+                              <h2 class="title sectiontitle">salt</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="salt.html#salt">salt</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt.html#salt__synopsis">Synopsis</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt.html#salt__description">Description</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt.html#salt__options">Options</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt.html#salt__logging-options">Logging Options</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt.html#salt__target-selection">Target Selection</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt.html#salt__output-options">Output Options</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt.html#salt__see-also">See also</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="command-line-reference__salt-cloud">
+                              <h2 class="title sectiontitle">salt-cloud</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="salt-cloud.html#salt-cloud">salt-cloud</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-cloud.html#salt-cloud__synopsis">Synopsis</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-cloud.html#salt-cloud__description">Description</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-cloud.html#salt-cloud__options">Options</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-cloud.html#salt-cloud__execution-options">Execution Options</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-cloud.html#salt-cloud__query-options">Query Options</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-cloud.html#salt-cloud__cloud-providers-listings">Cloud Providers Listings</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-cloud.html#salt-cloud__cloud-credentials">Cloud Credentials</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-cloud.html#salt-cloud__output-options">Output Options</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-cloud.html#salt-cloud__examples">Examples</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-cloud.html#salt-cloud__see-also">See also</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="command-line-reference__salt-cp">
+                              <h2 class="title sectiontitle">salt-cp</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="salt-cp.html#salt-cp">salt-cp</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-cp.html#salt-cp__synopsis">Synopsis</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-cp.html#salt-cp__description">Description</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-cp.html#salt-cp__options">Options</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-cp.html#salt-cp__logging-options">Logging Options</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-cp.html#salt-cp__target-selection">Target Selection</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-cp.html#salt-cp__see-also">See also</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="command-line-reference__salt-key">
+                              <h2 class="title sectiontitle">salt-key</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="salt-key.html#salt-key">salt-key</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-key.html#salt-key__synopsis">Synopsis</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-key.html#salt-key__description">Description</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-key.html#salt-key__options">Options</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-key.html#salt-key__logging-options">Logging Options</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-key.html#salt-key__output-options">Output Options</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-key.html#salt-key__actions">Actions</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-key.html#salt-key__key-generation-options">Key Generation Options</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-key.html#salt-key__see-also">See also</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="command-line-reference__salt-master">
+                              <h2 class="title sectiontitle">salt-master</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="salt-master.html#salt-master">salt-master</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-master.html#salt-master__synopsis">Synopsis</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-master.html#salt-master__description">Description</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-master.html#salt-master__options">Options</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-master.html#salt-master__logging-options">Logging Options</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-master.html#salt-master__see-also">See also</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="command-line-reference__salt-minion">
+                              <h2 class="title sectiontitle">salt-minion</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="salt-minion.html#salt-minion">salt-minion</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-minion.html#salt-minion__synopsis">Synopsis</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-minion.html#salt-minion__description">Description</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-minion.html#salt-minion__options">Options</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-minion.html#salt-minion__logging-options">Logging Options</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-minion.html#salt-minion__see-also">See also</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="command-line-reference__salt-run">
+                              <h2 class="title sectiontitle">salt-run</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="salt-run.html#salt-run">salt-run</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-run.html#salt-run__synopsis">Synopsis</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-run.html#salt-run__description">Description</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-run.html#salt-run__options">Options</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-run.html#salt-run__logging-options">Logging Options</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-run.html#salt-run__see-also">See also</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="command-line-reference__salt-ssh">
+                              <h2 class="title sectiontitle">salt-ssh</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="salt-ssh.html#salt-ssh">salt-ssh</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-ssh.html#salt-ssh__synopsis">Synopsis</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-ssh.html#salt-ssh__description">Description</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-ssh.html#salt-ssh__options">Options</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-ssh.html#salt-ssh__target-selection">Target Selection</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-ssh.html#salt-ssh__logging-options">Logging Options</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-ssh.html#salt-ssh__output-options">Output Options</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-ssh.html#salt-ssh__see-also">See also</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="command-line-reference__salt-syndic">
+                              <h2 class="title sectiontitle">salt-syndic</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="salt-syndic.html#salt-syndic">salt-syndic</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-syndic.html#salt-syndic__synopsis">Synopsis</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-syndic.html#salt-syndic__description">Description</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-syndic.html#salt-syndic__options">Options</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-syndic.html#salt-syndic__logging-options">Logging Options</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-syndic.html#salt-syndic__see-also">See also</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="command-line-reference__salt-api">
+                              <h2 class="title sectiontitle">salt-api</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="salt-api.html#salt-api">salt-api</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-api.html#salt-api__synopsis">Synopsis</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-api.html#salt-api__description">Description</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-api.html#salt-api__options">Options</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="salt-api.html#salt-api__logging-options">Logging Options</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt-api.html#salt-api__see-also">See also</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links">
+                           
+                           <ul class="ullinks">
+                              
+                              <li class="link ulchildlink"><strong><a href="salt.html#salt">salt</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="salt-call.html#salt-call">salt-call</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="salt-cloud.html#salt-cloud">salt-cloud</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="salt-cp.html#salt-cp">salt-cp</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="salt-key.html#salt-key">salt-key</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="salt-master.html#salt-master">salt-master</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="salt-minion.html#salt-minion">salt-minion</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="salt-run.html#salt-run">salt-run</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="salt-ssh.html#salt-ssh">salt-ssh</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="salt-syndic.html#salt-syndic">salt-syndic</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="salt-api.html#salt-api">salt-api</a></strong><br>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                        </div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

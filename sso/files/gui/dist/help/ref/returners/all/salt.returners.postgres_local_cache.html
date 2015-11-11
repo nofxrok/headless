@@ -1,0 +1,305 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.returners.postgres_local_cache</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.returners.postgres_local_cache">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../returners.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-returners-postgres-local-cache">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-returners-postgres-local-cache">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.returners.postgres_local_cache</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-returners-postgres-local-cache__module-salt.returners.postgres_local_cache"></span></p>
+                              
+                              <p class="p">Use a postgresql server for the master job cache. This helps the job cache to
+                                 cope with scale.
+                              </p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">maintainer</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p"><a class="xref" href="mailto:gjredelinghuys@gmail.com" target="_blank">gjredelinghuys@gmail.com</a></p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">maturity</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">New</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">psycopg2</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">platform</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">all</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">To enable this returner the minion will need the psycopg2 installed and
+                                 the following values configured in the master config:
+                              </p>
+                              <pre class="pre codeblock language-yaml">master_job_cache: postgres_local_cache
+master_job_cache.postgres.host: 'salt'
+master_job_cache.postgres.user: 'salt'
+master_job_cache.postgres.passwd: 'salt'
+master_job_cache.postgres.db: 'salt'
+master_job_cache.postgres.port: 5432</pre>
+                              <p class="p">Running the following command as the postgres user should create the database
+                                 correctly:
+                              </p>
+                              <pre class="pre codeblock language-sql">psql &lt;&lt; EOF
+CREATE ROLE salt WITH PASSWORD 'salt';
+CREATE DATABASE salt WITH OWNER salt;
+EOF</pre>
+                              <p class="p">and then:</p>
+                              <pre class="pre codeblock language-sql">psql -h localhost -U salt &lt;&lt; EOF
+--
+-- Table structure for table 'jids'
+--
+
+DROP TABLE IF EXISTS jids;
+CREATE TABLE jids (
+  jid   varchar(20) PRIMARY KEY,
+  started TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  tgt_type text NOT NULL,
+  cmd text NOT NULL,
+  tgt text NOT NULL,
+  kwargs text NOT NULL,
+  ret text NOT NULL,
+  username text NOT NULL,
+  arg text NOT NULL,
+  fun text NOT NULL
+);
+
+--
+-- Table structure for table 'salt_returns'
+--
+
+DROP TABLE IF EXISTS salt_returns;
+CREATE TABLE salt_returns (
+  added     TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  fun       text NOT NULL,
+  jid       varchar(20) NOT NULL,
+  return    text NOT NULL,
+  id        text NOT NULL,
+  success   boolean
+);
+CREATE INDEX ON salt_returns (added);
+CREATE INDEX ON salt_returns (id);
+CREATE INDEX ON salt_returns (jid);
+CREATE INDEX ON salt_returns (fun);
+EOF</pre>
+                              <p class="p">Required python modules: psycopg2</p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.returners.postgres_local_cache.clean_old_jobs">
+                           <h2 class="title topictitle2">clean_old_jobs</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.postgres_local_cache.clean_old_jobs( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Clean out the old jobs from the job cache</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.postgres_local_cache.get_jid">
+                           <h2 class="title topictitle2">get_jid</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.postgres_local_cache.get_jid(
+								jid
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the information returned when the specified job id was executed</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.postgres_local_cache.get_jids">
+                           <h2 class="title topictitle2">get_jids</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.postgres_local_cache.get_jids( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of all job ids
+                                    For master job cache this also formats the output and returns a string
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.postgres_local_cache.get_load">
+                           <h2 class="title topictitle2">get_load</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.postgres_local_cache.get_load(
+								jid
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the load data that marks a specified jid</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.postgres_local_cache.prep_jid">
+                           <h2 class="title topictitle2">prep_jid</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.postgres_local_cache.prep_jid(
+								nocache=False,
+								passed_jid=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a job id and prepare the job id directory
+                                    This is the function responsible for making sure jids don't collide
+                                    (unless its passed a jid). So do what you have to do to make sure that
+                                    stays the case
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.postgres_local_cache.returner">
+                           <h2 class="title topictitle2">returner</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.postgres_local_cache.returner(
+								load
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return data to a postgres server</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.postgres_local_cache.save_load">
+                           <h2 class="title topictitle2">save_load</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.postgres_local_cache.save_load(
+								jid,
+								clear_load
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Save the load to the specified jid id</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

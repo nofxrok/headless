@@ -1,0 +1,207 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.pillar.mongo</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.pillar.mongo">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../pillar-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-pillar-mongo">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-pillar-mongo">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.pillar.mongo</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-pillar-mongo__module-salt.pillar.mongo"></span></p>
+                              
+                              <p class="p">Read Pillar data from a mongodb collection</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">pymongo (for salt-master)</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">This module will load a node-specific pillar dictionary from a mongo
+                                 collection. It uses the node's id for lookups and can load either the whole
+                                 document, or just a specific field from that
+                                 document as the pillar dictionary.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="configuring-the-mongo-ext-pillar">
+                           <h2 class="title topictitle2">Configuring the Mongo ext_pillar</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">The Mongo ext_pillar takes advantage of the fact that the Salt Master
+                                    configuration file is yaml. It uses a sub-dictionary of values to adjust
+                                    specific features of the pillar. This is the explicit single-line dictionary
+                                    notation for yaml. One may be able to get the easier-to-read multi-line dict to
+                                    work correctly with some experimentation.
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">ext_pillar:
+  - mongo: {collection: vm, id_field: name, re_pattern: \.example\.com, fields: [customer_id, software, apache_vhosts]}</pre>
+                                 <p class="p">In the example above, we've decided to use the <tt class="ph tt">vm</tt> collection in the
+                                    database to store the data. Minion ids are stored in the <tt class="ph tt">name</tt> field on
+                                    documents in that collection. And, since minion ids are FQDNs in most cases,
+                                    we'll need to trim the domain name in order to find the minion by hostname in
+                                    the collection. When we find a minion, return only the <tt class="ph tt">customer_id</tt>,
+                                    <tt class="ph tt">software</tt>, and <tt class="ph tt">apache_vhosts</tt> fields, as that will contain the data we
+                                    want for a given node. They will be available directly inside the <tt class="ph tt">pillar</tt>
+                                    dict in your SLS templates.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="module-documentation">
+                           <h2 class="title topictitle2">Module Documentation</h2>
+                           <div class="body refbody">
+                              <div class="section"></div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.pillar.mongo.ext_pillar">
+                              <h3 class="title topictitle3">ext_pillar</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.pillar.mongo.ext_pillar(
+								minion_id,
+								pillar,
+								collection='pillar',
+								id_field='_id',
+								re_pattern=None,
+								re_replace='',
+								fields=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Connect to a mongo database and read per-node pillar information.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d319270e97" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d319270e99" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d319270e97" class="stentry propvalue">Parameters:</td>
+                                       
+                                       <td valign="top" headers="d319270e99" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p"><span class="keyword title_reference">collection</span>: The mongodb collection to read data from. Defaults to
+                                                   <tt class="ph tt">'pillar'</tt>.
+                                                </p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p"><span class="keyword title_reference">id_field</span>: The field in the collection that represents an individual
+                                                   minion id. Defaults to <tt class="ph tt">'_id'</tt>.
+                                                </p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p"><span class="keyword title_reference">re_pattern</span>: If your naming convention in the collection is shorter
+                                                   than the minion id, you can use this to trim the name.
+                                                   <span class="keyword title_reference">re_pattern</span> will be used to match the name, and <span class="keyword title_reference">re_replace</span> will
+                                                   be used to replace it. Backrefs are supported as they are in the
+                                                   Python standard library. If <tt class="ph tt">None</tt>, no mangling of the name will
+                                                   be performed - the collection will be searched with the entire
+                                                   minion id. Defaults to <tt class="ph tt">None</tt>.
+                                                </p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p"><span class="keyword title_reference">re_replace</span>: Use as the replacement value in node ids matched with
+                                                   <span class="keyword title_reference">re_pattern</span>. Defaults to ''. Feel free to use backreferences here.
+                                                </p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p"><span class="keyword title_reference">fields</span>: The specific fields in the document to use for the pillar
+                                                   data. If <tt class="ph tt">None</tt>, will use the entire document. If using the
+                                                   entire document, the <tt class="ph tt">_id</tt> field will be converted to string. Be
+                                                   careful with other fields in the document as they must be string
+                                                   serializable. Defaults to <tt class="ph tt">None</tt>.
+                                                </p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

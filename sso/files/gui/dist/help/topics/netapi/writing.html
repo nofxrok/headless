@@ -1,0 +1,117 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Writing netapi modules</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Writing netapi modules">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="writing-netapi-modules">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="writing-netapi-modules">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Writing netapi modules</h1>
+                        <div class="body conbody">
+                           <p class="p"><tt class="ph tt">netapi</tt> modules, put simply, bind a port and start a service.
+                              They are purposefully open-ended and can be used to present a variety of
+                              external interfaces to Salt, and even present multiple interfaces at once.
+                           </p>
+                           
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/netapi/all/index.html#all-netapi-modules">The full list of netapi modules</a></p>
+                              
+                           </aside>
+                           
+                           <div class="section" id="writing-netapi-modules__configuration">
+                              <h2 class="title sectiontitle">Configuration</h2>
+                              <p class="p">All <tt class="ph tt">netapi</tt> configuration is done in the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master">Salt master
+                                    config</a> and takes a form similar to the following:
+                              </p>
+                              <pre class="pre codeblock language-yaml">rest_cherrypy:
+  port: 8000
+  debug: True
+  ssl_crt: /etc/pki/tls/certs/localhost.crt
+  ssl_key: /etc/pki/tls/certs/localhost.key</pre>
+                              </div>
+                           
+                           <div class="section" id="writing-netapi-modules__the-virtual-function">
+                              <h2 class="title sectiontitle">The __virtual__ function</h2>
+                              <p class="p">Like all module types in Salt, <tt class="ph tt">netapi</tt> modules go through
+                                 Salt's loader interface to determine if they should be loaded into memory and
+                                 then executed.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">__virtual__</tt> function in the module makes this determination and should
+                                 return <tt class="ph tt">False</tt> or a string that will serve as the name of the module. If the
+                                 module raises an <tt class="ph tt">ImportError</tt> or any other errors, it will not be loaded.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="writing-netapi-modules__the-start-function">
+                              <h2 class="title sectiontitle">The start function</h2>
+                              <p class="p">The <tt class="ph tt">start()</tt> function will be called for each <tt class="ph tt">netapi</tt>
+                                 module that is loaded. This function should contain the server loop that
+                                 actually starts the service. This is started in a multiprocess.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="writing-netapi-modules__inline-documentation">
+                              <h2 class="title sectiontitle">Inline documentation</h2>
+                              <p class="p">As with the rest of Salt, it is a best-practice to include liberal inline
+                                 documentation in the form of a module docstring and docstrings on any classes,
+                                 methods, and functions in your <tt class="ph tt">netapi</tt> module.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="writing-netapi-modules__loader-magic-methods">
+                              <h2 class="title sectiontitle">Loader “magic” methods</h2>
+                              <p class="p">The loader makes the <tt class="ph tt">__opts__</tt> data structure available to any function in
+                                 a <tt class="ph tt">netapi</tt> module.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

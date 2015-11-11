@@ -1,0 +1,18 @@
+<div class="modal-header">
+    <h3 class="modal-title">Edit target {{ editTargetObj.target_name }}</h3>
+</div>
+<div class="modal-body">
+    <form name="editTargetForm" id="edit-target-form" class="form-horizontal" role="form" ng-submit="editTargetOk(editTargetObj)" novalidate>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">New Name</label>
+            <div class="col-xs-9" ng-class="{'has-error': editTargetForm.newtargetname.$error.required}">
+                <input name="newtargetname" class="form-control" ng-model="editTargetData.new_target_name" ng-pattern="/^[a-zA-Z0-9 ]+$/" maxlength="65" ng-trim="false" required salt-form-focus></input>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary site-btn-form" ng-click="editTargetOk(editTargetObj)" ng-disabled="editTargetForm.$invalid">Save</button>
+    <button class="btn btn-primary site-btn-form" ng-click="editTargetCancel()">Cancel</button>
+</div>

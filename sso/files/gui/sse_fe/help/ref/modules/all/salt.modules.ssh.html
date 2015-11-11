@@ -1,0 +1,488 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.ssh</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.ssh">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-ssh">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-ssh">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.ssh</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-ssh__module-salt.modules.ssh"></span></p>
+                              
+                              <p class="p">Manage client ssh components</p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">This module requires the use of MD5 hashing. Certain
+                                    security audits may not permit the use of MD5. For those cases,
+                                    this module should be disabled or removed.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.ssh.auth_keys">
+                           <h2 class="title topictitle2">auth_keys</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ssh.auth_keys(
+								user=None,
+								config='.ssh/authorized_keys'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the authorized keys for users</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ssh.auth_keys
+salt '*' ssh.auth_keys root
+salt '*' ssh.auth_keys user=root
+salt '*' ssh.auth_keys user="[user1, user2]"</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.ssh.check_key">
+                           <h2 class="title topictitle2">check_key</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ssh.check_key(
+								user,
+								key,
+								enc,
+								comment,
+								options,
+								config='.ssh/authorized_keys',
+								cache_keys=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check to see if a key needs updating, returns "update", "add" or "exists"</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ssh.check_key &lt;user&gt; &lt;key&gt; &lt;enc&gt; &lt;comment&gt; &lt;options&gt;</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.ssh.check_key_file">
+                           <h2 class="title topictitle2">check_key_file</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ssh.check_key_file(
+								user,
+								source,
+								config='.ssh/authorized_keys',
+								saltenv='base',
+								env=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check a keyfile from a source destination against the local keys and
+                                    return the keys to change
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' root salt://ssh/keyfile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.ssh.check_known_host">
+                           <h2 class="title topictitle2">check_known_host</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ssh.check_known_host(
+								user=None,
+								hostname=None,
+								key=None,
+								fingerprint=None,
+								config=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check the record in known_hosts file, either by its value or by fingerprint
+                                    (it's enough to set up either key or fingerprint, you don't need to set up
+                                    both).
+                                 </p>
+                                 
+                                 <p class="p">If provided key or fingerprint doesn't match with stored value, return
+                                    "update", if no value is found for a given host, return "add", otherwise
+                                    return "exists".
+                                 </p>
+                                 
+                                 <p class="p">If neither key, nor fingerprint is defined, then additional validation is
+                                    not performed.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ssh.check_known_host &lt;user&gt; &lt;hostname&gt; key='AAAA...FAaQ=='</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.ssh.get_known_host">
+                           <h2 class="title topictitle2">get_known_host</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ssh.get_known_host(
+								user,
+								hostname,
+								config=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return information about known host from the configfile, if any.
+                                    If there is no such key, return None.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ssh.get_known_host &lt;user&gt; &lt;hostname&gt;</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.ssh.hash_known_hosts">
+                           <h2 class="title topictitle2">hash_known_hosts</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ssh.hash_known_hosts(
+								user=None,
+								config=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Hash all the hostnames in the known hosts file.</p>
+                                 
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ssh.hash_known_hosts</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.ssh.host_keys">
+                           <h2 class="title topictitle2">host_keys</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ssh.host_keys(
+								keydir=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the minion's host keys</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ssh.host_keys</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.ssh.recv_known_host">
+                           <h2 class="title topictitle2">recv_known_host</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ssh.recv_known_host(
+								hostname,
+								enc=None,
+								port=None,
+								hash_hostname=False
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Retrieve information about host public key from remote server</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ssh.recv_known_host &lt;hostname&gt; enc=&lt;enc&gt; port=&lt;port&gt;</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.ssh.rm_auth_key">
+                           <h2 class="title topictitle2">rm_auth_key</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ssh.rm_auth_key(
+								user,
+								key,
+								config='.ssh/authorized_keys'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Remove an authorized key from the specified user's authorized key file</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ssh.rm_auth_key &lt;user&gt; &lt;key&gt;</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.ssh.rm_known_host">
+                           <h2 class="title topictitle2">rm_known_host</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ssh.rm_known_host(
+								user=None,
+								hostname=None,
+								config=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Remove all keys belonging to hostname from a known_hosts file.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ssh.rm_known_host &lt;user&gt; &lt;hostname&gt;</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.ssh.set_auth_key">
+                           <h2 class="title topictitle2">set_auth_key</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ssh.set_auth_key(
+								user,
+								key,
+								enc='ssh-rsa',
+								comment='',
+								options=None,
+								config='.ssh/authorized_keys',
+								cache_keys=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Add a key to the authorized_keys file. The "key" parameter must only be the
+                                    string of text that is the encoded key. If the key begins with "ssh-rsa"
+                                    or ends with <a class="xref" href="mailto:user@host" target="_blank">user@host</a>, remove those from the key before passing it to this
+                                    function.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ssh.set_auth_key &lt;user&gt; '&lt;key&gt;' enc='dsa'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.ssh.set_auth_key_from_file">
+                           <h2 class="title topictitle2">set_auth_key_from_file</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ssh.set_auth_key_from_file(
+								user,
+								source,
+								config='.ssh/authorized_keys',
+								saltenv='base',
+								env=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Add a key to the authorized_keys file, using a file as the source.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ssh.set_auth_key_from_file &lt;user&gt; salt://ssh_keys/&lt;user&gt;.id_rsa.pub</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.ssh.set_known_host">
+                           <h2 class="title topictitle2">set_known_host</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ssh.set_known_host(
+								user=None,
+								hostname=None,
+								fingerprint=None,
+								key=None,
+								port=None,
+								enc=None,
+								hash_hostname=True,
+								config=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Download SSH public key from remote host "hostname", optionally validate
+                                    its fingerprint against "fingerprint" variable and save the record in the
+                                    known_hosts file.
+                                 </p>
+                                 
+                                 <p class="p">If such a record does already exists in there, do nothing.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ssh.set_known_host &lt;user&gt; fingerprint='xx:xx:..:xx' enc='ssh-rsa' config='.ssh/known_hosts'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.ssh.user_keys">
+                           <h2 class="title topictitle2">user_keys</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ssh.user_keys(
+								user=None,
+								pubfile=None,
+								prvfile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the user's ssh keys on the minion</p>
+                                 
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' ssh.user_keys
+salt '*' ssh.user_keys user=user1
+salt '*' ssh.user_keys user=user1 pubfile=/home/user1/.ssh/id_rsa.pub prvfile=/home/user1/.ssh/id_rsa
+salt '*' ssh.user_keys user=user1 prvfile=False
+salt '*' ssh.user_keys user="['user1','user2'] pubfile=id_rsa.pub prvfile=id_rsa</pre>
+                                 <p class="p">As you can see you can tell Salt not to read from the user's private (or public) key
+                                    file by setting the
+                                    file path to <tt class="ph tt">False</tt>. This can be useful to prevent Salt from publishing private data via Salt Mine or
+                                    others.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

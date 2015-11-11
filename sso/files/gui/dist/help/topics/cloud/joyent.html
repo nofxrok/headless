@@ -1,0 +1,192 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Getting Started With Joyent</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Getting Started With Joyent">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/cloud-providers.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="getting-started-with-joyent">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="getting-started-with-joyent">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Getting Started With Joyent</h1>
+                        <div class="body conbody">
+                           <p class="p">Joyent is a public cloud provider supporting SmartOS, Linux, FreeBSD, and
+                              Windows.
+                           </p>
+                           
+                           <div class="section" id="getting-started-with-joyent__dependencies">
+                              <h2 class="title sectiontitle">Dependencies</h2>
+                              <p class="p">This driver requires the Python <tt class="ph tt">requests</tt> library to be installed.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="getting-started-with-joyent__configuration">
+                              <h2 class="title sectiontitle">Configuration</h2>
+                              <p class="p">The Joyent cloud requires three configuration parameters. The user name and
+                                 password that are used to log into the Joyent system, and the location of the
+                                 private ssh key associated with the Joyent account. The ssh key is needed to
+                                 send the provisioning commands up to the freshly created virtual machine.
+                              </p>
+                              <pre class="pre codeblock language-yaml"># Note: This example is for /etc/salt/cloud.providers or any file in the
+# /etc/salt/cloud.providers.d/ directory.
+
+my-joyent-config:
+    provider: joyent
+    user: fred
+    password: saltybacon
+    private_key: /root/mykey.pem
+    keyname: mykey</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-joyent__profiles">
+                              <h2 class="title sectiontitle">Profiles</h2>
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-joyent__cloud-profiles">
+                              <h2 class="title sectiontitle">Cloud Profiles</h2>
+                              <p class="p">Set up an initial profile at <tt class="ph tt">/etc/salt/cloud.profiles</tt> or in the
+                                 <tt class="ph tt">/etc/salt/cloud.profiles.d/</tt> directory:
+                              </p>
+                              <pre class="pre codeblock language-yaml">joyent_512
+  provider: my-joyent-config
+  size: Extra Small 512 MB
+  image: Arch Linux 2013.06</pre>
+                              <p class="p">Sizes can be obtained using the <tt class="ph tt">--list-sizes</tt> option for the <tt class="ph tt">salt-cloud</tt>
+                                 command:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-cloud --list-sizes my-joyent-config
+my-joyent-config:
+    ----------
+    joyent:
+        ----------
+        Extra Small 512 MB:
+            ----------
+            default:
+                false
+            disk:
+                15360
+            id:
+                Extra Small 512 MB
+            memory:
+                512
+            name:
+                Extra Small 512 MB
+            swap:
+                1024
+            vcpus:
+                1
+...SNIP...</pre>
+                              <p class="p">Images can be obtained using the <tt class="ph tt">--list-images</tt> option for the <tt class="ph tt">salt-cloud</tt>
+                                 command:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-cloud --list-images my-joyent-config
+my-joyent-config:
+    ----------
+    joyent:
+        ----------
+        base:
+            ----------
+            description:
+                A 32-bit SmartOS image with just essential packages
+                installed. Ideal for users who are comfortable with setting
+                up their own environment and tools.
+            disabled:
+                False
+            files:
+                ----------
+                - compression:
+                    bzip2
+                - sha1:
+                    40cdc6457c237cf6306103c74b5f45f5bf2d9bbe
+                - size:
+                    82492182
+            name:
+                base
+            os:
+                smartos
+            owner:
+                352971aa-31ba-496c-9ade-a379feaecd52
+            public:
+                True
+...SNIP...</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-joyent__smartdatacenter">
+                              <h2 class="title sectiontitle">SmartDataCenter</h2>
+                              <p class="p">This driver can also be used with the Joyent SmartDataCenter project. More
+                                 details can be found at:
+                              </p>
+                              
+                              <p class="p">Using SDC requires that an api_host_suffix is set. The default value for this is
+                                 <span class="keyword title_reference">.api.joyentcloud.com</span>. All characters, including the leading <span class="keyword title_reference">.</span>, should be
+                                 included:
+                              </p>
+                              <pre class="pre codeblock language-yaml">api_host_suffix: .api.myhostname.com</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-joyent__miscellaneous-configuration">
+                              <h2 class="title sectiontitle">Miscellaneous Configuration</h2>
+                              <p class="p">The following configuration items can be set in either <tt class="ph tt">provider</tt> or
+                                 <tt class="ph tt">profile</tt> confuration files.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-joyent__use-ssl">
+                              <h2 class="title sectiontitle">use_ssl</h2>
+                              <p class="p">When set to <tt class="ph tt">True</tt> (the default), attach <tt class="ph tt">https://</tt> to any URL that does not
+                                 already have <tt class="ph tt">http://</tt> or <tt class="ph tt">https://</tt> included at the beginning. The best
+                                 practice is to leave the protocol out of the URL, and use this setting to manage
+                                 it.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-joyent__verify-ssl">
+                              <h2 class="title sectiontitle">verify_ssl</h2>
+                              <p class="p">When set to <tt class="ph tt">True</tt> (the default), the underlying web library will verify the
+                                 SSL certificate. This should only be set to <tt class="ph tt">False</tt> for debugging.`
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

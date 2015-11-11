@@ -1,0 +1,17 @@
+description "Himalayan Pink"
+
+start on (net-device-up
+          and local-filesystems
+          and runlevel [2345])
+stop on runlevel [!2345]
+limit nofile 100000 100000
+
+# respawn limit COUNT INTERVAL | unlimited
+respawn
+respawn limit 5 30
+
+script
+    [ -f /etc/default/sso_gunicorn ] && . /etc/default/sso_gunicorn
+    {{ home_dir }}/session_start.sh
+end script
+

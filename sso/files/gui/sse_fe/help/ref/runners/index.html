@@ -1,0 +1,111 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Salt Runners</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Salt Runners">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/orchestration.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-runners">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-runners">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Salt Runners</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p">Salt runners are convenience applications executed with the salt-run command.</p>
+                              
+                              <p class="p">Salt runners work similarly to Salt execution modules however they execute on the
+                                 Salt master itself instead of remote Salt minions.
+                              </p>
+                              
+                              <p class="p">A Salt runner can be a simple client call or a complex application.</p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="all/index.html#all-salt-runners">The full list of runners</a></p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="salt-runners__writing-salt-runners">
+                              <h2 class="title sectiontitle">Writing Salt Runners</h2>
+                              <p class="p">A Salt runner is written in a similar manner to a Salt execution module.
+                                 Both are Python modules which contain functions and each public function
+                                 is a runner which may be executed via the <em class="ph i">salt-run</em> command.
+                              </p>
+                              
+                              <p class="p">For example, if a Python module named <tt class="ph tt">test.py</tt> is created in the runners
+                                 directory and contains a function called <tt class="ph tt">foo</tt>, the <tt class="ph tt">test</tt> runner could be
+                                 invoked with the following command:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-run test.foo</pre>
+                              <p class="p">To add custom runners, put them in a directory and add it to
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__runner_dirs">runner_dirs</a> in the master configuration file.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="salt-runners__examples">
+                              <h2 class="title sectiontitle">Examples</h2>
+                              <p class="p">Examples of runners can be found in the Salt distribution:</p>
+                              
+                              <p class="p"><a class="xref" href="https://github.com/saltstack/salt/blob/develop/salt/runners" target="_blank">https://github.com/saltstack/salt/blob/develop/salt/runners</a></p>
+                              
+                              <p class="p">A simple runner that returns a well-formatted list of the minions that are
+                                 responding to Salt calls could look like this:
+                              </p>
+                              <pre class="pre codeblock language-python"># Import salt modules
+import salt.client
+
+def up():
+    '''
+    Print a list of all of the minions that are up
+    '''
+    client = salt.client.LocalClient(__opts__['conf_file'])
+    minions = client.cmd('*', 'test.ping', timeout=1)
+    for minion in sorted(minions):
+        print minion</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

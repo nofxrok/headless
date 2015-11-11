@@ -1,0 +1,251 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>States tutorial, part 4</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="States tutorial, part 4">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/configuration-management.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="states-tutorial-part-4">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="states-tutorial-part-4">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">States tutorial, part 4</h1>
+                        <div class="body conbody">
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">This tutorial builds on topics covered in 
+                                 		
+                                 			&nbsp;<a class="xref" href="states_pt1.html#states-tutorial-part-1-basic-usage">part 1</a>,
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="states_pt2.html#states-tutorial-part-2-more-complex-states-requisites">part 2</a> and 
+                                 		
+                                 			&nbsp;<a class="xref" href="states_pt3.html#states-tutorial-part-3-templating-includes-extends">part 3</a>. It is recommended
+                                 that you begin there.
+                              </p>
+                              
+                           </aside>
+                           
+                           <p class="p">This part of the tutorial will show how to use salt's 
+                              		
+                              			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__file_roots">file_roots</a>
+                              to set up a workflow in which states can be "promoted" from dev, to QA, to
+                              production.
+                           </p>
+                           
+                           <div class="section" id="states-tutorial-part-4__salt-fileserver-path-inheritance">
+                              <h2 class="title sectiontitle">Salt fileserver path inheritance</h2>
+                              <p class="p">Salt's fileserver allows for more than one root directory per environment, like
+                                 in the below example, which uses both a local directory and a secondary
+                                 location shared to the salt master via NFS:
+                              </p>
+                              <pre class="pre codeblock language-yaml"># In the master config file (/etc/salt/master)
+file_roots:
+  base:
+    - /srv/salt
+    - /mnt/salt-nfs/base</pre>
+                              <p class="p">Salt's fileserver collapses the list of root directories into a single virtual
+                                 environment containing all files from each root. If the same file exists at the
+                                 same relative path in more than one root, then the top-most match "wins". For
+                                 example, if <tt class="ph tt">/srv/salt/foo.txt</tt> and <tt class="ph tt">/mnt/salt-nfs/base/foo.txt</tt> both
+                                 exist, then <tt class="ph tt">salt://foo.txt</tt> will point to <tt class="ph tt">/srv/salt/foo.txt</tt>.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">When using multiple fileserver backends, the order in which they are listed
+                                    in the 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__fileserver_backend">fileserver_backend</a> parameter also matters. If both
+                                    <tt class="ph tt">roots</tt> and <tt class="ph tt">git</tt> backends contain a file with the same relative path,
+                                    and <tt class="ph tt">roots</tt> appears before <tt class="ph tt">git</tt> in the
+                                    
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__fileserver_backend">fileserver_backend</a> list, then the file in <tt class="ph tt">roots</tt> will
+                                    "win", and the file in gitfs will be ignored.
+                                 </p>
+                                 
+                                 <p class="p">A more thorough explanation of how Salt's modular fileserver works can be
+                                    found 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/file_server/backends.html#file-server-backends">here</a>. We recommend reading this.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-tutorial-part-4__environment-configuration">
+                              <h2 class="title sectiontitle">Environment configuration</h2>
+                              <p class="p">Configure a multiple-environment setup like so:</p>
+                              <pre class="pre codeblock language-yaml">file_roots:
+  base:
+    - /srv/salt/prod
+  qa:
+    - /srv/salt/qa
+    - /srv/salt/prod
+  dev:
+    - /srv/salt/dev
+    - /srv/salt/qa
+    - /srv/salt/prod</pre>
+                              <p class="p">Given the path inheritance described above, files within <tt class="ph tt">/srv/salt/prod</tt>
+                                 would be available in all environments. Files within <tt class="ph tt">/srv/salt/qa</tt> would be
+                                 available in both <tt class="ph tt">qa</tt>, and <tt class="ph tt">dev</tt>. Finally, the files within
+                                 <tt class="ph tt">/srv/salt/dev</tt> would only be available within the <tt class="ph tt">dev</tt> environment.
+                              </p>
+                              
+                              <p class="p">Based on the order in which the roots are defined, new files/states can be
+                                 placed within <tt class="ph tt">/srv/salt/dev</tt>, and pushed out to the dev hosts for testing.
+                              </p>
+                              
+                              <p class="p">Those files/states can then be moved to the same relative path within
+                                 <tt class="ph tt">/srv/salt/qa</tt>, and they are now available only in the <tt class="ph tt">dev</tt> and <tt class="ph tt">qa</tt>
+                                 environments, allowing them to be pushed to QA hosts and tested.
+                              </p>
+                              
+                              <p class="p">Finally, if moved to the same relative path within <tt class="ph tt">/srv/salt/prod</tt>, the
+                                 files are now available in all three environments.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-tutorial-part-4__practical-example">
+                              <h2 class="title sectiontitle">Practical Example</h2>
+                              <p class="p">As an example, consider a simple website, installed to <tt class="ph tt">/var/www/foobarcom</tt>.
+                                 Below is a top.sls that can be used to deploy the website:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/prod/top.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">base:
+  'web*prod*':
+    - webserver.foobarcom
+qa:
+  'web*qa*':
+    - webserver.foobarcom
+dev:
+  'web*dev*':
+    - webserver.foobarcom</pre>
+                              <p class="p">Using pillar, roles can be assigned to the hosts:</p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/pillar/top.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">base:
+  'web*prod*':
+    - webserver.prod
+  'web*qa*':
+    - webserver.qa
+  'web*dev*':
+    - webserver.dev</pre>
+                              <p class="p"><tt class="ph tt">/srv/pillar/webserver/prod.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">webserver_role: prod</pre>
+                              <p class="p"><tt class="ph tt">/srv/pillar/webserver/qa.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">webserver_role: qa</pre>
+                              <p class="p"><tt class="ph tt">/srv/pillar/webserver/dev.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">webserver_role: dev</pre>
+                              <p class="p">And finally, the SLS to deploy the website:</p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/prod/webserver/foobarcom.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">{% if pillar.get('webserver_role', '') %}
+/var/www/foobarcom:
+  file.recurse:
+    - source: salt://webserver/src/foobarcom
+    - env: {{ pillar['webserver_role'] }}
+    - user: www
+    - group: www
+    - dir_mode: 755
+    - file_mode: 644
+{% endif %}</pre>
+                              <p class="p">Given the above SLS, the source for the website should initially be placed in
+                                 <tt class="ph tt">/srv/salt/dev/webserver/src/foobarcom</tt>.
+                              </p>
+                              
+                              <p class="p">First, let's deploy to dev. Given the configuration in the top file, this can
+                                 be done using 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.state.html#salt.modules.state.highstate">state.highstate</a>:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt --pillar 'webserver_role:dev' state.highstate</pre>
+                              <p class="p">However, in the event that it is not desirable to apply all states configured
+                                 in the top file (which could be likely in more complex setups), it is possible
+                                 to apply just the states for the <tt class="ph tt">foobarcom</tt> website, using 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.state.html#salt.modules.state.sls">state.sls</a>:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt --pillar 'webserver_role:dev' state.sls webserver.foobarcom</pre>
+                              <p class="p">Once the site has been tested in dev, then the files can be moved from
+                                 <tt class="ph tt">/srv/salt/dev/webserver/src/foobarcom</tt> to
+                                 <tt class="ph tt">/srv/salt/qa/webserver/src/foobarcom</tt>, and deployed using the following:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt --pillar 'webserver_role:qa' state.sls webserver.foobarcom</pre>
+                              <p class="p">Finally, once the site has been tested in qa, then the files can be moved from
+                                 <tt class="ph tt">/srv/salt/qa/webserver/src/foobarcom</tt> to
+                                 <tt class="ph tt">/srv/salt/prod/webserver/src/foobarcom</tt>, and deployed using the following:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt --pillar 'webserver_role:prod' state.sls webserver.foobarcom</pre>
+                              <p class="p">Thanks to Salt's fileserver inheritance, even though the files have been moved
+                                 to within <tt class="ph tt">/srv/salt/prod</tt>, they are still available from the same
+                                 <tt class="ph tt">salt://</tt> URI in both the qa and dev environments.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-tutorial-part-4__continue-learning">
+                              <h2 class="title sectiontitle">Continue Learning</h2>
+                              <p class="p">The best way to continue learning about Salt States is to read through the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/index.html#state-enforcement">reference documentation</a> and to look through examples
+                                 of existing state trees. Many pre-configured state trees
+                                 can be found on Github in the <a class="xref" href="https://github.com/saltstack-formulas" target="_blank">saltstack-formulas</a> collection of repositories.
+                              </p>
+                              
+                              <p class="p">If you have any questions, suggestions, or just want to chat with other people
+                                 who are using Salt, we have a very 
+                                 		
+                                 			&nbsp;<a class="xref" href="../index.html#introduction-to-salt__salt-community">active community</a>
+                                 and we'd love to hear from you.
+                              </p>
+                              
+                              <p class="p">In addition, by continuing to 
+                                 		
+                                 			&nbsp;<a class="xref" href="states_pt5.html#states-tutorial-part-5-orchestration-with-salt">part 5</a>, you can learn about
+                                 the powerful orchestration of which Salt is capable.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Using cron with Salt</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Using cron with Salt">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/administration.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="using-cron-with-salt">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="using-cron-with-salt">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Using cron with Salt</h1>
+                        <div class="body conbody">
+                           <p class="p">The Salt Minion can initiate its own highstate using the <tt class="ph tt">salt-call</tt> command.
+                           </p>
+                           <pre class="pre codeblock language-bash">$ salt-call state.highstate</pre>
+                           <p class="p">This will cause the minion to check in with the master and ensure it is in the
+                              correct 'state'.
+                           </p>
+                           
+                           <div class="section" id="using-cron-with-salt__use-cron-to-initiate-a-highstate">
+                              <h2 class="title sectiontitle">Use cron to initiate a highstate</h2>
+                              <p class="p">If you would like the Salt Minion to regularly check in with the master you can
+                                 use the venerable cron to run the <tt class="ph tt">salt-call</tt> command.
+                              </p>
+                              <pre class="pre codeblock language-bash"># PATH=/bin:/sbin:/usr/bin:/usr/sbin
+
+00 00 * * * salt-call state.highstate</pre>
+                              <p class="p">The above cron entry will run a highstate every day at midnight.</p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Be aware that you may need to ensure the PATH for cron includes any
+                                    scripts or commands that need to be executed.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

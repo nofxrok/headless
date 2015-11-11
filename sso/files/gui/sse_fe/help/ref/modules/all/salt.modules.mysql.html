@@ -1,0 +1,1397 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.mysql</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.mysql">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-mysql">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-mysql">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.mysql</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-mysql__module-salt.modules.mysql"></span></p>
+                              
+                              <p class="p">Module to provide MySQL compatibility to salt.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">MySQLdb Python module</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">On CentOS 5 (and possibly RHEL 5) both MySQL-python and python26-mysqldb
+                                    need to be installed.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">configuration</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">In order to connect to MySQL, certain configuration is required
+                                       in /etc/salt/minion on the relevant minions. Some sample configs might look
+                                       like:
+                                    </p>
+                                    <pre class="pre codeblock language-">mysql.host: 'localhost'
+mysql.port: 3306
+mysql.user: 'root'
+mysql.pass: ''
+mysql.db: 'mysql'
+mysql.unix_socket: '/tmp/mysql.sock'
+mysql.charset: 'utf8'</pre>
+                                    <p class="p">You can also use a defaults file:</p>
+                                    <pre class="pre codeblock language-">mysql.default_file: '/etc/mysql/debian.cnf'</pre>
+                                    </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><span class="keyword versionmodified">Changed in version 2014.1.0: </span>charset connection argument added. This is a MySQL charset, not a python one
+                              </p>
+                              
+                              <p class="p"><span class="keyword versionmodified">Changed in version 0.16.2: </span>Connection arguments from the minion config file can be overridden on the
+                                 CLI by using the arguments defined 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../states/all/salt.states.mysql_user.html#salt-states-mysql-user">here</a>. Additionally, it is now possible
+                                 to setup a user with no password.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.mysql.db_check">
+                           <h2 class="title topictitle2">db_check</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.db_check(
+								name,
+								table=None,
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Repairs the full database or just a given table</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.db_check dbname
+salt '*' mysql.db_check dbname dbtable</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.db_create">
+                           <h2 class="title topictitle2">db_create</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.db_create(
+								name,
+								character_set=None,
+								collate=None,
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Adds a databases to the MySQL server.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d169329e113" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d169329e115" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d169329e113" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d169329e115" class="stentry propdesc">
+                                       <p class="p">The name of the database to manage</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d169329e113" class="stentry propvalue">character_set</td>
+                                    
+                                    <td valign="top" headers="d169329e115" class="stentry propdesc">
+                                       <p class="p">The character set, if left empty the MySQL default will be used</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d169329e113" class="stentry propvalue">collate</td>
+                                    
+                                    <td valign="top" headers="d169329e115" class="stentry propdesc">
+                                       <p class="p">The collation, if left empty the MySQL default will be used</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.db_create 'dbname'
+salt '*' mysql.db_create 'dbname' 'utf8' 'utf8_general_ci'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.db_exists">
+                           <h2 class="title topictitle2">db_exists</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.db_exists(
+								name,
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Checks if a database exists on the MySQL server.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.db_exists 'dbname'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.db_list">
+                           <h2 class="title topictitle2">db_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.db_list(
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of databases of a MySQL server using the output
+                                    from the <tt class="ph tt">SHOW DATABASES</tt> query.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.db_list</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.db_optimize">
+                           <h2 class="title topictitle2">db_optimize</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.db_optimize(
+								name,
+								table=None,
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Optimizes the full database or just a given table</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.db_optimize dbname</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.db_remove">
+                           <h2 class="title topictitle2">db_remove</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.db_remove(
+								name,
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Removes a databases from the MySQL server.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.db_remove 'dbname'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.db_repair">
+                           <h2 class="title topictitle2">db_repair</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.db_repair(
+								name,
+								table=None,
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Repairs the full database or just a given table</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.db_repair dbname</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.db_tables">
+                           <h2 class="title topictitle2">db_tables</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.db_tables(
+								name,
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Shows the tables in the given MySQL database (if exists)</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.db_tables 'database'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.free_slave">
+                           <h2 class="title topictitle2">free_slave</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.free_slave(
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Frees a slave from its master.  This is a WIP, do not use.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.free_slave</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.get_master_status">
+                           <h2 class="title topictitle2">get_master_status</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.get_master_status(
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Retrieves the master status from the minion.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d169329e377" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d169329e379" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d169329e377" class="stentry propvalue">Returns:</td>
+                                    
+                                    <td valign="top" headers="d169329e379" class="stentry propdesc">
+                                       <dl class="dl definition_list">
+                                          <dt class="dt dlterm">{'host.domain.com': {'Binlog_Do_DB': '',</dt>
+                                          
+                                          <dd class="dd">
+                                             <p class="p">'Binlog_Ignore_DB': '',
+                                                'File': 'mysql-bin.000021',
+                                                'Position': 107}}
+                                             </p>
+                                             
+                                          </dd>
+                                          
+                                       </dl>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.get_master_status</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.get_slave_status">
+                           <h2 class="title topictitle2">get_slave_status</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.get_slave_status(
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Retrieves the slave status from the minion.</p>
+                                 
+                                 <p class="p">Returns:</p>
+                                 <pre class="pre codeblock language-">{'host.domain.com': {'Connect_Retry': 60,
+               'Exec_Master_Log_Pos': 107,
+               'Last_Errno': 0,
+               'Last_Error': '',
+               'Last_IO_Errno': 0,
+               'Last_IO_Error': '',
+               'Last_SQL_Errno': 0,
+               'Last_SQL_Error': '',
+               'Master_Host': 'comet.scion-eng.com',
+               'Master_Log_File': 'mysql-bin.000021',
+               'Master_Port': 3306,
+               'Master_SSL_Allowed': 'No',
+               'Master_SSL_CA_File': '',
+               'Master_SSL_CA_Path': '',
+               'Master_SSL_Cert': '',
+               'Master_SSL_Cipher': '',
+               'Master_SSL_Key': '',
+               'Master_SSL_Verify_Server_Cert': 'No',
+               'Master_Server_Id': 1,
+               'Master_User': 'replu',
+               'Read_Master_Log_Pos': 107,
+               'Relay_Log_File': 'klo-relay-bin.000071',
+               'Relay_Log_Pos': 253,
+               'Relay_Log_Space': 553,
+               'Relay_Master_Log_File': 'mysql-bin.000021',
+               'Replicate_Do_DB': '',
+               'Replicate_Do_Table': '',
+               'Replicate_Ignore_DB': '',
+               'Replicate_Ignore_Server_Ids': '',
+               'Replicate_Ignore_Table': '',
+               'Replicate_Wild_Do_Table': '',
+               'Replicate_Wild_Ignore_Table': '',
+               'Seconds_Behind_Master': 0,
+               'Skip_Counter': 0,
+               'Slave_IO_Running': 'Yes',
+               'Slave_IO_State': 'Waiting for master to send event',
+               'Slave_SQL_Running': 'Yes',
+               'Until_Condition': 'None',
+               'Until_Log_File': '',
+               'Until_Log_Pos': 0}}</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.get_slave_status</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.grant_add">
+                           <h2 class="title topictitle2">grant_add</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.grant_add(
+								grant,
+								database,
+								user,
+								host='localhost',
+								grant_option=False,
+								escape=True,
+								ssl_option=False,
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Adds a grant to the MySQL server.</p>
+                                 
+                                 <p class="p">For database, make sure you specify database.table or database.*</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.grant_add             'SELECT,INSERT,UPDATE,...' 'database.*' 'frank' 'localhost'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.grant_exists">
+                           <h2 class="title topictitle2">grant_exists</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.grant_exists(
+								grant,
+								database,
+								user,
+								host='localhost',
+								grant_option=False,
+								escape=True,
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Checks to see if a grant exists in the database</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.grant_exists              'SELECT,INSERT,UPDATE,...' 'database.*' 'frank' 'localhost'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.grant_revoke">
+                           <h2 class="title topictitle2">grant_revoke</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.grant_revoke(
+								grant,
+								database,
+								user,
+								host='localhost',
+								grant_option=False,
+								escape=True,
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Removes a grant from the MySQL server.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.grant_revoke             'SELECT,INSERT,UPDATE' 'database.*' 'frank' 'localhost'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.processlist">
+                           <h2 class="title topictitle2">processlist</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.processlist(
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Retrieves the processlist from the MySQL server via
+                                    "SHOW FULL PROCESSLIST".
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d169329e549" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d169329e551" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d169329e549" class="stentry propvalue">Returns: a list of dicts, with each dict representing a process:</td>
+                                    
+                                    <td valign="top" headers="d169329e551" class="stentry propdesc">
+                                       <dl class="dl definition_list">
+                                          <dt class="dt dlterm">{'Command': 'Query',</dt>
+                                          
+                                          <dd class="dd">
+                                             <p class="p">'Host': 'localhost',
+                                                'Id': 39,
+                                                'Info': 'SHOW FULL PROCESSLIST',
+                                                'Rows_examined': 0,
+                                                'Rows_read': 1,
+                                                'Rows_sent': 0,
+                                                'State': None,
+                                                'Time': 0,
+                                                'User': 'root',
+                                                'db': 'mysql'}
+                                             </p>
+                                             
+                                          </dd>
+                                          
+                                       </dl>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.processlist</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.query">
+                           <h2 class="title topictitle2">query</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.query(
+								database,
+								query,
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Run an arbitrary SQL query and return the results or
+                                    the number of affected rows.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.query mydb "UPDATE mytable set myfield=1 limit 1"</pre>
+                                 <p class="p">Return data:</p>
+                                 <pre class="pre codeblock language-python">{'query time': {'human': '39.0ms', 'raw': '0.03899'}, 'rows affected': 1L}</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.query mydb "SELECT id,name,cash from users limit 3"</pre>
+                                 <p class="p">Return data:</p>
+                                 <pre class="pre codeblock language-python">{'columns': ('id', 'name', 'cash'),
+    'query time': {'human': '1.0ms', 'raw': '0.001'},
+    'results': ((1L, 'User 1', Decimal('110.000000')),
+                (2L, 'User 2', Decimal('215.636756')),
+                (3L, 'User 3', Decimal('0.040000'))),
+    'rows returned': 3L}</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.query mydb 'INSERT into users values (null,"user 4", 5)'</pre>
+                                 <p class="p">Return data:</p>
+                                 <pre class="pre codeblock language-python">{'query time': {'human': '25.6ms', 'raw': '0.02563'}, 'rows affected': 1L}</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.query mydb 'DELETE from users where id = 4 limit 1'</pre>
+                                 <p class="p">Return data:</p>
+                                 <pre class="pre codeblock language-python">{'query time': {'human': '39.0ms', 'raw': '0.03899'}, 'rows affected': 1L}</pre>
+                                 <p class="p">Jinja Example: Run a query on <tt class="ph tt">mydb</tt> and use row 0, column 0's data.
+                                 </p>
+                                 <pre class="pre codeblock language-python jinja">{{ salt['mysql.query']('mydb', 'SELECT info from mytable limit 1')['results'][0][0] }}</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.quote_identifier">
+                           <h2 class="title topictitle2">quote_identifier</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.quote_identifier(
+								identifier,
+								for_grants=False
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Return an identifier name (column, table, database, etc) escaped for MySQL</p>
+                                 
+                                 <p class="p">This means surrounded by "`" character and escaping this character inside.
+                                    It also means doubling the '%' character for MySQLdb internal usage.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr>
+                                    
+                                    <th id="d169329e667-value" valign="bottom" align="left">Value</th>
+                                    
+                                    <th id="d169329e667-desc" valign="bottom" align="left">Description</th>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d169329e667-value" class="stentry propvalue">Parameters</td>
+                                    
+                                    <td valign="top" headers="d169329e667-desc" class="stentry propdesc">
+                                       <ul class="ul">
+                                          <li class="li">
+                                             <p class="p">identifier -- the table, column or database identifier</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">for_grants -- is False by default, when using database names on grant
+                                                queries you should set it to True to also escape "_" and "%" characters as
+                                                requested by MySQL. Note that theses characters should only be escaped when
+                                                requesting grants on the database level (<span class="keyword title_reference">my_%db</span>.*) but not for table
+                                                level grants (<span class="keyword title_reference">my_%db</span>.`foo`)
+                                             </p>
+                                             
+                                          </li>
+                                          
+                                       </ul>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.quote_identifier 'foo`bar'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.showglobal">
+                           <h2 class="title topictitle2">showglobal</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.showglobal(
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Retrieves the show global variables from the minion.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d169329e720" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d169329e722" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d169329e720" class="stentry propvalue">Returns::</td>
+                                    
+                                    <td valign="top" headers="d169329e722" class="stentry propdesc">
+                                       <p class="p">show global variables full dict</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.showglobal</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.showvariables">
+                           <h2 class="title topictitle2">showvariables</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.showvariables(
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Retrieves the show variables from the minion.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d169329e765" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d169329e767" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d169329e765" class="stentry propvalue">Returns::</td>
+                                    
+                                    <td valign="top" headers="d169329e767" class="stentry propdesc">
+                                       <p class="p">show variables full dict</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.showvariables</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.slave_lag">
+                           <h2 class="title topictitle2">slave_lag</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.slave_lag(
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the number of seconds that a slave SQL server is lagging behind the
+                                    master, if the host is not a slave it will return -1.  If the server is
+                                    configured to be a slave for replication but slave IO is not running then
+                                    -2 will be returned. If there was an error connecting to the database or
+                                    checking the slave status, -3 will be returned.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.slave_lag</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.status">
+                           <h2 class="title topictitle2">status</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.status(
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the status of a MySQL server using the output from the <tt class="ph tt">SHOW
+                                       STATUS</tt> query.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.status</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.tokenize_grant">
+                           <h2 class="title topictitle2">tokenize_grant</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.tokenize_grant(
+								grant
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">External wrapper function
+                                    :param grant:
+                                    :return: dict
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.tokenize_grant             "GRANT SELECT, INSERT ON testdb.* TO 'testuser'@'localhost'"</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.user_chpass">
+                           <h2 class="title topictitle2">user_chpass</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.user_chpass(
+								user,
+								host='localhost',
+								password=None,
+								password_hash=None,
+								allow_passwordless=False,
+								unix_socket=None,
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Change password for a MySQL user</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d169329e901" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d169329e903" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d169329e901" class="stentry propvalue">host</td>
+                                    
+                                    <td valign="top" headers="d169329e903" class="stentry propdesc">
+                                       <p class="p">Host for which this user/password combo applies</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d169329e901" class="stentry propvalue">password</td>
+                                    
+                                    <td valign="top" headers="d169329e903" class="stentry propdesc">
+                                       <p class="p">The password to set for the new user. Will take precedence over the
+                                          <tt class="ph tt">password_hash</tt> option if both are specified.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d169329e901" class="stentry propvalue">password_hash</td>
+                                    
+                                    <td valign="top" headers="d169329e903" class="stentry propdesc">
+                                       <p class="p">The password in hashed form. Be sure to quote the password because YAML
+                                          doesn't like the <tt class="ph tt">*</tt>. A password hash can be obtained from the mysql
+                                          command-line client like so:
+                                       </p>
+                                       <pre class="pre codeblock language-">mysql&gt; SELECT PASSWORD('mypass');
++-------------------------------------------+
+| PASSWORD('mypass')                        |
++-------------------------------------------+
+| *6C8989366EAF75BB670AD8EA7A7FC1176A95CEF4 |
++-------------------------------------------+
+1 row in set (0.00 sec)</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d169329e901" class="stentry propvalue">allow_passwordless</td>
+                                    
+                                    <td valign="top" headers="d169329e903" class="stentry propdesc">
+                                       <p class="p">If <tt class="ph tt">True</tt>, then <tt class="ph tt">password</tt> and <tt class="ph tt">password_hash</tt> can be omitted (or
+                                          set to <tt class="ph tt">None</tt>) to permit a passwordless login.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 0.16.2: </span>The <tt class="ph tt">allow_passwordless</tt> option was added.
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.user_chpass frank localhost newpassword
+salt '*' mysql.user_chpass frank localhost password_hash='hash'
+salt '*' mysql.user_chpass frank localhost allow_passwordless=True</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.user_create">
+                           <h2 class="title topictitle2">user_create</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.user_create(
+								user,
+								host='localhost',
+								password=None,
+								password_hash=None,
+								allow_passwordless=False,
+								unix_socket=False,
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Creates a MySQL user</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d169329e991" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d169329e993" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d169329e991" class="stentry propvalue">host</td>
+                                    
+                                    <td valign="top" headers="d169329e993" class="stentry propdesc">
+                                       <p class="p">Host for which this user/password combo applies</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d169329e991" class="stentry propvalue">password</td>
+                                    
+                                    <td valign="top" headers="d169329e993" class="stentry propdesc">
+                                       <p class="p">The password to use for the new user. Will take precedence over the
+                                          <tt class="ph tt">password_hash</tt> option if both are specified.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d169329e991" class="stentry propvalue">password_hash</td>
+                                    
+                                    <td valign="top" headers="d169329e993" class="stentry propdesc">
+                                       <p class="p">The password in hashed form. Be sure to quote the password because YAML
+                                          doesn't like the <tt class="ph tt">*</tt>. A password hash can be obtained from the mysql
+                                          command-line client like so:
+                                       </p>
+                                       <pre class="pre codeblock language-">mysql&gt; SELECT PASSWORD('mypass');
++-------------------------------------------+
+| PASSWORD('mypass')                        |
++-------------------------------------------+
+| *6C8989366EAF75BB670AD8EA7A7FC1176A95CEF4 |
++-------------------------------------------+
+1 row in set (0.00 sec)</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d169329e991" class="stentry propvalue">allow_passwordless</td>
+                                    
+                                    <td valign="top" headers="d169329e993" class="stentry propdesc">
+                                       <p class="p">If <tt class="ph tt">True</tt>, then <tt class="ph tt">password</tt> and <tt class="ph tt">password_hash</tt> can be omitted (or
+                                          set to <tt class="ph tt">None</tt>) to permit a passwordless login.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d169329e991" class="stentry propvalue">unix_socket</td>
+                                    
+                                    <td valign="top" headers="d169329e993" class="stentry propdesc">
+                                       <p class="p">If <tt class="ph tt">True</tt> and allow_passwordless is <tt class="ph tt">True</tt> then will be used unix_socket auth plugin.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 0.16.2: </span>The <tt class="ph tt">allow_passwordless</tt> option was added.
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.user_create 'username' 'hostname' 'password'
+salt '*' mysql.user_create 'username' 'hostname' password_hash='hash'
+salt '*' mysql.user_create 'username' 'hostname' allow_passwordless=True</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.user_exists">
+                           <h2 class="title topictitle2">user_exists</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.user_exists(
+								user,
+								host='localhost',
+								password=None,
+								password_hash=None,
+								passwordless=False,
+								unix_socket=False,
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Checks if a user exists on the MySQL server. A login can be checked to see
+                                    if passwordless login is permitted by omitting <tt class="ph tt">password</tt> and
+                                    <tt class="ph tt">password_hash</tt>, and using <tt class="ph tt">passwordless=True</tt>.
+                                 </p>
+                                 
+                                 <p class="p"><span class="keyword versionmodified">New in version 0.16.2: </span>The <tt class="ph tt">passwordless</tt> option was added.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.user_exists 'username' 'hostname' 'password'
+salt '*' mysql.user_exists 'username' 'hostname' password_hash='hash'
+salt '*' mysql.user_exists 'username' passwordless=True</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.user_grants">
+                           <h2 class="title topictitle2">user_grants</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.user_grants(
+								user,
+								host='localhost',
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Shows the grants for the given MySQL user (if it exists)</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.user_grants 'frank' 'localhost'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.user_info">
+                           <h2 class="title topictitle2">user_info</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.user_info(
+								user,
+								host='localhost',
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Get full info on a MySQL user</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.user_info root localhost</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.user_list">
+                           <h2 class="title topictitle2">user_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.user_list(
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of users on a MySQL server</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.user_list</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.user_remove">
+                           <h2 class="title topictitle2">user_remove</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.user_remove(
+								user,
+								host='localhost',
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Delete MySQL user</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.user_remove frank localhost</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.mysql.version">
+                           <h2 class="title topictitle2">version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.mysql.version(
+								**connection_args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the version of a MySQL server using the output from the <tt class="ph tt">SELECT
+                                       VERSION()</tt> query.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' mysql.version</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.xmpp</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.xmpp">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-xmpp">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-xmpp">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.xmpp</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-xmpp__module-salt.modules.xmpp"></span></p>
+                              
+                              <p class="p">Module for Sending Messages via XMPP (a.k.a. Jabber)</p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">sleekxmpp python module</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">configuration</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">This module can be used by either passing a jid and password
+                                       directly to send_message, or by specifying the name of a configuration
+                                       profile in the minion config, minion pillar, or master config.
+                                    </p>
+                                    
+                                    <p class="p">For example:</p>
+                                    <pre class="pre codeblock language-yaml">my-xmpp-login:
+    xmpp.jid: myuser@jabber.example.org/resourcename
+    xmpp.password: verybadpass</pre>
+                                    <p class="p">The resourcename refers to the resource that is using this account. It is
+                                       user-definable, and optional. The following configurations are both valid:
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">my-xmpp-login:
+    xmpp.jid: myuser@jabber.example.org/salt
+    xmpp.password: verybadpass
+
+my-xmpp-login:
+    xmpp.jid: myuser@jabber.example.org
+    xmpp.password: verybadpass</pre>
+                                    </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.xmpp.send_msg">
+                           <h2 class="title topictitle2">send_msg</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.xmpp.send_msg(
+								recipient,
+								message,
+								jid=None,
+								password=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Send a message to an XMPP recipient. Designed for use in states.</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-">xmpp.send_msg 'admins@xmpp.example.com' 'This is a salt module test'             profile='my-xmpp-account'
+xmpp.send_msg 'admins@xmpp.example.com' 'This is a salt module test'             jid='myuser@xmpp.example.com/salt' password='verybadpass'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.xmpp.SendMsgBot">
+                           <h2 class="title topictitle2">SendMsgBot Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.xmpp.SendMsgBot(
+									jid,
+									password,
+									recipient,
+									msg
+									)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.xmpp.SendMsgBot.start">
+                              <h3 class="title topictitle3">SendMsgBot.start Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">start(
+								event
+								)</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

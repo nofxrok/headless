@@ -1,0 +1,706 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Salt Best Practices</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Salt Best Practices">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../enterprise/user-guide.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-best-practices">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/bootstrap/css/bootstrap.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/bootstrap/css/fonts.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/bootstrap/css/prism.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/bootstrap/css/lightbox.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/bootstrap/css/webhelp.css">
+      <script type="text/javascript" src="../../themes/bootstrap/js/jquery-1.11.0.js"></script>
+      <script type="text/javascript" src="../../themes/bootstrap/js/jquery-ui-1.9.1.custom.min.js"></script>
+      <script type="text/javascript" src="../../themes/bootstrap/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="../../themes/bootstrap/js/jquery.slimscroll.js"></script>
+      <script type="text/javascript" src="../../themes/bootstrap/js/jquery.tocify.js"></script>
+      <script type="text/javascript" src="../../themes/bootstrap/js/prism.js"></script>
+      <script type="text/javascript" src="../../themes/bootstrap/js/lightbox.min.js"></script>
+      <script type="text/javascript" src="../../themes/bootstrap/js/webhelp.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <div id="sidebar-wrapper"><a class="ss-logo" href="/help/home.html"></a><div id="search-form" class="inner-addon left-addon"><i class="glyphicon glyphicon-search"></i><input type="text" class="form-control"></div>
+            <div id="guide-links">
+               <div class="well">
+                  <ul class="nav nav-pills nav-stacked">
+                     <li><a href="/help/gs/index.html"><span class="glyphicon glyphicon glyphicon-th-list"></span> Get Started</a></li>
+                     <li><a href="/help/home.html"><span class="glyphicon glyphicon-home"></span>  Home</a></li>
+                     <li><a href="/help/enterprise/user-guide.html"><span class="glyphicon glyphicon-user"></span> User Guide</a></li>
+                  </ul>
+               </div>
+               <p id="guide-title">Enterprise Help</p>
+            </div>
+            <div class="sidebar-nav">
+               <ul id="gen-links">
+                  <li class=" collapsible  collapsed"><a href="../../enterprise/use-cases.html">Use Cases</a><ul>
+                        <li class=" no-child "><a href="../../enterprise/continuous-deployment.html">Continuous Deployment</a></li>
+                        <li class=" no-child "><a href="../../enterprise/app-stacks.html">Application Stacks</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../enterprise/cloud.html">Cloud Management</a><ul>
+                              <li class=" no-child "><a href="../../enterprise/orchestrate.html">Orchestration</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../enterprise/security-bp.html">Security Best Practices</a></li>
+                        <li class=" no-child "><a href="../../enterprise/components.html">SaltStack Components</a></li>
+                     </ul>
+                  </li>
+                  <li class=" collapsible  collapsed"><a href="../../enterprise/deployment.html">Deployment</a><ul>
+                        <li class=" no-child "><a href="../../enterprise/t_ops_prepare.html">Preparing the SaltStack Ops System</a></li>
+                        <li class=" no-child "><a href="../../enterprise/t_master_prepare.html">Preparing Masters for SaltStack Ops Integration</a></li>
+                        <li class=" no-child "><a href="../../enterprise/requirements.html">System Requirements</a></li>
+                        <li class=" no-child "><a href="../../enterprise/faq.html">Frequently Asked Questions</a></li>
+                     </ul>
+                  </li>
+                  <li class=" no-child "><a href="../../enterprise/masters.html">View Masters</a></li>
+                  <li class=" no-child "><a href="../../enterprise/minions.html">View Minions</a></li>
+                  <li class=" no-child "><a href="../../enterprise/jobs.html">Jobs</a></li>
+                  <li class=" no-child "><a href="../../enterprise/targets.html">Targets</a></li>
+                  <li class=" collapsible  collapsed"><a href="../../enterprise/management.html">Admin Management</a><ul>
+                        <li class=" no-child "><a href="../../enterprise/cfg-masters.html">Manage Masters</a></li>
+                        <li class=" no-child "><a href="../../enterprise/jobs-all.html">Manage Jobs</a></li>
+                        <li class=" no-child "><a href="../../enterprise/cfg-users.html">User Accounts</a></li>
+                     </ul>
+                  </li>
+                  <li class=" no-child "><a href="../../enterprise/web-console-overview.html">Console Overview</a></li>
+                  <li class=" no-child "><a href="../../enterprise/reports.html">View Reports</a></li>
+                  <li class=" no-child "><a href="../../enterprise/architecture.html">Architecture Reference</a></li>
+                  <li class=" no-child "><a href="../../enterprise/glossary.html">Glossary</a></li>
+                  <li class=" collapsible  active"><a href="../../enterprise/user-guide.html">SaltStack User Guide</a><ul>
+                        <li class=" collapsible  collapsed"><a href="../../user/topics/installation/index.html">Installation</a><ul>
+                              <li class=" no-child "><a href="../../user/topics/installation/debian.html">Debian Installation</a></li>
+                              <li class=" no-child "><a href="../../user/topics/installation/freebsd.html">FreeBSD</a></li>
+                              <li class=" no-child "><a href="../../user/topics/installation/gentoo.html">Gentoo</a></li>
+                              <li class=" no-child "><a href="../../user/topics/installation/solaris.html">Solaris</a></li>
+                              <li class=" no-child "><a href="../../user/topics/installation/ubuntu.html">Ubuntu Installation</a></li>
+                              <li class=" no-child "><a href="../../user/topics/installation/windows.html">Windows</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../user/topics/tutorials/index.html">Tutorials</a><ul>
+                              <li class=" no-child "><a href="../../user/topics/tutorials/standalone_minion.html">Standalone Minion</a></li>
+                              <li class=" no-child "><a href="../../user/topics/tutorials/cron.html">Using cron with Salt</a></li>
+                              <li class=" no-child "><a href="../../user/topics/tutorials/states_pt1.html">States tutorial, part 1 - Basic Usage</a></li>
+                              <li class=" no-child "><a href="../../user/topics/tutorials/states_pt2.html">States tutorial, part 2 - More Complex States, Requisites</a></li>
+                              <li class=" no-child "><a href="../../user/topics/tutorials/states_pt4.html">States tutorial, part 4</a></li>
+                              <li class=" no-child "><a href="../../user/topics/tutorials/minionfs.html">MinionFS Backend Walkthrough</a></li>
+                              <li class=" no-child "><a href="../../user/topics/tutorials/multimaster_pki.html">Multi-Master-PKI Tutorial With Failover</a></li>
+                              <li class=" no-child "><a href="../../user/topics/tutorials/writing_tests.html">Writing Salt Tests</a></li>
+                              <li class=" no-child "><a href="../../user/topics/tutorials/halite.html">Installing and Configuring Halite</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../user/topics/targeting/index.html">Targeting Minions</a><ul>
+                              <li class=" no-child "><a href="../../user/topics/targeting/globbing.html">Matching the minion id</a></li>
+                              <li class=" no-child "><a href="../../user/topics/targeting/grains.html">Grains</a></li>
+                              <li class=" no-child "><a href="../../user/topics/targeting/ipcidr.html">Subnet/IP Address Matching</a></li>
+                              <li class=" no-child "><a href="../../user/topics/targeting/compound.html">Compound matchers</a></li>
+                              <li class=" no-child "><a href="../../user/topics/targeting/nodegroups.html">Node groups</a></li>
+                              <li class=" no-child "><a href="../../user/topics/targeting/batch.html">Batch Size</a></li>
+                              <li class=" no-child "><a href="../../user/topics/targeting/range.html">SECO Range</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../user/topics/pillar/index.html">Storing Static Data in the Pillar</a></li>
+                        <li class=" no-child "><a href="../../user/topics/reactor/index.html">Reactor System</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../user/topics/eauth/index.html">External Authentication System</a><ul>
+                              <li class=" no-child "><a href="../../user/topics/eauth/access_control.html">Access Control System</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../user/topics/event/index.html">Salt Event System</a><ul>
+                              <li class=" no-child "><a href="../../user/topics/event/master_events.html">Salt Master Events</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../user/topics/topology/syndic.html">Salt Syndic</a></li>
+                        <li class=" no-child "><a href="../../user/topics/topology/proxyminion/index.html">Proxy Minion</a></li>
+                        <li class=" no-child "><a href="../../user/topics/windows/windows-specific-behavior.html">Windows-specific Behaviour</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../user/topics/cloud/index.html">Salt Cloud</a><ul>
+                              <li class=" no-child "><a href="../../user/topics/cloud/basic.html">Salt Cloud basic usage</a></li>
+                              <li class=" no-child "><a href="../../user/topics/cloud/profiles.html">VM Profiles</a></li>
+                              <li class=" no-child "><a href="../../user/topics/cloud/map.html">Cloud Map File</a></li>
+                              <li class=" no-child "><a href="../../user/topics/cloud/action.html">Cloud Actions</a></li>
+                              <li class=" no-child "><a href="../../user/topics/cloud/function.html">Cloud Functions</a></li>
+                              <li class=" collapsible  collapsed"><a href="../../user/topics/cloud/provider-specifics.html">Cloud Provider Specifics</a><ul>
+                                    <li class=" no-child "><a href="../../user/topics/cloud/parallels.html">Getting Started With Parallels</a></li>
+                                    <li class=" no-child "><a href="../../user/topics/cloud/proxmox.html">Getting Started With Proxmox</a></li>
+                                    <li class=" no-child "><a href="../../user/topics/cloud/lxc.html">Getting Started With LXC</a></li>
+                                    <li class=" no-child "><a href="../../user/topics/cloud/hpcloud.html">Getting Started With HP Cloud</a></li>
+                                    <li class=" no-child "><a href="../../user/topics/cloud/vexxhost.html">Getting Started with VEXXHOST</a></li>
+                                 </ul>
+                              </li>
+                              <li class=" no-child "><a href="../../user/topics/cloud/deploy.html">OS Support for Cloud VMs</a></li>
+                              <li class=" no-child "><a href="../../user/topics/cloud/features.html">Feature Matrix</a></li>
+                              <li class=" no-child "><a href="../../user/topics/cloud/windows.html">Spinning up Windows Minions</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../user/topics/netapi/index.html">netapi modules</a><ul>
+                              <li class=" no-child "><a href="../../user/topics/netapi/writing.html">Writing netapi modules</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../user/topics/virt/index.html">Salt Virt</a><ul>
+                              <li class=" no-child "><a href="../../user/topics/virt/disk.html">Virtual Machine Disk Profiles</a></li>
+                              <li class=" no-child "><a href="../../user/topics/virt/nic.html">Virtual Machine Network Profiles</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../user/topics/yaml/index.html">Understanding YAML</a></li>
+                        <li class=" no-child "><a href="../../user/topics/master_tops/index.html">Master Tops System</a></li>
+                        <li class=" no-child  active">
+                           <div id="toc"></div>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../user/topics/troubleshooting/index.html">Troubleshooting</a><ul>
+                              <li class=" no-child "><a href="../../user/topics/troubleshooting/minion.html">Troubleshooting the Salt Minion</a></li>
+                           </ul>
+                        </li>
+                     </ul>
+                  </li>
+               </ul>
+            </div>
+         </div>
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="salt-best-practices">
+                        
+                        <h1 class="title topictitle1">Salt Best Practices</h1>
+                        <div class="body conbody">
+                           <p class="p">Salt's extreme flexibility leads to many questions concerning the structure of
+                              configuration files.
+                           </p>
+                           
+                           <p class="p">This document exists to clarify these points through examples and
+                              code.
+                           </p>
+                           
+                           <div class="section" id="salt-best-practices__general-rules">
+                              <h2 class="title sectiontitle">General rules</h2>
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">Modularity and clarity should be emphasized whenever possible.</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Create clear relations between pillars and states.</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Use variables when it makes sense but don't overuse them.</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Store sensitive data in pillar.</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Don't use grains for matching in your pillar top file for any sensitive
+                                       pillars.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                           </div>
+                           
+                           <div class="section" id="salt-best-practices__structuring-states-and-formulas">
+                              <h2 class="title sectiontitle">Structuring States and Formulas</h2>
+                              <p class="p">When structuring Salt States and Formulas it is important to begin with the
+                                 directory structure. A proper directory structure clearly defines the
+                                 functionality of each state to the user via visual inspection of the state's
+                                 name.
+                              </p>
+                              
+                              <p class="p">Reviewing the <a class="xref" href="https://github.com/saltstack-formulas/mysql-formula" target="_blank">MySQL Salt Formula</a>
+                                 it is clear to see the benefits to the end-user when reviewing a sample of the
+                                 available states:
+                              </p>
+                              <pre class="pre codeblock language-bash">/srv/salt/mysql/files/
+/srv/salt/mysql/client.sls
+/srv/salt/mysql/map.jinja
+/srv/salt/mysql/python.sls
+/srv/salt/mysql/server.sls</pre>
+                              <p class="p">This directory structure would lead to these states being referenced in a top
+                                 file in the following way:
+                              </p>
+                              <pre class="pre codeblock language-yaml">base:
+  'web*':
+    - mysql.client
+    - mysql.python
+  'db*':
+    - mysql.server</pre>
+                              <p class="p">This clear definition ensures that the user is properly informed of what each
+                                 state will do.
+                              </p>
+                              
+                              <p class="p">Another example comes from the <a class="xref" href="https://github.com/saltstack-formulas/vim-formula" target="_blank">vim-formula</a>:
+                              </p>
+                              <pre class="pre codeblock language-bash">/srv/salt/vim/files/
+/srv/salt/vim/absent.sls
+/srv/salt/vim/init.sls
+/srv/salt/vim/map.jinja
+/srv/salt/vim/nerdtree.sls
+/srv/salt/vim/pyflakes.sls
+/srv/salt/vim/salt.sls</pre>
+                              <p class="p">Once again viewing how this would look in a top file:</p>
+                              
+                              <p class="p">/srv/salt/top.sls:</p>
+                              <pre class="pre codeblock language-yaml">base:
+  'web*':
+    - vim
+    - vim.nerdtree
+    - vim.pyflakes
+    - vim.salt
+  'db*':
+    - vim.absent</pre>
+                              <p class="p">The usage of a clear top-level directory as well as properly named states
+                                 reduces the overall complexity and leads a user to both understand what will
+                                 be included at a glance and where it is located.
+                              </p>
+                              
+                              <p class="p">In addition <a class="xref" href="unresolvable-reference.html#salt-formulas__conventions-formula">Formulas</a> should
+                                 be used as often as possible.
+                              </p>
+                              
+                              <aside class="note "><span class="title">Note:</span> 
+                                 <p class="p">Formulas repositories on the saltstack-formulas GitHub organization should
+                                    not be pointed to directly from systems that automatically fetch new
+                                    updates such as GitFS or similar tooling. Instead formulas repositories
+                                    should be forked on GitHub or cloned locally, where unintended, automatic
+                                    changes will not take place.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="salt-best-practices__structuring-pillar-files">
+                              <h2 class="title sectiontitle">Structuring Pillar Files</h2>
+                              <p class="p"><a class="xref" href="pillar/index.html#storing-static-data-in-the-pillar__pillar">Pillars</a> are used to store
+                                 secure and insecure data pertaining to minions. When designing the structure
+                                 of the <tt class="ph tt">/srv/pillar</tt> directory, the pillars contained within
+                                 should once again be focused on clear and concise data which users can easily
+                                 review, modify, and understand.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">/srv/pillar/</tt> directory is primarily controlled by <tt class="ph tt">top.sls</tt>. It
+                                 should be noted that the pillar <tt class="ph tt">top.sls</tt> is not used as a location to
+                                 declare variables and their values. The <tt class="ph tt">top.sls</tt> is used as a way to
+                                 include other pillar files and organize the way they are matched based on
+                                 environments or grains.
+                              </p>
+                              
+                              <p class="p">An example <tt class="ph tt">top.sls</tt> may be as simple as the following:
+                              </p>
+                              
+                              <p class="p">/srv/pillar/top.sls:</p>
+                              <pre class="pre codeblock language-yaml">base:
+  '*':
+    - packages</pre>
+                              <p class="p">Or much more complicated, using a variety of matchers:</p>
+                              
+                              <p class="p">/srv/pillar/top.sls:</p>
+                              <pre class="pre codeblock language-yaml">base:
+  '*':
+    - apache
+dev:
+  'os:Debian':
+    - match: grain
+    - vim
+test:
+  '* and not G@os: Debian':
+    - match: compound
+    - emacs</pre>
+                              <p class="p">It is clear to see through these examples how the top file provides users with
+                                 power but when used incorrectly it can lead to confusing configurations. This
+                                 is why it is important to understand that the top file for pillar is not used
+                                 for variable definitions.
+                              </p>
+                              
+                              <p class="p">Each SLS file within the <tt class="ph tt">/srv/pillar/</tt> directory should correspond to the
+                                 states which it matches.
+                              </p>
+                              
+                              <p class="p">This would mean that the <tt class="ph tt">apache</tt> pillar file should contain data relevant to
+                                 Apache. Structuring files in this way once again ensures modularity, and
+                                 creates a consistent understanding throughout our Salt environment. Users can
+                                 expect that pillar variables found in an Apache state will live inside of an
+                                 Apache pillar:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/pillar/apache.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">apache:
+  lookup:
+    name: httpd
+    config:
+      tmpl: /etc/httpd/httpd.conf</pre>
+                              <p class="p">While this pillar file is simple, it shows how a pillar file explicitly
+                                 relates to the state it is associated with.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="salt-best-practices__variable-flexibility">
+                              <h2 class="title sectiontitle">Variable Flexibility</h2>
+                              <p class="p">Salt allows users to define variables in SLS files. When creating a state
+                                 variables should provide users with as much flexibility as possible. This
+                                 means that variables should be clearly defined and easy to manipulate, and
+                                 that sane defaults should exist in the event a variable is not properly
+                                 defined. Looking at several examples shows how these different items can
+                                 lead to extensive flexibility.
+                              </p>
+                              
+                              <p class="p">Although it is possible to set variables locally, this is generally not
+                                 preferred:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/apache/conf.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">{% set name = 'httpd' %}
+{% set tmpl = 'salt://apache/files/httpd.conf' %}
+
+include:
+  - apache
+
+apache_conf:
+  file.managed:
+    - name: {{ name }}
+    - source: {{ tmpl }}
+    - template: jinja
+    - user: root
+    - watch_in:
+      - service: apache</pre>
+                              <p class="p">When generating this information it can be easily transitioned to the pillar
+                                 where data can be overwritten, modified, and applied to multiple states, or
+                                 locations within a single state:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/pillar/apache.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">apache:
+  lookup:
+    name: httpd
+    config:
+      tmpl: salt://apache/files/httpd.conf</pre>
+                              <p class="p"><tt class="ph tt">/srv/salt/apache/conf.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">{% from "apache/map.jinja" import apache with context %}
+
+include:
+  - apache
+
+apache_conf:
+  file.managed:
+    - name: {{ salt['pillar.get']('apache:lookup:name') }}
+    - source: {{ salt['pillar.get']('apache:lookup:config:tmpl') }}
+    - template: jinja
+    - user: root
+    - watch_in:
+      - service: apache</pre>
+                              <p class="p">This flexibility provides users with a centralized location to modify
+                                 variables, which is extremely important as an environment grows.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="salt-best-practices__modularity-within-states">
+                              <h2 class="title sectiontitle">Modularity Within States</h2>
+                              <p class="p">Ensuring that states are modular is one of the key concepts to understand
+                                 within Salt. When creating a state a user must consider how many times the
+                                 state could be re-used, and what it relies on to operate. Below are several
+                                 examples which will iteratively explain how a user can go from a state which
+                                 is not very modular to one that is:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/apache/init.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">httpd:
+  pkg.installed: []
+  service.running:
+    - enable: True
+
+/etc/httpd/httpd.conf:
+  file.managed:
+    - source: salt://apache/files/httpd.conf
+    - template: jinja
+    - watch_in:
+      - service: httpd</pre>
+                              <p class="p">The example above is probably the worst-case scenario when writing a state.
+                                 There is a clear lack of focus by naming both the pkg/service, and managed
+                                 file directly as the state ID. This would lead to changing multiple requires
+                                 within this state, as well as others that may depend upon the state.
+                              </p>
+                              
+                              <p class="p">Imagine if a require was used for the <tt class="ph tt">httpd</tt> package in another state, and
+                                 then suddenly it's a custom package. Now changes need to be made in multiple
+                                 locations which increases the complexity and leads to a more error prone
+                                 configuration.
+                              </p>
+                              
+                              <p class="p">There is also the issue of having the configuration file located in the init,
+                                 as a user would be unable to simply install the service and use the default
+                                 conf file.
+                              </p>
+                              
+                              <p class="p">Our second revision begins to address the referencing by using <tt class="ph tt">- name</tt>, as
+                                 opposed to direct ID references:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/apache/init.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">apache:
+  pkg.installed:
+    - name: httpd
+  service.running:
+    - name: httpd
+    - enable: True
+
+apache_conf:
+  file.managed:
+    - name: /etc/httpd/httpd.conf
+    - source: salt://apache/files/httpd.conf
+    - template: jinja
+    - watch_in:
+      - service: apache</pre>
+                              <p class="p">The above init file is better than our original, yet it has several issues
+                                 which lead to a lack of modularity. The first of these problems is the usage
+                                 of static values for items such as the name of the service, the name of the
+                                 managed file, and the source of the managed file. When these items are hard
+                                 coded they become difficult to modify and the opportunity to make mistakes
+                                 arises. It also leads to multiple edits that need to occur when changing
+                                 these items (imagine if there were dozens of these occurrences throughout the
+                                 state!). There is also still the concern of the configuration file data living
+                                 in the same state as the service and package.
+                              </p>
+                              
+                              <p class="p">In the next example steps will be taken to begin addressing these issues.
+                                 Starting with the addition of a map.jinja file (as noted in the
+                                 <a class="xref" href="unresolvable-reference.html#salt-formulas__conventions-formula">Formula documentation</a>), and
+                                 modification of static values:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/apache/map.jinja</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">{% set apache = salt['grains.filter_by']({
+    'Debian': {
+        'server': 'apache2',
+        'service': 'apache2',
+         'conf': '/etc/apache2/apache.conf',
+    },
+    'RedHat': {
+        'server': 'httpd',
+        'service': 'httpd',
+        'conf': '/etc/httpd/httpd.conf',
+    },
+}, merge=salt['pillar.get']('apache:lookup')) %}</pre>
+                              <p class="p">/srv/pillar/apache.sls:</p>
+                              <pre class="pre codeblock language-yaml">apache:
+  lookup:
+    config:
+      tmpl: salt://apache/files/httpd.conf</pre>
+                              <p class="p"><tt class="ph tt">/srv/salt/apache/init.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">{% from "apache/map.jinja" import apache with context %}
+
+apache:
+  pkg.installed:
+    - name: {{ apache.server }}
+  service.running:
+    - name: {{ apache.service }}
+    - enable: True
+
+apache_conf:
+  file.managed:
+    - name: {{ apache.conf }}
+    - source: {{ salt['pillar.get']('apache:lookup:config:tmpl') }}
+    - template: jinja
+    - user: root
+    - watch_in:
+      - service: apache</pre>
+                              <p class="p">The changes to this state now allow us to easily identify the location of the
+                                 variables, as well as ensuring they are flexible and easy to modify.
+                                 While this takes another step in the right direction, it is not yet complete.
+                                 Suppose the user did not want to use the provided conf file, or even their own
+                                 configuration file, but the default apache conf. With the current state setup
+                                 this is not possible. To attain this level of modularity this state will need
+                                 to be broken into two states.
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/apache/map.jinja</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">{% set apache = salt['grains.filter_by']({
+    'Debian': {
+        'server': 'apache2',
+        'service': 'apache2',
+         'conf': '/etc/apache2/apache.conf',
+    },
+    'RedHat': {
+        'server': 'httpd',
+        'service': 'httpd',
+        'conf': '/etc/httpd/httpd.conf',
+    },
+}, merge=salt['pillar.get']('apache:lookup')) %}</pre>
+                              <p class="p"><tt class="ph tt">/srv/pillar/apache.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">apache:
+  lookup:
+    config:
+      tmpl: salt://apache/files/httpd.conf</pre>
+                              <p class="p"><tt class="ph tt">/srv/salt/apache/init.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">{% from "apache/map.jinja" import apache with context %}
+
+apache:
+  pkg.installed:
+    - name: {{ apache.server }}
+  service.running:
+    - name: {{ apache.service }}
+    - enable: True</pre>
+                              <p class="p"><tt class="ph tt">/srv/salt/apache/conf.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">{% from "apache/map.jinja" import apache with context %}
+
+include:
+  - apache
+
+apache_conf:
+  file.managed:
+    - name: {{ apache.conf }}
+    - source: {{ salt['pillar.get']('apache:lookup:config:tmpl') }}
+    - template: jinja
+    - user: root
+    - watch_in:
+      - service: apache</pre>
+                              <p class="p">This new structure now allows users to choose whether they only wish to
+                                 install the default Apache, or if they wish, overwrite the default package,
+                                 service, configuration file location, or the configuration file itself. In
+                                 addition to this the data has been broken between multiple files allowing for
+                                 users to identify where they need to change the associated data.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="salt-best-practices__storing-secure-data">
+                              <h2 class="title sectiontitle">Storing Secure Data</h2>
+                              <p class="p">Secure data refers to any information that you would not wish to share with
+                                 anyone accessing a server. This could include data such as passwords,
+                                 keys, or other information.
+                              </p>
+                              
+                              <p class="p">As all data within a state is accessible by EVERY server that is connected
+                                 it is important to store secure data within pillar. This will ensure that only
+                                 those servers which require this secure data have access to it. In this
+                                 example a use can go from an insecure configuration to one which is only
+                                 accessible by the appropriate hosts:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/mysql/testerdb.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">testdb:
+  mysql_database.present::
+    - name: testerdb</pre>
+                              <p class="p"><tt class="ph tt">/srv/salt/mysql/user.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">include:
+  - mysql.testerdb
+
+testdb_user:
+  mysql_user.present:
+    - name: frank
+    - password: "test3rdb"
+    - host: localhost
+    - require:
+      - sls: mysql.testerdb</pre>
+                              <p class="p">Many users would review this state and see that the password is there in plain
+                                 text, which is quite problematic. It results in several issues which may not
+                                 be immediately visible.
+                              </p>
+                              
+                              <p class="p">The first of these issues is clear to most users -- the password being visible
+                                 in this state. This  means that any minion will have a copy of this, and
+                                 therefore the password which is a major security concern as minions may not
+                                 be locked down as tightly as the master server.
+                              </p>
+                              
+                              <p class="p">The other issue that can be encountered is access by users on the master. If
+                                 everyone has access to the states (or their repository), then they are able to
+                                 review this password. Keeping your password data accessible by only a few
+                                 users is critical for both security and peace of mind.
+                              </p>
+                              
+                              <p class="p">There is also the issue of portability. When a state is configured this way
+                                 it results in multiple changes needing to be made. This was discussed in the
+                                 sections above but it is a critical idea to drive home. If states are not
+                                 portable it may result in more work later!
+                              </p>
+                              
+                              <p class="p">Fixing this issue is relatively simple, the content just needs to be moved to
+                                 the associated pillar:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/pillar/mysql.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">mysql:
+  lookup:
+    name: testerdb
+    password: test3rdb
+    user: frank
+    host: localhost</pre>
+                              <p class="p"><tt class="ph tt">/srv/salt/mysql/testerdb.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">testdb:
+  mysql_database.present:
+    - name: {{ salt['pillar.get']('mysql:lookup:name') }}</pre>
+                              <p class="p"><tt class="ph tt">/srv/salt/mysql/user.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">include:
+  - mysql.testerdb
+
+testdb_user:
+  mysql_user.present:
+    - name: {{ salt['pillar.get']('mysql:lookup:user') }}
+    - password: {{ salt['pillar.get']('mysql:lookup:password') }}
+    - host: {{ salt['pillar.get']('mysql:lookup:host') }}
+    - require:
+      - sls: mysql.testerdb</pre>
+                              <p class="p">Now that the database details have been moved to the associated pillar file,
+                                 only machines which are targeted via pillar will have access to these details.
+                                 Access to users who should not be able to review these details can also be
+                                 prevented while ensuring that they are still able to write states which take
+                                 advantage of this information.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+                        <p class="text-muted pull-right"><small>Copyright © 2015 SaltStack.</small></p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

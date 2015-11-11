@@ -1,0 +1,105 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Sentry Logging Handler</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Sentry Logging Handler">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../../log.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="sentry-logging-handler">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="sentry-logging-handler">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Sentry Logging Handler</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                              
+                              <p class="p">This module provides a <a class="xref" href="https://getsentry.com" target="_blank">Sentry</a> logging handler.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">Note</strong><p class="p">The <a class="xref" href="http://raven.readthedocs.org" target="_blank">Raven</a> library needs to be installed on the system for this
+                                    logging handler to be available.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Configuring the python <a class="xref" href="https://getsentry.com" target="_blank">Sentry</a> client, <a class="xref" href="http://raven.readthedocs.org" target="_blank">Raven</a>, should be done under the
+                                 <tt class="ph tt">sentry_handler</tt> configuration key.
+                                 At the bare minimum, you need to define the <a class="xref" href="http://raven.readthedocs.org/en/latest/config/index.html#the-sentry-dsn" target="_blank">DSN</a>. As an example:
+                              </p>
+                              <pre class="pre codeblock language-yaml">sentry_handler:
+  dsn: https://pub-key:secret-key@app.getsentry.com/app-id</pre>
+                              <p class="p">More complex configurations can be achieved, for example:</p>
+                              <pre class="pre codeblock language-yaml">sentry_handler:
+  servers:
+    - https://sentry.example.com
+    - http://192.168.1.1
+  project: app-id
+  public_key: deadbeefdeadbeefdeadbeefdeadbeef
+  secret_key: beefdeadbeefdeadbeefdeadbeefdead</pre>
+                              <p class="p">All the client configuration keys are supported, please see the
+                                 <a class="xref" href="http://raven.readthedocs.org/en/latest/config/index.html#client-arguments" target="_blank">Raven client documentation</a>.
+                              </p>
+                              
+                              <p class="p">The default logging level for the sentry handler is <tt class="ph tt">ERROR</tt>. If you wish
+                                 to define a different one, define <tt class="ph tt">log_level</tt> under the
+                                 <tt class="ph tt">sentry_handler</tt> configuration key:
+                              </p>
+                              <pre class="pre codeblock language-yaml">sentry_handler:
+  dsn: https://pub-key:secret-key@app.getsentry.com/app-id
+  log_level: warning</pre>
+                              <p class="p">The available log levels are those also available for the salt <tt class="ph tt">cli</tt>
+                                 tools and configuration; <tt class="ph tt">salt --help</tt> should give you the required
+                                 information.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="sentry-logging-handler__threaded-transports">
+                              <h2 class="title sectiontitle">Threaded Transports</h2>
+                              <p class="p">Raven's documents rightly suggest using its threaded transport for
+                                 critical applications. However, don't forget that if you start having
+                                 troubles with Salt after enabling the threaded transport, please try
+                                 switching to a non-threaded transport to see if that fixes your problem.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

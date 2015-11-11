@@ -1,0 +1,311 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Salt Event System</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Salt Event System">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/events-reactors.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="master_events.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-event-system">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="salt-event-system">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Salt Event System</h1>
+                        <div class="body conbody">
+                           <p class="p">The Salt Event System is used to fire off events enabling third party
+                              applications or external processes to react to behavior within Salt.
+                           </p>
+                           
+                           <p class="p">The event system is comprised of a two primary components:</p>
+                           
+                           <blockquote class="lq">
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">The event sockets which publishes events.</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">The event library which can listen to events and send events into the salt system.</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </blockquote>
+                           
+                           <div class="section" id="salt-event-system__event-types">
+                              <h2 class="title sectiontitle">Event types</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="master_events.html#event-master-events">Salt Master Events</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="master_events.html#event-master-events__authentication-events">Authentication events</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="master_events.html#event-master-events__start-events">Start events</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="master_events.html#event-master-events__key-events">Key events</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="master_events.html#event-master-events__job-events">Job events</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="master_events.html#event-master-events__presence-events">Presence events</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="master_events.html#event-master-events__cloud-events">Cloud Events</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="salt-event-system__listening-for-events">
+                              <h2 class="title sectiontitle">Listening for Events</h2>
+                              <p class="p">Salt's Event Bus is used heavily within Salt and it is also written to
+                                 integrate heavily with existing tooling and scripts. There is a variety of
+                                 ways to consume it.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="salt-event-system__from-the-cli">
+                              <h2 class="title sectiontitle">From the CLI</h2>
+                              <p class="p">The quickest way to watch the event bus is by calling the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/runners/all/salt.runners.state.html#salt.runners.state.event">state.event
+                                    runner</a>:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-run state.event pretty=True</pre>
+                              <p class="p">That runner is designed to interact with the event bus from external tools and
+                                 shell scripts. See the documentation for more examples.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="salt-event-system__remotely-via-the-rest-api">
+                              <h2 class="title sectiontitle">Remotely via the REST API</h2>
+                              <p class="p">Salt's event bus can be consumed
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/netapi/all/salt.netapi.rest_cherrypy.html#salt.netapi.rest_cherrypy.app.Events">salt.netapi.rest_cherrypy.app.Events</a> as an HTTP stream from
+                                 external tools or services.
+                              </p>
+                              <pre class="pre codeblock language-bash">curl -SsNk https://salt-api.example.com:8000/events?token=05A3</pre>
+                              </div>
+                           
+                           <div class="section head3" id="salt-event-system__from-python">
+                              <h2 class="title sectiontitle">From Python</h2>
+                              <p class="p">Python scripts can access the event bus only as the same system user that Salt
+                                 is running as.
+                              </p>
+                              
+                              <p class="p">The event system is accessed via the event library and can only be accessed
+                                 by the same system user that Salt is running as. To listen to events a
+                                 SaltEvent object needs to be created and then the get_event function needs to
+                                 be run. The SaltEvent object needs to know the location that the Salt Unix
+                                 sockets are kept. In the configuration this is the <tt class="ph tt">sock_dir</tt> option. The
+                                 <tt class="ph tt">sock_dir</tt> option defaults to "/var/run/salt/master" on most systems.
+                              </p>
+                              
+                              <p class="p">The following code will check for a single event:</p>
+                              <pre class="pre codeblock language-python">import salt.config
+import salt.utils.event
+
+opts = salt.config.client_config('/etc/salt/master')
+
+event = salt.utils.event.get_event(
+        'master',
+        sock_dir=opts['sock_dir'],
+        transport=opts['transport'],
+        opts=opts)
+
+data = event.get_event()</pre>
+                              <p class="p">Events will also use a "tag". Tags allow for events to be filtered by prefix.
+                                 By default all events will be returned. If only authentication events are
+                                 desired, then pass the tag "salt/auth".
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">get_event</tt> method has a default poll time assigned of 5 seconds. To
+                                 change this time set the "wait" option.
+                              </p>
+                              
+                              <p class="p">The following example will only listen for auth events and will wait for 10 seconds
+                                 instead of the default 5.
+                              </p>
+                              <pre class="pre codeblock language-python">data = event.get_event(wait=10, tag='salt/auth')</pre>
+                              <p class="p">To retrieve the tag as well as the event data, pass <tt class="ph tt">full=True</tt>:
+                              </p>
+                              <pre class="pre codeblock language-python">evdata = event.get_event(wait=10, tag='salt/job', full=True)
+
+tag, data = evdata['tag'], evdata['data']</pre>
+                              <p class="p">Instead of looking for a single event, the <tt class="ph tt">iter_events</tt> method can be used to
+                                 make a generator which will continually yield salt events.
+                              </p>
+                              
+                              <p class="p">The iter_events method also accepts a tag but not a wait time:</p>
+                              <pre class="pre codeblock language-python">for data in event.iter_events(tag='salt/auth'):
+    print(data)</pre>
+                              <p class="p">And finally event tags can be globbed, such as they can be in the Reactor,
+                                 using the fnmatch library.
+                              </p>
+                              <pre class="pre codeblock language-python">import fnmatch
+
+import salt.config
+import salt.utils.event
+
+opts = salt.config.client_config('/etc/salt/master')
+
+sevent = salt.utils.event.get_event(
+        'master',
+        sock_dir=opts['sock_dir'],
+        transport=opts['transport'],
+        opts=opts)
+
+while True:
+    ret = sevent.get_event(full=True)
+    if ret is None:
+        continue
+
+    if fnmatch.fnmatch(ret['tag'], 'salt/job/*/ret/*'):
+        do_something_with_job_return(ret['data'])</pre>
+                              </div>
+                           
+                           <div class="section" id="salt-event-system__firing-events">
+                              <h2 class="title sectiontitle">Firing Events</h2>
+                              <p class="p">It is possible to fire events on either the minion's local bus or to fire
+                                 events intended for the master.
+                              </p>
+                              
+                              <p class="p">To fire a local event from the minion on the command line call the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.event.html#salt.modules.event.fire">event.fire</a> execution function:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-call event.fire '{"data": "message to be sent in the event"}' 'tag'</pre>
+                              <p class="p">To fire an event to be sent up to the master from the minion call the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.event.html#salt.modules.event.send">event.send</a> execution function. Remember
+                                 YAML can be used at the CLI in function arguments:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-call event.send 'myco/mytag/success' '{success: True, message: "It works!"}'</pre>
+                              <p class="p">If a process is listening on the minion, it may be useful for a user on the
+                                 master to fire an event to it:
+                              </p>
+                              <pre class="pre codeblock language-python"># Job on minion
+import salt.utils.event
+
+event = salt.utils.event.MinionEvent(**__opts__)
+
+for evdata in event.iter_events(tag='customtag/'):
+    return evdata # do your processing here...</pre>
+                              <pre class="pre codeblock language-bash">salt minionname event.fire '{"data": "message for the minion"}' 'customtag/african/unladen'</pre>
+                              </div>
+                           
+                           <div class="section" id="salt-event-system__firing-events-from-python">
+                              <h2 class="title sectiontitle">Firing Events from Python</h2>
+                           </div>
+                           
+                           <div class="section head3" id="salt-event-system__from-salt-execution-modules">
+                              <h2 class="title sectiontitle">From Salt execution modules</h2>
+                              <p class="p">Events can be very useful when writing execution modules, in order to inform
+                                 various processes on the master when a certain task has taken place. This is
+                                 easily done using the normal cross-calling syntax:
+                              </p>
+                              <pre class="pre codeblock language-python"># /srv/salt/_modules/my_custom_module.py
+
+def do_something():
+    '''
+    Do something and fire an event to the master when finished
+
+    CLI Example::
+
+        salt '*' my_custom_module:do_something
+    '''
+    # do something!
+    __salt__['event.send']('myco/my_custom_module/finished', {
+        'finished': True,
+        'message': "The something is finished!",
+    })</pre>
+                              </div>
+                           
+                           <div class="section head3" id="salt-event-system__from-custom-python-scripts">
+                              <h2 class="title sectiontitle">From Custom Python Scripts</h2>
+                              <p class="p">Firing events from custom Python code is quite simple and mirrors how it is
+                                 done at the CLI:
+                              </p>
+                              <pre class="pre codeblock language-python">import salt.client
+
+caller = salt.client.Caller()
+
+caller.sminion.functions['event.send'](
+    'myco/myevent/success',
+    {
+        'success': True,
+        'message': "It works!",
+    }
+)</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links">
+                           
+                           <ul class="ullinks">
+                              
+                              <li class="link ulchildlink"><strong><a href="master_events.html">Salt Master Events</a></strong><br>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                        </div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

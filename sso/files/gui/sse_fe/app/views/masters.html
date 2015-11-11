@@ -1,0 +1,53 @@
+<!-- <div class="col-xs-9 center-container padding-zero col-height"> -->
+    <div class="main-content">
+       <div class="center-content-reports">
+            <div id="masters-list" ng-show="mode==1">
+                <table  class="table" ng-show="masters.length">
+                    <thead>
+                         <tr>
+                            <th data-field="name">Host Name</th>
+                            <!-- <th data-field="minions">Minions</th> -->
+                         </tr>
+                    </thead>
+                    <tbody>
+	                    <tr ui-sref-active="active" ng-repeat="master in masters">
+                            <td><a ui-sref="salt.dashboard.resources.masters.detail({ hostname: master.hostname })">{{ master.hostname }}</a></td>
+                            <!-- <td><a ui-sref="salt.dashboard.resources.minions.master({ masterId: master.id })">View Minions</a></td> -->
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table master-list-table"  ng-hide="masters===undefined || masters.length">
+                    <tr>
+                        <td>0 Masters connected</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="masters-grid" ng-show="mode==2" class="clearfix items-grid">
+                <ul class="nav">
+                    <li ng-repeat="master in masters" class="col-xs-2 master-grid-list" ui-sref-active="active" ui-sref="salt.dashboard.resources.masters.detail({ hostname: master.hostname })" title="{{ master.hostname }}">
+                        <a href="" ng-click="showMaster('{{ master.hostname }}','{{$index}}')">
+                            <span class="glyphicon glyphicon-picture"></span>
+                            {{ master.hostname }}
+                        </a>
+                    </li>
+                </ul>
+
+
+            <div ng-hide="masters.length">
+                	<div ng-show="loading" class="alert alert-warning">Loading Data</div>
+                    <div ng-show="masters===undefined" class="alert alert-warning">0 Master connected.</div>
+            </div>
+            </div>
+
+       </div>
+        <footer></footer>
+     </div>
+
+<!-- </div> -->
+
+<!-- Commenting out until the redesign
+<div id="right-bar-container" class="col-xs-3 col-height padding-zero right-container">
+    <ui-view class="col-height">
+</div>
+ -->

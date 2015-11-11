@@ -1,0 +1,45 @@
+<!-- <div class="col-xs-9 center-container padding-zero col-height">    -->
+    <div class="main-content">
+        <div class="center-content">
+            <table class="table" ng-show="slsJobHistory.length">
+               <thead>
+                    <tr>
+                        <th data-field="host" class="hand-cursor">ID</th>
+                        <th data-field="host" class="hand-cursor">Function</th>
+                        <th data-field="host" class="hand-cursor">JID</th>
+                        <th data-field="host" class="hand-cursor">Return</th>
+                        <th data-field="host" class="hand-cursor">Status</th>
+                        <th data-field="host" class="hand-cursor">Executed At</th>
+                        <th data-field="host" class="hand-cursor">Full Return</th>
+                   </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="l in slsJobHistory">
+                        <td>{{ l.id | displayDefault }}</td>
+                        <td>{{ l.fun | displayDefault }}</td>
+                        <td>{{ l.jid | displayDefault }}</td>
+                        <td>
+                            <button ng-show="l.comment" class="job-history-popover-button btn btn-primary glyphicon glyphicon-comment" ns-popover ns-popover-template="{{ l.comment }}" ns-popover-plain="true" ns-popover-trigger="mouseenter" ns-popover-placement="bottom" ns-popover-timeout=0.05 ns-popover-theme="job-history-popover"></button>
+                            <span ng-show="!l.comment">No comments</span>
+                        </td>
+                        <td ng-show="l.success==0">Failed</td>
+                        <td ng-show="l.success==1">Passed</td>
+                        <td>{{ l.executed_at | date:'EEE MMM dd HH:mm:ss yyyy' }}</td>
+                        <td>
+                             <button ng-show="l.full_ret" class="job-history-popover-button btn btn-primary glyphicon glyphicon-info-sign" ng-click="showJobReturnModal(l.full_ret);"></button>
+                             <span ng-show="!l.full_ret">No returns</span>
+                        </td>
+                   </tr>
+               </tbody>
+            </table>
+            <div class="alert alert-warning" ng-hide="slsJobHistory.length">
+                {{ loadingMessage }}
+            </div>
+        </div>
+        <footer></footer>
+    </div>
+<!-- </div> -->
+
+<!-- <div class="col-xs-3 col-height padding-zero right-container">
+    <ui-view class="col-height">
+</div> -->

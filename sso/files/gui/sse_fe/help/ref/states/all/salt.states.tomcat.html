@@ -1,0 +1,483 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.tomcat</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.tomcat">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-tomcat">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-tomcat">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.tomcat</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-tomcat__module-salt.states.tomcat"></span></p>
+                              
+                              <p class="p">This state uses the manager webapp to manage Apache tomcat webapps
+                                 This state requires the manager webapp to be enabled
+                              </p>
+                              
+                              <p class="p">The following grains/pillar should be set:</p>
+                              <pre class="pre codeblock language-">tomcat-manager:user: admin user name
+tomcat-manager:passwd: password</pre>
+                              <p class="p">and also configure a user in the conf/tomcat-users.xml file:</p>
+                              <pre class="pre codeblock language-">&lt;?xml version='1.0' encoding='utf-8'?&gt;
+&lt;tomcat-users&gt;
+    &lt;role rolename="manager-script"/&gt;
+    &lt;user username="tomcat" password="tomcat" roles="manager-script"/&gt;
+&lt;/tomcat-users&gt;</pre>
+                              <p class="p">Notes:</p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Not supported multiple version on the same context path</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <dl class="dl definition_list">
+                                       <dt class="dt dlterm">More information about tomcat manager:</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p"><a class="xref" href="http://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html" target="_blank">http://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html</a></p>
+                                          
+                                       </dd>
+                                       
+                                    </dl>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <dl class="dl definition_list">
+                                       <dt class="dt dlterm">if you use only this module for deployments you might want to restrict</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">access to the manager so its only accessible via localhost
+                                             for more info: <a class="xref" href="http://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html#Configuring_Manager_Application_Access" target="_blank">http://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html#Configuring_Manager_Application_Access</a></p>
+                                          
+                                       </dd>
+                                       
+                                    </dl>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Tested on:</p>
+                                    
+                                    <dl class="dl definition_list">
+                                       <dt class="dt dlterm">JVM Vendor:</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">Sun Microsystems Inc.</p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">JVM Version:</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">1.6.0_43-b01</p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">OS Architecture:</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">amd64</p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">OS Name:</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">Linux</p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">OS Version:</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">2.6.32-358.el6.x86_64</p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">Tomcat Version:</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">Apache Tomcat/7.0.37</p>
+                                          
+                                       </dd>
+                                       
+                                    </dl>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.states.tomcat.mod_watch">
+                           <h2 class="title topictitle2">mod_watch</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.tomcat.mod_watch(
+								name,
+								url='http://localhost:8080/manager',
+								timeout=180
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">The tomcat watcher function.
+                                    When called it will reload the webapp in question
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.tomcat.undeployed">
+                           <h2 class="title topictitle2">undeployed</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.tomcat.undeployed(
+								name,
+								url='http://localhost:8080/manager',
+								timeout=180
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Enforce that the WAR will be un-deployed from the server</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d426418e147" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d426418e149" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d426418e147" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d426418e149" class="stentry propdesc">
+                                       <p class="p">the context path to deploy</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d426418e147" class="stentry propvalue">url</td>
+                                    
+                                    <td valign="top" headers="d426418e149" class="stentry propdesc">
+                                       <p class="p">the URL of the server manager webapp</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d426418e147" class="stentry propvalue">timeout</td>
+                                    
+                                    <td valign="top" headers="d426418e149" class="stentry propdesc">
+                                       <p class="p">timeout for HTTP request to the tomcat manager</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Example:</p>
+                                 <pre class="pre codeblock language-yaml">jenkins:
+  tomcat.undeployed:
+    - name: /ran
+    - require:
+      - service: application-service</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.tomcat.wait">
+                           <h2 class="title topictitle2">wait</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.tomcat.wait(
+								name,
+								url='http://localhost:8080/manager',
+								timeout=180
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Wait for the tomcat manager to load</p>
+                                 
+                                 <p class="p">Notice that if tomcat is not running we won't wait for it start and the
+                                    state will fail. This state can be required in the tomcat.war_deployed
+                                    state to make sure tomcat is running and that the manager is running as
+                                    well and ready for deployment
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d426418e206" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d426418e208" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d426418e206" class="stentry propvalue">url</td>
+                                    
+                                    <td valign="top" headers="d426418e208" class="stentry propdesc">
+                                       <p class="p">the URL of the server manager webapp</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d426418e206" class="stentry propvalue">timeout</td>
+                                    
+                                    <td valign="top" headers="d426418e208" class="stentry propdesc">
+                                       <p class="p">timeout for HTTP request to the tomcat manager</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Example:</p>
+                                 <pre class="pre codeblock language-yaml">tomcat-service:
+  service.running:
+    - name: tomcat
+    - enable: True
+
+wait-for-tomcatmanager:
+  tomcat.wait:
+    - timeout: 300
+    - require:
+      - service: tomcat-service
+
+jenkins:
+  tomcat.war_deployed:
+    - name: /ran
+    - war: salt://jenkins-1.2.4.war
+    - require:
+      - tomcat: wait-for-tomcatmanager</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.tomcat.war_deployed">
+                           <h2 class="title topictitle2">war_deployed</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.tomcat.war_deployed(
+								name,
+								war,
+								force=False,
+								url='http://localhost:8080/manager',
+								timeout=180,
+								temp_war_location=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Enforce that the WAR will be deployed and started in the context path
+                                    it will make use of WAR versions
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d426418e257" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d426418e259" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d426418e257" class="stentry propvalue">for more info:</td>
+                                    
+                                    <td valign="top" headers="d426418e259" class="stentry propdesc">
+                                       <p class="p"><a class="xref" href="http://tomcat.apache.org/tomcat-7.0-doc/config/context.html#Naming" target="_blank">http://tomcat.apache.org/tomcat-7.0-doc/config/context.html#Naming</a></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d426418e257" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d426418e259" class="stentry propdesc">
+                                       <p class="p">the context path to deploy</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d426418e257" class="stentry propvalue">war</td>
+                                    
+                                    <td valign="top" headers="d426418e259" class="stentry propdesc">
+                                       <p class="p">absolute path to WAR file (should be accessible by the user running
+                                          tomcat) or a path supported by the salt.modules.cp.get_url function
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d426418e257" class="stentry propvalue">force</td>
+                                    
+                                    <td valign="top" headers="d426418e259" class="stentry propdesc">
+                                       <p class="p">force deploy even if version strings are the same, False by default.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d426418e257" class="stentry propvalue">url</td>
+                                    
+                                    <td valign="top" headers="d426418e259" class="stentry propdesc">
+                                       <p class="p">the URL of the server manager webapp</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d426418e257" class="stentry propvalue">timeout</td>
+                                    
+                                    <td valign="top" headers="d426418e259" class="stentry propdesc">
+                                       <p class="p">timeout for HTTP request to the tomcat manager</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d426418e257" class="stentry propvalue">temp_war_location</td>
+                                    
+                                    <td valign="top" headers="d426418e259" class="stentry propdesc">
+                                       <p class="p">use another location to temporarily copy to war file
+                                          by default the system's temp directory is used
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Example:</p>
+                                 <pre class="pre codeblock language-yaml">jenkins:
+  tomcat.war_deployed:
+    - name: /ran
+    - war: salt://jenkins-1.2.4.war
+    - require:
+      - service: application-service</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

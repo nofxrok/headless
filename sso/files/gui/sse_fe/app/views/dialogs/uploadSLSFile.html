@@ -1,0 +1,82 @@
+    <div class="modal-header">
+        <h3 class="modal-title">Upload State File</h3>
+    </div>
+    <div class="modal-body">
+        <form name="uploadSLS" id="upload-SLS-form" class="form-horizontal" role="form" ng-submit="uploadSLSConfirm(job)" novalidate>
+             <div class="form-group">
+                <label class="col-xs-3 control-label">Select an SLS file:</label>
+                <div class="col-xs-9" ng-class="{'has-error': uploadSLS.slsfile.$error.required}">
+                    <input id="slsFileUpload" name="slsfile" type="file" class="form-control" file-model="" accept="*.sls">
+                </div>
+
+            </div>
+             <div class="form-group">
+                <label class="col-xs-3 control-label">Name:</label>
+                <div class="col-xs-9" ng-class="{'has-error': uploadSLS.jobname.$error.required}">
+                    <input name="jobname" class="form-control" ng-model="job.name" ng-pattern="/^[a-zA-Z0-9 ]+$/" maxlength="65" ng-trim="false" required salt-form-focus ng-blur="fileSelect()">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label class="col-xs-3 control-label">File Type:</label>
+                <div id="radio-btn-holder-file">
+                    <div  class="pull-left">
+                        <label id="file-type-state"><input id="file-type-state-check" type="radio" name="file_type" ng-model="job.file_type" value="state"></input> Minion-side state file</label>
+                    </div>
+                    <div class="pull-left">
+                        <label id="file-type-orchestrate"><input id="file-type-orchestrate-check" type="radio" name="file_type" ng-model="job.file_type" value="orchestrate"></input> Master-side state file</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-3 control-label">Save To:</label>
+                <div id="radio-btn-holder">
+                    <div  class="pull-left">
+                        <label id="fav-job-text"><input id="fav-job-check" type="radio" name="fav-job" ng-model="job.is_fav" ng-value="true" ng-change="radioBtnChange(true);"></input> Private Folder</label>
+                    </div>
+                    <div class="pull-left">
+                        <label id="public-job-text"><input id="public-job-check" type="radio" name="public-job" ng-model="job.is_fav" ng-value="false" ng-change="radioBtnChange(false);"></input> Public Folder</label>
+                    </div>
+                </div>
+                <div id="job-folder-list">
+                    <div class="col-xs-3"></div>
+                    <div class="col-xs-9" ng-class="{'has-error': uploadSLS.foldername.$error.required}">
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" href="">
+                                <input id="job-folder-name" name="foldername" class="form-control" ng-model="job.foldername" placeholder="Please select a folder" readonly required />
+                                <input type="hidden" ng-model="target.parent_id" />
+                                <span id="job-folder-dropdown-icon"><b class="caret"></b></span>
+                            </a>
+
+                            <ul class="dropdown-menu user-dropdown-details">
+                                <div ng-show="target.is_fav" ng-hide="!job.is_fav" id="job-folder-dropdown" 
+                                    data-angular-treeview="true"
+                                    data-tree-id="privateJobFolders"
+                                    data-tree-model="jobPrivateFolderStructure"
+                                    data-node-id="id"
+                                    data-node-label="name"
+                                    data-node-children="children" 
+                                    data-tree-type="foldersonly">
+                                </div>
+                                <div ng-show="!target.is_fav" ng-hide="job.is_fav" id="job-folder-dropdown"
+                                    data-angular-treeview="true"
+                                    data-tree-id="publicJobFolders"
+                                    data-tree-model="jobPublicFolderStructure"
+                                    data-node-id="id"
+                                    data-node-label="name"
+                                    data-node-children="children" 
+                                    data-tree-type="foldersonly">
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-primary site-btn-form" ng-click="uploadSLSConfirm(job)" ng-disabled="uploadSLS.$invalid || !fileSelected">Upload</button>
+        <button class="btn btn-primary site-btn-form" ng-click="uploadSLSCancel()">Cancel</button>
+    </div>

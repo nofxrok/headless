@@ -1,0 +1,765 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.saltmod</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.saltmod">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-saltmod">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-saltmod">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.saltmod</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-saltmod__module-salt.states.saltmod"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="control-the-salt-command-interface">
+                           <h2 class="title topictitle2">Control the Salt command interface</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">This state is intended for use from the Salt Master. It provides access to
+                                    sending commands down to minions as well as access to executing master-side
+                                    modules. These state functions wrap Salt's 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../clients/index.html#client-apis__python-api">Python API</a>.
+                                 </p>
+                                 
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p">More Orchestrate documentation</p>
+                                    
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">
+                                             		
+                                             			&nbsp;<a class="xref" href="../../../topics/tutorials/states_pt5.html#states-tutorial-part-5-orchestration-with-salt__orchestrate-runner">Full Orchestrate Tutorial</a></p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">
+                                             		
+                                             			&nbsp;<a class="xref" href="../../runners/all/salt.runners.state.html#salt.runners.state.orchestrate">The Orchestrate runner</a></p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </aside>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.saltmod.function">
+                              <h3 class="title topictitle3">function</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.saltmod.function(
+								name,
+								tgt,
+								ssh=False,
+								tgt_type=None,
+								expr_form=None,
+								ret='',
+								expect_minions=False,
+								fail_minions=None,
+								fail_function=None,
+								arg=None,
+								kwarg=None,
+								timeout=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Execute a single module function on a remote minion via salt or salt-ssh</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d418803e75" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d418803e77" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e75" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d418803e77" class="stentry propdesc">
+                                          <p class="p">The name of the function to run, aka cmd.run or pkg.install</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e75" class="stentry propvalue">tgt</td>
+                                       
+                                       <td valign="top" headers="d418803e77" class="stentry propdesc">
+                                          <p class="p">The target specification, aka '*' for all minions</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e75" class="stentry propvalue">tgt_type | expr_form</td>
+                                       
+                                       <td valign="top" headers="d418803e77" class="stentry propdesc">
+                                          <p class="p">The target type, defaults to glob</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e75" class="stentry propvalue">arg</td>
+                                       
+                                       <td valign="top" headers="d418803e77" class="stentry propdesc">
+                                          <p class="p">The list of arguments to pass into the function</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e75" class="stentry propvalue">kwarg</td>
+                                       
+                                       <td valign="top" headers="d418803e77" class="stentry propdesc">
+                                          <p class="p">The list of keyword arguments to pass into the function</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e75" class="stentry propvalue">ret</td>
+                                       
+                                       <td valign="top" headers="d418803e77" class="stentry propdesc">
+                                          <p class="p">Optionally set a single or a list of returners to use</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e75" class="stentry propvalue">expect_minions</td>
+                                       
+                                       <td valign="top" headers="d418803e77" class="stentry propdesc">
+                                          <p class="p">An optional boolean for failing if some minions do not respond</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e75" class="stentry propvalue">fail_minions</td>
+                                       
+                                       <td valign="top" headers="d418803e77" class="stentry propdesc">
+                                          <p class="p">An optional list of targeted minions where failure is an option</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e75" class="stentry propvalue">fail_function</td>
+                                       
+                                       <td valign="top" headers="d418803e77" class="stentry propdesc">
+                                          <p class="p">An optional string that points to a salt module that returns True or False
+                                             based on the returned data dict for individual minions
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e75" class="stentry propvalue">ssh</td>
+                                       
+                                       <td valign="top" headers="d418803e77" class="stentry propdesc">
+                                          <p class="p">Set to <span class="keyword title_reference">True</span> to use the ssh client instaed of the standard salt client
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.saltmod.runner">
+                              <h3 class="title topictitle3">runner</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.saltmod.runner(
+								name,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Execute a runner module on the master</p>
+                                    
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.7.</span></p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d418803e173" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d418803e175" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e173" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d418803e175" class="stentry propdesc">
+                                          <p class="p">The name of the function to run</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e173" class="stentry propvalue">kwargs</td>
+                                       
+                                       <td valign="top" headers="d418803e175" class="stentry propdesc">
+                                          <p class="p">Any keyword arguments to pass to the runner function</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.saltmod.state">
+                              <h3 class="title topictitle3">state</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.saltmod.state(
+								name,
+								tgt,
+								ssh=False,
+								tgt_type=None,
+								expr_form=None,
+								ret='',
+								highstate=None,
+								sls=None,
+								top=None,
+								env=None,
+								test=False,
+								pillar=None,
+								expect_minions=False,
+								fail_minions=None,
+								allow_fail=0,
+								concurrent=False,
+								timeout=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Invoke a state run on a given target</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d418803e217" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d418803e219" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e217" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d418803e219" class="stentry propdesc">
+                                          <p class="p">An arbitrary name used to track the state execution</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e217" class="stentry propvalue">tgt</td>
+                                       
+                                       <td valign="top" headers="d418803e219" class="stentry propdesc">
+                                          <p class="p">The target specification for the state run.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e217" class="stentry propvalue">tgt_type | expr_form</td>
+                                       
+                                       <td valign="top" headers="d418803e219" class="stentry propdesc">
+                                          <p class="p">The target type to resolve, defaults to glob</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e217" class="stentry propvalue">ret</td>
+                                       
+                                       <td valign="top" headers="d418803e219" class="stentry propdesc">
+                                          <p class="p">Optionally set a single or a list of returners to use</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e217" class="stentry propvalue">highstate</td>
+                                       
+                                       <td valign="top" headers="d418803e219" class="stentry propdesc">
+                                          <p class="p">Defaults to None, if set to True the target systems will ignore any
+                                             sls references specified in the sls option and call state.highstate
+                                             on the targeted minions
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e217" class="stentry propvalue">top</td>
+                                       
+                                       <td valign="top" headers="d418803e219" class="stentry propdesc">
+                                          <p class="p">Should be the name of a top file. If set state.top is called with this
+                                             top file instead of state.sls.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e217" class="stentry propvalue">sls</td>
+                                       
+                                       <td valign="top" headers="d418803e219" class="stentry propdesc">
+                                          <p class="p">A group of sls files to execute. This can be defined as a single string
+                                             containing a single sls file, or a list of sls files
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e217" class="stentry propvalue">test</td>
+                                       
+                                       <td valign="top" headers="d418803e219" class="stentry propdesc">
+                                          <p class="p">Pass <tt class="ph tt">test=true</tt> through to the state function
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e217" class="stentry propvalue">pillar</td>
+                                       
+                                       <td valign="top" headers="d418803e219" class="stentry propdesc">
+                                          <p class="p">Pass the <tt class="ph tt">pillar</tt> kwarg through to the state function
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e217" class="stentry propvalue">saltenv</td>
+                                       
+                                       <td valign="top" headers="d418803e219" class="stentry propdesc">
+                                          <p class="p">The default salt environment to pull sls files from</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e217" class="stentry propvalue">ssh</td>
+                                       
+                                       <td valign="top" headers="d418803e219" class="stentry propdesc">
+                                          <p class="p">Set to <span class="keyword title_reference">True</span> to use the ssh client instaed of the standard salt client
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e217" class="stentry propvalue">roster</td>
+                                       
+                                       <td valign="top" headers="d418803e219" class="stentry propdesc">
+                                          <p class="p">In the event of using salt-ssh, a roster system can be set</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e217" class="stentry propvalue">expect_minions</td>
+                                       
+                                       <td valign="top" headers="d418803e219" class="stentry propdesc">
+                                          <p class="p">An optional boolean for failing if some minions do not respond</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e217" class="stentry propvalue">fail_minions</td>
+                                       
+                                       <td valign="top" headers="d418803e219" class="stentry propdesc">
+                                          <p class="p">An optional list of targeted minions where failure is an option</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e217" class="stentry propvalue">allow_fail</td>
+                                       
+                                       <td valign="top" headers="d418803e219" class="stentry propdesc">
+                                          <p class="p">Pass in the number of minions to allow for failure before setting
+                                             the result of the execution to False
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e217" class="stentry propvalue">concurrent</td>
+                                       
+                                       <td valign="top" headers="d418803e219" class="stentry propdesc">
+                                          <p class="p">Allow multiple state runs to occur at once.</p>
+                                          
+                                          <p class="p">WARNING: This flag is potentially dangerous. It is designed
+                                             for use when multiple state runs can safely be run at the same
+                                             Do not use this flag for performance optimization.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Examples:</p>
+                                    
+                                    <p class="p">Run a list of sls files via <tt class="ph tt">state.sls</tt> on target
+                                       minions:
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">webservers:
+  salt.state:
+    - tgt: 'web*'
+    - sls:
+      - apache
+      - django
+      - core
+    - saltenv: prod</pre>
+                                    <p class="p">Run a full <tt class="ph tt">state.highstate</tt> on target
+                                       mininons.
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">databases:
+  salt.state:
+    - tgt: role:database
+    - tgt_type: grain
+    - highstate: True</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.saltmod.wait_for_event">
+                              <h3 class="title topictitle3">wait_for_event</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.saltmod.wait_for_event(
+								name,
+								id_list,
+								event_id='id',
+								timeout=300
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Watch Salt's event bus and block until a condition is met</p>
+                                    
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.7.</span></p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d418803e379" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d418803e381" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e379" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d418803e381" class="stentry propdesc">
+                                          <p class="p">An event tag to watch for; supports Reactor-style globbing.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e379" class="stentry propvalue">id_list</td>
+                                       
+                                       <td valign="top" headers="d418803e381" class="stentry propdesc">
+                                          <p class="p">A list of event identifiers to watch for -- usually the minion ID. Each
+                                             time an event tag is matched the event data is inspected for
+                                             <tt class="ph tt">event_id</tt>, if found it is removed from <tt class="ph tt">id_list</tt>. When <tt class="ph tt">id_list</tt>
+                                             is empty this function returns success.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e379" class="stentry propvalue">event_id</td>
+                                       
+                                       <td valign="top" headers="d418803e381" class="stentry propdesc">
+                                          <p class="p">The name of a key in the event data. Default is <tt class="ph tt">id</tt> for the minion
+                                             ID, another common value is <tt class="ph tt">name</tt> for use with orchestrating
+                                             salt-cloud events.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e379" class="stentry propvalue">timeout</td>
+                                       
+                                       <td valign="top" headers="d418803e381" class="stentry propdesc">
+                                          <p class="p">The maximum time in seconds to wait before failing.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">The following example blocks until all the listed minions complete a
+                                       restart and reconnect to the Salt master:
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">reboot_all_minions:
+  salt.function:
+    - name: system.reboot
+    - tgt: '*'
+
+wait_for_reboots:
+  salt.wait_for_event:
+    - name: salt/minion/*/start
+    - id_list:
+      - jerry
+      - stuart
+      - dave
+      - phil
+      - kevin
+      - mike
+    - require:
+      - salt: reboot_all_minions</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.saltmod.wheel">
+                              <h3 class="title topictitle3">wheel</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.saltmod.wheel(
+								name,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Execute a wheel module on the master</p>
+                                    
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.7.</span></p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d418803e460" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d418803e462" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e460" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d418803e462" class="stentry propdesc">
+                                          <p class="p">The name of the function to run</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d418803e460" class="stentry propvalue">kwargs</td>
+                                       
+                                       <td valign="top" headers="d418803e462" class="stentry propdesc">
+                                          <p class="p">Any keyword arguments to pass to the wheel function</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4><pre class="pre codeblock language-yaml">accept_minion_key:
+  salt.wheel:
+    - name: key.accept
+    - match: frank</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,2756 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>rest_cherrypy</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="rest_cherrypy">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../rest-api.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="rest-cherrypy">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="rest-cherrypy">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">rest_cherrypy</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="rest-cherrypy__module-salt.netapi.rest_cherrypy.app"></span></p>
+                              
+                           </div>
+                           
+                           <div class="section" id="rest-cherrypy__a-rest-api-for-salt">
+                              <h2 class="title sectiontitle">A REST API for Salt</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">CherryPy Python module (strongly recommend 3.2.x versions due to</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                    <p class="p">an as yet unknown SSL error).</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">optdepends</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">ws4py Python module for websockets support.</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">configuration</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">All authentication is done through Salt's 
+                                       		
+                                       			&nbsp;<a class="xref" href="../../../topics/eauth/index.html#acl-eauth">external auth</a> system which requires additional configuration not described
+                                       here.
+                                    </p>
+                                    
+                                    <p class="p">Example production-ready configuration; add to the Salt master config file
+                                       and restart the <tt class="ph tt">salt-master</tt> and <tt class="ph tt">salt-api</tt> daemons:
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">rest_cherrypy:
+  port: 8000
+  ssl_crt: /etc/pki/tls/certs/localhost.crt
+  ssl_key: /etc/pki/tls/certs/localhost.key</pre>
+                                    <p class="p">Using only a secure HTTPS connection is strongly recommended since Salt
+                                       authentication credentials will be sent over the wire.
+                                    </p>
+                                    
+                                    <p class="p">A self-signed certificate can be generated using the
+                                       
+                                       		
+                                       			&nbsp;<a class="xref" href="../../modules/all/salt.modules.tls.html#salt.modules.tls.create_self_signed_cert">create_self_signed_cert()</a> execution function.
+                                       Running this function requires pyOpenSSL and the <tt class="ph tt">salt-call</tt> script is
+                                       available in the <tt class="ph tt">salt-minion</tt> package.
+                                    </p>
+                                    <pre class="pre codeblock language-bash">salt-call --local tls.create_self_signed_cert</pre>
+                                    <p class="p">All available configuration options are detailed below. These settings
+                                       configure the CherryPy HTTP server and do not apply when using an external
+                                       server such as Apache or Nginx.
+                                    </p>
+                                    
+                                    <dl class="dl definition_list">
+                                       <dt class="dt dlterm">port</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p"><strong class="ph b">Required</strong></p>
+                                          
+                                          <p class="p">The port for the webserver to listen on.</p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">host</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">The socket interface for the HTTP server to listen on.</p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">debug</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">Starts the web server in development mode. It will reload itself when
+                                             the underlying code is changed and will output more debugging info.
+                                          </p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">ssl_crt</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">The path to a SSL certificate. (See below)</p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">ssl_key</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">The path to the private key for your SSL certificate. (See below)</p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">disable_ssl</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">A flag to disable SSL. Warning: your Salt authentication credentials
+                                             will be sent in the clear!
+                                          </p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">webhook_disable_auth</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">The <a class="xref" href="salt.netapi.rest_cherrypy.html#salt.netapi.rest_cherrypy.app.Webhook">Webhook</a> URL requires authentication by default but
+                                             external services cannot always be configured to send authentication.
+                                             See the Webhook documentation for suggestions on securing this
+                                             interface.
+                                          </p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">webhook_url</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">Configure the URL endpoint for the <a class="xref" href="salt.netapi.rest_cherrypy.html#salt.netapi.rest_cherrypy.app.Webhook">Webhook</a> entry point.
+                                          </p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">thread_pool</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">The number of worker threads to start up in the pool.</p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">socket_queue_size</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">Specify the maximum number of HTTP connections to queue.</p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">expire_responses</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">Whether to check for and kill HTTP responses that have exceeded the
+                                             default timeout.
+                                          </p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">max_request_body_size</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">Maximum size for the HTTP request body.</p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">collect_stats</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">Collect and report statistics about the CherryPy server</p>
+                                          
+                                          <p class="p">Reports are available via the <a class="xref" href="salt.netapi.rest_cherrypy.html#salt.netapi.rest_cherrypy.app.Stats">Stats</a> URL.
+                                          </p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">static</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">A filesystem path to static HTML/JavaScript/CSS/image assets.</p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">static_path</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">The URL prefix to use when serving static assets out of the directory
+                                             specified in the <tt class="ph tt">static</tt> setting.
+                                          </p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">app</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">A filesystem path to an HTML file that will be served as a static file.
+                                             This is useful for bootstrapping a single-page JavaScript app.
+                                          </p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">app_path</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">The URL prefix to use for serving the HTML file specified in the <tt class="ph tt">app</tt>
+                                             setting. This should be a simple name containing no slashes.
+                                          </p>
+                                          
+                                          <p class="p">Any path information after the specified path is ignored; this is
+                                             useful for apps that utilize the HTML5 history API.
+                                          </p>
+                                          
+                                       </dd>
+                                       
+                                       <dt class="dt dlterm">root_prefix</dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">A URL path to the main entry point for the application. This is useful
+                                             for serving multiple applications from the same URL.
+                                          </p>
+                                          
+                                       </dd>
+                                       
+                                    </dl>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                           <div class="section" id="rest-cherrypy__rest-cherrypy-auth">
+                              <h2 class="title sectiontitle">Authentication</h2>
+                              <p class="p">Authentication is performed by passing a session token with each request.
+                                 Tokens are generated via the <a class="xref" href="salt.netapi.rest_cherrypy.html#salt.netapi.rest_cherrypy.app.Login">Login</a> URL.
+                              </p>
+                              
+                              <p class="p">The token may be sent in one of two ways:</p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Include a custom header named X-Auth-Token.</p>
+                                    
+                                    <p class="p">For example, using curl:</p>
+                                    <pre class="pre codeblock language-bash">curl -sSk https://localhost:8000/login             -H 'Accept: application/x-yaml'             -d username=saltdev             -d password=saltdev             -d eauth=auto</pre>
+                                    <p class="p">Copy the <tt class="ph tt">token</tt> value from the output and include it in subsequent
+                                       requests:
+                                    </p>
+                                    <pre class="pre codeblock language-bash"></pre>
+                                    <p class="p">curl -sSk <a class="xref" href="https://localhost:8000" target="_blank">https://localhost:8000</a>             -H 'Accept: application/x-yaml'             -H 'X-Auth-Token: 697adbdc8fe971d09ae4c2a3add7248859c87079'
+                                       -d client=local             -d tgt='*'             -d fun=test.ping
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Sent via a cookie. This option is a convenience for HTTP clients that
+                                       automatically handle cookie support (such as browsers).
+                                    </p>
+                                    
+                                    <p class="p">For example, using curl:</p>
+                                    <pre class="pre codeblock language-bash"># Write the cookie file:
+curl -sSk https://localhost:8000/login             -c ~/cookies.txt             -H 'Accept: application/x-yaml'             -d username=saltdev             -d password=saltdev             -d eauth=auto
+
+# Read the cookie file:
+curl -sSk https://localhost:8000             -b ~/cookies.txt             -H 'Accept: application/x-yaml'             -d client=local             -d tgt='*'             -d fun=test.ping</pre>
+                                    </li>
+                                 
+                              </ul>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">You can bypass the session handling via the <a class="xref" href="salt.netapi.rest_cherrypy.html#salt.netapi.rest_cherrypy.app.Run">Run</a> URL.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="rest-cherrypy__usage">
+                              <h2 class="title sectiontitle">Usage</h2>
+                              <p class="p">Commands are sent to a running Salt master via this module by sending HTTP
+                                 requests to the URLs detailed below.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">Content negotiation</strong><p class="p">This REST interface is flexible in what data formats it will accept as well
+                                    as what formats it will return (e.g., JSON, YAML, x-www-form-urlencoded).
+                                 </p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">Specify the format of data in the request body by including the
+                                          Content-Type header.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">Specify the desired data format for the response body with the
+                                          Accept header.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                              </aside>
+                              
+                              <p class="p">Data sent in <a class="xref" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.5" target="_blank">POST</a> and <a class="xref" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.6" target="_blank">PUT</a> requests  must be in
+                                 the format of a list of lowstate dictionaries. This allows multiple commands to
+                                 be executed in a single HTTP request. The order of commands in the request
+                                 corresponds to the return for each command in the response.
+                              </p>
+                              
+                              <p class="p">Lowstate, broadly, is a dictionary of values that are mapped to a function
+                                 call. This pattern is used pervasively throughout Salt. The functions called
+                                 from netapi modules are described in <em class="ph i">Client Interfaces</em>.
+                              </p>
+                              
+                              <p class="p">The following example (in JSON format) causes Salt to execute two commands, a
+                                 command sent to minions as well as a runner function on the master:
+                              </p>
+                              <pre class="pre codeblock language-">[{
+    "client": "local",
+    "tgt": "*",
+    "fun": "test.fib",
+    "arg": ["10"]
+},
+{
+    "client": "runner",
+    "fun": "jobs.lookup_jid",
+    "jid": "20130603122505459265"
+}]</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">x-www-form-urlencoded</strong><p class="p">Sending JSON or YAML in the request body is simple and most flexible,
+                                    however sending data in urlencoded format is also supported with the
+                                    caveats below. It is the default format for HTML forms, many JavaScript
+                                    libraries, and the curl command.
+                                 </p>
+                                 
+                                 <p class="p">For example, the equivalent to running <tt class="ph tt">salt '*' test.ping</tt> is sending
+                                    <tt class="ph tt">fun=test.ping&amp;arg&amp;client=local&amp;tgt=*</tt> in the HTTP request body.
+                                 </p>
+                                 
+                                 <p class="p">Caveats:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">Only a single command may be sent per HTTP request.</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">Repeating the <tt class="ph tt">arg</tt> parameter multiple times will cause those
+                                          parameters to be combined into a single list.
+                                       </p>
+                                       
+                                       <p class="p">Note, some popular frameworks and languages (notably jQuery, PHP, and
+                                          Ruby on Rails) will automatically append empty brackets onto repeated
+                                          parameters. E.g., <tt class="ph tt">arg=one</tt>, <tt class="ph tt">arg=two</tt> will be sent as <tt class="ph tt">arg[]=one</tt>,
+                                          <tt class="ph tt">arg[]=two</tt>. This is not supported; send JSON or YAML instead.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="rest-cherrypy__deployment">
+                              <h2 class="title sectiontitle">Deployment</h2>
+                              <p class="p">The <tt class="ph tt">rest_cherrypy</tt> netapi module is a standard Python WSGI app. It can be
+                                 deployed one of two ways.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="rest-cherrypy__salt-api-using-the-cherrypy-server">
+                              <h2 class="title sectiontitle">salt-api using the CherryPy server</h2>
+                              <p class="p">The default configuration is to run this module using salt-api to
+                                 start the Python-based CherryPy server. This server is lightweight,
+                                 multi-threaded, encrypted with SSL, and should be considered production-ready.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="rest-cherrypy__using-a-wsgi-compliant-web-server">
+                              <h2 class="title sectiontitle">Using a WSGI-compliant web server</h2>
+                              <p class="p">This module may be deployed on any WSGI-compliant server such as Apache with
+                                 mod_wsgi or Nginx with FastCGI, to name just two (there are many).
+                              </p>
+                              
+                              <p class="p">Note, external WSGI servers handle URLs, paths, and SSL certs directly. The
+                                 <tt class="ph tt">rest_cherrypy</tt> configuration options are ignored and the <tt class="ph tt">salt-api</tt> daemon
+                                 does not need to be running at all. Remember Salt authentication credentials
+                                 are sent in the clear unless SSL is being enforced!
+                              </p>
+                              
+                              <p class="p">An example Apache virtual host configuration:</p>
+                              <pre class="pre codeblock language-">&lt;VirtualHost *:80&gt;
+    ServerName example.com
+    ServerAlias *.example.com
+
+    ServerAdmin webmaster@example.com
+
+    LogLevel warn
+    ErrorLog /var/www/example.com/logs/error.log
+    CustomLog /var/www/example.com/logs/access.log combined
+
+    DocumentRoot /var/www/example.com/htdocs
+
+    WSGIScriptAlias / /path/to/salt/netapi/rest_cherrypy/wsgi.py
+&lt;/VirtualHost&gt;</pre>
+                              </div>
+                           
+                           <div class="section" id="rest-cherrypy__rest-uri-reference">
+                              <h2 class="title sectiontitle">REST URI Reference</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-cherrypy__id1">/</span></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-cherrypy__login">/login</span></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-cherrypy__logout">/logout</span></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-cherrypy__minions">/minions</span></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-cherrypy__jobs">/jobs</span></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-cherrypy__run">/run</span></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-cherrypy__events">/events</span></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-cherrypy__hook">/hook</span></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-cherrypy__keys">/keys</span></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-cherrypy__ws">/ws</span></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><span class="ph refid" id="rest-cherrypy__stats">/stats</span></p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="rest-cherrypy__id1">
+                              <h2 class="title sectiontitle">/</h2>
+                           </div>
+                           
+                           <div class="section" id="rest-cherrypy__login">
+                              <h2 class="title sectiontitle">/login</h2>
+                           </div>
+                           
+                           <div class="section" id="rest-cherrypy__logout">
+                              <h2 class="title sectiontitle">/logout</h2>
+                           </div>
+                           
+                           <div class="section" id="rest-cherrypy__minions">
+                              <h2 class="title sectiontitle">/minions</h2>
+                           </div>
+                           
+                           <div class="section" id="rest-cherrypy__jobs">
+                              <h2 class="title sectiontitle">/jobs</h2>
+                           </div>
+                           
+                           <div class="section" id="rest-cherrypy__run">
+                              <h2 class="title sectiontitle">/run</h2>
+                           </div>
+                           
+                           <div class="section" id="rest-cherrypy__events">
+                              <h2 class="title sectiontitle">/events</h2>
+                           </div>
+                           
+                           <div class="section" id="rest-cherrypy__hook">
+                              <h2 class="title sectiontitle">/hook</h2>
+                           </div>
+                           
+                           <div class="section" id="rest-cherrypy__keys">
+                              <h2 class="title sectiontitle">/keys</h2>
+                           </div>
+                           
+                           <div class="section" id="rest-cherrypy__ws">
+                              <h2 class="title sectiontitle">/ws</h2>
+                           </div>
+                           
+                           <div class="section" id="rest-cherrypy__stats">
+                              <h2 class="title sectiontitle">/stats</h2>
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.netapi.rest_cherrypy.app.Events">
+                           <h2 class="title topictitle2">Events Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.netapi.rest_cherrypy.app.Events</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Expose the Salt event bus</p>
+                                 
+                                 <p class="p">The event bus on the Salt master exposes a large variety of things, notably when
+                                    executions are started on the master and also when minions ultimately return their
+                                    results. This URL provides a real-time window into a running Salt infrastructure.
+                                 </p>
+                                 
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p"><em class="ph i">events</em></p>
+                                    
+                                 </aside>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.netapi.rest_cherrypy.app.Events.GET">
+                              <h3 class="title topictitle3">Events.GET Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GET(
+								token=None,
+								salt_token=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">An HTTP stream of the Salt master event bus</p>
+                                    
+                                    <p class="p">This stream is formatted per the Server Sent Events (SSE) spec. Each
+                                       event is formatted as JSON.
+                                    </p>
+                                    
+                                    <p class="p"><strong class="ph b">Example request:</strong></p>
+                                    <pre class="pre codeblock language-bash">curl -NsS localhost:8000/events</pre>
+                                    <pre class="pre codeblock language-http">GET /events HTTP/1.1
+Host: localhost:8000</pre>
+                                    <p class="p"><strong class="ph b">Example response:</strong></p>
+                                    
+                                    <p class="p">Note, the <tt class="ph tt">tag</tt> field is not part of the spec. SSE compliant clients
+                                       should ignore unknown fields. This addition allows non-compliant
+                                       clients to only watch for certain tags without having to deserialze the
+                                       JSON object each time.
+                                    </p>
+                                    <pre class="pre codeblock language-http">HTTP/1.1 200 OK
+Connection: keep-alive
+Cache-Control: no-cache
+Content-Type: text/event-stream;charset=utf-8
+
+retry: 400
+
+tag: salt/job/20130802115730568475/new
+data: {'tag': 'salt/job/20130802115730568475/new', 'data': {'minions': ['ms-4', 'ms-3', 'ms-2', 'ms-1', 'ms-0']}}
+
+tag: salt/job/20130802115730568475/ret/jerry
+data: {'tag': 'salt/job/20130802115730568475/ret/jerry', 'data': {'jid': '20130802115730568475', 'return': True, 'retcode': 0, 'success': True, 'cmd': '_return', 'fun': 'test.ping', 'id': 'ms-1'}}</pre>
+                                    <p class="p">The event stream can be easily consumed via JavaScript:</p>
+                                    <pre class="pre codeblock language-javascript">var source = new EventSource('/events');
+source.onopen = function() { console.debug('opening') };
+source.onerror = function(e) { console.debug('error!', e) };
+source.onmessage = function(e) {
+    console.debug('Tag: ', e.data.tag)
+    console.debug('Data: ', e.data.data)
+};</pre>
+                                    <p class="p">Or using CORS:</p>
+                                    <pre class="pre codeblock language-javascript">var source = new EventSource('/events?token=ecd589e4e01912cf3c4035afad73426dbb8dba75', {withCredentials: true});</pre>
+                                    <p class="p">It is also possible to consume the stream via the shell.</p>
+                                    
+                                    <p class="p">Records are separated by blank lines; the <tt class="ph tt">data:</tt> and <tt class="ph tt">tag:</tt>
+                                       prefixes will need to be removed manually before attempting to
+                                       unserialize the JSON.
+                                    </p>
+                                    
+                                    <p class="p">curl's <tt class="ph tt">-N</tt> flag turns off input buffering which is required to
+                                       process the stream incrementally.
+                                    </p>
+                                    
+                                    <p class="p">Here is a basic example of printing each event as it comes in:</p>
+                                    <pre class="pre codeblock language-bash">curl -NsS localhost:8000/events |\
+        while IFS= read -r line ; do
+            echo $line
+        done</pre>
+                                    <p class="p">Here is an example of using awk to filter events based on tag:</p>
+                                    <pre class="pre codeblock language-bash">curl -NsS localhost:8000/events |\
+        awk '
+            BEGIN { RS=""; FS="\\n" }
+            $1 ~ /^tag: salt\/job\/[0-9]+\/new$/ { print $0 }
+        '
+tag: salt/job/20140112010149808995/new
+data: {"tag": "salt/job/20140112010149808995/new", "data": {"tgt_type": "glob", "jid": "20140112010149808995", "tgt": "jerry", "_stamp": "2014-01-12_01:01:49.809617", "user": "shouse", "arg": [], "fun": "test.ping", "minions": ["jerry"]}}
+tag: 20140112010149808995
+data: {"tag": "20140112010149808995", "data": {"fun_args": [], "jid": "20140112010149808995", "return": true, "retcode": 0, "success": true, "cmd": "_return", "_stamp": "2014-01-12_01:01:49.819316", "fun": "test.ping", "id": "jerry"}}</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="get--events">
+                              <h3 class="title topictitle3">GET /events</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GET  /events( )</pre>
+                                    </div>
+                                 
+                                 <div class="section"></div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr>
+                                       
+                                       <th id="d304619e575-value" valign="bottom" align="left">Value</th>
+                                       
+                                       <th id="d304619e575-desc" valign="bottom" align="left">Description</th>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e575-value" class="stentry propvalue">Status Codes</td>
+                                       
+                                       <td valign="top" headers="d304619e575-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">200 -- success</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">401 -- authentication required</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">406 -- requested Content-Type not available</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e575-value" class="stentry propvalue">Query Parameters</td>
+                                       
+                                       <td valign="top" headers="d304619e575-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">token -- <strong class="ph b">optional</strong> parameter containing the token
+                                                   ordinarily supplied via the X-Auth-Token header in order to
+                                                   allow cross-domain requests in browsers that do not include
+                                                   CORS support in the EventSource API. E.g.,
+                                                   <tt class="ph tt">curl -NsS localhost:8000/events?token=308650d</tt></p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">salt_token -- <strong class="ph b">optional</strong> parameter containing a raw Salt
+                                                   <em class="ph i">eauth token</em> (not to be confused with the token returned from
+                                                   the /login URL). E.g.,
+                                                   <tt class="ph tt">curl -NsS localhost:8000/events?salt_token=30742765</tt></p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.netapi.rest_cherrypy.app.Jobs">
+                           <h2 class="title topictitle2">Jobs Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.netapi.rest_cherrypy.app.Jobs</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.netapi.rest_cherrypy.app.Jobs.GET">
+                              <h3 class="title topictitle3">Jobs.GET Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GET(
+								jid=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">A convenience URL for getting lists of previously run jobs or getting
+                                       the return from a single job
+                                    </p>
+                                    
+                                    <p class="p"><strong class="ph b">Example request:</strong></p>
+                                    <pre class="pre codeblock language-bash">curl -i localhost:8000/jobs</pre>
+                                    <pre class="pre codeblock language-http">GET /jobs HTTP/1.1
+Host: localhost:8000
+Accept: application/x-yaml</pre>
+                                    <p class="p"><strong class="ph b">Example response:</strong></p>
+                                    <pre class="pre codeblock language-http">HTTP/1.1 200 OK
+Content-Length: 165
+Content-Type: application/x-yaml
+
+return:
+- '20121130104633606931':
+    Arguments:
+    - '3'
+    Function: test.fib
+    Start Time: 2012, Nov 30 10:46:33.606931
+    Target: jerry
+    Target-type: glob</pre>
+                                    <p class="p"><strong class="ph b">Example request:</strong></p>
+                                    <pre class="pre codeblock language-bash">curl -i localhost:8000/jobs/20121130104633606931</pre>
+                                    <pre class="pre codeblock language-http">GET /jobs/20121130104633606931 HTTP/1.1
+Host: localhost:8000
+Accept: application/x-yaml</pre>
+                                    <p class="p"><strong class="ph b">Example response:</strong></p>
+                                    <pre class="pre codeblock language-http">HTTP/1.1 200 OK
+Content-Length: 73
+Content-Type: application/x-yaml
+
+info:
+- Arguments:
+    - '3'
+    Function: test.fib
+    Minions:
+    - jerry
+    Start Time: 2012, Nov 30 10:46:33.606931
+    Target: '*'
+    Target-type: glob
+    User: saltdev
+    jid: '20121130104633606931'
+return:
+- jerry:
+    - - 0
+    - 1
+    - 1
+    - 2
+    - 6.9141387939453125e-06</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="get--jobs-jid">
+                              <h3 class="title topictitle3">GET /jobs/jid</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GET  /jobs/(
+								jid
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">List jobs or show a single job from the job cache.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr>
+                                       
+                                       <th id="d304619e710-value" valign="bottom" align="left">Value</th>
+                                       
+                                       <th id="d304619e710-desc" valign="bottom" align="left">Description</th>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e710-value" class="stentry propvalue">Status Codes</td>
+                                       
+                                       <td valign="top" headers="d304619e710-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">200 -- success</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">401 -- authentication required</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">406 -- requested Content-Type not available</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.netapi.rest_cherrypy.app.Keys">
+                           <h2 class="title topictitle2">Keys Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.netapi.rest_cherrypy.app.Keys</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Convenience URLs for working with minion keys</p>
+                                 
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">These URLs wrap the functionality provided by the &nbsp;<a class="xref" href="../../wheel/all/salt.wheel.key.html#salt.wheel.key">key wheel module</a>
+                                    functions.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.netapi.rest_cherrypy.app.Keys.GET">
+                              <h3 class="title topictitle3">Keys.GET Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GET(
+								mid=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Show the list of minion keys or detail on a specific key</p>
+                                    
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                    
+                                    <p class="p"><strong class="ph b">Example request:</strong></p>
+                                    <pre class="pre codeblock language-bash">curl -i localhost:8000/keys</pre>
+                                    <pre class="pre codeblock language-http">GET /keys HTTP/1.1
+Host: localhost:8000
+Accept: application/x-yaml</pre>
+                                    <p class="p"><strong class="ph b">Example response:</strong></p>
+                                    <pre class="pre codeblock language-http">HTTP/1.1 200 OK
+Content-Length: 165
+Content-Type: application/x-yaml
+
+return:
+  local:
+  - master.pem
+  - master.pub
+  minions:
+  - jerry
+  minions_pre: []
+  minions_rejected: []</pre>
+                                    <p class="p"><strong class="ph b">Example request:</strong></p>
+                                    <pre class="pre codeblock language-bash">curl -i localhost:8000/keys/jerry</pre>
+                                    <pre class="pre codeblock language-http">GET /keys/jerry HTTP/1.1
+Host: localhost:8000
+Accept: application/x-yaml</pre>
+                                    <p class="p"><strong class="ph b">Example response:</strong></p>
+                                    <pre class="pre codeblock language-http">HTTP/1.1 200 OK
+Content-Length: 73
+Content-Type: application/x-yaml
+
+return:
+  minions:
+    jerry: 51:93:b3:d0:9f:3a:6d:e5:28:67:c2:4b:27:d6:cd:2b</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="get--keys-mid">
+                              <h3 class="title topictitle3">GET /keys/mid</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GET  /keys/(
+								mid
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">List all keys or show a specific key</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr>
+                                       
+                                       <th id="d304619e836-value" valign="bottom" align="left">Value</th>
+                                       
+                                       <th id="d304619e836-desc" valign="bottom" align="left">Description</th>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e836-value" class="stentry propvalue">Status Codes</td>
+                                       
+                                       <td valign="top" headers="d304619e836-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">200 -- success</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">401 -- authentication required</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">406 -- requested Content-Type not available</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.netapi.rest_cherrypy.app.Keys.POST">
+                              <h3 class="title topictitle3">Keys.POST Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">POST(
+								mid,
+								keysize=None,
+								force=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Easily generate keys for a minion and auto-accept the new key</p>
+                                    
+                                    <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                    
+                                    <p class="p">Example partial kickstart script to bootstrap a new minion:</p>
+                                    <pre class="pre codeblock language-text">%post
+mkdir -p /etc/salt/pki/minion
+curl -sSk https://localhost:8000/keys \
+        -d mid=jerry \
+        -d username=kickstart \
+        -d password=kickstart \
+        -d eauth=pam \
+    | tar -C /etc/salt/pki/minion -xf -
+
+mkdir -p /etc/salt/minion.d
+printf 'master: 10.0.0.5\nid: jerry' &gt; /etc/salt/minion.d/id.conf
+%end</pre>
+                                    <p class="p"><strong class="ph b">Example request:</strong></p>
+                                    <pre class="pre codeblock language-bash">curl -sSk https://localhost:8000/keys \
+        -d mid=jerry \
+        -d username=kickstart \
+        -d password=kickstart \
+        -d eauth=pam \
+        -o jerry-salt-keys.tar</pre>
+                                    <pre class="pre codeblock language-http">POST /keys HTTP/1.1
+Host: localhost:8000</pre>
+                                    <p class="p"><strong class="ph b">Example response:</strong></p>
+                                    <pre class="pre codeblock language-http">HTTP/1.1 200 OK
+Content-Length: 10240
+Content-Disposition: attachment; filename="saltkeys-jerry.tar"
+Content-Type: application/x-tar
+
+jerry.pub0000644000000000000000000000070300000000000010730 0ustar  00000000000000</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="post--keys">
+                              <h3 class="title topictitle3">POST /keys</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">POST  /keys( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Generate a public and private key and return both as a tarball</p>
+                                    
+                                    <p class="p">Authentication credentials must be passed in the request.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr>
+                                       
+                                       <th id="d304619e926-value" valign="bottom" align="left">Value</th>
+                                       
+                                       <th id="d304619e926-desc" valign="bottom" align="left">Description</th>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e926-value" class="stentry propvalue">Status Codes</td>
+                                       
+                                       <td valign="top" headers="d304619e926-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">200 -- success</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">401 -- authentication required</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">406 -- requested Content-Type not available</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.netapi.rest_cherrypy.app.Login">
+                           <h2 class="title topictitle2">Login Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.netapi.rest_cherrypy.app.Login(
+									*args,
+									**kwargs
+									)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Log in to receive a session token</p>
+                                 
+                                 <p class="p"><a class="xref" href="salt.netapi.rest_cherrypy.html#rest-cherrypy__rest-cherrypy-auth">Authentication information</a>.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.netapi.rest_cherrypy.app.Login.GET">
+                              <h3 class="title topictitle3">Login.GET Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GET( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Present the login interface</p>
+                                    
+                                    <p class="p"><strong class="ph b">Example request:</strong></p>
+                                    <pre class="pre codeblock language-bash">curl -i localhost:8000/login</pre>
+                                    <pre class="pre codeblock language-http">GET /login HTTP/1.1
+Host: localhost:8000
+Accept: text/html</pre>
+                                    <p class="p"><strong class="ph b">Example response:</strong></p>
+                                    <pre class="pre codeblock language-http">HTTP/1.1 200 OK
+Content-Type: text/html</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="get--login">
+                              <h3 class="title topictitle3">GET /login</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GET  /login( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">An explanation of how to log in.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr>
+                                       
+                                       <th id="d304619e1031-value" valign="bottom" align="left">Value</th>
+                                       
+                                       <th id="d304619e1031-desc" valign="bottom" align="left">Description</th>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e1031-value" class="stentry propvalue">Status Codes</td>
+                                       
+                                       <td valign="top" headers="d304619e1031-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">200 -- success</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">401 -- authentication required</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">406 -- requested Content-Type not available</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.netapi.rest_cherrypy.app.Login.POST">
+                              <h3 class="title topictitle3">Login.POST Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">POST(
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p"><a class="xref" href="salt.netapi.rest_cherrypy.html#rest-cherrypy__rest-cherrypy-auth">Authenticate</a> against Salt's eauth system
+                                    </p>
+                                    
+                                    <p class="p"><strong class="ph b">Example request:</strong></p>
+                                    <pre class="pre codeblock language-bash">curl -si localhost:8000/login \
+        -H "Accept: application/json" \
+        -d username='saltuser' \
+        -d password='saltpass' \
+        -d eauth='pam'</pre>
+                                    <pre class="pre codeblock language-http">POST / HTTP/1.1
+Host: localhost:8000
+Content-Length: 42
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+username=saltuser&amp;password=saltpass&amp;eauth=pam</pre>
+                                    <p class="p"><strong class="ph b">Example response:</strong></p>
+                                    <pre class="pre codeblock language-http">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 206
+X-Auth-Token: 6d1b722e
+Set-Cookie: session_id=6d1b722e; expires=Sat, 17 Nov 2012 03:23:52 GMT; Path=/
+
+{"return": {
+    "token": "6d1b722e",
+    "start": 1363805943.776223,
+    "expire": 1363849143.776224,
+    "user": "saltuser",
+    "eauth": "pam",
+    "perms": [
+        "grains.*",
+        "status.*",
+        "sys.*",
+        "test.*"
+    ]
+}}</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="post--login">
+                              <h3 class="title topictitle3">POST /login</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">POST  /login( )</pre>
+                                    </div>
+                                 
+                                 <div class="section"></div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr>
+                                       
+                                       <th id="d304619e1113-value" valign="bottom" align="left">Value</th>
+                                       
+                                       <th id="d304619e1113-desc" valign="bottom" align="left">Description</th>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e1113-value" class="stentry propvalue">Request Headers</td>
+                                       
+                                       <td valign="top" headers="d304619e1113-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">X-Auth-Token -- a session token from <a class="xref" href="salt.netapi.rest_cherrypy.html#salt.netapi.rest_cherrypy.app.Login">Login</a>.
+                                                </p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">Accept -- the desired response format.</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">Content-Type -- the format of the request body.</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e1113-value" class="stentry propvalue">Form Parameters</td>
+                                       
+                                       <td valign="top" headers="d304619e1113-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">eauth -- the eauth backend configured for the user</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">username -- username</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">password -- password</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e1113-value" class="stentry propvalue">Status Codes</td>
+                                       
+                                       <td valign="top" headers="d304619e1113-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">200 -- success</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">401 -- authentication required</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">406 -- requested Content-Type not available</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.netapi.rest_cherrypy.app.Logout">
+                           <h2 class="title topictitle2">Logout Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.netapi.rest_cherrypy.app.Logout</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Class to remove or invalidate sessions</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.netapi.rest_cherrypy.app.Logout.POST">
+                              <h3 class="title topictitle3">Logout.POST Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">POST( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Destroy the currently active session and expire the session cookie</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.netapi.rest_cherrypy.app.LowDataAdapter">
+                           <h2 class="title topictitle2">LowDataAdapter Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.netapi.rest_cherrypy.app.LowDataAdapter</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">The primary entry point to Salt's REST API</p>
+                                 
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties" id="salt.netapi.rest_cherrypy.app.LowDataAdapter__properties_bzv_dy1_pr">
+                                 <tr>
+                                    
+                                    <th id="d304619e1222-value" valign="bottom" align="left">Value</th>
+                                    
+                                    <th id="d304619e1222-desc" valign="bottom" align="left">Description</th>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d304619e1222-value" class="stentry propvalue">LowDataAdapter.POST</td>
+                                    
+                                    <td valign="top" headers="d304619e1222-desc" class="stentry propdesc">
+                                       <p class="p">Mock out specified imports</p>
+                                       
+                                       <p class="p">This allows autodoc to do its thing without having oodles of req'd installed libs.
+                                          This doesn't work with <tt class="ph tt">import *</tt> imports.
+                                       </p>
+                                       
+                                       <p class="p"><a class="xref" href="http://read-the-docs.readthedocs.org/en/latest/faq.html#i-get-import-errors-on-libraries-that-depend-on-c-modules" target="_blank">http://read-the-docs.readthedocs.org/en/latest/faq.html#i-get-import-errors-on-libraries-that-depend-on-c-modules</a></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.netapi.rest_cherrypy.app.LowDataAdapter.GET">
+                              <h3 class="title topictitle3">LowDataAdapter.GET Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GET( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">An explanation of the API with links of where to go next</p>
+                                    
+                                    <p class="p"><strong class="ph b">Example request:</strong></p>
+                                    <pre class="pre codeblock language-bash">curl -i localhost:8000</pre>
+                                    <pre class="pre codeblock language-http">GET / HTTP/1.1
+Host: localhost:8000
+Accept: application/json</pre>
+                                    <p class="p"><strong class="ph b">Example response:</strong></p>
+                                    <pre class="pre codeblock language-http">HTTP/1.1 200 OK
+Content-Type: application/json</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="get--">
+                              <h3 class="title topictitle3">GET /</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GET  /( )</pre>
+                                    </div>
+                                 
+                                 <div class="section"></div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr>
+                                       
+                                       <th id="d304619e1302-value" valign="bottom" align="left">Value</th>
+                                       
+                                       <th id="d304619e1302-desc" valign="bottom" align="left">Description</th>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e1302-value" class="stentry propvalue">Request Headers</td>
+                                       
+                                       <td valign="top" headers="d304619e1302-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">Accept -- the desired response format.</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e1302-value" class="stentry propvalue">Status Codes</td>
+                                       
+                                       <td valign="top" headers="d304619e1302-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">200 -- success</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">401 -- authentication required</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">406 -- requested Content-Type not available</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.netapi.rest_cherrypy.app.Minions">
+                           <h2 class="title topictitle2">Minions Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.netapi.rest_cherrypy.app.Minions</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Convenience URLs for working with minions</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.netapi.rest_cherrypy.app.Minions.GET">
+                              <h3 class="title topictitle3">Minions.GET Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GET(
+								mid=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">A convenience URL for getting lists of minions or getting minion
+                                       details
+                                    </p>
+                                    
+                                    <p class="p"><strong class="ph b">Example request:</strong></p>
+                                    <pre class="pre codeblock language-bash">curl -i localhost:8000/minions/ms-3</pre>
+                                    <pre class="pre codeblock language-http">GET /minions/ms-3 HTTP/1.1
+Host: localhost:8000
+Accept: application/x-yaml</pre>
+                                    <p class="p"><strong class="ph b">Example response:</strong></p>
+                                    <pre class="pre codeblock language-http">HTTP/1.1 200 OK
+Content-Length: 129005
+Content-Type: application/x-yaml
+
+return:
+- ms-3:
+    grains.items:
+        ...</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="get--minions-mid">
+                              <h3 class="title topictitle3">GET /minions/mid</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GET  /minions/(
+								mid
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section"></div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr>
+                                       
+                                       <th id="d304619e1408-value" valign="bottom" align="left">Value</th>
+                                       
+                                       <th id="d304619e1408-desc" valign="bottom" align="left">Description</th>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e1408-value" class="stentry propvalue">Request Headers</td>
+                                       
+                                       <td valign="top" headers="d304619e1408-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">X-Auth-Token -- a session token from <a class="xref" href="salt.netapi.rest_cherrypy.html#salt.netapi.rest_cherrypy.app.Login">Login</a>.
+                                                </p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">Accept -- the desired response format.</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e1408-value" class="stentry propvalue">Status Codes</td>
+                                       
+                                       <td valign="top" headers="d304619e1408-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">200 -- success</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">401 -- authentication required</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">406 -- requested Content-Type not available</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.netapi.rest_cherrypy.app.Minions.POST">
+                              <h3 class="title topictitle3">Minions.POST Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">POST(
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Start an execution command and immediately return the job id</p>
+                                    
+                                    <p class="p"><strong class="ph b">Example request:</strong></p>
+                                    <pre class="pre codeblock language-bash">curl -sSi localhost:8000/minions \
+    -H "Accept: application/x-yaml" \
+    -d tgt='*' \
+    -d fun='status.diskusage'</pre>
+                                    <pre class="pre codeblock language-http">POST /minions HTTP/1.1
+Host: localhost:8000
+Accept: application/x-yaml
+Content-Length: 26
+Content-Type: application/x-www-form-urlencoded
+
+tgt=*&amp;fun=status.diskusage</pre>
+                                    <p class="p"><strong class="ph b">Example response:</strong></p>
+                                    <pre class="pre codeblock language-http">HTTP/1.1 202 Accepted
+Content-Length: 86
+Content-Type: application/x-yaml
+
+return:
+- jid: '20130603122505459265'
+  minions: [ms-4, ms-3, ms-2, ms-1, ms-0]
+_links:
+  jobs:
+    - href: /jobs/20130603122505459265</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="post--minions">
+                              <h3 class="title topictitle3">POST /minions</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">POST  /minions( )</pre>
+                                    </div>
+                                 
+                                 <div class="section"></div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr>
+                                       
+                                       <th id="d304619e1502-value" valign="bottom" align="left">Value</th>
+                                       
+                                       <th id="d304619e1502-desc" valign="bottom" align="left">Description</th>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e1502-value" class="stentry propvalue">Request Headers</td>
+                                       
+                                       <td valign="top" headers="d304619e1502-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">X-Auth-Token -- a session token from <a class="xref" href="salt.netapi.rest_cherrypy.html#salt.netapi.rest_cherrypy.app.Login">Login</a>.
+                                                </p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">Accept -- the desired response format.</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">Content-Type -- the format of the request body.</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e1502-value" class="stentry propvalue">Response Headers</td>
+                                       
+                                       <td valign="top" headers="d304619e1502-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">Content-Type -- the format of the response body; depends on the
+                                                   Accept request header.
+                                                </p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e1502-value" class="stentry propvalue">Status Codes</td>
+                                       
+                                       <td valign="top" headers="d304619e1502-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">200 -- success</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">401 -- authentication required</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">406 -- requested Content-Type not available</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="salt.netapi.rest_tornado.html#rest-tornado__term-lowstate">lowstate</a> data describing Salt commands must be sent in the
+                                       request body. The <tt class="ph tt">client</tt> option will be set to
+                                       <tt class="ph tt">local_async()</tt>.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.netapi.rest_cherrypy.app.Run">
+                           <h2 class="title topictitle2">Run Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.netapi.rest_cherrypy.app.Run</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Class to run commands without normal session handling</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.netapi.rest_cherrypy.app.Run.POST">
+                              <h3 class="title topictitle3">Run.POST Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">POST(
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Run commands bypassing the <a class="xref" href="salt.netapi.rest_cherrypy.html#rest-cherrypy__rest-cherrypy-auth">normal session handling</a></p>
+                                    
+                                    <p class="p"><strong class="ph b">Example request:</strong></p>
+                                    <pre class="pre codeblock language-bash">curl -sS localhost:8000/run \
+    -H 'Accept: application/x-yaml' \
+    -d client='local' \
+    -d tgt='*' \
+    -d fun='test.ping' \
+    -d username='saltdev' \
+    -d password='saltdev' \
+    -d eauth='pam'</pre>
+                                    <pre class="pre codeblock language-http">POST /run HTTP/1.1
+Host: localhost:8000
+Accept: application/x-yaml
+Content-Length: 75
+Content-Type: application/x-www-form-urlencoded
+
+client=local&amp;tgt=*&amp;fun=test.ping&amp;username=saltdev&amp;password=saltdev&amp;eauth=pam</pre>
+                                    <p class="p"><strong class="ph b">Example response:</strong></p>
+                                    <pre class="pre codeblock language-http">HTTP/1.1 200 OK
+Content-Length: 73
+Content-Type: application/x-yaml
+
+return:
+- ms-0: true
+    ms-1: true
+    ms-2: true
+    ms-3: true
+    ms-4: true</pre>
+                                    <p class="p">The /run enpoint can also be used to issue commands using the salt-ssh subsystem.</p>
+                                    
+                                    <p class="p">When using salt-ssh, eauth credentials should not be supplied. Instad, authentication
+                                       should be handled by the SSH layer itself. The use of the salt-ssh client does not
+                                       require a salt master to be running. Instead, only a roster file must be present
+                                       in the salt configuration directory.
+                                    </p>
+                                    
+                                    <p class="p">All SSH client requests are synchronous.</p>
+                                    
+                                    <p class="p">** Example SSH client request:**</p>
+                                    <pre class="pre codeblock language-bash">curl -sS localhost:8000/run \
+    -H 'Accept: application/x-yaml' \
+    -d client='ssh' \
+    -d tgt='*' \
+    -d fun='test.ping'</pre>
+                                    <pre class="pre codeblock language-http">POST /run HTTP/1.1
+Host: localhost:8000
+Accept: application/x-yaml
+Content-Length: 75
+Content-Type: application/x-www-form-urlencoded
+
+client=ssh&amp;tgt=*&amp;fun=test.ping</pre>
+                                    <p class="p"><strong class="ph b">Example SSH response:</strong></p>
+                                    <pre class="pre codeblock language-http">return:
+- silver:
+  fun: test.ping
+  fun_args: []
+  id: silver
+  jid: '20141203103525666185'
+  retcode: 0
+  return: true
+  success: true</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="post--run">
+                              <h3 class="title topictitle3">POST /run</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">POST  /run( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">This entry point is primarily for "one-off" commands. Each request
+                                       must pass full Salt authentication credentials. Otherwise this URL
+                                       is identical to the <a class="xref" href="salt.netapi.rest_cherrypy.html#salt.netapi.rest_cherrypy.app.LowDataAdapter.POST">root URL (/)</a>.
+                                    </p>
+                                    
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="salt.netapi.rest_tornado.html#rest-tornado__term-lowstate">lowstate</a> data describing Salt commands must be sent in the
+                                       request body.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr>
+                                       
+                                       <th id="d304619e1674-value" valign="bottom" align="left">Value</th>
+                                       
+                                       <th id="d304619e1674-desc" valign="bottom" align="left">Description</th>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e1674-value" class="stentry propvalue">Status Codes</td>
+                                       
+                                       <td valign="top" headers="d304619e1674-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">200 -- success</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">401 -- authentication required</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">406 -- requested Content-Type not available</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.netapi.rest_cherrypy.app.Stats">
+                           <h2 class="title topictitle2">Stats Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.netapi.rest_cherrypy.app.Stats</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Expose statistics on the running CherryPy server</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.netapi.rest_cherrypy.app.Stats.GET">
+                              <h3 class="title topictitle3">Stats.GET Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GET( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a dump of statistics collected from the CherryPy server</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="get--stats">
+                              <h3 class="title topictitle3">GET /stats</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GET  /stats( )</pre>
+                                    </div>
+                                 
+                                 <div class="section"></div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr>
+                                       
+                                       <th id="d304619e1761-value" valign="bottom" align="left">Value</th>
+                                       
+                                       <th id="d304619e1761-desc" valign="bottom" align="left">Description</th>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e1761-value" class="stentry propvalue">Request Headers</td>
+                                       
+                                       <td valign="top" headers="d304619e1761-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">X-Auth-Token -- a session token from <a class="xref" href="salt.netapi.rest_cherrypy.html#salt.netapi.rest_cherrypy.app.Login">Login</a>.
+                                                </p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">Accept -- the desired response format.</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e1761-value" class="stentry propvalue">Response Headers</td>
+                                       
+                                       <td valign="top" headers="d304619e1761-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">Content-Type -- the format of the response body; depends on the
+                                                   Accept request header.
+                                                </p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e1761-value" class="stentry propvalue">Status Codes</td>
+                                       
+                                       <td valign="top" headers="d304619e1761-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">200 -- success</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">401 -- authentication required</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">406 -- requested Content-Type not available</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.netapi.rest_cherrypy.app.Webhook">
+                           <h2 class="title topictitle2">Webhook Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.netapi.rest_cherrypy.app.Webhook</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">A generic web hook entry point that fires an event on Salt's event bus</p>
+                                 
+                                 <p class="p">External services can POST data to this URL to trigger an event in Salt. For example,
+                                    Amazon SNS, Jenkins-CI or Travis-CI, or GitHub web hooks.
+                                 </p>
+                                 
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p">Be mindful of security</p>
+                                    
+                                    <p class="p">Salt's Reactor can run any code. A Reactor SLS that responds to a hook event is
+                                       responsible for validating that the event came from a trusted source and contains
+                                       valid data.
+                                    </p>
+                                    
+                                    <p class="p"><strong class="ph b">This is a generic interface and securing it is up to you!</strong></p>
+                                    
+                                    <p class="p">This URL requires authentication however not all external services can be configured
+                                       to authenticate. For this reason authentication can be selectively disabled for this
+                                       URL. Follow best practices -- always use SSL, pass a secret key, configure the
+                                       firewall to only allow traffic from a known source, etc.
+                                    </p>
+                                    
+                                 </aside>
+                                 
+                                 <p class="p">The event data is taken from the request body. The Content-Type header is respected
+                                    for
+                                    the payload.
+                                 </p>
+                                 
+                                 <p class="p">The event tag is prefixed with <tt class="ph tt">salt/netapi/hook</tt> and the URL path is appended to
+                                    the end. For example, a <tt class="ph tt">POST</tt> request sent to
+                                    <tt class="ph tt">/hook/mycompany/myapp/mydata</tt> will produce a Salt event with the tag
+                                    <tt class="ph tt">salt/netapi/hook/mycompany/myapp/mydata</tt>.
+                                 </p>
+                                 
+                                 <p class="p">The following is an example <tt class="ph tt">.travis.yml</tt> file to send notifications to Salt of
+                                    successful test runs:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">language: python
+script: python -m unittest tests
+after_success:
+    - |
+        curl -sSk https://saltapi-url.example.com:8000/hook/travis/build/success                         -d branch="${TRAVIS_BRANCH}"                         -d commit="${TRAVIS_COMMIT}"</pre>
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p"><em class="ph i">events</em>, <em class="ph i">reactor</em></p>
+                                    
+                                 </aside>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.netapi.rest_cherrypy.app.Webhook.POST">
+                              <h3 class="title topictitle3">Webhook.POST Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">POST(
+								*args,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Fire an event in Salt with a custom event tag and data</p>
+                                    
+                                    <p class="p"><strong class="ph b">Example request:</strong></p>
+                                    <pre class="pre codeblock language-bash">curl -sS localhost:8000/hook -d foo='Foo!' -d bar='Bar!'</pre>
+                                    <pre class="pre codeblock language-http">POST /hook HTTP/1.1
+Host: localhost:8000
+Content-Length: 16
+Content-Type: application/x-www-form-urlencoded
+
+foo=Foo&amp;bar=Bar!</pre>
+                                    <p class="p"><strong class="ph b">Example response</strong>:
+                                    </p>
+                                    <pre class="pre codeblock language-http">HTTP/1.1 200 OK
+Content-Length: 14
+Content-Type: application/json
+
+{"success": true}</pre>
+                                    <p class="p">As a practical example, an internal continuous-integration build
+                                       server could send an HTTP POST request to the URL
+                                       <tt class="ph tt">https://localhost:8000/hook/mycompany/build/success</tt> which contains
+                                       the result of a build and the SHA of the version that was built as
+                                       JSON. That would then produce the following event in Salt that could be
+                                       used to kick off a deployment via Salt's Reactor:
+                                    </p>
+                                    <pre class="pre codeblock language-">Event fired at Fri Feb 14 17:40:11 2014
+*************************
+Tag: salt/netapi/hook/mycompany/build/success
+Data:
+{'_stamp': '2014-02-14_17:40:11.440996',
+    'headers': {
+        'X-My-Secret-Key': 'F0fAgoQjIT@W',
+        'Content-Length': '37',
+        'Content-Type': 'application/json',
+        'Host': 'localhost:8000',
+        'Remote-Addr': '127.0.0.1'},
+    'post': {'revision': 'aa22a3c4b2e7', 'result': True}}</pre>
+                                    <p class="p">Salt's Reactor could listen for the event:</p>
+                                    <pre class="pre codeblock language-yaml">reactor:
+  - 'salt/netapi/hook/mycompany/build/*':
+    - /srv/reactor/react_ci_builds.sls</pre>
+                                    <p class="p">And finally deploy the new build:</p>
+                                    <pre class="pre codeblock language-yaml">{% set secret_key = data.get('headers', {}).get('X-My-Secret-Key') %}
+{% set build = data.get('post', {}) %}
+
+{% if secret_key == 'F0fAgoQjIT@W' and build.result == True %}
+deploy_my_app:
+  cmd.state.sls:
+    - tgt: 'application*'
+    - arg:
+      - myapp.deploy
+    - kwarg:
+        pillar:
+          revision: {{ revision }}
+{% endif %}</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="post--hook">
+                              <h3 class="title topictitle3">POST /hook</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">POST  /hook( )</pre>
+                                    </div>
+                                 
+                                 <div class="section"></div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr>
+                                       
+                                       <th id="d304619e1941-value" valign="bottom" align="left">Value</th>
+                                       
+                                       <th id="d304619e1941-desc" valign="bottom" align="left">Description</th>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e1941-value" class="stentry propvalue">Status Codes</td>
+                                       
+                                       <td valign="top" headers="d304619e1941-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">200 -- success</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">401 -- authentication required</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">406 -- requested Content-Type not available</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">413 -- request body is too large</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.netapi.rest_cherrypy.app.WebsocketEndpoint">
+                           <h2 class="title topictitle2">WebsocketEndpoint Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.netapi.rest_cherrypy.app.WebsocketEndpoint</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Open a WebSocket connection to Salt's event bus</p>
+                                 
+                                 <p class="p">The event bus on the Salt master exposes a large variety of things, notably when
+                                    executions are started on the master and also when minions ultimately return their
+                                    results. This URL provides a real-time window into a running Salt infrastructure.
+                                    Uses
+                                    websocket as the transport mechanism.
+                                 </p>
+                                 
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p"><em class="ph i">events</em></p>
+                                    
+                                 </aside>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.netapi.rest_cherrypy.app.WebsocketEndpoint.GET">
+                              <h3 class="title topictitle3">WebsocketEndpoint.GET Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GET(
+								token=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a websocket connection of Salt's event stream</p>
+                                    
+                                    <p class="p"><strong class="ph b">Example request:</strong></p>
+                                    
+                                    <blockquote class="lq">
+                                       <dl class="dl definition_list">
+                                          <dt class="dt dlterm">curl -NsSk </dt>
+                                          
+                                          <dd class="dd">
+                                             <p class="p">-H 'X-Auth-Token: ffedf49d' -H 'Host: localhost:8000' -H 'Connection: Upgrade' -H
+                                                'Upgrade: websocket' -H 'Origin: https://localhost:8000' -H 'Sec-WebSocket-Version:
+                                                13' -H 'Sec-WebSocket-Key: '"$(echo -n $RANDOM | base64)" localhost:8000/ws
+                                             </p>
+                                             
+                                          </dd>
+                                          
+                                       </dl>
+                                       
+                                    </blockquote>
+                                    <pre class="pre codeblock language-http">GET /ws HTTP/1.1
+Connection: Upgrade
+Upgrade: websocket
+Host: localhost:8000
+Origin: https://localhost:8000
+Sec-WebSocket-Version: 13
+Sec-WebSocket-Key: s65VsgHigh7v/Jcf4nXHnA==
+X-Auth-Token: ffedf49d</pre>
+                                    <p class="p"><strong class="ph b">Example response</strong>:
+                                    </p>
+                                    <pre class="pre codeblock language-http">HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: mWZjBV9FCglzn1rIKJAxrTFlnJE=
+Sec-WebSocket-Version: 13</pre>
+                                    <p class="p">An authentication token <strong class="ph b">may optionally</strong> be passed as part of the URL
+                                       for browsers that cannot be configured to send the authentication
+                                       header or cookie:
+                                    </p>
+                                    <pre class="pre codeblock language-bash">curl -NsS &lt;...snip...&gt; localhost:8000/ws/ffedf49d</pre>
+                                    <p class="p">The event stream can be easily consumed via JavaScript:</p>
+                                    <pre class="pre codeblock language-javascript">// Note, you must be authenticated!
+var source = new Websocket('ws://localhost:8000/ws/d0ce6c1a');
+source.onerror = function(e) { console.debug('error!', e); };
+source.onmessage = function(e) { console.debug(e.data); };
+
+source.send('websocket client ready')
+
+source.close();</pre>
+                                    <p class="p">Or via Python, using the Python module <a class="xref" href="https://pypi.python.org/pypi/websocket-client/" target="_blank">websocket-client</a> for example.
+                                    </p>
+                                    <pre class="pre codeblock language-python"># Note, you must be authenticated!
+
+from websocket import create_connection
+
+ws = create_connection('ws://localhost:8000/ws/d0ce6c1a')
+ws.send('websocket client ready')
+
+# Look at https://pypi.python.org/pypi/websocket-client/ for more
+# examples.
+while listening_to_events:
+    print ws.recv()
+
+ws.close()</pre>
+                                    <p class="p">Above examples show how to establish a websocket connection to Salt and
+                                       activating real time updates from Salt's event stream by signaling
+                                       <tt class="ph tt">websocket client ready</tt>.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="get--ws-token">
+                              <h3 class="title topictitle3">GET /ws/token</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GET  /ws/(
+								token
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section"></div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr>
+                                       
+                                       <th id="d304619e2080-value" valign="bottom" align="left">Value</th>
+                                       
+                                       <th id="d304619e2080-desc" valign="bottom" align="left">Description</th>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e2080-value" class="stentry propvalue">Query Parameters</td>
+                                       
+                                       <td valign="top" headers="d304619e2080-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <div class="p">format_events -- The event stream will undergo server-side formatting if
+                                                   the <tt class="ph tt">format_events</tt> URL parameter is included in the request. This
+                                                   can be useful to avoid formatting on the client-side:
+                                                   <pre class="pre codeblock language-bash">curl -NsS &lt;...snip...&gt; localhost:8000/ws?format_events</pre>
+                                                   </div>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e2080-value" class="stentry propvalue">Request Headers</td>
+                                       
+                                       <td valign="top" headers="d304619e2080-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">X-Auth-Token -- an authentication token from <a class="xref" href="salt.netapi.rest_cherrypy.html#salt.netapi.rest_cherrypy.app.Login">Login</a>.
+                                                </p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d304619e2080-value" class="stentry propvalue">Status Codes</td>
+                                       
+                                       <td valign="top" headers="d304619e2080-desc" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">101 -- switching to the websockets protocol</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">401 -- authentication required</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">406 -- requested Content-Type not available</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Standalone Minion</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Standalone Minion">
+      
+      <meta name="DC.Relation" scheme="URI" content="../installation/models.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="standalone-minion">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="standalone-minion">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Standalone Minion</h1>
+                        <div class="body conbody">
+                           <p class="p">Since the Salt minion contains such extensive functionality it can be useful
+                              to run it standalone. A standalone minion can be used to do a number of
+                              things:
+                           </p>
+                           
+                           <ul class="ul">
+                              <li class="li">
+                                 <p class="p">Use salt-call commands on a system without connectivity to a master</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">Masterless States, run states entirely from files local to the minion</p>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">When running Salt in masterless mode, do not run the salt-minion daemon.
+                                 Otherwise, it will attempt to connect to a master and fail. The salt-call
+                                 command stands on its own and does not need the salt-minion daemon.
+                              </p>
+                              
+                           </aside>
+                           
+                           <div class="section" id="standalone-minion__telling-salt-call-to-run-masterless">
+                              <h2 class="title sectiontitle">Telling Salt Call to Run Masterless</h2>
+                              <p class="p">The salt-call command is used to run module functions locally on a minion
+                                 instead of executing them from the master. Normally the salt-call command
+                                 checks into the master to retrieve file server and pillar data, but when
+                                 running standalone salt-call needs to be instructed to not check the master for
+                                 this data. To instruct the minion to not look for a master when running
+                                 salt-call the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/minion.html#configuration-salt-minion__file_client">file_client</a> configuration option needs to be set.
+                                 By default the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/minion.html#configuration-salt-minion__file_client">file_client</a> is set to <tt class="ph tt">remote</tt> so that the
+                                 minion knows that file server and pillar data are to be gathered from the
+                                 master. When setting the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/minion.html#configuration-salt-minion__file_client">file_client</a> option to <tt class="ph tt">local</tt> the
+                                 minion is configured to not gather this data from the master.
+                              </p>
+                              <pre class="pre codeblock language-yaml">file_client: local</pre>
+                              <p class="p">Now the salt-call command will not look for a master and will assume that the
+                                 local system has all of the file and pillar resources.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="standalone-minion__running-states-masterless">
+                              <h2 class="title sectiontitle">Running States Masterless</h2>
+                              <p class="p">The state system can be easily run without a Salt master, with all needed files
+                                 local to the minion. To do this the minion configuration file needs to be set
+                                 up to know how to return file_roots information like the master. The file_roots
+                                 setting defaults to /srv/salt for the base environment just like on the master:
+                              </p>
+                              <pre class="pre codeblock language-yaml">file_roots:
+  base:
+    - /srv/salt</pre>
+                              <p class="p">Now set up the Salt State Tree, top file, and SLS modules in the same way that
+                                 they would be set up on a master. Now, with the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/minion.html#configuration-salt-minion__file_client">file_client</a>
+                                 option set to <tt class="ph tt">local</tt> and an available state tree then calls to functions in
+                                 the state module will use the information in the file_roots on the minion
+                                 instead of checking in with the master.
+                              </p>
+                              
+                              <p class="p">Remember that when creating a state tree on a minion there are no syntax or
+                                 path changes needed, SLS modules written to be used from a master do not need
+                                 to be modified in any way to work with a minion.
+                              </p>
+                              
+                              <p class="p">This makes it easy to "script" deployments with Salt states without having to
+                                 set up a master, and allows for these SLS modules to be easily moved into a
+                                 Salt master as the deployment grows.
+                              </p>
+                              
+                              <p class="p">The declared state can now be executed with:</p>
+                              <pre class="pre codeblock language-bash">salt-call state.highstate</pre>
+                              <p class="p">Or the salt-call command can be executed with the <tt class="ph tt">--local</tt> flag, this makes
+                                 it unnecessary to change the configuration file:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-call state.highstate --local</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

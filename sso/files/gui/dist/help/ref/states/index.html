@@ -1,0 +1,1050 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>State Enforcement</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="State Enforcement">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/configuration-management.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="aggregate.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="altering_states.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="backup_mode.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="compiler_ordering.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="extend.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="failhard.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="global_state_arguments.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="highstate.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="include.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="layers.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="ordering.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="overstate.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="providers.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="requisites.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="startup.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="testing.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="top.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="vars.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="writing.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="state-enforcement">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="state-enforcement">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">State Enforcement</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p">Salt offers an optional interface to manage the configuration or "state" of the
+                                 Salt minions. This interface is a fully capable mechanism used to enforce the
+                                 state of systems from a central manager.
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="aggregate.html#mod-aggregate-state-runtime-modifications">Mod Aggregate State Runtime Modifications</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="aggregate.html#mod-aggregate-state-runtime-modifications__how-it-works">How it Works</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="aggregate.html#mod-aggregate-state-runtime-modifications__how-to-use-it">How to Use it</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="aggregate.html#mod-aggregate-state-runtime-modifications__in-config-files">In config files</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="aggregate.html#mod-aggregate-state-runtime-modifications__in-states">In states</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="aggregate.html#mod-aggregate-state-runtime-modifications__adding-mod-aggregate-to-a-state-module">Adding mod_aggregate to a State Module</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="altering_states.html#altering-states">Altering States</a></li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="backup_mode.html#file-state-backups">File State Backups</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="backup_mode.html#file-state-backups__backed-up-files">Backed-up Files</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="backup_mode.html#file-state-backups__interacting-with-backups">Interacting with Backups</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="backup_mode.html#file-state-backups__listing">Listing</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="backup_mode.html#file-state-backups__restoring">Restoring</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="backup_mode.html#file-state-backups__deleting">Deleting</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="compiler_ordering.html#understanding-state-compiler-ordering">Understanding State Compiler Ordering</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="compiler_ordering.html#understanding-state-compiler-ordering__compiler-basics">Compiler Basics</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="compiler_ordering.html#understanding-state-compiler-ordering__high-data-and-low-data">High Data and Low Data</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="compiler_ordering.html#understanding-state-compiler-ordering__ordering-layers">Ordering Layers</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="compiler_ordering.html#understanding-state-compiler-ordering__definition-order">Definition Order</a><ul class="ul">
+                                                   <li class="li">
+                                                      		
+                                                      			&nbsp;<a class="xref" href="compiler_ordering.html#understanding-state-compiler-ordering__the-include-statement">The Include Statement</a></li>
+                                                   
+                                                </ul>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="compiler_ordering.html#understanding-state-compiler-ordering__the-order-flag">The order Flag</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="compiler_ordering.html#understanding-state-compiler-ordering__lexicographical-fall-back">Lexicographical Fall-back</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="compiler_ordering.html#understanding-state-compiler-ordering__requisite-ordering">Requisite Ordering</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="compiler_ordering.html#understanding-state-compiler-ordering__runtime-requisite-evaluation">Runtime Requisite Evaluation</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="compiler_ordering.html#understanding-state-compiler-ordering__simple-runtime-evaluation-example">Simple Runtime Evaluation Example</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="compiler_ordering.html#understanding-state-compiler-ordering__best-practice">Best Practice</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="extend.html#extending-external-sls-data">Extending External SLS Data</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="extend.html#extending-external-sls-data__the-extend-declaration">The Extend Declaration</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="extend.html#extending-external-sls-data__extend-is-a-top-level-declaration">Extend is a Top Level Declaration</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="extend.html#extending-external-sls-data__the-requisite-in-statement">The Requisite "in" Statement</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="extend.html#extending-external-sls-data__rules-to-extend-by">Rules to Extend By</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="failhard.html#failhard-global-option">Failhard Global Option</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="failhard.html#failhard-global-option__state-level-failhard">State Level Failhard</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="failhard.html#failhard-global-option__global-failhard">Global Failhard</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="global_state_arguments.html#global-state-arguments">Global State Arguments</a></li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="highstate.html#states-highstate">Highstate data structure definitions</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="highstate.html#states-highstate__the-salt-state-tree">The Salt State Tree</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="highstate.html#states-highstate__top-file">Top file</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="highstate.html#states-highstate__include-declaration">Include declaration</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="highstate.html#reference">Module reference</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="highstate.html#states-highstate__id-declaration">ID declaration</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="highstate.html#states-highstate__extend-declaration">Extend declaration</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="highstate.html#states-highstate__state-declaration">State declaration</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="highstate.html#states-highstate__requisite-declaration">Requisite declaration</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="highstate.html#states-highstate__requisite-reference">Requisite reference</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="highstate.html#states-highstate__function-declaration">Function declaration</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="highstate.html#states-highstate__function-arg-declaration">Function arg declaration</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="highstate.html#states-highstate__name-declaration">Name declaration</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="highstate.html#states-highstate__names-declaration">Names declaration</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="highstate.html#states-highstate__large-example">Large example</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="include.html#include-and-exclude">Include and Exclude</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="include.html#include-and-exclude__include">Include</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="include.html#include-and-exclude__relative-include">Relative Include</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="include.html#include-and-exclude__exclude">Exclude</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="layers.html#state-layers">State System Layers</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="layers.html#state-layers__function-call">Function Call</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="layers.html#state-layers__low-chunk">Low Chunk</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="layers.html#state-layers__low-state">Low State</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="layers.html#state-layers__high-data">High Data</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="layers.html#state-layers__sls">SLS</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="layers.html#state-layers__highstate">HighState</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="layers.html#state-layers__overstate">OverState</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="master_side.html#the-orchestrate-runner">The Orchestrate Runner</a></li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="ordering.html#ordering">Ordering States</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="ordering.html#ordering__state-auto-ordering">State Auto Ordering</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="ordering.html#ordering__requisite-statements">Requisite Statements</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="ordering.html#ordering__multiple-requisites">Multiple Requisites</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="ordering.html#ordering__requisite-documentation">Requisite Documentation</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="ordering.html#ordering__the-order-option">The Order Option</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="overstate.html#overstate-system">OverState System</a></li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="providers.html#state-providers">State Providers</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="providers.html#state-providers__setting-a-provider-in-the-minion-config-file">Setting a Provider in the Minion Config File</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="providers.html#state-providers__provider-pkg">Provider: pkg</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="providers.html#state-providers__provider-service">Provider: service</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="providers.html#state-providers__provider-user">Provider: user</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="providers.html#state-providers__provider-group">Provider: group</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="providers.html#state-providers__arbitrary-redirects">Arbitrary Module Redirects</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="requisites.html#requisites">Requisites and Other Global State Arguments</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="requisites.html#requisites__id1">Requisites</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="requisites.html#requisites__direct-requisite-and-requisite-in-types">Direct Requisite and Requisite_in types</a><ul class="ul">
+                                                   <li class="li">
+                                                      		
+                                                      			&nbsp;<a class="xref" href="requisites.html#requisites__require">require</a></li>
+                                                   
+                                                   <li class="li">
+                                                      		
+                                                      			&nbsp;<a class="xref" href="requisites.html#requisites__require-an-entire-sls-file">Require an entire sls file</a></li>
+                                                   
+                                                   <li class="li">
+                                                      		
+                                                      			&nbsp;<a class="xref" href="requisites.html#requisites__watch">watch</a></li>
+                                                   
+                                                   <li class="li">
+                                                      		
+                                                      			&nbsp;<a class="xref" href="requisites.html#requisites__prereq">prereq</a></li>
+                                                   
+                                                   <li class="li">
+                                                      		
+                                                      			&nbsp;<a class="xref" href="requisites.html#requisites__onfail">onfail</a></li>
+                                                   
+                                                   <li class="li">
+                                                      		
+                                                      			&nbsp;<a class="xref" href="requisites.html#requisites__onchanges">onchanges</a></li>
+                                                   
+                                                   <li class="li">
+                                                      		
+                                                      			&nbsp;<a class="xref" href="requisites.html#requisites__use">use</a></li>
+                                                   
+                                                   <li class="li">
+                                                      		
+                                                      			&nbsp;<a class="xref" href="requisites.html#requisites__the-in-versions-of-requisites">The _in versions of requisites</a></li>
+                                                   
+                                                </ul>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="requisites.html#requisites__altering-states">Altering States</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="requisites.html#requisites__unless">Unless</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="requisites.html#requisites__onlyif">Onlyif</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="requisites.html#requisites__listen-listen-in">Listen/Listen_in</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="requisites.html#requisites__check-cmd">check_cmd</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="requisites.html#requisites__overriding-checks">Overriding Checks</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="startup.html#startup-states">Startup States</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="startup.html#startup-states__examples">Examples:</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="testing.html#state-testing">State Testing</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="testing.html#state-testing__default-test">Default Test</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="top.html#states-top">The Top File</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="top.html#states-top__environments">Environments</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="top.html#states-top__other-ways-of-targeting-minions">Other Ways of Targeting Minions</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="top.html#states-top__how-top-files-are-compiled">How Top Files Are Compiled</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="vars.html#sls-template-variable-reference">SLS Template Variable Reference</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="vars.html#sls-template-variable-reference__salt">Salt</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="vars.html#sls-template-variable-reference__opts">Opts</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="vars.html#sls-template-variable-reference__pillar">Pillar</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="vars.html#sls-template-variable-reference__grains">Grains</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="vars.html#sls-template-variable-reference__env">env</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="vars.html#sls-template-variable-reference__sls">sls</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="writing.html#state-modules">State Modules</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="writing.html#state-modules__states-are-easy-to-write">States are Easy to Write!</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="writing.html#state-modules__using-custom-state-modules">Using Custom State Modules</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="writing.html#state-modules__cross-calling-modules">Cross Calling Modules</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="writing.html#state-modules__return-data">Return Data</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="writing.html#state-modules__test-state">Test State</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="writing.html#state-modules__watcher-function">Watcher Function</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="writing.html#state-modules__mod-init-interface">Mod_init Interface</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="writing.html#state-modules__full-state-example">Full State Module Example</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="writing.html#state-modules__example-state-module">Example state module</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="state-enforcement__state-management">
+                              <h2 class="title sectiontitle">State Management</h2>
+                              <p class="p">State management, also frequently called Software Configuration Management
+                                 (SCM), is a program that puts and keeps a system into a predetermined state. It
+                                 installs software packages, starts or restarts services or puts configuration
+                                 files in place and watches them for changes.
+                              </p>
+                              
+                              <p class="p">Having a state management system in place allows one to easily and reliably
+                                 configure and manage a few servers or a few thousand servers. It allows
+                                 configurations to be kept under version control.
+                              </p>
+                              
+                              <p class="p">Salt States is an extension of the Salt Modules that we discussed in the
+                                 previous 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/tutorials/modules.html#remote-execution-tutorial">remote execution</a> tutorial. Instead
+                                 of calling one-off executions the state of a system can be easily defined and
+                                 then enforced.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="state-enforcement__understanding-the-salt-state-system-components">
+                              <h2 class="title sectiontitle">Understanding the Salt State System Components</h2>
+                              <p class="p">The Salt state system is comprised of a number of components. As a user, an
+                                 understanding of the SLS and renderer systems are needed. But as a developer,
+                                 an understanding of Salt states and how to write the states is needed as well.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">States are compiled and executed only on minions that have been targeted.
+                                    To execute functions directly on masters, see 
+                                    		
+                                    			&nbsp;<a class="xref" href="../runners/index.html#salt-runners">runners</a>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="state-enforcement__salt-sls-system">
+                              <h2 class="title sectiontitle">Salt SLS System</h2>
+                              <p class="p">The primary system used by the Salt state system is the SLS system. SLS stands
+                                 for <strong class="ph b">S</strong>a<strong class="ph b">L</strong>t <strong class="ph b">S</strong>tate.
+                              </p>
+                              
+                              <p class="p">The Salt States are files which contain the information about how to configure
+                                 Salt minions. The states are laid out in a directory tree and can be written in
+                                 many different formats.
+                              </p>
+                              
+                              <p class="p">The contents of the files and they way they are laid out is intended to be as
+                                 simple as possible while allowing for maximum flexibility. The files are laid
+                                 out in states and contains information about how the minion needs to be
+                                 configured.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="state-enforcement__sls-file-layout">
+                              <h2 class="title sectiontitle">SLS File Layout</h2>
+                              <p class="p">SLS files are laid out in the Salt file server.</p>
+                              
+                              <p class="p">A simple layout can look like this:</p>
+                              <pre class="pre codeblock language-yaml">top.sls
+ssh.sls
+sshd_config
+users/init.sls
+users/admin.sls
+salt/master.sls
+web/init.sls</pre>
+                              <p class="p">The <tt class="ph tt">top.sls</tt> file is a key component. The <tt class="ph tt">top.sls</tt> files
+                                 is used to determine which SLS files should be applied to which minions.
+                              </p>
+                              
+                              <p class="p">The rest of the files with the <tt class="ph tt">.sls</tt> extension in the above example are
+                                 state files.
+                              </p>
+                              
+                              <p class="p">Files without a <tt class="ph tt">.sls</tt> extensions are seen by the Salt master as
+                                 files that can be downloaded to a Salt minion.
+                              </p>
+                              
+                              <p class="p">States are translated into dot notation. For example, the <tt class="ph tt">ssh.sls</tt> file is
+                                 seen as the ssh state and the <tt class="ph tt">users/admin.sls</tt> file is seen as the
+                                 users.admin state.
+                              </p>
+                              
+                              <p class="p">Files named <tt class="ph tt">init.sls</tt> are translated to be the state name of the parent
+                                 directory, so the <tt class="ph tt">web/init.sls</tt> file translates to the <tt class="ph tt">web</tt> state.
+                              </p>
+                              
+                              <p class="p">In Salt, everything is a file; there is no "magic translation" of files and file
+                                 types. This means that a state file can be distributed to minions just like a
+                                 plain text or binary file.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="state-enforcement__sls-files">
+                              <h2 class="title sectiontitle">SLS Files</h2>
+                              <p class="p">The Salt state files are simple sets of data. Since SLS files are just data
+                                 they can be represented in a number of different ways.
+                              </p>
+                              
+                              <p class="p">The default format is YAML generated from a Jinja template. This allows for the
+                                 states files to have all the language constructs of Python and the simplicity of YAML.
+                              </p>
+                              
+                              <p class="p">State files can then be complicated Jinja templates that translate down to YAML, or
+                                 just
+                                 plain and simple YAML files.
+                              </p>
+                              
+                              <p class="p">The State files are simply common data structures such as dictionaries and lists,
+                                 constructed
+                                 using a templating language such as YAML.
+                              </p>
+                              
+                              <p class="p">Here is an example of a Salt State:</p>
+                              <pre class="pre codeblock language-yaml">vim:
+  pkg.installed: []
+
+salt:
+  pkg.latest:
+    - name: salt
+  service.running:
+    - names:
+      - salt-master
+      - salt-minion
+    - require:
+      - pkg: salt
+    - watch:
+      - file: /etc/salt/minion
+
+/etc/salt/minion:
+  file.managed:
+    - source: salt://salt/minion
+    - user: root
+    - group: root
+    - mode: 644
+    - require:
+      - pkg: salt</pre>
+                              <p class="p">This short stanza will ensure that vim is installed, Salt is installed and up
+                                 to date, the salt-master and salt-minion daemons are running and the Salt
+                                 minion configuration file is in place. It will also ensure everything is
+                                 deployed in the right order and that the Salt services are restarted when the
+                                 watched file updated.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="state-enforcement__the-top-file">
+                              <h2 class="title sectiontitle">The Top File</h2>
+                              <p class="p">The top file controls the mapping between minions and the states which should be
+                                 applied to them.
+                              </p>
+                              
+                              <p class="p">The top file specifies which minions should have which SLS files applied and which
+                                 environments they should draw those SLS files from.
+                              </p>
+                              
+                              <p class="p">The top file works by specifying environments on the top-level.</p>
+                              
+                              <p class="p">Each environment contains globs to match minions. Finally, each glob contains a list
+                                 of
+                                 lists of Salt states to apply to matching minions:
+                              </p>
+                              <pre class="pre codeblock language-yaml">base:
+  '*':
+    - salt
+    - users
+    - users.admin
+  'saltmaster.*':
+    - match: pcre
+    - salt.master</pre>
+                              <p class="p">This above example uses the base environment which is built into the default
+                                 Salt setup.
+                              </p>
+                              
+                              <p class="p">The base environment has two globs. First, the '*' glob contains a list of
+                                 SLS files to apply to all minions.
+                              </p>
+                              
+                              <p class="p">The second glob contains a regular expression that will match all minions with
+                                 an ID matching saltmaster.* and specifies that for those minions, the salt.master
+                                 state should be applied.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="state-enforcement__reloading-modules">
+                              <h2 class="title sectiontitle">Reloading Modules</h2>
+                              <p class="p">Some Salt states require that specific packages be installed in order for the
+                                 module to load. As an example the 
+                                 		
+                                 			&nbsp;<a class="xref" href="all/salt.states.pip_state.html#salt.states.pip_state">pip</a> state
+                                 module requires the <a class="xref" href="https://pypi.python.org/pypi/pip" target="_blank">pip</a> package for proper name and version parsing.
+                              </p>
+                              
+                              <p class="p">In most of the common cases, Salt is clever enough to transparently reload the
+                                 modules. For example, if you install a package, Salt reloads modules because
+                                 some other module or state might require just that package which was installed.
+                              </p>
+                              
+                              <p class="p">On some edge-cases salt might need to be told to reload the modules. Consider
+                                 the following state file which we'll call <tt class="ph tt">pep8.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">python-pip:
+  cmd.run:
+    - name: |
+        easy_install --script-dir=/usr/bin -U pip
+    - cwd: /
+
+pep8:
+  pip.installed:
+    - require:
+      - cmd: python-pip</pre>
+                              <p class="p">The above example installs <a class="xref" href="https://pypi.python.org/pypi/pip" target="_blank">pip</a> using <tt class="ph tt">easy_install</tt> from <a class="xref" href="https://pypi.python.org/pypi/setuptools" target="_blank">setuptools</a> and
+                                 installs <a class="xref" href="https://pypi.python.org/pypi/pep8" target="_blank">pep8</a> using 
+                                 		
+                                 			&nbsp;<a class="xref" href="all/salt.states.pip_state.html#salt.states.pip_state">pip</a>, which, as told
+                                 earlier, requires <a class="xref" href="https://pypi.python.org/pypi/pip" target="_blank">pip</a> to be installed system-wide. Let's execute this state:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-call state.sls pep8</pre>
+                              <p class="p">The execution output would be something like:</p>
+                              <pre class="pre codeblock language-text">----------
+    State: - pip
+    Name:      pep8
+    Function:  installed
+        Result:    False
+        Comment:   State pip.installed found in sls pep8 is unavailable
+
+        Changes:
+
+Summary
+------------
+Succeeded: 1
+Failed:    1
+------------
+Total:     2</pre>
+                              <p class="p">If we executed the state again the output would be:</p>
+                              <pre class="pre codeblock language-text">----------
+    State: - pip
+    Name:      pep8
+    Function:  installed
+        Result:    True
+        Comment:   Package was successfully installed
+        Changes:   pep8==1.4.6: Installed
+
+Summary
+------------
+Succeeded: 2
+Failed:    0
+------------
+Total:     2</pre>
+                              <p class="p">Since we installed <a class="xref" href="https://pypi.python.org/pypi/pip" target="_blank">pip</a> using 
+                                 		
+                                 			&nbsp;<a class="xref" href="all/salt.states.cmd.html#salt.states.cmd">cmd</a>, Salt has no way
+                                 to know that a system-wide package was installed.
+                              </p>
+                              
+                              <p class="p">On the second execution, since the required <a class="xref" href="https://pypi.python.org/pypi/pip" target="_blank">pip</a> package was installed, the
+                                 state executed correctly.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Salt does not reload modules on every state run because doing so would greatly
+                                    slow down state execution.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">So how do we solve this <em class="ph i">edge-case</em>? <tt class="ph tt">reload_modules</tt>!
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">reload_modules</tt> is a boolean option recognized by salt on <strong class="ph b">all</strong> available
+                                 states which forces salt to reload its modules once a given state finishes.
+                              </p>
+                              
+                              <p class="p">The modified state file would now be:</p>
+                              <pre class="pre codeblock language-yaml">python-pip:
+  cmd.run:
+    - name: |
+        easy_install --script-dir=/usr/bin -U pip
+    - cwd: /
+    - reload_modules: true
+
+pep8:
+  pip.installed:
+    - require:
+      - cmd: python-pip</pre>
+                              <p class="p">Let's run it, once:</p>
+                              <pre class="pre codeblock language-bash">salt-call state.sls pep8</pre>
+                              <p class="p">The output is:</p>
+                              <pre class="pre codeblock language-text">----------
+    State: - pip
+    Name:      pep8
+    Function:  installed
+        Result:    True
+        Comment:   Package was successfully installed
+        Changes:   pep8==1.4.6: Installed
+
+Summary
+------------
+Succeeded: 2
+Failed:    0
+------------
+Total:     2</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links">
+                           
+                           <ul class="ullinks">
+                              
+                              <li class="link ulchildlink"><strong><a href="aggregate.html">Mod Aggregate State Runtime Modifications</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="altering_states.html">Altering States</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="backup_mode.html">File State Backups</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="compiler_ordering.html">Understanding State Compiler Ordering</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="extend.html">Extending External SLS Data</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="failhard.html">Failhard Global Option</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="global_state_arguments.html">Global State Arguments</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="highstate.html">Highstate data structure definitions</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="include.html">Include and Exclude</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="layers.html">State System Layers</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="ordering.html">Ordering States</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="overstate.html">OverState System</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="providers.html">State Providers</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="requisites.html">Requisites and Other Global State Arguments</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="startup.html">Startup States</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="testing.html">State Testing</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="top.html">The Top File</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="vars.html">SLS Template Variable Reference</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="writing.html">State Modules</a></strong><br>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                        </div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

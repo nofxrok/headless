@@ -1,0 +1,1840 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.cloud.clouds.ec2</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.cloud.clouds.ec2">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../cloud-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-cloud-clouds-ec2">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-cloud-clouds-ec2">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.cloud.clouds.ec2</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-cloud-clouds-ec2__module-salt.cloud.clouds.ec2"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="the-ec2-cloud-module">
+                           <h2 class="title topictitle2">The EC2 Cloud Module</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">The EC2 cloud module is used to interact with the Amazon Elastic Cloud
+                                    Computing.
+                                 </p>
+                                 
+                                 <dl class="dl definition_list">
+                                    <dt class="dt dlterm">To use the EC2 cloud module, set up the cloud configuration at</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p"><tt class="ph tt">/etc/salt/cloud.providers</tt> or <tt class="ph tt">/etc/salt/cloud.providers.d/ec2.conf</tt>:
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 <pre class="pre codeblock language-yaml">my-ec2-config:
+  # The EC2 API authentication id, set this and/or key to
+  # 'use-instance-role-credentials' to use the instance role credentials
+  # from the meta-data if running on an AWS instance
+  id: GKTADJGHEIQSXMKKRBJ08H
+  # The EC2 API authentication key, set this and/or id to
+  # 'use-instance-role-credentials' to use the instance role credentials
+  # from the meta-data if running on an AWS instance
+  key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs
+  # The ssh keyname to use
+  keyname: default
+  # The amazon security group
+  securitygroup: ssh_open
+  # The location of the private key which corresponds to the keyname
+  private_key: /root/default.pem
+
+  # Be default, service_url is set to amazonaws.com. If you are using this
+  # driver for something other than Amazon EC2, change it here:
+  service_url: amazonaws.com
+
+  # The endpoint that is ultimately used is usually formed using the region
+  # and the service_url. If you would like to override that entirely, you
+  # can explicitly define the endpoint:
+  endpoint: myendpoint.example.com:1138/services/Cloud
+
+  # SSH Gateways can be used with this provider. Gateways can be used
+  # when a salt-master is not on the same private network as the instance
+  # that is being deployed.
+
+  # Defaults to None
+  # Required
+  ssh_gateway: gateway.example.com
+
+  # Defaults to port 22
+  # Optional
+  ssh_gateway_port: 22
+
+  # Defaults to root
+  # Optional
+  ssh_gateway_username: root
+
+  # One authentication method is required. If both
+  # are specified, Private key wins.
+
+  # Private key defaults to None
+  ssh_gateway_private_key: /path/to/key.pem
+
+  # Password defaults to None
+  ssh_gateway_password: ExamplePasswordHere
+
+  provider: ec2</pre>
+                                 <dl class="dl field_list">
+                                    <dt class="dt dlterm">depends</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">requests</p>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.attach_volume">
+                              <h3 class="title topictitle3">attach_volume</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.attach_volume(
+								name=None,
+								kwargs=None,
+								instance_id=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Attach a volume to an instance</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.avail_images">
+                              <h3 class="title topictitle3">avail_images</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.avail_images(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a dict of all available VM images on the cloud provider.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.avail_locations">
+                              <h3 class="title topictitle3">avail_locations</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.avail_locations(
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">List all available locations</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.avail_sizes">
+                              <h3 class="title topictitle3">avail_sizes</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.avail_sizes(
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a dict of all available VM sizes on the cloud provider with
+                                       relevant data. Latest version can be found at:
+                                    </p>
+                                    
+                                    <p class="p"><a class="xref" href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html" target="_blank">http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html</a></p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.block_device_mappings">
+                              <h3 class="title topictitle3">block_device_mappings</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.block_device_mappings(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the block device mapping:</p>
+                                    <pre class="pre codeblock language-python">[{'DeviceName': '/dev/sdb', 'VirtualName': 'ephemeral0'},
+  {'DeviceName': '/dev/sdc', 'VirtualName': 'ephemeral1'}]</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.copy_snapshot">
+                              <h3 class="title topictitle3">copy_snapshot</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.copy_snapshot(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Copy a snapshot</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.create">
+                              <h3 class="title topictitle3">create</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.create(
+								vm_=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create a single VM from a data dict</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.create_attach_volumes">
+                              <h3 class="title topictitle3">create_attach_volumes</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.create_attach_volumes(
+								name,
+								kwargs,
+								call=None,
+								wait_to_finish=True
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create and attach volumes to created node</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.create_keypair">
+                              <h3 class="title topictitle3">create_keypair</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.create_keypair(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create an SSH keypair</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.create_snapshot">
+                              <h3 class="title topictitle3">create_snapshot</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.create_snapshot(
+								kwargs=None,
+								call=None,
+								wait_to_finish=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create a snapshot</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.create_volume">
+                              <h3 class="title topictitle3">create_volume</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.create_volume(
+								kwargs=None,
+								call=None,
+								wait_to_finish=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create a volume</p>
+                                    
+                                    <p class="p">CLI Examples:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f create_volume my-ec2-config zone=us-east-1b
+salt-cloud -f create_volume my-ec2-config zone=us-east-1b tags='{"tag1": "val1", "tag2", "val2"}'</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.del_tags">
+                              <h3 class="title topictitle3">del_tags</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.del_tags(
+								name=None,
+								kwargs=None,
+								call=None,
+								instance_id=None,
+								resource_id=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Delete tags for a resource. Normally a VM name or instance_id is passed in,
+                                       but a resource_id may be passed instead. If both are passed in, the
+                                       instance_id will be used.
+                                    </p>
+                                    
+                                    <p class="p">CLI Examples:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -a del_tags mymachine tags=mytag,
+salt-cloud -a del_tags mymachine tags=tag1,tag2,tag3
+salt-cloud -a del_tags resource_id=vol-3267ab32 tags=tag1,tag2,tag3</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.delete_keypair">
+                              <h3 class="title topictitle3">delete_keypair</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.delete_keypair(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Delete an SSH keypair</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.delete_snapshot">
+                              <h3 class="title topictitle3">delete_snapshot</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.delete_snapshot(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Delete a snapshot</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.delete_volume">
+                              <h3 class="title topictitle3">delete_volume</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.delete_volume(
+								name=None,
+								kwargs=None,
+								instance_id=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Delete a volume</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.delvol_on_destroy">
+                              <h3 class="title topictitle3">delvol_on_destroy</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.delvol_on_destroy(
+								name,
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Delete all/specified EBS volumes upon instance termination</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -a delvol_on_destroy mymachine</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.describe_snapshots">
+                              <h3 class="title topictitle3">describe_snapshots</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.describe_snapshots(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Describe a snapshot (or snapshots)</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d21459e495" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d21459e497" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d21459e495" class="stentry propvalue">snapshot_id</td>
+                                       
+                                       <td valign="top" headers="d21459e497" class="stentry propdesc">
+                                          <p class="p">One or more snapshot IDs. Multiple IDs must be separated by ",".</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d21459e495" class="stentry propvalue">owner</td>
+                                       
+                                       <td valign="top" headers="d21459e497" class="stentry propdesc">
+                                          <p class="p">Return the snapshots owned by the specified owner. Valid values
+                                             include: self, amazon, &lt;AWS Account ID&gt;. Multiple values must be
+                                             separated by ",".
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d21459e495" class="stentry propvalue">restorable_by</td>
+                                       
+                                       <td valign="top" headers="d21459e497" class="stentry propdesc">
+                                          <p class="p">One or more AWS accounts IDs that can create volumes from the snapshot.
+                                             Multiple aws account IDs must be separated by ",".
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">TODO: Add all of the filters.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.describe_volumes">
+                              <h3 class="title topictitle3">describe_volumes</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.describe_volumes(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Describe a volume (or volumes)</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d21459e550" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d21459e552" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d21459e550" class="stentry propvalue">volume_id</td>
+                                       
+                                       <td valign="top" headers="d21459e552" class="stentry propdesc">
+                                          <p class="p">One or more volume IDs. Multiple IDs must be separated by ",".</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">TODO: Add all of the filters.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.destroy">
+                              <h3 class="title topictitle3">destroy</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.destroy(
+								name,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Destroy a node. Will check termination protection and warn if enabled.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud --destroy mymachine</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.detach_volume">
+                              <h3 class="title topictitle3">detach_volume</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.detach_volume(
+								name=None,
+								kwargs=None,
+								instance_id=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Detach a volume from an instance</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.disable_term_protect">
+                              <h3 class="title topictitle3">disable_term_protect</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.disable_term_protect(
+								name,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Disable termination protection on a node</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -a disable_term_protect mymachine</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.enable_term_protect">
+                              <h3 class="title topictitle3">enable_term_protect</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.enable_term_protect(
+								name,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Enable termination protection on a node</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -a enable_term_protect mymachine</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.get_availability_zone">
+                              <h3 class="title topictitle3">get_availability_zone</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.get_availability_zone(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the availability zone to use</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.get_configured_provider">
+                              <h3 class="title topictitle3">get_configured_provider</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.get_configured_provider( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the first configured instance.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.get_console_output">
+                              <h3 class="title topictitle3">get_console_output</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.get_console_output(
+								name=None,
+								instance_id=None,
+								call=None,
+								kwargs=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Show the console output from the instance.</p>
+                                    
+                                    <p class="p">By default, returns decoded data, not the Base64-encoded data that is
+                                       actually returned from the EC2 API.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.get_location">
+                              <h3 class="title topictitle3">get_location</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.get_location(
+								vm_=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section"></div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d21459e781" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d21459e783" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d21459e781" class="stentry propvalue">Return the EC2 region to use, in this order:</td>
+                                       
+                                       <td valign="top" headers="d21459e783" class="stentry propdesc">
+                                          <ul class="ul">
+                                             <li class="li">
+                                                <p class="p">CLI parameter</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">VM parameter</p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">Cloud profile setting</p>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.get_password_data">
+                              <h3 class="title topictitle3">get_password_data</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.get_password_data(
+								name=None,
+								kwargs=None,
+								instance_id=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return password data for a Windows instance.</p>
+                                    
+                                    <p class="p">By default only the encrypted password data will be returned. However, if a
+                                       key_file is passed in, then a decrypted password will also be returned.
+                                    </p>
+                                    
+                                    <p class="p">Note that the key_file references the private key that was used to generate
+                                       the keypair associated with this instance. This private key will _not_ be
+                                       transmitted to Amazon; it is only used internally inside of Salt Cloud to
+                                       decrypt data _after_ it has been received from Amazon.
+                                    </p>
+                                    
+                                    <p class="p">CLI Examples:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -a get_password_data mymachine
+salt-cloud -a get_password_data mymachine key_file=/root/ec2key.pem</pre>
+                                    <p class="p">Note: PKCS1_v1_5 was added in PyCrypto 2.5</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.get_placementgroup">
+                              <h3 class="title topictitle3">get_placementgroup</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.get_placementgroup(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Returns the PlacementGroup to use</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.get_provider">
+                              <h3 class="title topictitle3">get_provider</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.get_provider(
+								vm_=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Extract the provider name from vm</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.get_salt_interface">
+                              <h3 class="title topictitle3">get_salt_interface</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.get_salt_interface(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the salt_interface type to connect to. Either 'public_ips' (default)
+                                       or 'private_ips'.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.get_spot_config">
+                              <h3 class="title topictitle3">get_spot_config</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.get_spot_config(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Returns the spot instance configuration for the provided vm</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.get_ssh_gateway_config">
+                              <h3 class="title topictitle3">get_ssh_gateway_config</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.get_ssh_gateway_config(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the ssh_gateway configuration.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.get_subnetid">
+                              <h3 class="title topictitle3">get_subnetid</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.get_subnetid(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Returns the SubnetId to use</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.get_tags">
+                              <h3 class="title topictitle3">get_tags</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.get_tags(
+								name=None,
+								instance_id=None,
+								call=None,
+								location=None,
+								kwargs=None,
+								resource_id=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Retrieve tags for a resource. Normally a VM name or instance_id is passed
+                                       in, but a resource_id may be passed instead. If both are passed in, the
+                                       instance_id will be used.
+                                    </p>
+                                    
+                                    <p class="p">CLI Examples:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -a get_tags mymachine
+salt-cloud -a get_tags resource_id=vol-3267ab32</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.get_tenancy">
+                              <h3 class="title topictitle3">get_tenancy</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.get_tenancy(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Returns the Tenancy to use.</p>
+                                    
+                                    <p class="p">Can be "dedicated" or "default". Cannot be present for spot instances.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.iam_profile">
+                              <h3 class="title topictitle3">iam_profile</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.iam_profile(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the IAM profile.</p>
+                                    
+                                    <p class="p">The IAM instance profile to associate with the instances.
+                                       This is either the Amazon Resource Name (ARN) of the instance profile
+                                       or the name of the role.
+                                    </p>
+                                    
+                                    <p class="p">Type: String</p>
+                                    
+                                    <p class="p">Default: None</p>
+                                    
+                                    <p class="p">Required: No</p>
+                                    
+                                    <p class="p">Example: arn:aws:iam::111111111111:instance-profile/s3access</p>
+                                    
+                                    <p class="p">Example: s3access</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.keepvol_on_destroy">
+                              <h3 class="title topictitle3">keepvol_on_destroy</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.keepvol_on_destroy(
+								name,
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Do not delete all/specified EBS volumes upon instance termination</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -a keepvol_on_destroy mymachine</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.keyname">
+                              <h3 class="title topictitle3">keyname</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.keyname(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the keyname</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.list_nodes">
+                              <h3 class="title topictitle3">list_nodes</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.list_nodes(
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a list of the VMs that are on the provider</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.list_nodes_full">
+                              <h3 class="title topictitle3">list_nodes_full</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.list_nodes_full(
+								location=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a list of the VMs that are on the provider</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.list_nodes_min">
+                              <h3 class="title topictitle3">list_nodes_min</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.list_nodes_min(
+								location=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a list of the VMs that are on the provider. Only a list of VM names,
+                                       and their state, is returned. This is the minimum amount of information
+                                       needed to check for existing VMs.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.list_nodes_select">
+                              <h3 class="title topictitle3">list_nodes_select</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.list_nodes_select(
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a list of the VMs that are on the provider, with select fields</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.optimize_providers">
+                              <h3 class="title topictitle3">optimize_providers</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.optimize_providers(
+								providers
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return an optimized list of providers.</p>
+                                    
+                                    <p class="p">We want to reduce the duplication of querying
+                                       the same region.
+                                    </p>
+                                    
+                                    <p class="p">If a provider is using the same credentials for the same region
+                                       the same data will be returned for each provider, thus causing
+                                       un-wanted duplicate data and API calls to EC2.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.query">
+                              <h3 class="title topictitle3">query</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.query(
+								params=None,
+								setname=None,
+								requesturl=None,
+								location=None,
+								return_url=False,
+								return_root=False
+								)</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.query_instance">
+                              <h3 class="title topictitle3">query_instance</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.query_instance(
+								vm_=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Query an instance upon creation from the EC2 API</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.queue_instances">
+                              <h3 class="title topictitle3">queue_instances</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.queue_instances(
+								instances
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Queue a set of instances to be provisioned later. Expects a list.</p>
+                                    
+                                    <p class="p">Currently this only queries node data, and then places it in the cloud
+                                       cache (if configured). If the salt-cloud-reactor is being used, these
+                                       instances will be automatically provisioned using that.
+                                    </p>
+                                    
+                                    <p class="p">For more information about the salt-cloud-reactor, see:</p>
+                                    
+                                    <p class="p"><a class="xref" href="https://github.com/saltstack-formulas/salt-cloud-reactor" target="_blank">https://github.com/saltstack-formulas/salt-cloud-reactor</a></p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.reboot">
+                              <h3 class="title topictitle3">reboot</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.reboot(
+								name,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Reboot a node.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -a reboot mymachine</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.rename">
+                              <h3 class="title topictitle3">rename</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.rename(
+								name,
+								kwargs,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Properly rename a node. Pass in the new name as "new name".</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -a rename mymachine newname=yourmachine</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.request_instance">
+                              <h3 class="title topictitle3">request_instance</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.request_instance(
+								vm_=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Put together all of the information necessary to request an instance on EC2,
+                                       and then fire off the request the instance.
+                                    </p>
+                                    
+                                    <p class="p">Returns data about the instance</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.script">
+                              <h3 class="title topictitle3">script</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.script(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the script deployment object</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.securitygroup">
+                              <h3 class="title topictitle3">securitygroup</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.securitygroup(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the security group</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.securitygroupid">
+                              <h3 class="title topictitle3">securitygroupid</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.securitygroupid(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Returns the SecurityGroupId</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.set_tags">
+                              <h3 class="title topictitle3">set_tags</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.set_tags(
+								name=None,
+								tags=None,
+								call=None,
+								location=None,
+								instance_id=None,
+								resource_id=None,
+								kwargs=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Set tags for a resource. Normally a VM name or instance_id is passed in,
+                                       but a resource_id may be passed instead. If both are passed in, the
+                                       instance_id will be used.
+                                    </p>
+                                    
+                                    <p class="p">CLI Examples:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -a set_tags mymachine tag1=somestuff tag2='Other stuff'
+salt-cloud -a set_tags resource_id=vol-3267ab32 tag=somestuff</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.show_delvol_on_destroy">
+                              <h3 class="title topictitle3">show_delvol_on_destroy</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.show_delvol_on_destroy(
+								name,
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Do not delete all/specified EBS volumes upon instance termination</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -a show_delvol_on_destroy mymachine</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.show_image">
+                              <h3 class="title topictitle3">show_image</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.show_image(
+								kwargs,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Show the details from EC2 concerning an AMI</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.show_instance">
+                              <h3 class="title topictitle3">show_instance</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.show_instance(
+								name=None,
+								instance_id=None,
+								call=None,
+								kwargs=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Show the details from EC2 concerning an AMI.</p>
+                                    
+                                    <p class="p">Can be called as an action (which requires a name):</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -a show_instance myinstance</pre>
+                                    <p class="p">...or as a function (which requires either a name or instance_id):</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f show_instance my-ec2 name=myinstance
+salt-cloud -f show_instance my-ec2 instance_id=i-d34db33f</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.show_keypair">
+                              <h3 class="title topictitle3">show_keypair</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.show_keypair(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Show the details of an SSH keypair</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.show_term_protect">
+                              <h3 class="title topictitle3">show_term_protect</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.show_term_protect(
+								name=None,
+								instance_id=None,
+								call=None,
+								quiet=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Show the details from EC2 concerning an AMI</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.show_volume">
+                              <h3 class="title topictitle3">show_volume</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.show_volume(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Wrapper around describe_volumes.
+                                       Here just to keep functionality.
+                                       Might be depreciated later.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.ssh_interface">
+                              <h3 class="title topictitle3">ssh_interface</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.ssh_interface(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the ssh_interface type to connect to. Either 'public_ips' (default)
+                                       or 'private_ips'.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.start">
+                              <h3 class="title topictitle3">start</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.start(
+								name,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Start a node</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.stop">
+                              <h3 class="title topictitle3">stop</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.stop(
+								name,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Stop a node</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.ec2.wait_for_instance">
+                              <h3 class="title topictitle3">wait_for_instance</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.ec2.wait_for_instance(
+								vm_=None,
+								data=None,
+								ip_address=None,
+								display_ssh_output=True,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Wait for an instance upon creation from the EC2 API, to become available</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

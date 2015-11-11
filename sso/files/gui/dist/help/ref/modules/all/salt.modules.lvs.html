@@ -1,0 +1,706 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.lvs</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.lvs">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-lvs">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-lvs">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.lvs</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-lvs__module-salt.modules.lvs"></span></p>
+                              
+                              <p class="p">Support for LVS (Linux Virtual Server)</p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.lvs.add_server">
+                           <h2 class="title topictitle2">add_server</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.lvs.add_server(
+								protocol=None,
+								service_address=None,
+								server_address=None,
+								packet_forward_method='dr',
+								weight=1,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Add a real server to a virtual service.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d152689e47" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d152689e49" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e47" class="stentry propvalue">protocol</td>
+                                    
+                                    <td valign="top" headers="d152689e49" class="stentry propdesc">
+                                       <p class="p">The service protocol(only support <tt class="ph tt">tcp</tt>, <tt class="ph tt">udp</tt> and <tt class="ph tt">fwmark</tt> service).
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e47" class="stentry propvalue">service_address</td>
+                                    
+                                    <td valign="top" headers="d152689e49" class="stentry propdesc">
+                                       <p class="p">The LVS service address.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e47" class="stentry propvalue">server_address</td>
+                                    
+                                    <td valign="top" headers="d152689e49" class="stentry propdesc">
+                                       <p class="p">The real server address.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e47" class="stentry propvalue">packet_forward_method</td>
+                                    
+                                    <td valign="top" headers="d152689e49" class="stentry propdesc">
+                                       <p class="p">The LVS packet forwarding method(<tt class="ph tt">dr</tt> for direct routing, <tt class="ph tt">tunnel</tt> for tunneling, <tt class="ph tt">nat</tt> for network access translation).
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e47" class="stentry propvalue">weight</td>
+                                    
+                                    <td valign="top" headers="d152689e49" class="stentry propdesc">
+                                       <p class="p">The capacity  of a server relative to the others in the pool.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' lvs.add_server tcp 1.1.1.1:80 192.168.0.11:8080 nat 1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.lvs.add_service">
+                           <h2 class="title topictitle2">add_service</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.lvs.add_service(
+								protocol=None,
+								service_address=None,
+								scheduler='wlc'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Add a virtual service.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d152689e134" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d152689e136" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e134" class="stentry propvalue">protocol</td>
+                                    
+                                    <td valign="top" headers="d152689e136" class="stentry propdesc">
+                                       <p class="p">The service protocol(only support tcp, udp and fwmark service).</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e134" class="stentry propvalue">service_address</td>
+                                    
+                                    <td valign="top" headers="d152689e136" class="stentry propdesc">
+                                       <p class="p">The LVS service address.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e134" class="stentry propvalue">scheduler</td>
+                                    
+                                    <td valign="top" headers="d152689e136" class="stentry propdesc">
+                                       <p class="p">Algorithm for allocating TCP connections and UDP datagrams to real servers.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' lvs.add_service tcp 1.1.1.1:80 rr</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.lvs.check_server">
+                           <h2 class="title topictitle2">check_server</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.lvs.check_server(
+								protocol=None,
+								service_address=None,
+								server_address=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check the real server exists in the specified service.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' lvs.check_server tcp 1.1.1.1:80 192.168.0.11:8080</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.lvs.check_service">
+                           <h2 class="title topictitle2">check_service</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.lvs.check_service(
+								protocol=None,
+								service_address=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check the virtual service exists.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' lvs.check_service tcp 1.1.1.1:80</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.lvs.clear">
+                           <h2 class="title topictitle2">clear</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.lvs.clear( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Clear the virtual server table</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' lvs.clear</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.lvs.delete_server">
+                           <h2 class="title topictitle2">delete_server</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.lvs.delete_server(
+								protocol=None,
+								service_address=None,
+								server_address=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Delete the realserver from the virtual service.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d152689e278" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d152689e280" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e278" class="stentry propvalue">protocol</td>
+                                    
+                                    <td valign="top" headers="d152689e280" class="stentry propdesc">
+                                       <p class="p">The service protocol(only support <tt class="ph tt">tcp</tt>, <tt class="ph tt">udp</tt> and <tt class="ph tt">fwmark</tt> service).
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e278" class="stentry propvalue">service_address</td>
+                                    
+                                    <td valign="top" headers="d152689e280" class="stentry propdesc">
+                                       <p class="p">The LVS service address.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e278" class="stentry propvalue">server_address</td>
+                                    
+                                    <td valign="top" headers="d152689e280" class="stentry propdesc">
+                                       <p class="p">The real server address.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' lvs.delete_server tcp 1.1.1.1:80 192.168.0.11:8080</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.lvs.delete_service">
+                           <h2 class="title topictitle2">delete_service</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.lvs.delete_service(
+								protocol=None,
+								service_address=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Delete the virtual service.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d152689e344" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d152689e346" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e344" class="stentry propvalue">protocol</td>
+                                    
+                                    <td valign="top" headers="d152689e346" class="stentry propdesc">
+                                       <p class="p">The service protocol(only support tcp, udp and fwmark service).</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e344" class="stentry propvalue">service_address</td>
+                                    
+                                    <td valign="top" headers="d152689e346" class="stentry propdesc">
+                                       <p class="p">The LVS service address.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' lvs.delete_service tcp 1.1.1.1:80</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.lvs.edit_server">
+                           <h2 class="title topictitle2">edit_server</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.lvs.edit_server(
+								protocol=None,
+								service_address=None,
+								server_address=None,
+								packet_forward_method=None,
+								weight=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Edit a real server to a virtual service.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d152689e395" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d152689e397" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e395" class="stentry propvalue">protocol</td>
+                                    
+                                    <td valign="top" headers="d152689e397" class="stentry propdesc">
+                                       <p class="p">The service protocol(only support <tt class="ph tt">tcp</tt>, <tt class="ph tt">udp</tt> and <tt class="ph tt">fwmark</tt> service).
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e395" class="stentry propvalue">service_address</td>
+                                    
+                                    <td valign="top" headers="d152689e397" class="stentry propdesc">
+                                       <p class="p">The LVS service address.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e395" class="stentry propvalue">server_address</td>
+                                    
+                                    <td valign="top" headers="d152689e397" class="stentry propdesc">
+                                       <p class="p">The real server address.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e395" class="stentry propvalue">packet_forward_method</td>
+                                    
+                                    <td valign="top" headers="d152689e397" class="stentry propdesc">
+                                       <p class="p">The LVS packet forwarding method(<tt class="ph tt">dr</tt> for direct routing, <tt class="ph tt">tunnel</tt> for tunneling, <tt class="ph tt">nat</tt> for network access translation).
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e395" class="stentry propvalue">weight</td>
+                                    
+                                    <td valign="top" headers="d152689e397" class="stentry propdesc">
+                                       <p class="p">The capacity  of a server relative to the others in the pool.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' lvs.edit_server tcp 1.1.1.1:80 192.168.0.11:8080 nat 1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.lvs.edit_service">
+                           <h2 class="title topictitle2">edit_service</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.lvs.edit_service(
+								protocol=None,
+								service_address=None,
+								scheduler=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Edit the virtual service.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d152689e483" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d152689e485" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e483" class="stentry propvalue">protocol</td>
+                                    
+                                    <td valign="top" headers="d152689e485" class="stentry propdesc">
+                                       <p class="p">The service protocol(only support tcp, udp and fwmark service).</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e483" class="stentry propvalue">service_address</td>
+                                    
+                                    <td valign="top" headers="d152689e485" class="stentry propdesc">
+                                       <p class="p">The LVS service address.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d152689e483" class="stentry propvalue">scheduler</td>
+                                    
+                                    <td valign="top" headers="d152689e485" class="stentry propdesc">
+                                       <p class="p">Algorithm for allocating TCP connections and UDP datagrams to real servers.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' lvs.edit_service tcp 1.1.1.1:80 rr</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.lvs.get_rules">
+                           <h2 class="title topictitle2">get_rules</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.lvs.get_rules( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Get the virtual server rules</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' lvs.get_rules</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.lvs.list_">
+                           <h2 class="title topictitle2">list_</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.lvs.list_(
+								protocol=None,
+								service_address=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List the virtual server table if service_address is not specified. If a service_address
+                                    is selected, list this service only.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' lvs.list</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.lvs.zero">
+                           <h2 class="title topictitle2">zero</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.lvs.zero(
+								protocol=None,
+								service_address=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Zero the packet, byte and rate counters in a service or all services.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' lvs.zero</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

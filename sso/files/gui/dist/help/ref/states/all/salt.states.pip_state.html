@@ -1,0 +1,875 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.pip_state</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.pip_state">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-pip-state">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-pip-state">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.pip_state</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-pip-state__module-salt.states.pip_state"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="installation-of-python-packages-using-pip">
+                           <h2 class="title topictitle2">Installation of Python Packages Using pip</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">These states manage system installed python packages. Note that pip must be
+                                    installed for these states to be available, so pip states should include a
+                                    requisite to a pkg.installed state for the package which provides pip
+                                    (<tt class="ph tt">python-pip</tt> in most cases). Example:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">python-pip:
+  pkg.installed
+
+virtualenvwrapper:
+  pip.installed:
+    - require:
+      - pkg: python-pip</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.pip_state.installed">
+                              <h3 class="title topictitle3">installed</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.pip_state.installed(
+								name,
+								pkgs=None,
+								pip_bin=None,
+								requirements=None,
+								env=None,
+								bin_env=None,
+								use_wheel=False,
+								no_use_wheel=False,
+								log=None,
+								proxy=None,
+								timeout=None,
+								repo=None,
+								editable=None,
+								find_links=None,
+								index_url=None,
+								extra_index_url=None,
+								no_index=False,
+								mirrors=None,
+								build=None,
+								target=None,
+								download=None,
+								download_cache=None,
+								source=None,
+								upgrade=False,
+								force_reinstall=False,
+								ignore_installed=False,
+								exists_action=None,
+								no_deps=False,
+								no_install=False,
+								no_download=False,
+								install_options=None,
+								global_options=None,
+								user=None,
+								no_chown=False,
+								cwd=None,
+								activate=False,
+								pre_releases=False,
+								cert=None,
+								allow_all_external=False,
+								allow_external=None,
+								allow_unverified=None,
+								process_dependency_links=False,
+								env_vars=None,
+								use_vt=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Make sure the package is installed</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d403595e60" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d403595e62" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e60" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d403595e62" class="stentry propdesc">
+                                          <p class="p">The name of the python package to install. You can also specify version
+                                             numbers here using the standard operators <tt class="ph tt">==, &gt;=, &lt;=</tt>. If
+                                             <tt class="ph tt">requirements</tt> is given, this parameter will be ignored.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">This will install the latest Django version greater than 1.6 but less
+                                       than 1.7.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d403595e81" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d403595e83" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">requirements</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Path to a pip requirements file. If the path begins with salt://
+                                             the file will be transferred from the master file server.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">user</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">The user under which to run pip</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">use_wheel</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Prefer wheel archives (requires pip&gt;=1.4)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">no_use_wheel</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Force to not use wheel archives (requires pip&gt;=1.4)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">log</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Log file where a complete (maximum verbosity) record will be kept</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">proxy</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Specify a proxy in the form
+                                             user:passwd@proxy.server:port. Note that the
+                                             user:password@ is optional and required only if you
+                                             are behind an authenticated proxy.  If you provide
+                                             user@proxy.server:port then you will be prompted for a
+                                             password.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">timeout</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Set the socket timeout (default 15 seconds)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">editable</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">install something editable (i.e.
+                                             git+https://github.com/worldcompany/djangoembed.git#egg=djangoembed)
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">find_links</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">URL to look for packages at</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">index_url</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Base URL of Python Package Index</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">extra_index_url</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Extra URLs of package indexes to use in addition to <tt class="ph tt">index_url</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">no_index</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Ignore package index</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">mirrors</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Specific mirror URL(s) to query (automatically adds --use-mirrors)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">build</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Unpack packages into <tt class="ph tt">build</tt> dir
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">target</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Install packages into <tt class="ph tt">target</tt> dir
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">download</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Download packages into <tt class="ph tt">download</tt> instead of installing them
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">download_cache</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Cache downloaded packages in <tt class="ph tt">download_cache</tt> dir
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">source</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Check out <tt class="ph tt">editable</tt> packages into <tt class="ph tt">source</tt> dir
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">upgrade</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Upgrade all packages to the newest available version</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">force_reinstall</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">When upgrading, reinstall all packages even if they are already
+                                             up-to-date.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">ignore_installed</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Ignore the installed packages (reinstalling instead)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">exists_action</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Default action when a path already exists: (s)witch, (i)gnore, (w)ipe,
+                                             (b)ackup
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">no_deps</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Ignore package dependencies</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">no_install</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Download and unpack all packages, but don't actually install them</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">no_chown</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">When user is given, do not attempt to copy and chown
+                                             a requirements file
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">cwd</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Current working directory to run pip from</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">activate</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Activates the virtual environment, if given via bin_env,
+                                             before running install.
+                                          </p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">Deprecated since version 2014.7.2: </span>If <span class="keyword title_reference">bin_env</span> is given, pip will already be sourced from that
+                                             virualenv, making <span class="keyword title_reference">activate</span> effectively a noop.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">pre_releases</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Include pre-releases in the available versions</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">cert</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Provide a path to an alternate CA bundle</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">allow_all_external</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Allow the installation of all externally hosted files</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">allow_external</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Allow the installation of externally hosted files (comma separated list)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">allow_unverified</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Allow the installation of insecure and unverifiable files (comma separated list)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">process_dependency_links</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Enable the processing of dependency links</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">bin_env</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Absolute path to a virtual environment directory or absolute path to
+                                             a pip executable. The example below assumes a virtual environment
+                                             has been created at <tt class="ph tt">/foo/.virtualenvs/bar</tt>.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">env_vars</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Add or modify environment variables. Useful for tweaking build steps,
+                                             such as specifying INCLUDE or LIBRARY paths in Makefiles, build scripts or
+                                             compiler calls.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e81" class="stentry propvalue">use_vt</td>
+                                       
+                                       <td valign="top" headers="d403595e83" class="stentry propdesc">
+                                          <p class="p">Use VT terminal emulation (see ouptut while installing)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">Example:</p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d403595e342" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d403595e344" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e342" class="stentry propvalue">pip_bin</td>
+                                       
+                                       <td valign="top" headers="d403595e344" class="stentry propdesc">
+                                          <p class="p">Deprecated, use <tt class="ph tt">bin_env</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e342" class="stentry propvalue">env</td>
+                                       
+                                       <td valign="top" headers="d403595e344" class="stentry propdesc">
+                                          <p class="p">Deprecated, use <tt class="ph tt">bin_env</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <p class="p">install_options</p>
+                                    
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d403595e368" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d403595e370" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e368" class="stentry propvalue">global_options</td>
+                                       
+                                       <td valign="top" headers="d403595e370" class="stentry propdesc">
+                                          <p class="p">Extra global options to be supplied to the setup.py call before the
+                                             install command.
+                                          </p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 2014.1.3.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">Attention</strong><p class="p">As of Salt 0.17.0 the pip state <strong class="ph b">needs</strong> an importable pip module.
+                                          This usually means having the system's pip package installed or running
+                                          Salt from an active <a class="xref" href="http://www.virtualenv.org/en/latest/" target="_blank">virtualenv</a>.
+                                       </p>
+                                       
+                                       <p class="p">The reason for this requirement is because <tt class="ph tt">pip</tt> already does a
+                                          pretty good job parsing its own requirements. It makes no sense for
+                                          Salt to do <tt class="ph tt">pip</tt> requirements parsing and validation before passing
+                                          them to the <tt class="ph tt">pip</tt> library. It's functionality duplication and it's
+                                          more error prone.
+                                       </p>
+                                       
+                                    </aside>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.pip_state.removed">
+                              <h3 class="title topictitle3">removed</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.pip_state.removed(
+								name,
+								requirements=None,
+								bin_env=None,
+								log=None,
+								proxy=None,
+								timeout=None,
+								user=None,
+								cwd=None,
+								use_vt=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Make sure that a package is not installed.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d403595e435" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d403595e437" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e435" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d403595e437" class="stentry propdesc">
+                                          <p class="p">The name of the package to uninstall</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e435" class="stentry propvalue">user</td>
+                                       
+                                       <td valign="top" headers="d403595e437" class="stentry propdesc">
+                                          <p class="p">The user under which to run pip</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e435" class="stentry propvalue">bin_env</td>
+                                       
+                                       <td valign="top" headers="d403595e437" class="stentry propdesc">
+                                          <p class="p">the pip executable or virtualenenv to use</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e435" class="stentry propvalue">use_vt</td>
+                                       
+                                       <td valign="top" headers="d403595e437" class="stentry propdesc">
+                                          <p class="p">Use VT terminal emulation (see ouptut while installing)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.pip_state.uptodate">
+                              <h3 class="title topictitle3">uptodate</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.pip_state.uptodate(
+								name,
+								bin_env=None,
+								user=None,
+								cwd=None,
+								use_vt=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                                    
+                                    <p class="p">Verify that the system is completely up to date.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d403595e494" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d403595e496" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e494" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d403595e496" class="stentry propdesc">
+                                          <p class="p">The name has no functional value and is only used as a tracking
+                                             reference
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e494" class="stentry propvalue">user</td>
+                                       
+                                       <td valign="top" headers="d403595e496" class="stentry propdesc">
+                                          <p class="p">The user under which to run pip</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e494" class="stentry propvalue">bin_env</td>
+                                       
+                                       <td valign="top" headers="d403595e496" class="stentry propdesc">
+                                          <p class="p">the pip executable or virtualenenv to use</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d403595e494" class="stentry propvalue">use_vt</td>
+                                       
+                                       <td valign="top" headers="d403595e496" class="stentry propdesc">
+                                          <p class="p">Use VT terminal emulation (see ouptut while installing)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

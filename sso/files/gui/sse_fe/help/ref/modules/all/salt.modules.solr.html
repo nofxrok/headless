@@ -1,0 +1,1641 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.solr</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.solr">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-solr">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-solr">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.solr</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-solr__module-salt.modules.solr"></span></p>
+                              
+                              <p class="p">Apache Solr Salt Module</p>
+                              
+                              <p class="p">Author: Jed Glazner
+                                 Version: 0.2.1
+                                 Modified: 12/09/2011
+                              </p>
+                              
+                              <p class="p">This module uses HTTP requests to talk to the apache solr request handlers
+                                 to gather information and report errors. Because of this the minion doesn't
+                                 necessarily need to reside on the actual slave.  However if you want to
+                                 use the signal function the minion must reside on the physical solr host.
+                              </p>
+                              
+                              <p class="p">This module supports multi-core and standard setups.  Certain methods are
+                                 master/slave specific.  Make sure you set the solr.type. If you have
+                                 questions or want a feature request please ask.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="coming-features-in-0-3">
+                           <h2 class="title topictitle2">Coming Features in 0.3</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <ol class="ol">
+                                    <li class="li">
+                                       <p class="p">Add command for checking for replication failures on slaves</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">Improve match_index_versions since it's pointless on busy solr masters</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">Add additional local fs checks for backups to make sure they succeeded</p>
+                                       
+                                    </li>
+                                    
+                                 </ol>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="override-these-in-the-minion-config">
+                           <h2 class="title topictitle2">Override these in the minion config</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <dl class="dl definition_list">
+                                    <dt class="dt dlterm">solr.cores</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">A list of core names e.g. ['core1','core2'].
+                                          An empty list indicates non-multicore setup.
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">solr.baseurl</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">The root level URL to access solr via HTTP</p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">solr.request_timeout</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">The number of seconds before timing out an HTTP/HTTPS/FTP request. If
+                                          nothing is specified then the python global timeout setting is used.
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">solr.type</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">Possible values are 'master' or 'slave'</p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">solr.backup_path</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">The path to store your backups. If you are using cores and you can specify
+                                          to append the core name to the path in the backup method.
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">solr.num_backups</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">For versions of solr &gt;= 3.5. Indicates the number of backups to keep. This
+                                          option is ignored if your version is less.
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">solr.init_script</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">The full path to your init script with start/stop options</p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">solr.dih.options</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">A list of options to pass to the DIH.</p>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="required-options-for-dih">
+                           <h2 class="title topictitle2">Required Options for DIH</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <dl class="dl definition_list">
+                                    <dt class="dt dlterm">clean</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">Clear the index before importing</p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">commit</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">Commit the documents to the index upon completion</p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">optimize</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">Optimize the index after commit is complete</p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">verbose</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">Get verbose output</p>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.abort_import">
+                              <h3 class="title topictitle3">abort_import</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.abort_import(
+								handler,
+								host=None,
+								core_name=None,
+								verbose=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">MASTER ONLY
+                                       Aborts an existing import command to the specified handler.
+                                       This command can only be run if the minion is configured with
+                                       solr.type=master
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e162" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e164" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e162" class="stentry propvalue">handler</td>
+                                       
+                                       <td valign="top" headers="d249159e164" class="stentry propdesc">
+                                          <p class="p">The name of the data import handler.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e162" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d249159e164" class="stentry propdesc">
+                                          <p class="p">The solr host to query. __opts__['host'] is default.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e162" class="stentry propvalue">core</td>
+                                       
+                                       <td valign="top" headers="d249159e164" class="stentry propdesc">
+                                          <p class="p">The core the handler belongs to.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e162" class="stentry propvalue">verbose</td>
+                                       
+                                       <td valign="top" headers="d249159e164" class="stentry propdesc">
+                                          <p class="p">Run the command with verbose output.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return : dict&lt;str,obj&gt;:</p>
+                                    <pre class="pre codeblock language-">{'success':boolean, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.abort_import dataimport None music {'clean':True}</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.backup">
+                              <h3 class="title topictitle3">backup</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.backup(
+								host=None,
+								core_name=None,
+								append_core_to_path=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Tell solr make a backup.  This method can be mis-leading since it uses the
+                                       backup API.  If an error happens during the backup you are not notified.
+                                       The status: 'OK' in the response simply means that solr received the
+                                       request successfully.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e229" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e231" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e229" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d249159e231" class="stentry propdesc">
+                                          <p class="p">The solr host to query. __opts__['host'] is default.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e229" class="stentry propvalue">core_name</td>
+                                       
+                                       <td valign="top" headers="d249159e231" class="stentry propdesc">
+                                          <p class="p">The name of the solr core if using cores. Leave this blank if you are
+                                             not using cores or if you want to check all cores.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e229" class="stentry propvalue">append_core_to_path</td>
+                                       
+                                       <td valign="top" headers="d249159e231" class="stentry propdesc">
+                                          <p class="p">If True add the name of the core to the backup path. Assumes that
+                                             minion backup path is not None.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return : dict&lt;str,obj&gt;:</p>
+                                    <pre class="pre codeblock language-">{'success':boolean, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.backup music</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.core_status">
+                              <h3 class="title topictitle3">core_status</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.core_status(
+								host=None,
+								core_name=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">MULTI-CORE HOSTS ONLY
+                                       Get the status for a given core or all cores if no core is specified
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e290" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e292" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e290" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d249159e292" class="stentry propdesc">
+                                          <p class="p">The solr host to query. __opts__['host'] is default.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e290" class="stentry propvalue">core_name</td>
+                                       
+                                       <td valign="top" headers="d249159e292" class="stentry propdesc">
+                                          <p class="p">The name of the core to reload</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return : dict&lt;str,obj&gt;:</p>
+                                    <pre class="pre codeblock language-">{'success':boolean, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.core_status None music</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.delta_import">
+                              <h3 class="title topictitle3">delta_import</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.delta_import(
+								handler,
+								host=None,
+								core_name=None,
+								options=None,
+								extra=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Submits an import command to the specified handler using specified options.
+                                       This command can only be run if the minion is configured with
+                                       solr.type=master
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e345" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e347" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e345" class="stentry propvalue">handler</td>
+                                       
+                                       <td valign="top" headers="d249159e347" class="stentry propdesc">
+                                          <p class="p">The name of the data import handler.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e345" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d249159e347" class="stentry propdesc">
+                                          <p class="p">The solr host to query. __opts__['host'] is default.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e345" class="stentry propvalue">core</td>
+                                       
+                                       <td valign="top" headers="d249159e347" class="stentry propdesc">
+                                          <p class="p">The core the handler belongs to.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e345" class="stentry propvalue">options</td>
+                                       
+                                       <td valign="top" headers="d249159e347" class="stentry propdesc">
+                                          <p class="p">A list of options such as clean, optimize commit, verbose, and
+                                             pause_replication. leave blank to use __opts__ defaults. options will
+                                             be merged with __opts__
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e345" class="stentry propvalue">extra</td>
+                                       
+                                       <td valign="top" headers="d249159e347" class="stentry propdesc">
+                                          <p class="p">Extra name value pairs to pass to the handler. e.g. ["name=value"]</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return : dict&lt;str,obj&gt;:</p>
+                                    <pre class="pre codeblock language-">{'success':boolean, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.delta_import dataimport None music {'clean':True}</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.full_import">
+                              <h3 class="title topictitle3">full_import</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.full_import(
+								handler,
+								host=None,
+								core_name=None,
+								options=None,
+								extra=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">MASTER ONLY
+                                       Submits an import command to the specified handler using specified options.
+                                       This command can only be run if the minion is configured with
+                                       solr.type=master
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e418" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e420" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e418" class="stentry propvalue">handler</td>
+                                       
+                                       <td valign="top" headers="d249159e420" class="stentry propdesc">
+                                          <p class="p">The name of the data import handler.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e418" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d249159e420" class="stentry propdesc">
+                                          <p class="p">The solr host to query. __opts__['host'] is default.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e418" class="stentry propvalue">core</td>
+                                       
+                                       <td valign="top" headers="d249159e420" class="stentry propdesc">
+                                          <p class="p">The core the handler belongs to.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e418" class="stentry propvalue">options</td>
+                                       
+                                       <td valign="top" headers="d249159e420" class="stentry propdesc">
+                                          <p class="p">A list of options such as clean, optimize commit, verbose, and
+                                             pause_replication. leave blank to use __opts__ defaults. options will
+                                             be merged with __opts__
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e418" class="stentry propvalue">extra</td>
+                                       
+                                       <td valign="top" headers="d249159e420" class="stentry propdesc">
+                                          <p class="p">Extra name value pairs to pass to the handler. e.g. ["name=value"]</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return : dict&lt;str,obj&gt;:</p>
+                                    <pre class="pre codeblock language-">{'success':boolean, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.full_import dataimport None music {'clean':True}</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.import_status">
+                              <h3 class="title topictitle3">import_status</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.import_status(
+								handler,
+								host=None,
+								core_name=None,
+								verbose=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Submits an import command to the specified handler using specified options.
+                                       This command can only be run if the minion is configured with
+                                       solr.type: 'master'
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e491" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e493" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e491" class="stentry propvalue">handler</td>
+                                       
+                                       <td valign="top" headers="d249159e493" class="stentry propdesc">
+                                          <p class="p">The name of the data import handler.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e491" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d249159e493" class="stentry propdesc">
+                                          <p class="p">The solr host to query. __opts__['host'] is default.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e491" class="stentry propvalue">core</td>
+                                       
+                                       <td valign="top" headers="d249159e493" class="stentry propdesc">
+                                          <p class="p">The core the handler belongs to.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e491" class="stentry propvalue">verbose</td>
+                                       
+                                       <td valign="top" headers="d249159e493" class="stentry propdesc">
+                                          <p class="p">Specifies verbose output</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return : dict&lt;str,obj&gt;:</p>
+                                    <pre class="pre codeblock language-">{'success':boolean, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.import_status dataimport None music False</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.is_replication_enabled">
+                              <h3 class="title topictitle3">is_replication_enabled</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.is_replication_enabled(
+								host=None,
+								core_name=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">SLAVE CALL
+                                       Check for errors, and determine if a slave is replicating or not.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e558" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e560" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e558" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d249159e560" class="stentry propdesc">
+                                          <p class="p">The solr host to query. __opts__['host'] is default.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e558" class="stentry propvalue">core_name</td>
+                                       
+                                       <td valign="top" headers="d249159e560" class="stentry propdesc">
+                                          <p class="p">The name of the solr core if using cores. Leave this blank if you are
+                                             not using cores or if you want to check all cores.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return : dict&lt;str,obj&gt;:</p>
+                                    <pre class="pre codeblock language-">{'success':boolean, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.is_replication_enabled music</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.lucene_version">
+                              <h3 class="title topictitle3">lucene_version</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.lucene_version(
+								core_name=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Gets the lucene version that solr is using. If you are running a multi-core
+                                       setup you should specify a core name since all the cores run under the same
+                                       servlet container, they will all have the same version.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e613" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e615" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e613" class="stentry propvalue">core_name</td>
+                                       
+                                       <td valign="top" headers="d249159e615" class="stentry propdesc">
+                                          <p class="p">The name of the solr core if using cores. Leave this blank if you are
+                                             not using cores or if you want to check all cores.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return: dict&lt;str,obj&gt;:</p>
+                                    <pre class="pre codeblock language-">{'success':boolean, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.lucene_version</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.match_index_versions">
+                              <h3 class="title topictitle3">match_index_versions</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.match_index_versions(
+								host=None,
+								core_name=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">SLAVE CALL
+                                       Verifies that the master and the slave versions are in sync by
+                                       comparing the index version. If you are constantly pushing updates
+                                       the index the master and slave versions will seldom match. A solution
+                                       to this is pause indexing every so often to allow the slave to replicate
+                                       and then call this method before allowing indexing to resume.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e662" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e664" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e662" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d249159e664" class="stentry propdesc">
+                                          <p class="p">The solr host to query. __opts__['host'] is default.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e662" class="stentry propvalue">core_name</td>
+                                       
+                                       <td valign="top" headers="d249159e664" class="stentry propdesc">
+                                          <p class="p">The name of the solr core if using cores. Leave this blank if you are
+                                             not using cores or if you want to check all cores.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return : dict&lt;str,obj&gt;:</p>
+                                    <pre class="pre codeblock language-">{'success':boolean, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.match_index_versions music</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.optimize">
+                              <h3 class="title topictitle3">optimize</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.optimize(
+								host=None,
+								core_name=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Search queries fast, but it is a very expensive operation. The ideal
+                                       process is to run this with a master/slave configuration.  Then you
+                                       can optimize the master, and push the optimized index to the slaves.
+                                       If you are running a single solr instance, or if you are going to run
+                                       this on a slave be aware than search performance will be horrible
+                                       while this command is being run. Additionally it can take a LONG time
+                                       to run and your HTTP request may timeout. If that happens adjust your
+                                       timeout settings.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e718" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e720" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e718" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d249159e720" class="stentry propdesc">
+                                          <p class="p">The solr host to query. __opts__['host'] is default.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e718" class="stentry propvalue">core_name</td>
+                                       
+                                       <td valign="top" headers="d249159e720" class="stentry propdesc">
+                                          <p class="p">The name of the solr core if using cores. Leave this blank if you are
+                                             not using cores or if you want to check all cores.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return : dict&lt;str,obj&gt;:</p>
+                                    <pre class="pre codeblock language-">{'success':boolean, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.optimize music</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.ping">
+                              <h3 class="title topictitle3">ping</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.ping(
+								host=None,
+								core_name=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Does a health check on solr, makes sure solr can talk to the indexes.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e773" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e775" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e773" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d249159e775" class="stentry propdesc">
+                                          <p class="p">The solr host to query. __opts__['host'] is default.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e773" class="stentry propvalue">core_name</td>
+                                       
+                                       <td valign="top" headers="d249159e775" class="stentry propdesc">
+                                          <p class="p">The name of the solr core if using cores. Leave this blank if you are
+                                             not using cores or if you want to check all cores.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return : dict&lt;str,obj&gt;:</p>
+                                    <pre class="pre codeblock language-">{'success':boolean, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.ping music</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.reload_core">
+                              <h3 class="title topictitle3">reload_core</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.reload_core(
+								host=None,
+								core_name=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">MULTI-CORE HOSTS ONLY
+                                       Load a new core from the same configuration as an existing registered core.
+                                       While the "new" core is initializing, the "old" one will continue to accept
+                                       requests. Once it has finished, all new request will go to the "new" core,
+                                       and the "old" core will be unloaded.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e828" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e830" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e828" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d249159e830" class="stentry propdesc">
+                                          <p class="p">The solr host to query. __opts__['host'] is default.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e828" class="stentry propvalue">core_name</td>
+                                       
+                                       <td valign="top" headers="d249159e830" class="stentry propdesc">
+                                          <p class="p">The name of the core to reload</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return : dict&lt;str,obj&gt;:</p>
+                                    <pre class="pre codeblock language-">{'success':boolean, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.reload_core None music</pre>
+                                    <p class="p">Return data is in the following format:</p>
+                                    <pre class="pre codeblock language-">{'success':bool, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.reload_import_config">
+                              <h3 class="title topictitle3">reload_import_config</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.reload_import_config(
+								handler,
+								host=None,
+								core_name=None,
+								verbose=False
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">MASTER ONLY
+                                       re-loads the handler config XML file.
+                                       This command can only be run if the minion is a 'master' type
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e887" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e889" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e887" class="stentry propvalue">handler</td>
+                                       
+                                       <td valign="top" headers="d249159e889" class="stentry propdesc">
+                                          <p class="p">The name of the data import handler.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e887" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d249159e889" class="stentry propdesc">
+                                          <p class="p">The solr host to query. __opts__['host'] is default.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e887" class="stentry propvalue">core</td>
+                                       
+                                       <td valign="top" headers="d249159e889" class="stentry propdesc">
+                                          <p class="p">The core the handler belongs to.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e887" class="stentry propvalue">verbose</td>
+                                       
+                                       <td valign="top" headers="d249159e889" class="stentry propdesc">
+                                          <p class="p">Run the command with verbose output.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return : dict&lt;str,obj&gt;:</p>
+                                    <pre class="pre codeblock language-">{'success':boolean, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.reload_import_config dataimport None music {'clean':True}</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.replication_details">
+                              <h3 class="title topictitle3">replication_details</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.replication_details(
+								host=None,
+								core_name=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Get the full replication details.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e954" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e956" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e954" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d249159e956" class="stentry propdesc">
+                                          <p class="p">The solr host to query. __opts__['host'] is default.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e954" class="stentry propvalue">core_name</td>
+                                       
+                                       <td valign="top" headers="d249159e956" class="stentry propdesc">
+                                          <p class="p">The name of the solr core if using cores. Leave this blank if you are
+                                             not using cores or if you want to check all cores.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return : dict&lt;str,obj&gt;:</p>
+                                    <pre class="pre codeblock language-">{'success':boolean, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.replication_details music</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.set_is_polling">
+                              <h3 class="title topictitle3">set_is_polling</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.set_is_polling(
+								polling,
+								host=None,
+								core_name=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">SLAVE CALL
+                                       Prevent the slaves from polling the master for updates.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e1009" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e1011" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e1009" class="stentry propvalue">polling</td>
+                                       
+                                       <td valign="top" headers="d249159e1011" class="stentry propdesc">
+                                          <p class="p">True will enable polling. False will disable it.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e1009" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d249159e1011" class="stentry propdesc">
+                                          <p class="p">The solr host to query. __opts__['host'] is default.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e1009" class="stentry propvalue">core_name</td>
+                                       
+                                       <td valign="top" headers="d249159e1011" class="stentry propdesc">
+                                          <p class="p">The name of the solr core if using cores. Leave this blank if you are
+                                             not using cores or if you want to check all cores.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return : dict&lt;str,obj&gt;:</p>
+                                    <pre class="pre codeblock language-">{'success':boolean, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.set_is_polling False</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.set_replication_enabled">
+                              <h3 class="title topictitle3">set_replication_enabled</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.set_replication_enabled(
+								status,
+								host=None,
+								core_name=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">MASTER ONLY
+                                       Sets the master to ignore poll requests from the slaves. Useful when you
+                                       don't want the slaves replicating during indexing or when clearing the
+                                       index.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e1070" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e1072" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e1070" class="stentry propvalue">status</td>
+                                       
+                                       <td valign="top" headers="d249159e1072" class="stentry propdesc">
+                                          <p class="p">Sets the replication status to the specified state.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e1070" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d249159e1072" class="stentry propdesc">
+                                          <p class="p">The solr host to query. __opts__['host'] is default.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e1070" class="stentry propvalue">core_name</td>
+                                       
+                                       <td valign="top" headers="d249159e1072" class="stentry propdesc">
+                                          <p class="p">The name of the solr core if using cores. Leave this blank if you are
+                                             not using cores or if you want to set the status on all cores.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return : dict&lt;str,obj&gt;:</p>
+                                    <pre class="pre codeblock language-">{'success':boolean, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.set_replication_enabled false, None, music</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.signal">
+                              <h3 class="title topictitle3">signal</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.signal(
+								signal=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Signals Apache Solr to start, stop, or restart. Obviously this is only
+                                       going to work if the minion resides on the solr host. Additionally Solr
+                                       doesn't ship with an init script so one must be created.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e1131" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e1133" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e1131" class="stentry propvalue">signal</td>
+                                       
+                                       <td valign="top" headers="d249159e1133" class="stentry propdesc">
+                                          <p class="p">The command to pass to the apache solr init valid values are 'start',
+                                             'stop', and 'restart'
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.signal restart</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.modules.solr.version">
+                              <h3 class="title topictitle3">version</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solr.version(
+								core_name=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Gets the solr version for the core specified.  You should specify a core
+                                       here as all the cores will run under the same servlet container and so will
+                                       all have the same version.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d249159e1176" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d249159e1178" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d249159e1176" class="stentry propvalue">core_name</td>
+                                       
+                                       <td valign="top" headers="d249159e1178" class="stentry propdesc">
+                                          <p class="p">The name of the solr core if using cores. Leave this blank if you are
+                                             not using cores or if you want to check all cores.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return : dict&lt;str,obj&gt;:</p>
+                                    <pre class="pre codeblock language-">{'success':boolean, 'data':dict, 'errors':list, 'warnings':list}</pre>
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' solr.version</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

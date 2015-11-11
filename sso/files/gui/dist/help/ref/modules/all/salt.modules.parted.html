@@ -1,0 +1,908 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.parted</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.parted">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-parted">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-parted">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.parted</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-parted__module-salt.modules.parted"></span></p>
+                              
+                              <p class="p">Module for managing partitions on POSIX-like systems.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">parted, partprobe, lsblk (usually parted and util-linux packages)</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">Some functions may not be available, depending on your version of parted.</p>
+                              
+                              <p class="p">Check the manpage for <tt class="ph tt">parted(8)</tt> for more information, or the online docs
+                                 at:
+                              </p>
+                              
+                              <p class="p"><a class="xref" href="http://www.gnu.org/software/parted/manual/html_chapter/parted_2.html" target="_blank">http://www.gnu.org/software/parted/manual/html_chapter/parted_2.html</a></p>
+                              
+                              <p class="p">In light of parted not directly supporting partition IDs, some of this module
+                                 has been written to utilize sfdisk instead. For further information, please
+                                 reference the man page for <tt class="ph tt">sfdisk(8)</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.parted.align_check">
+                           <h2 class="title topictitle2">align_check</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.align_check(
+								device,
+								part_type,
+								partition
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">partition.align_check device part_type partition</p>
+                                 
+                                 <p class="p">Check if partition satisfies the alignment constraint of part_type.
+                                    Type must be "minimal" or "optimal".
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.align_check /dev/sda minimal 1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.check">
+                           <h2 class="title topictitle2">check</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.check(
+								device,
+								minor
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">partition.check device minor</p>
+                                 
+                                 <p class="p">Checks if the file system on partition &lt;minor&gt; has any errors.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.check 1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.cp">
+                           <h2 class="title topictitle2">cp</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.cp(
+								device,
+								from_minor,
+								to_minor
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">partition.check device from_minor to_minor</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d192062e134" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d192062e136" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d192062e134" class="stentry propvalue">Copies the file system on the partition &lt;from-minor&gt; to partition</td>
+                                    
+                                    <td valign="top" headers="d192062e136" class="stentry propdesc">
+                                       <p class="p">&lt;to-minor&gt;, deleting the original contents of the destination
+                                          partition.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.cp /dev/sda 2 3</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.exists">
+                           <h2 class="title topictitle2">exists</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.exists(
+								device=''
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">partition.exists device</p>
+                                 
+                                 <p class="p">Check to see if the partition exists</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.exists /dev/sdb1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.get_block_device">
+                           <h2 class="title topictitle2">get_block_device</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.get_block_device( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Retrieve a list of disk devices</p>
+                                 
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.get_block_device</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.get_id">
+                           <h2 class="title topictitle2">get_id</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.get_id(
+								device,
+								minor
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Prints the system ID for the partition. Some typical values are:</p>
+                                 <pre class="pre codeblock language-"> b: FAT32 (vfat)
+ 7: HPFS/NTFS
+82: Linux Swap
+83: Linux
+8e: Linux LVM
+fd: Linux RAID Auto</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.get_id /dev/sda 1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.list_">
+                           <h2 class="title topictitle2">list_</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.list_(
+								device,
+								unit=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">partition.list device unit</p>
+                                 
+                                 <p class="p">Prints partition information of given &lt;device&gt;</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.list /dev/sda
+salt '*' partition.list /dev/sda unit=s
+salt '*' partition.list /dev/sda unit=kB</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.mkfs">
+                           <h2 class="title topictitle2">mkfs</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.mkfs(
+								device,
+								fs_type
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">partition.mkfs device fs_type</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d192062e304" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d192062e306" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d192062e304" class="stentry propvalue">Makes a file system &lt;fs_type&gt; on partition &lt;device&gt;, destroying all data</td>
+                                    
+                                    <td valign="top" headers="d192062e306" class="stentry propdesc">
+                                       <p class="p">that resides on that partition. &lt;fs_type&gt; must be one of "ext2",
+                                          "fat32", "fat16", "linux-swap" or "reiserfs" (if libreiserfs is
+                                          installed)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.mkfs /dev/sda2 fat32</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.mklabel">
+                           <h2 class="title topictitle2">mklabel</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.mklabel(
+								device,
+								label_type
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">partition.mklabel device label_type</p>
+                                 
+                                 <p class="p">Create a new disklabel (partition table) of label_type.
+                                    Type should be one of "aix", "amiga", "bsd", "dvh", "gpt", "loop", "mac",
+                                    "msdos", "pc98", or "sun".
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.mklabel /dev/sda msdos</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.mkpart">
+                           <h2 class="title topictitle2">mkpart</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.mkpart(
+								device,
+								part_type,
+								fs_type=None,
+								start=None,
+								end=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">partition.mkpart device part_type fs_type start end</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d192062e381" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d192062e383" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d192062e381" class="stentry propvalue">Make a part_type partition for filesystem fs_type, beginning at start and</td>
+                                    
+                                    <td valign="top" headers="d192062e383" class="stentry propdesc">
+                                       <p class="p">ending at end (by default in megabytes).  part_type should be one of
+                                          "primary", "logical", or "extended".
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.mkpart /dev/sda primary fs_type=fat32 start=0 end=639
+salt '*' partition.mkpart /dev/sda primary start=0 end=639</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.mkpartfs">
+                           <h2 class="title topictitle2">mkpartfs</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.mkpartfs(
+								device,
+								part_type,
+								fs_type,
+								start,
+								end
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">partition.mkpartfs device part_type fs_type start end</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d192062e426" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d192062e428" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d192062e426" class="stentry propvalue">Make a &lt;part_type&gt; partition with a new filesystem of &lt;fs_type&gt;, beginning</td>
+                                    
+                                    <td valign="top" headers="d192062e428" class="stentry propdesc">
+                                       <p class="p">at &lt;start&gt; and ending at &lt;end&gt; (by default in megabytes).  &lt;part_type&gt;
+                                          should be one of "primary", "logical", or "extended". &lt;fs_type&gt; must be
+                                          one of "ext2", "fat32", "fat16", "linux-swap" or "reiserfs" (if
+                                          libreiserfs is installed)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.mkpartfs /dev/sda logical ext2 440 670</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.name">
+                           <h2 class="title topictitle2">name</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.name(
+								device,
+								partition,
+								name
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">partition.name device partition name</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d192062e471" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d192062e473" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d192062e471" class="stentry propvalue">Set the name of partition to name. This option works only on Mac, PC98,</td>
+                                    
+                                    <td valign="top" headers="d192062e473" class="stentry propdesc">
+                                       <p class="p">and GPT disklabels. The name can be placed in quotes, if necessary.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.name /dev/sda 1 'My Documents'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.part_list">
+                           <h2 class="title topictitle2">part_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.part_list(
+								device,
+								unit=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Deprecated. Calls partition.list.</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.part_list /dev/sda
+salt '*' partition.part_list /dev/sda unit=s
+salt '*' partition.part_list /dev/sda unit=kB</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.probe">
+                           <h2 class="title topictitle2">probe</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.probe(
+								*devices,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Ask the kernel to update its local partition data. When no args are
+                                    specified all block devices are tried.
+                                 </p>
+                                 
+                                 <p class="p">Caution: Generally only works on devices with no mounted partitions and
+                                    may take a long time to return if specified devices are in use.
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.probe
+salt '*' partition.probe /dev/sda
+salt '*' partition.probe /dev/sda /dev/sdb</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.rescue">
+                           <h2 class="title topictitle2">rescue</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.rescue(
+								device,
+								start,
+								end
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">partition.rescue device start end</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d192062e576" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d192062e578" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d192062e576" class="stentry propvalue">Rescue a lost partition that was located somewhere between start and end.</td>
+                                    
+                                    <td valign="top" headers="d192062e578" class="stentry propdesc">
+                                       <p class="p">If a partition is found, parted will ask if you want to create an
+                                          entry for it in the partition table.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.rescue /dev/sda 0 8056</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.resize">
+                           <h2 class="title topictitle2">resize</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.resize(
+								device,
+								minor,
+								start,
+								end
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">partition.resize device minor, start, end</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d192062e621" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d192062e623" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d192062e621" class="stentry propvalue">Resizes the partition with number &lt;minor&gt;. The partition will start &lt;start&gt;</td>
+                                    
+                                    <td valign="top" headers="d192062e623" class="stentry propdesc">
+                                       <p class="p">from the beginning of the disk, and end &lt;end&gt; from the beginning of the
+                                          disk. resize never changes the minor number. Extended partitions can be
+                                          resized, so long as the new extended partition completely contains all
+                                          logical partitions.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.resize /dev/sda 3 200 850</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.rm">
+                           <h2 class="title topictitle2">rm</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.rm(
+								device,
+								minor
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">partition.rm device minor</p>
+                                 
+                                 <p class="p">Removes the partition with number &lt;minor&gt;.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.rm /dev/sda 5</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.set_">
+                           <h2 class="title topictitle2">set_</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.set_(
+								device,
+								minor,
+								flag,
+								state
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">partition.set device  minor flag state</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d192062e697" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d192062e699" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d192062e697" class="stentry propvalue">Changes a flag on the partition with number &lt;minor&gt;. A flag can be either</td>
+                                    
+                                    <td valign="top" headers="d192062e699" class="stentry propdesc">
+                                       <p class="p">"on" or "off". Some or all of these flags will be available, depending
+                                          on what disk label you are using.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.set /dev/sda 1 boot on</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.set_id">
+                           <h2 class="title topictitle2">set_id</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.set_id(
+								device,
+								minor,
+								system_id
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Sets the system ID for the partition. Some typical values are:</p>
+                                 <pre class="pre codeblock language-"> b: FAT32 (vfat)
+ 7: HPFS/NTFS
+82: Linux Swap
+83: Linux
+8e: Linux LVM
+fd: Linux RAID Auto</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.set_id /dev/sda 1 83</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.system_types">
+                           <h2 class="title topictitle2">system_types</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.system_types( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List the system types that are supported by the installed version of sfdisk</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.system_types</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.parted.toggle">
+                           <h2 class="title topictitle2">toggle</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.parted.toggle(
+								device,
+								partition,
+								flag
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">partition.toggle device partition flag</p>
+                                 
+                                 <p class="p">Toggle the state of &lt;flag&gt; on &lt;partition&gt;</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' partition.name /dev/sda 1 boot</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

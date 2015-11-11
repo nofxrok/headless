@@ -1,0 +1,146 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.ldapmod</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.ldapmod">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-ldapmod">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-ldapmod">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.ldapmod</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-ldapmod__module-salt.modules.ldapmod"></span></p>
+                              
+                              <p class="p">Salt interface to LDAP commands</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">ldap Python module</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">configuration</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">In order to connect to LDAP, certain configuration is required
+                                       in the minion config on the LDAP server. The minimum configuration items
+                                       that must be set are:
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">ldap.basedn: dc=acme,dc=com (example values, adjust to suit)</pre>
+                                    <p class="p">If your LDAP server requires authentication then you must also set:</p>
+                                    <pre class="pre codeblock language-yaml">ldap.anonymous: False
+ldap.binddn: admin
+ldap.bindpw: password</pre>
+                                    <p class="p">In addition, the following optional values may be set:</p>
+                                    <pre class="pre codeblock language-yaml">ldap.server: localhost (default=localhost, see warning below)
+ldap.port: 389 (default=389, standard port)
+ldap.tls: False (default=False, no TLS)
+ldap.no_verify: False (default=False, verify TLS)
+ldap.anonymous: True (default=True, bind anonymous)
+ldap.scope: 2 (default=2, ldap.SCOPE_SUBTREE)
+ldap.attrs: [saltAttr] (default=None, return all attributes)</pre>
+                                    </dd>
+                                 
+                              </dl>
+                              
+                              <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                 <p class="p">At the moment this module only recommends connection to LDAP services
+                                    listening on <tt class="ph tt">localhost</tt>. This is deliberate to avoid the potentially
+                                    dangerous situation of multiple minions sending identical update commands
+                                    to the same LDAP server. It's easy enough to override this behavior, but
+                                    badness may ensue - you have been warned.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.ldapmod.search">
+                           <h2 class="title topictitle2">search</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.ldapmod.search(
+								filter,
+								dn=None,
+								scope=None,
+								attrs=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Run an arbitrary LDAP query and return the results.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt 'ldaphost' ldap.search "filter=cn=myhost"</pre>
+                                 <p class="p">Return data:</p>
+                                 <pre class="pre codeblock language-python">{'myhost': {'count': 1,
+            'results': [['cn=myhost,ou=hosts,o=acme,c=gb',
+                         {'saltKeyValue': ['ntpserver=ntp.acme.local',
+                                           'foo=myfoo'],
+                          'saltState': ['foo', 'bar']}]],
+            'time': {'human': '1.2ms', 'raw': '0.00123'}}}</pre>
+                                 <p class="p">Search and connection options can be overridden by specifying the relevant
+                                    option as key=value pairs, for example:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt 'ldaphost' ldap.search filter=cn=myhost dn=ou=hosts,o=acme,c=gb
+scope=1 attrs='' server='localhost' port='7393' tls=True bindpw='ssh'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.module</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.module">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-module">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-module">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.module</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-module__module-salt.states.module"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="execution-of-salt-modules-from-within-states">
+                           <h2 class="title topictitle2">Execution of Salt modules from within states</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">These states allow individual execution module calls to be made via states. To
+                                    call a single module function use a <a class="xref" href="salt.states.module.html#salt.states.module.run">module.run</a>
+                                    state:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">mine.send:
+  module.run:
+    - name: network.interfaces</pre>
+                                 <p class="p">Note that this example is probably unnecessary to use in practice, since the
+                                    <tt class="ph tt">mine_functions</tt> and <tt class="ph tt">mine_interval</tt> config parameters can be used to
+                                    schedule updates for the mine (see 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../../topics/mine/index.html#the-salt-mine">here</a> for more
+                                    info).
+                                 </p>
+                                 
+                                 <p class="p">It is sometimes desirable to trigger a function call after a state is executed,
+                                    for this the <a class="xref" href="salt.states.module.html#salt.states.module.wait">module.wait</a> state can be used:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">mine.send:
+  module.wait:
+    - name: network.interfaces
+    - watch:
+      - file: /etc/network/interfaces</pre>
+                                 <p class="p">All arguments that the <tt class="ph tt">module</tt> state does not consume are passed through to
+                                    the execution module function being executed:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">fetch_out_of_band:
+  module.run:
+    - name: git.fetch
+    - cwd: /path/to/my/repo
+    - user: myuser
+    - opts: '--all'</pre>
+                                 <p class="p">Due to how the state system works, if a module function accepts an
+                                    argument called, <tt class="ph tt">name</tt>, then <tt class="ph tt">m_name</tt> must be used to specify that
+                                    argument, to avoid a collision with the <tt class="ph tt">name</tt> argument. For example:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">disable_nfs:
+  module.run:
+    - name: service.disable
+    - m_name: nfs</pre>
+                                 <p class="p">Note that some modules read all or some of the arguments from a list of keyword
+                                    arguments. For example:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">mine.send:
+  module.run:
+    - func: network.ip_addrs
+    - kwargs:
+        interface: eth0</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.module.mod_watch">
+                              <h3 class="title topictitle3">mod_watch</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.module.mod_watch(
+								name,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Run a single module function</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d394946e105" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d394946e107" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d394946e105" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d394946e107" class="stentry propdesc">
+                                          <p class="p">The module function to execute</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d394946e105" class="stentry propvalue">returner</td>
+                                       
+                                       <td valign="top" headers="d394946e107" class="stentry propdesc">
+                                          <p class="p">Specify the returner to send the return of the module execution to</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d394946e105" class="stentry propvalue">**kwargs</td>
+                                       
+                                       <td valign="top" headers="d394946e107" class="stentry propdesc">
+                                          <p class="p">Pass any arguments needed to execute the function</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.module.run">
+                              <h3 class="title topictitle3">run</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.module.run(
+								name,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Run a single module function</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d394946e155" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d394946e157" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d394946e155" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d394946e157" class="stentry propdesc">
+                                          <p class="p">The module function to execute</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d394946e155" class="stentry propvalue">returner</td>
+                                       
+                                       <td valign="top" headers="d394946e157" class="stentry propdesc">
+                                          <p class="p">Specify the returner to send the return of the module execution to</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d394946e155" class="stentry propvalue">**kwargs</td>
+                                       
+                                       <td valign="top" headers="d394946e157" class="stentry propdesc">
+                                          <p class="p">Pass any arguments needed to execute the function</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.module.wait">
+                              <h3 class="title topictitle3">wait</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.module.wait(
+								name,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Run a single module function only if the watch statement calls it</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d394946e205" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d394946e207" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d394946e205" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d394946e207" class="stentry propdesc">
+                                          <p class="p">The module function to execute</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d394946e205" class="stentry propvalue">**kwargs</td>
+                                       
+                                       <td valign="top" headers="d394946e207" class="stentry propdesc">
+                                          <p class="p">Pass any arguments needed to execute the function</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                       <p class="p">Like the 
+                                          		
+                                          			&nbsp;<a class="xref" href="salt.states.cmd.html#salt.states.cmd.run">cmd.run</a> state, this state will
+                                          return <tt class="ph tt">True</tt> but not actually execute, unless one of the following
+                                          two things happens:
+                                       </p>
+                                       
+                                       <ol class="ol">
+                                          <li class="li">
+                                             <p class="p">The state has a 
+                                                		
+                                                			&nbsp;<a class="xref" href="../requisites.html#requisites">watch requisite</a>, and
+                                                the state which it is watching changes.
+                                             </p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Another state has a 
+                                                		
+                                                			&nbsp;<a class="xref" href="../requisites.html#requisites">watch_in requisite</a> which references this state, and the state
+                                                wth the <tt class="ph tt">watch_in</tt> changes.
+                                             </p>
+                                             
+                                          </li>
+                                          
+                                       </ol>
+                                       
+                                    </aside>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

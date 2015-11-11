@@ -1,0 +1,783 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.nftables</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.nftables">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-nftables">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-nftables">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.nftables</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-nftables__module-salt.modules.nftables"></span></p>
+                              
+                              <p class="p">Support for nftables</p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.nftables.append">
+                           <h2 class="title topictitle2">append</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nftables.append(
+								table='filter',
+								chain=None,
+								rule=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Append a rule to the specified table &amp; chain.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d177939e47" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d177939e49" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d177939e47" class="stentry propvalue">This function accepts a rule in a standard nftables command format,</td>
+                                    
+                                    <td valign="top" headers="d177939e49" class="stentry propdesc">
+                                       <p class="p">starting with the chain. Trying to force users to adapt to a new
+                                          method of creating rules would be irritating at best, and we
+                                          already have a parser that can handle it.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nftables.append filter input \
+    rule='input tcp dport 22 log accept'
+
+IPv6:
+salt '*' nftables.append filter input \
+    rule='input tcp dport 22 log accept' \
+    family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nftables.build_rule">
+                           <h2 class="title topictitle2">build_rule</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nftables.build_rule(
+								table=None,
+								chain=None,
+								command=None,
+								position='',
+								full=None,
+								family='ipv4',
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Build a well-formatted nftables rule based on kwargs.
+                                    A <span class="keyword title_reference">table</span> and <span class="keyword title_reference">chain</span> are not required, unless <span class="keyword title_reference">full</span> is True.
+                                 </p>
+                                 
+                                 <p class="p">If <span class="keyword title_reference">full</span> is <span class="keyword title_reference">True</span>, then <span class="keyword title_reference">table</span>, <span class="keyword title_reference">chain</span> and <span class="keyword title_reference">command</span> are required.
+                                    <span class="keyword title_reference">command</span> may be specified as either insert, append, or delete.
+                                    This will return the nftables command, exactly as it would
+                                    be used from the command line.
+                                 </p>
+                                 
+                                 <p class="p">If a position is required (as with <span class="keyword title_reference">insert</span> or <span class="keyword title_reference">delete</span>), it may be specified as
+                                    <span class="keyword title_reference">position</span>. This will only be useful if <span class="keyword title_reference">full</span> is True.
+                                 </p>
+                                 
+                                 <p class="p">If <span class="keyword title_reference">connstate</span> is passed in, it will automatically be changed to <span class="keyword title_reference">state</span>.
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nftables.build_rule match=state \
+    connstate=RELATED,ESTABLISHED jump=ACCEPT
+salt '*' nftables.build_rule filter input command=insert position=3 \
+    full=True match=state state=related,established jump=accept
+
+IPv6:
+salt '*' nftables.build_rule match=state \
+    connstate=related,established jump=accept \
+    family=ipv6
+salt '*' nftables.build_rule filter input command=insert position=3 \
+    full=True match=state state=related,established jump=accept \
+    family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nftables.check">
+                           <h2 class="title topictitle2">check</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nftables.check(
+								table='filter',
+								chain=None,
+								rule=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Check for the existence of a rule in the table and chain</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d177939e173" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d177939e175" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d177939e173" class="stentry propvalue">This function accepts a rule in a standard nftables command format,</td>
+                                    
+                                    <td valign="top" headers="d177939e175" class="stentry propdesc">
+                                       <p class="p">starting with the chain. Trying to force users to adapt to a new
+                                          method of creating rules would be irritating at best, and we
+                                          already have a parser that can handle it.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nftables.check filter input \
+    rule='input tcp dport 22 log accept'
+
+IPv6:
+salt '*' nftables.check filter input \
+    rule='input tcp dport 22 log accept' \
+    family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nftables.check_chain">
+                           <h2 class="title topictitle2">check_chain</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nftables.check_chain(
+								table='filter',
+								chain=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">Check for the existence of a chain in the table</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nftables.check_chain filter input
+
+IPv6:
+salt '*' nftables.check_chain filter input family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nftables.check_table">
+                           <h2 class="title topictitle2">check_table</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nftables.check_table(
+								table=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check for the existence of a table</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-">salt '*' nftables.check_table nat</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nftables.delete">
+                           <h2 class="title topictitle2">delete</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nftables.delete(
+								table,
+								chain=None,
+								position=None,
+								rule=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section"></div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d177939e277" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d177939e279" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d177939e277" class="stentry propvalue">Delete a rule from the specified table &amp; chain, specifying either the rule</td>
+                                    
+                                    <td valign="top" headers="d177939e279" class="stentry propdesc">
+                                       <p class="p">in its entirety, or the rule's position in the chain.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d177939e277" class="stentry propvalue">This function accepts a rule in a standard nftables command format,</td>
+                                    
+                                    <td valign="top" headers="d177939e279" class="stentry propdesc">
+                                       <p class="p">starting with the chain. Trying to force users to adapt to a new
+                                          method of creating rules would be irritating at best, and we
+                                          already have a parser that can handle it.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nftables.delete filter input position=3
+
+salt '*' nftables.delete filter input \
+    rule='input tcp dport 22 log accept'
+
+IPv6:
+salt '*' nftables.delete filter input position=3 family=ipv6
+
+salt '*' nftables.delete filter input \
+    rule='input tcp dport 22 log accept' \
+    family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nftables.delete_chain">
+                           <h2 class="title topictitle2">delete_chain</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nftables.delete_chain(
+								table='filter',
+								chain=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">Delete the chain from the specified table.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nftables.delete_chain filter input
+
+salt '*' nftables.delete_chain filter foo
+
+IPv6:
+salt '*' nftables.delete_chain filter input family=ipv6
+
+salt '*' nftables.delete_chain filter foo family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nftables.delete_table">
+                           <h2 class="title topictitle2">delete_table</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nftables.delete_table(
+								table,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">Create new custom table.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nftables.delete_table filter
+
+IPv6:
+salt '*' nftables.delete_table filter family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nftables.flush">
+                           <h2 class="title topictitle2">flush</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nftables.flush(
+								table='filter',
+								chain='',
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Flush the chain in the specified table, flush all chains in the specified
+                                    table if chain is not specified.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nftables.flush filter
+
+salt '*' nftables.flush filter input
+
+IPv6:
+salt '*' nftables.flush filter input family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nftables.get_rule_handle">
+                           <h2 class="title topictitle2">get_rule_handle</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nftables.get_rule_handle(
+								table='filter',
+								chain=None,
+								rule=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Get the handle for a particular rule</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d177939e422" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d177939e424" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d177939e422" class="stentry propvalue">This function accepts a rule in a standard nftables command format,</td>
+                                    
+                                    <td valign="top" headers="d177939e424" class="stentry propdesc">
+                                       <p class="p">starting with the chain. Trying to force users to adapt to a new
+                                          method of creating rules would be irritating at best, and we
+                                          already have a parser that can handle it.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nftables.get_rule_handle filter input \
+    rule='input tcp dport 22 log accept'
+
+IPv6:
+salt '*' nftables.get_rule_handle filter input \
+    rule='input tcp dport 22 log accept' \
+    family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nftables.get_rules">
+                           <h2 class="title topictitle2">get_rules</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nftables.get_rules(
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a data structure of the current, in-memory rules</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nftables.get_rules
+
+salt '*' nftables.get_rules family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nftables.get_saved_rules">
+                           <h2 class="title topictitle2">get_saved_rules</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nftables.get_saved_rules(
+								conf_file=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a data structure of the rules in the conf file</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nftables.get_saved_rules</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nftables.insert">
+                           <h2 class="title topictitle2">insert</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nftables.insert(
+								table='filter',
+								chain=None,
+								position=None,
+								rule=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Insert a rule into the specified table &amp; chain, at the specified position.</p>
+                                 
+                                 <p class="p">If position is not specified, rule will be inserted in first position.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d177939e527" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d177939e529" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d177939e527" class="stentry propvalue">This function accepts a rule in a standard nftables command format,</td>
+                                    
+                                    <td valign="top" headers="d177939e529" class="stentry propdesc">
+                                       <p class="p">starting with the chain. Trying to force users to adapt to a new
+                                          method of creating rules would be irritating at best, and we
+                                          already have a parser that can handle it.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nftables.insert filter input \
+    rule='input tcp dport 22 log accept'
+
+salt '*' nftables.insert filter input position=3 \
+    rule='input tcp dport 22 log accept'
+
+IPv6:
+salt '*' nftables.insert filter input \
+    rule='input tcp dport 22 log accept' \
+    family=ipv6
+
+salt '*' nftables.insert filter input position=3 \
+    rule='input tcp dport 22 log accept' \
+    family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nftables.new_chain">
+                           <h2 class="title topictitle2">new_chain</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nftables.new_chain(
+								table='filter',
+								chain=None,
+								table_type=None,
+								hook=None,
+								priority=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">Create new chain to the specified table.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nftables.new_chain filter input
+
+salt '*' nftables.new_chain filter input \
+        table_type=filter hook=input priority=0
+
+salt '*' nftables.new_chain filter foo
+
+IPv6:
+salt '*' nftables.new_chain filter input family=ipv6
+
+salt '*' nftables.new_chain filter input \
+        table_type=filter hook=input priority=0 family=ipv6
+
+salt '*' nftables.new_chain filter foo family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nftables.new_table">
+                           <h2 class="title topictitle2">new_table</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nftables.new_table(
+								table,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">Create new custom table.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nftables.new_table filter
+
+IPv6:
+salt '*' nftables.new_table filter family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nftables.save">
+                           <h2 class="title topictitle2">save</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nftables.save(
+								filename=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Save the current in-memory rules to disk</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nftables.save /etc/nftables</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nftables.version">
+                           <h2 class="title topictitle2">version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nftables.version( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return version from nftables --version</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nftables.version</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

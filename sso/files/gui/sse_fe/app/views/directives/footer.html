@@ -1,0 +1,225 @@
+<!-- Hide footer for settings pages -->
+<div id="main-footer" class="col-xs-12 padding-zero">
+    <p class="navbar-text" ng-show="state.includes('salt.dashboard.resources')">View
+        <!-- Grid/List view switcher -->
+        <!-- Masters -->
+        <a href="" ng-show="state.includes('salt.dashboard.resources.masters')" class="active" data-trigger="hover" animation="none" placement="top" container="body" data-title="List" bs-tooltip><span class="ssIcons-icon_listView"></span></a>
+        <!-- <a href="" ng-show="state.includes('salt.dashboard.resources.masters')" ng-class="{ 'active': mode==1 }" ui-sref="salt.dashboard.resources.masters({view: 'list'})" data-trigger="hover" animation="none" placement="top" container="body" data-title="List" bs-tooltip><span class="ssIcons-icon_listView"></span></a> -->
+        <a href="" ng-show="state.includes('salt.dashboard.resources.masters')" ng-class="{ 'active': mode==2 }" ui-sref="salt.dashboard.resources.masters({view: 'grid'})" ng-hide="true" data-trigger="hover" animation="none" placement="top" container="body" data-title="Grid" bs-tooltip><span class="ssIcons-icon_iconView"></span></a>
+
+        <!-- Minions -->
+        <a href="" ng-show="state.includes('salt.dashboard.resources.minions')" class="active" data-trigger="hover" animation="none" placement="top" container="body" data-title="List" bs-tooltip><span class="ssIcons-icon_listView"></span></a>
+        <a href="" ng-show="state.includes('salt.dashboard.resources.minions-job-history') || state.includes('salt.dashboard.resources.minions-reports')" ui-sref="salt.dashboard.resources.minions({view: 'list'})" data-trigger="hover" animation="none" placement="top" container="body" data-title="List" bs-tooltip><span class="ssIcons-icon_listView"></span></a>
+        <a href="" ng-show="state.includes('salt.dashboard.resources.minions') || state.includes('salt.dashboard.resources.minions-job-history') || state.includes('salt.dashboard.resources.minions-reports')" ng-class="{ 'active': mode==2 }" ui-sref="salt.dashboard.resources.minions({view: 'grid'})" ng-hide="true" data-trigger="hover" animation="none" placement="top" container="body" data-title="Grid" bs-tooltip><span class="ssIcons-icon_iconView"></span></a>
+
+        <!-- Quick targets -->
+        <a href="" ng-show="state.includes('salt.dashboard.resources.quicktargets')" class="active" data-trigger="hover" animation="none" placement="top" container="body" data-title="List" bs-tooltip><span class="ssIcons-icon_listView"></span></a>
+        <a href="" ng-show="state.includes('salt.dashboard.resources.quicktargets-job-history') || state.includes('salt.dashboard.resources.quicktargets-reports')" ui-sref="salt.dashboard.resources.quicktargets({view: 'list'})" data-trigger="hover" animation="none" placement="top" container="body" data-title="List" bs-tooltip><span class="ssIcons-icon_listView"></span></a>
+        <a href="" ng-show="state.includes('salt.dashboard.resources.quicktargets') || state.includes('salt.dashboard.resources.quicktargets-job-history') || state.includes('salt.dashboard.resources.quicktargets-reports')" ng-class="{ 'active': mode==2 }" ui-sref="salt.dashboard.resources.quicktargets({view: 'grid'})" ng-hide="true" data-trigger="hover" animation="none" placement="top" container="body" data-title="Grid" bs-tooltip><span class="ssIcons-icon_iconView"></span></a>
+
+        <!-- Folder Minions -->
+        <a href="" ng-show="state.includes('salt.dashboard.resources.folder')" class="active" data-trigger="hover" animation="none" placement="top" container="body" data-title="List" bs-tooltip><span class="ssIcons-icon_listView"></span></a>
+        <a href="" ng-show="state.includes('salt.dashboard.resources.folder-minions-job-history')" ui-sref="salt.dashboard.resources.folder({folderId: state.params.folderId, view: 'list'})" data-trigger="hover" animation="none" placement="top" container="body" data-title="List" bs-tooltip><span class="ssIcons-icon_listView"></span></a>
+        <a href="" ng-show="state.includes('salt.dashboard.resources.folder') || state.includes('salt.dashboard.resources.folder.minions-job-history')" ng-class="{ 'active': mode==2 }" ui-sref="salt.dashboard.resources.minions({view: 'grid'})" ng-hide="true" data-trigger="hover" animation="none" placement="top" container="body" data-title="Grid" bs-tooltip><span class="ssIcons-icon_iconView"></span></a>
+
+        <!-- Targets -->
+        <span ng-if="state.includes('salt.dashboard.resources.targets') ||
+            state.includes('salt.dashboard.resources.target-reports') ||
+            state.includes('salt.dashboard.resources.job-history') ||
+            state.includes('salt.dashboard.resources.job-history-minion') ||
+            state.includes('salt.dashboard.resources.target-eventstream') ||
+            state.includes('salt.dashboard.resources.target-beacons')">
+             <a href="" ng-show="state.includes('salt.dashboard.resources.targets')" class="active" data-trigger="hover" animation="none" placement="top" container="body" data-title="List" bs-tooltip><span class="ssIcons-icon_listView"></span></a>
+            <a href="" ng-show="state.includes('salt.dashboard.resources.job-history') || state.includes('salt.dashboard.resources.job-history-minion') || state.includes('salt.dashboard.resources.target-reports') || state.includes('salt.dashboard.resources.target-eventstream')" ui-sref="salt.dashboard.resources.targets({targetId: state.params.targetId, view: 'list'})" data-trigger="hover" animation="none" placement="top" container="body" data-title="List" bs-tooltip><span class="ssIcons-icon_listView"></span></a>
+             
+            <a href=""
+                ng-class="{ 'active': mode==2 }"
+                ui-sref="salt.dashboard.resources.targets({targetId: state.params.targetId, view: 'grid'})" ng-hide="true">
+                <span class="ssIcons-icon_iconView"></span>
+            </a>
+            <a href="" ui-sref="salt.dashboard.resources.target-eventstream({targetId: state.params.targetId})"
+                ng-class="{ 'active': state.is('salt.dashboard.resources.target-eventstream') }">
+                <span class="glyphicon glyphicon-list-alt"></span>
+            </a>
+            <a href="" ui-sref="salt.dashboard.resources.target-reports({targetId: state.params.targetId})"
+                ng-class="{ 'active': state.is('salt.dashboard.resources.target-reports') }">
+                <span class="ssIcons-icon_charts"></span>
+            </a>
+            <a ng-show="$root.selectedMinions.length === 0" href="" ui-sref="salt.dashboard.resources.job-history({ targetId: state.params.targetId })"
+                ng-class="{ 'active': state.is('salt.dashboard.resources.job-history') }">
+                <span class="icon-icon_jobHistory"></span>
+            </a>
+            <a ng-show="$root.selectedMinions.length > 0" href="" ui-sref="salt.dashboard.resources.job-history-minion({ targetId: state.params.targetId })"
+                ng-class="{ 'active': state.is('salt.dashboard.resources.job-history-minion') }">
+                <span class="icon-icon_jobHistory"></span>
+            </a>
+            
+            <a ui-sref="salt.dashboard.resources.target-beacons({ targetId: state.params.targetId, view: 'list' })" ng-hide="true"
+                ng-class="{ 'active': state.is('salt.dashboard.resources.target-beacons') }">
+                <span class="icon-icon_beacon salt-icon-2x-med"></span>
+            </a>
+        </span>
+        </span>
+
+        <!-- Reports -->
+        <a href="" ng-show="state.includes('salt.dashboard.resources.minions') || state.includes('salt.dashboard.resources.minions-reports') || state.includes('salt.dashboard.resources.minions-job-history')" class="navbar-link" ui-sref="salt.dashboard.resources.minions-reports" ng-class="{ 'active': state.is('salt.dashboard.resources.minions-reports') }" data-trigger="hover" animation="none" placement="top" container="body" data-title="Reports" bs-tooltip><span class="ssIcons-icon_charts"></span></a>
+        <a href="" ng-show="state.includes('salt.dashboard.resources.quicktargets-job-history') || state.includes('salt.dashboard.resources.quicktargets') || state.includes('salt.dashboard.resources.quicktargets-reports')" class="navbar-link" ui-sref="salt.dashboard.resources.quicktargets-reports" ng-class=" { 'active': state.is('salt.dashboard.resources.quicktargets-reports') }" data-trigger="hover" animation="none" placement="top" container="body" data-title="Reports" bs-tooltip><span class="ssIcons-icon_charts"></span></a>
+
+        <!-- job History -->
+        <a href="" ng-if="selectedMinions.length > 0" ng-show="state.includes('salt.dashboard.resources.minions')
+                                                            || state.includes('salt.dashboard.resources.minions-job-history')
+                                                            || state.includes('salt.dashboard.resources.minions-reports')"
+                   class="navbar-link" ui-sref="salt.dashboard.resources.minions-job-history({view: 'list'})" ng-class="{ 'active': state.is('salt.dashboard.resources.minions-job-history') }" data-trigger="hover" animation="none" placement="top" container="body" data-title="Job History" bs-tooltip><span class="icon-icon_jobHistory"></span></a>
+
+        <a href="" ng-if="selectedMinions.length === 0" ng-show="state.includes('salt.dashboard.resources.minions')
+                                                            || state.includes('salt.dashboard.resources.minions-job-history')
+                                                            || state.includes('salt.dashboard.resources.minions-reports')"
+                   class="navbar-link" ng-class="{ 'active': state.is('salt.dashboard.resources.minions-job-history') }" data-trigger="hover" animation="none" placement="top" container="body" data-title="Job History" bs-tooltip><span class="icon-icon_jobHistory"></span></a>
+
+        <a href="" ng-if="selectedMinions.length > 0" ng-show="state.includes('salt.dashboard.resources.quicktargets')
+                                                            || state.includes('salt.dashboard.resources.quicktargets-job-history')
+                                                            || state.includes('salt.dashboard.resources.quicktargets-reports')"
+                   class="navbar-link" ui-sref="salt.dashboard.resources.quicktargets-job-history({view: 'list'})" ng-class="{ 'active': state.is('salt.dashboard.resources.quicktargets-job-history') }" data-trigger="hover" animation="none" placement="top" container="body" data-title="Job History" bs-tooltip><span class="icon-icon_jobHistory"></span></a>
+
+        <a href="" ng-if="selectedMinions.length === 0" ng-show="state.includes('salt.dashboard.resources.quicktargets')
+                                                            || state.includes('salt.dashboard.resources.quicktargets-job-history')
+                                                            || state.includes('salt.dashboard.resources.quicktargets-reports')"
+                   class="navbar-link" ng-class="{ 'active': state.is('salt.dashboard.resources.quicktargets-job-history') }" data-trigger="hover" animation="none" placement="top" container="body" data-title="Job History" bs-tooltip><span class="icon-icon_jobHistory"></span></a>
+
+        <!-- Folder Minion History -->
+        <a href="" ng-if="selectedMinions.length > 0" ng-show="state.includes('salt.dashboard.resources.folder')" class="navbar-link" ui-sref="salt.dashboard.resources.folder-minions-job-history({ folderId: state.params.folderId })" ng-class="{ 'active': state.is('salt.dashboard.resources.folder-minions-job-history') }" data-trigger="hover" animation="none" placement="top" container="body" data-title="Job History" bs-tooltip><span class="icon-icon_jobHistory"></span></a>
+        <a href="" ng-if="selectedMinions.length === 0" ng-show="state.includes('salt.dashboard.resources.folder-minions-job-history')" class="navbar-link" ng-class="{ 'active': state.is('salt.dashboard.resources.folder-minions-job-history') }" data-trigger="hover" animation="none" placement="top" container="body" data-title="Job History" bs-tooltip><span class="icon-icon_jobHistory"></span></a>
+
+
+
+        <!-- Beacons -->
+        <!-- <span ng-show="state.includes('salt.dashboard.resources.targets') || state.includes('salt.dashboard.resources.job-history') || state.includes('salt.dashboard.resources.target-reports') || state.includes('salt.dashboard.resources.target-beacons')">
+            <a ui-sref="salt.dashboard.resources.target-beacons({ targetId: state.params.targetId, view: 'list' })" class="navbar-link" ng-class="{ 'active': state.is('salt.dashboard.resources.target-beacons') }"><span class="icon-icon_beacon salt-icon-2x-med"></span></a>
+        </span> -->
+
+    </p>
+
+    <!-- Pagination Controls Masters Page on Resource and Settings -->
+
+    <div id="master-pagination" class="pagination-btns pull-right" ng-show="showPagination && (state.includes('salt.dashboard.resources.masters') || state.includes('salt.dashboard.settings.masters.list'))">
+        <button type="button" class="btn btn-default pull-left" ng-click="getMastersFirst()" ng-disabled="previousPage === 0">
+            First
+        </button>
+        <button type="button" class="btn btn-default pull-left" ng-click="getMastersPrev()" ng-disabled="previousPage === 0">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </button>
+        <div class="pagination_text pull-left">Page {{ currentPage }} of {{ totalPages }}</div>
+        <button type="button" class="btn btn-default pull-left" ng-click="getMastersNext()" ng-disabled="nextPage === 0">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </button>
+        <button type="button" class="btn btn-default pull-left" ng-click="getMastersLast()" ng-disabled="nextPage === 0">
+         Last
+        </button>
+    </div>
+
+
+    <!-- Pagination Controls Minions Page -->
+    <div id="minion-pagination" class="pagination-btns pull-right" ng-show="showPagination && state.includes('salt.dashboard.resources.minions')">
+        <button type="button" class="btn btn-default pull-left" ng-click="getMinionsFirst()" ng-disabled="previousPage === 0">
+            First
+        </button>
+        <button type="button" class="btn btn-default pull-left" ng-click="getMinionsPrev()" ng-disabled="previousPage === 0">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </button>
+        <div class="pagination_text pull-left">Page {{ currentPage }} of {{ totalPages }}</div>
+            <button type="button" class="btn btn-default pull-left" ng-click="getMinionsNext()" ng-disabled="nextPage === 0">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+            </button>
+            <button type="button" class="btn btn-default pull-left" ng-click="getMinionsLast()" ng-disabled="nextPage === 0">
+                Last
+            </button>
+    </div>
+
+    <!-- Pagination Controls Quick Target Page -->
+    <div id="minion-pagination" class="pagination-btns pull-right" ng-show="showQtPagination && state.includes('salt.dashboard.resources.quicktargets')">
+        <button type="button" class="btn btn-default pull-left" ng-click="getQtMinionsFirst()" ng-disabled="previousQtPage === 0">
+            First
+        </button>
+        <button type="button" class="btn btn-default pull-left" ng-click="getQtMinionsPrev()" ng-disabled="previousQtPage === 0">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </button>
+        <div class="pagination_text pull-left">Page {{ currentQtPage }} of {{ totalQtPages }}</div>
+        <button type="button" class="btn btn-default pull-left" ng-click="getQtMinionsNext()" ng-disabled="nextQtPage === 0">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </button>
+        <button type="button" class="btn btn-default pull-left" ng-click="getQtMinionsLast()" ng-disabled="nextQtPage === 0">
+            Last
+        </button>
+    </div>
+
+    <!-- Pagination Controls Target Page -->
+    <div ng-show="showTPagination && state.includes('salt.dashboard.resources.targets')" id="minion-pagination" class="pagination-btns pull-right">
+        <button type="button" class="btn btn-default pull-left" ng-click="getTargetMinionsFirst()" ng-disabled="previousTPage === 0">
+            First
+        </button>
+        <button type="button" class="btn btn-default pull-left" ng-click="getTargetMinionsPrev()" ng-disabled="previousTPage === 0">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </button>
+        <div class="pagination_text pull-left">Page {{ currentTPage }} of {{ totalTPages }}</div>
+            <button type="button" class="btn btn-default pull-left" ng-click="getTargetMinionsNext()" ng-disabled="nextTPage === 0">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+            </button>
+            <button type="button" class="btn btn-default pull-left" ng-click="getTargetMinionsLast()" ng-disabled="nextTPage === 0">
+                Last
+            </button>
+    </div>
+    
+    
+        <!-- Pagination Controls Folder Page -->
+    <div ng-show="showTPagination && state.includes('salt.dashboard.resources.folder')" id="minion-pagination" class="pagination-btns pull-right">
+        <button type="button" class="btn btn-default pull-left" ng-click="getFolderMinionsFirst()" ng-disabled="previousTPage === 0">
+            First
+        </button>
+        <button type="button" class="btn btn-default pull-left" ng-click="getFolderMinionsPrev()" ng-disabled="previousTPage === 0">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </button>
+        <div class="pagination_text pull-left">Page {{ currentTPage }} of {{ totalTPages }}</div>
+            <button type="button" class="btn btn-default pull-left" ng-click="getFolderMinionsNext()" ng-disabled="nextTPage === 0">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+            </button>
+            <button type="button" class="btn btn-default pull-left" ng-click="getFolderMinionsLast()" ng-disabled="nextTPage === 0">
+                Last
+            </button>
+    </div>
+
+
+    <!-- Pagination Controls Settings User Page -->
+    <div id="user-pagination" class="pagination-btns pull-right" ng-show="showPagination && state.includes('salt.dashboard.settings.users.list')">
+        <button type="button" class="btn btn-default pull-left" ng-click="getUsersFirst()" ng-disabled="previousPage === 0">
+            First
+        </button>
+        <button type="button" class="btn btn-default pull-left" ng-click="getUsersPrev()" ng-disabled="previousPage === 0">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </button>
+        <div class="pagination_text pull-left">Page {{ currentPage }} of {{ totalPages }}</div>
+        <button type="button" class="btn btn-default pull-left" ng-click="getUsersNext()" ng-disabled="nextPage === 0">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </button>
+        <button type="button" class="btn btn-default pull-left" ng-click="getUsersLast()" ng-disabled="nextPage === 0">
+            Last
+        </button>
+    </div>
+    
+     <!-- Pagination Controls Minions History Page -->
+    <div id="history-pagination" class="pagination-btns pull-right" ng-show="showMinionHistoryPagination && state.includes('salt.dashboard.resources.minions-job-history')">
+        <button type="button" class="btn btn-default pull-left" ng-click="getMinionsJobHistoryFirst()" ng-disabled="previousMinionHistoryPage === 0">
+            First
+        </button>
+        <button type="button" class="btn btn-default pull-left" ng-click="getMinionsJobHistoryPrev()" ng-disabled="previousMinionHistoryPage === 0">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </button>
+        <div class="pagination_text pull-left">Page {{ currentMinionHistoryPage }} of {{ totalMinionHistoryPages }}</div>
+        <button type="button" class="btn btn-default pull-left" ng-click="getMinionsJobHistoryNext()" ng-disabled="nextMinionHistoryPage === 0">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </button>
+        <button type="button" class="btn btn-default pull-left" ng-click="getMinionsJobHistoryLast()" ng-disabled="nextMinionHistoryPage === 0">
+            Last
+        </button>
+    </div>
+
+</div>

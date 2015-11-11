@@ -1,0 +1,155 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>SUSE Installation</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="SUSE Installation">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="suse-installation">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="suse-installation">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">SUSE Installation</h1>
+                        <div class="body conbody">
+                           <p class="p">With openSUSE 13.1, Salt 0.16.4 has been available in the primary repositories.
+                              The devel:language:python repo will have more up to date versions of salt,
+                              all package development will be done there.
+                           </p>
+                           
+                           <div class="section" id="suse-installation__installation">
+                              <h2 class="title sectiontitle">Installation</h2>
+                              <p class="p">Salt can be installed using <tt class="ph tt">zypper</tt> and is available in the standard openSUSE 13.1
+                                 repositories.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="suse-installation__stable-release">
+                              <h2 class="title sectiontitle">Stable Release</h2>
+                              <p class="p">Salt is packaged separately for the minion and the master. It is necessary only to
+                                 install the appropriate package for the role the machine will play. Typically, there
+                                 will be one master and multiple minions.
+                              </p>
+                              <pre class="pre codeblock language-bash">zypper install salt-master
+zypper install salt-minion</pre>
+                              </div>
+                           
+                           <div class="section" id="suse-installation__post-installation-tasks-opensuse">
+                              <h2 class="title sectiontitle">Post-installation tasks openSUSE</h2>
+                              <p class="p"><strong class="ph b">Master</strong></p>
+                              
+                              <p class="p">To have the Master start automatically at boot time:</p>
+                              <pre class="pre codeblock language-bash">systemctl enable salt-master.service</pre>
+                              <p class="p">To start the Master:</p>
+                              <pre class="pre codeblock language-bash">systemctl start salt-master.service</pre>
+                              <p class="p"><strong class="ph b">Minion</strong></p>
+                              
+                              <p class="p">To have the Minion start automatically at boot time:</p>
+                              <pre class="pre codeblock language-bash">systemctl enable salt-minion.service</pre>
+                              <p class="p">To start the Minion:</p>
+                              <pre class="pre codeblock language-bash">systemctl start salt-minion.service</pre>
+                              </div>
+                           
+                           <div class="section" id="suse-installation__post-installation-tasks-sles">
+                              <h2 class="title sectiontitle">Post-installation tasks SLES</h2>
+                              <p class="p"><strong class="ph b">Master</strong></p>
+                              
+                              <p class="p">To have the Master start automatically at boot time:</p>
+                              <pre class="pre codeblock language-bash">chkconfig salt-master on</pre>
+                              <p class="p">To start the Master:</p>
+                              <pre class="pre codeblock language-bash">rcsalt-master start</pre>
+                              <p class="p"><strong class="ph b">Minion</strong></p>
+                              
+                              <p class="p">To have the Minion start automatically at boot time:</p>
+                              <pre class="pre codeblock language-bash">chkconfig salt-minion on</pre>
+                              <p class="p">To start the Minion:</p>
+                              <pre class="pre codeblock language-bash">rcsalt-minion start</pre>
+                              </div>
+                           
+                           <div class="section head3" id="suse-installation__unstable-release">
+                              <h2 class="title sectiontitle">Unstable Release</h2>
+                           </div>
+                           
+                           <div class="section head3" id="suse-installation__opensuse">
+                              <h2 class="title sectiontitle">openSUSE</h2>
+                              <p class="p">For openSUSE Factory run the following as root:</p>
+                              <pre class="pre codeblock language-bash">zypper addrepo http://download.opensuse.org/repositories/devel:languages:python/openSUSE_Factory/devel:languages:python.repo
+zypper refresh
+zypper install salt salt-minion salt-master</pre>
+                              <p class="p">For openSUSE 13.1 run the following as root:</p>
+                              <pre class="pre codeblock language-bash">zypper addrepo http://download.opensuse.org/repositories/devel:languages:python/openSUSE_13.1/devel:languages:python.repo
+zypper refresh
+zypper install salt salt-minion salt-master</pre>
+                              <p class="p">For openSUSE 12.3 run the following as root:</p>
+                              <pre class="pre codeblock language-bash">zypper addrepo http://download.opensuse.org/repositories/devel:languages:python/openSUSE_12.3/devel:languages:python.repo
+zypper refresh
+zypper install salt salt-minion salt-master</pre>
+                              <p class="p">For openSUSE 12.2 run the following as root:</p>
+                              <pre class="pre codeblock language-bash">zypper addrepo http://download.opensuse.org/repositories/devel:languages:python/openSUSE_12.2/devel:languages:python.repo
+zypper refresh
+zypper install salt salt-minion salt-master</pre>
+                              <p class="p">For openSUSE 12.1 run the following as root:</p>
+                              <pre class="pre codeblock language-bash">zypper addrepo http://download.opensuse.org/repositories/devel:languages:python/openSUSE_12.1/devel:languages:python.repo
+zypper refresh
+zypper install salt salt-minion salt-master</pre>
+                              <p class="p">For bleeding edge python Factory run the following as root:</p>
+                              <pre class="pre codeblock language-bash">zypper addrepo http://download.opensuse.org/repositories/devel:languages:python/bleeding_edge_python_Factory/devel:languages:python.repo
+zypper refresh
+zypper install salt salt-minion salt-master</pre>
+                              </div>
+                           
+                           <div class="section head3" id="suse-installation__suse-linux-enterprise">
+                              <h2 class="title sectiontitle">Suse Linux Enterprise</h2>
+                              <p class="p">For SLE 11 SP3 run the following as root:</p>
+                              <pre class="pre codeblock language-bash">zypper addrepo http://download.opensuse.org/repositories/devel:languages:python/SLE_11_SP3/devel:languages:python.repo
+zypper refresh
+zypper install salt salt-minion salt-master</pre>
+                              <p class="p">For SLE 11 SP2 run the following as root:</p>
+                              <pre class="pre codeblock language-bash">zypper addrepo http://download.opensuse.org/repositories/devel:languages:python/SLE_11_SP2/devel:languages:python.repo
+zypper refresh
+zypper install salt salt-minion salt-master</pre>
+                              <p class="p">Now go to the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/index.html#configuring-salt">Configuring Salt</a> page.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,415 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.renderers.pyobjects</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.renderers.pyobjects">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../renderers.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-renderers-pyobjects">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-renderers-pyobjects">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.renderers.pyobjects</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-renderers-pyobjects__module-salt.renderers.pyobjects"></span></p>
+                              
+                              <p class="p">Python renderer that includes a Pythonic Object based interface</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">maintainer</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Evan Borgstrom &lt;<a class="xref" href="mailto:evan@borgstrom.ca" target="_blank">evan@borgstrom.ca</a>&gt;
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">Let's take a look at how you use pyobjects in a state file. Here's a quick
+                                 example that ensures the <tt class="ph tt">/tmp</tt> directory is in the correct state.
+                              </p>
+                              <pre class="pre codeblock language-python"> #!pyobjects
+
+ File.managed("/tmp", user='root', group='root', mode='1777')</pre>
+                              <p class="p">Nice and Pythonic!</p>
+                              
+                              <p class="p">By using the "shebang" syntax to switch to the pyobjects renderer we can now
+                                 write our state data using an object based interface that should feel at home
+                                 to python developers. You can import any module and do anything that you'd
+                                 like (with caution, importing sqlalchemy, django or other large frameworks has
+                                 not been tested yet). Using the pyobjects renderer is exactly the same as
+                                 using the built-in Python renderer with the exception that pyobjects provides
+                                 you with an object based interface for generating state data.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="creating-state-data">
+                           <h2 class="title topictitle2">Creating state data</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">Pyobjects takes care of creating an object for each of the available states on
+                                    the minion. Each state is represented by an object that is the CamelCase
+                                    version of its name (i.e. <tt class="ph tt">File</tt>, <tt class="ph tt">Service</tt>, <tt class="ph tt">User</tt>, etc), and these
+                                    objects expose all of their available state functions (i.e. <tt class="ph tt">File.managed</tt>,
+                                    <tt class="ph tt">Service.running</tt>, etc).
+                                 </p>
+                                 
+                                 <p class="p">The name of the state is split based upon underscores (<tt class="ph tt">_</tt>), then each part
+                                    is capitalized and finally the parts are joined back together.
+                                 </p>
+                                 
+                                 <p class="p">Some examples:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">postgres_user</tt> becomes <tt class="ph tt">PostgresUser</tt></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><tt class="ph tt">ssh_known_hosts</tt> becomes <tt class="ph tt">SshKnownHosts</tt></p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="context-managers-and-requisites">
+                           <h2 class="title topictitle2">Context Managers and requisites</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">How about something a little more complex. Here we're going to get into the
+                                    core of how to use pyobjects to write states.
+                                 </p>
+                                 <pre class="pre codeblock language-python"> #!pyobjects
+
+ with Pkg.installed("nginx"):
+     Service.running("nginx", enable=True)
+
+     with Service("nginx", "watch_in"):
+         File.managed("/etc/nginx/conf.d/mysite.conf",
+                      owner='root', group='root', mode='0444',
+                      source='salt://nginx/mysite.conf')</pre>
+                                 <p class="p">The objects that are returned from each of the magic method calls are setup to
+                                    be used a Python context managers (<tt class="ph tt">with</tt>) and when you use them as such all
+                                    declarations made within the scope will <strong class="ph b">automatically</strong> use the enclosing
+                                    state as a requisite!
+                                 </p>
+                                 
+                                 <p class="p">The above could have also been written use direct requisite statements as.</p>
+                                 <pre class="pre codeblock language-python"> #!pyobjects
+
+ Pkg.installed("nginx")
+ Service.running("nginx", enable=True, require=Pkg("nginx"))
+ File.managed("/etc/nginx/conf.d/mysite.conf",
+              owner='root', group='root', mode='0444',
+              source='salt://nginx/mysite.conf',
+              watch_in=Service("nginx"))</pre>
+                                 <p class="p">You can use the direct requisite statement for referencing states that are
+                                    generated outside of the current file.
+                                 </p>
+                                 <pre class="pre codeblock language-python"> #!pyobjects
+
+ # some-other-package is defined in some other state file
+ Pkg.installed("nginx", require=Pkg("some-other-package"))</pre>
+                                 <p class="p">The last thing that direct requisites provide is the ability to select which
+                                    of the SaltStack requisites you want to use (require, require_in, watch,
+                                    watch_in, use &amp; use_in) when using the requisite as a context manager.
+                                 </p>
+                                 <pre class="pre codeblock language-python"> #!pyobjects
+
+ with Service("my-service", "watch_in"):
+     ...</pre>
+                                 <p class="p">The above example would cause all declarations inside the scope of the context
+                                    manager to automatically have their <tt class="ph tt">watch_in</tt> set to
+                                    <tt class="ph tt">Service("my-service")</tt>.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="including-and-extending">
+                           <h2 class="title topictitle2">Including and Extending</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">To include other states use the <tt class="ph tt">include()</tt> function. It takes one name per
+                                    state to include.
+                                 </p>
+                                 
+                                 <p class="p">To extend another state use the <tt class="ph tt">extend()</tt> function on the name when creating
+                                    a state.
+                                 </p>
+                                 <pre class="pre codeblock language-python"> #!pyobjects
+
+ include('http', 'ssh')
+
+ Service.running(extend('apache'),
+                 watch=[File('/etc/httpd/extra/httpd-vhosts.conf')])</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="importing-from-other-state-files">
+                           <h2 class="title topictitle2">Importing from other state files</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">Like any Python project that grows you will likely reach a point where you want
+                                    to create reusability in your state tree and share objects between state files,
+                                    Map Data (described below) is a perfect example of this.
+                                 </p>
+                                 
+                                 <p class="p">To facilitate this Python's <tt class="ph tt">import</tt> statement has been augmented to allow
+                                    for a special case when working with a Salt state tree. If you specify a Salt
+                                    url (<tt class="ph tt">salt://...</tt>) as the target for importing from then the pyobjects
+                                    renderer will take care of fetching the file for you, parsing it with all of
+                                    the pyobjects features available and then place the requested objects in the
+                                    global scope of the template being rendered.
+                                 </p>
+                                 
+                                 <p class="p">This works for both types of import statements, <tt class="ph tt">import X</tt> and
+                                    <tt class="ph tt">from X import Y</tt>.
+                                 </p>
+                                 <pre class="pre codeblock language-python"> #!pyobjects
+
+ import salt://myfile.sls
+ from salt://something/data.sls import Object</pre>
+                                 <p class="p">See the Map Data section for a more practical use.</p>
+                                 
+                                 <p class="p">Caveats:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">You cannot use the <tt class="ph tt">as</tt> syntax, you can only import objects using their
+                                          existing name.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">Imported objects are ALWAYS put into the global scope of your template,
+                                          regardless of where your import statement is.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt-object">
+                           <h2 class="title topictitle2">Salt object</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">In the spirit of the object interface for creating state data pyobjects also
+                                    provides a simple object interface to the <tt class="ph tt">__salt__</tt> object.
+                                 </p>
+                                 
+                                 <p class="p">A function named <tt class="ph tt">salt</tt> exists in scope for your sls files and will dispatch
+                                    its attributes to the <tt class="ph tt">__salt__</tt> dictionary.
+                                 </p>
+                                 
+                                 <p class="p">The following lines are functionally equivalent:</p>
+                                 <pre class="pre codeblock language-python"> #!pyobjects
+
+ ret = salt.cmd.run(bar)
+ ret = __salt__['cmd.run'](bar)</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="pillar-grain-mine-config-data">
+                           <h2 class="title topictitle2">Pillar, grain, mine &amp; config data</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">Pyobjects provides shortcut functions for calling <tt class="ph tt">pillar.get</tt>,
+                                    <tt class="ph tt">grains.get</tt>, <tt class="ph tt">mine.get</tt> &amp; <tt class="ph tt">config.get</tt> on the <tt class="ph tt">__salt__</tt> object. This
+                                    helps maintain the readability of your state files.
+                                 </p>
+                                 
+                                 <p class="p">Each type of data can be access by a function of the same name: <tt class="ph tt">pillar()</tt>,
+                                    <tt class="ph tt">grains()</tt>, <tt class="ph tt">mine()</tt> and <tt class="ph tt">config()</tt>.
+                                 </p>
+                                 
+                                 <p class="p">The following pairs of lines are functionally equivalent:</p>
+                                 <pre class="pre codeblock language-python"> #!pyobjects
+
+ value = pillar('foo:bar:baz', 'qux')
+ value = __salt__['pillar.get']('foo:bar:baz', 'qux')
+
+ value = grains('pkg:apache')
+ value = __salt__['grains.get']('pkg:apache')
+
+ value = mine('os:Fedora', 'network.interfaces', 'grain')
+ value = __salt__['mine.get']('os:Fedora', 'network.interfaces', 'grain')
+
+ value = config('foo:bar:baz', 'qux')
+ value = __salt__['config.get']('foo:bar:baz', 'qux')</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="map-data">
+                           <h2 class="title topictitle2">Map Data</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">When building complex states or formulas you often need a way of building up a
+                                    map of data based on grain data. The most common use of this is tracking the
+                                    package and service name differences between distributions.
+                                 </p>
+                                 
+                                 <p class="p">To build map data using pyobjects we provide a class named Map that you use to
+                                    build your own classes with inner classes for each set of values for the
+                                    different grain matches.
+                                 </p>
+                                 <pre class="pre codeblock language-python"> #!pyobjects
+
+ class Samba(Map):
+     merge = 'samba:lookup'
+
+     class Debian:
+         server = 'samba'
+         client = 'samba-client'
+         service = 'samba'
+
+     class Ubuntu:
+         __grain__ = 'os'
+         service = 'smbd'
+
+     class RedHat:
+         server = 'samba'
+         client = 'samba'
+         service = 'smb'</pre>
+                                 <p class="p">To use this new data you can import it into your state file and then access
+                                    your attributes. To access the data in the map you simply access the attribute
+                                    name on the base class that is extending Map. Assuming the above Map was in the
+                                    file <tt class="ph tt">samba/map.sls</tt>, you could do the following.
+                                 </p>
+                                 <pre class="pre codeblock language-python"> #!pyobjects
+
+ from salt://samba/map.sls import Samba
+
+ with Pkg.installed("samba", names=[Samba.server, Samba.client]):
+     Service.running("samba", name=Samba.service)</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="todo">
+                           <h2 class="title topictitle2">TODO</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">Interface for working with reactor files</p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.renderers.pyobjects.load_states">
+                              <h3 class="title topictitle3">load_states</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.renderers.pyobjects.load_states( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">This loads our states into the salt __context__</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.renderers.pyobjects.render">
+                              <h3 class="title topictitle3">render</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.renderers.pyobjects.render(
+								template,
+								saltenv='base',
+								sls='',
+								salt_data=True,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

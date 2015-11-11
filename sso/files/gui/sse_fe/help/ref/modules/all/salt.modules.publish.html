@@ -1,0 +1,226 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.publish</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.publish">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-publish">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-publish">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.publish</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-publish__module-salt.modules.publish"></span></p>
+                              
+                              <p class="p">Publish a command from a minion to a target</p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.publish.full_data">
+                           <h2 class="title topictitle2">full_data</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.publish.full_data(
+								tgt,
+								fun,
+								arg=None,
+								expr_form='glob',
+								returner='',
+								timeout=5
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the full data about the publication, this is invoked in the same
+                                    way as the publish function
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt system.example.com publish.full_data '*' cmd.run 'ls -la /tmp'</pre>
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">Attention</strong><p class="p">If you need to pass a value to a function argument and that value
+                                       contains an equal sign, you <strong class="ph b">must</strong> include the argument name.
+                                       For example:
+                                    </p>
+                                    <pre class="pre codeblock language-bash">salt '*' publish.full_data test.kwarg arg='cheese=spam'</pre>
+                                    </aside>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.publish.publish">
+                           <h2 class="title topictitle2">publish</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.publish.publish(
+								tgt,
+								fun,
+								arg=None,
+								expr_form='glob',
+								returner='',
+								timeout=5
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Publish a command from the minion out to other minions.</p>
+                                 
+                                 <p class="p">Publications need to be enabled on the Salt master and the minion
+                                    needs to have permission to publish the command. The Salt master
+                                    will also prevent a recursive publication loop, this means that a
+                                    minion cannot command another minion to command another minion as
+                                    that would create an infinite command loop.
+                                 </p>
+                                 
+                                 <p class="p">The expr_form argument is used to pass a target other than a glob into
+                                    the execution, the available options are:
+                                 </p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">glob</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">pcre</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">grain</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">grain_pcre</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">pillar</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">ipcidr</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">range</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">compound</p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">Note that for pillar matches must be exact, both in the pillar matcher
+                                    and the compound matcher. No globbing is supported.
+                                 </p>
+                                 
+                                 <p class="p">The arguments sent to the minion publish function are separated with
+                                    commas. This means that for a minion executing a command with multiple
+                                    args it will look like this:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt system.example.com publish.publish '*' user.add 'foo,1020,1020'
+salt system.example.com publish.publish 'os:Fedora' network.interfaces '' grain</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt system.example.com publish.publish '*' cmd.run 'ls -la /tmp'</pre>
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">Attention</strong><p class="p">If you need to pass a value to a function argument and that value
+                                       contains an equal sign, you <strong class="ph b">must</strong> include the argument name.
+                                       For example:
+                                    </p>
+                                    <pre class="pre codeblock language-bash">salt '*' publish.publish test.kwarg arg='cheese=spam'</pre>
+                                    <p class="p">Multiple keyword arguments should be passed as a list.</p>
+                                    <pre class="pre codeblock language-bash">salt '*' publish.publish test.kwarg arg="['cheese=spam','spam=cheese']"</pre>
+                                    </aside>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.publish.runner">
+                           <h2 class="title topictitle2">runner</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.publish.runner(
+								fun,
+								arg=None,
+								timeout=5
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Execute a runner on the master and return the data from the runner
+                                    function
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt publish.runner manage.down</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

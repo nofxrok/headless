@@ -1,0 +1,217 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Getting Started With Parallels</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Getting Started With Parallels">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/cloud-providers.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="getting-started-with-parallels">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="getting-started-with-parallels">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Getting Started With Parallels</h1>
+                        <div class="body conbody">
+                           <p class="p">Parallels Cloud Server is a product by Parallels that delivers a cloud hosting
+                              solution. The PARALLELS module for Salt Cloud enables you to manage instances
+                              hosted by a provider using PCS. Further information can be found at:
+                           </p>
+                           
+                           <p class="p"><a class="xref" href="http://www.parallels.com/products/pcs/" target="_blank">http://www.parallels.com/products/pcs/</a></p>
+                           
+                           <ul class="ul">
+                              <li class="li">
+                                 <p class="p">Using the old format, set up the cloud configuration at <tt class="ph tt">/etc/salt/cloud</tt>:
+                                 </p>
+                                 
+                              </li>
+                              
+                           </ul>
+                           <pre class="pre codeblock language-yaml"># Set up the location of the salt master
+#
+minion:
+    master: saltmaster.example.com
+
+# Set the PARALLELS access credentials (see below)
+#
+PARALLELS.user: myuser
+PARALLELS.password: badpass
+
+# Set the access URL for your PARALLELS provider
+#
+PARALLELS.url: https://api.cloud.xmission.com:4465/paci/v1.0/</pre>
+                           <ul class="ul">
+                              <li class="li">
+                                 <p class="p">Using the new format, set up the cloud configuration at
+                                    <tt class="ph tt">/etc/salt/cloud.providers</tt> or
+                                    <tt class="ph tt">/etc/salt/cloud.providers.d/parallels.conf</tt>:
+                                 </p>
+                                 
+                              </li>
+                              
+                           </ul>
+                           <pre class="pre codeblock language-yaml">my-parallels-config:
+  # Set up the location of the salt master
+  #
+  minion:
+    master: saltmaster.example.com
+
+  # Set the PARALLELS access credentials (see below)
+  #
+  user: myuser
+  password: badpass
+
+  # Set the access URL for your PARALLELS provider
+  #
+  url: https://api.cloud.xmission.com:4465/paci/v1.0/
+  provider: parallels</pre>
+                           <div class="section" id="getting-started-with-parallels__access-credentials">
+                              <h2 class="title sectiontitle">Access Credentials</h2>
+                              <p class="p">The <tt class="ph tt">user</tt>, <tt class="ph tt">password</tt>, and <tt class="ph tt">url</tt> will be provided to you by your cloud
+                                 provider. These are all required in order for the PARALLELS driver to work.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="getting-started-with-parallels__cloud-profiles">
+                              <h2 class="title sectiontitle">Cloud Profiles</h2>
+                              <p class="p">Set up an initial profile at <tt class="ph tt">/etc/salt/cloud.profiles</tt> or
+                                 <tt class="ph tt">/etc/salt/cloud.profiles.d/parallels.conf</tt>:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Using the old cloud configuration format:</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              <pre class="pre codeblock language-yaml">parallels-ubuntu:
+    provider: parallels
+    image: ubuntu-12.04-x86_64</pre>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Using the new cloud configuration format and the cloud configuration example
+                                       from above:
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              <pre class="pre codeblock language-yaml">parallels-ubuntu:
+    provider: my-parallels-config
+    image: ubuntu-12.04-x86_64</pre>
+                              <p class="p">The profile can be realized now with a salt command:</p>
+                              <pre class="pre codeblock language-bash"># salt-cloud -p parallels-ubuntu myubuntu</pre>
+                              <p class="p">This will create an instance named <tt class="ph tt">myubuntu</tt> on the cloud provider. The
+                                 minion that is installed on this instance will have an <tt class="ph tt">id</tt> of <tt class="ph tt">myubuntu</tt>.
+                                 If the command was executed on the salt-master, its Salt key will automatically
+                                 be signed on the master.
+                              </p>
+                              
+                              <p class="p">Once the instance has been created with salt-minion installed, connectivity to
+                                 it can be verified with Salt:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt myubuntu test.ping</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-parallels__required-settings">
+                              <h2 class="title sectiontitle">Required Settings</h2>
+                              <p class="p">The following settings are always required for PARALLELS:</p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Using the old cloud configuration format:</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              <pre class="pre codeblock language-yaml">PARALLELS.user: myuser
+PARALLELS.password: badpass
+PARALLELS.url: https://api.cloud.xmission.com:4465/paci/v1.0/</pre>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Using the new cloud configuration format:</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              <pre class="pre codeblock language-yaml">my-parallels-config:
+  user: myuser
+  password: badpass
+  url: https://api.cloud.xmission.com:4465/paci/v1.0/
+  provider: parallels</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-parallels__optional-settings">
+                              <h2 class="title sectiontitle">Optional Settings</h2>
+                              <p class="p">Unlike other cloud providers in Salt Cloud, Parallels does not utilize a
+                                 <tt class="ph tt">size</tt> setting. This is because Parallels allows the end-user to specify a
+                                 more detailed configuration for their instances, than is allowed by many other
+                                 cloud providers. The following options are available to be used in a profile,
+                                 with their default settings listed.
+                              </p>
+                              <pre class="pre codeblock language-yaml"># Description of the instance. Defaults to the instance name.
+desc: &lt;instance_name&gt;
+
+# How many CPU cores, and how fast they are (in MHz)
+cpu_number: 1
+cpu_power: 1000
+
+# How many megabytes of RAM
+ram: 256
+
+# Bandwidth available, in kbps
+bandwidth: 100
+
+# How many public IPs will be assigned to this instance
+ip_num: 1
+
+# Size of the instance disk (in GiB)
+disk_size: 10
+
+# Username and password
+ssh_username: root
+password: &lt;value from PARALLELS.password&gt;
+
+# The name of the image, from ``salt-cloud --list-images parallels``
+image: ubuntu-12.04-x86_64</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

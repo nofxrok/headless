@@ -1,0 +1,38 @@
+<div class="views-forms">
+<div class="modal-header">
+    <h3 class="modal-title">Create New Job</h3>
+</div>
+<alert type="{{ addMastersStatus.type }}" ng-if="!!addMastersStatus" close="clearAlert('add')">{{ addMastersStatus.message }}</alert>
+
+<div class="modal-body">
+    <form id="add-job-form" class="form-horizontal" name="addJobForm" role="form" novalidate>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Job Name</label>
+            <div class="col-xs-9" ng-class="{'has-error': addJobForm.jobname.$error.required}">
+                <input class="form-control" name="jobname" ng-model="master.hostname" required>
+            </div>
+        </div> 
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Module</label>
+            <div class="col-xs-9" ng-class="{'has-error': addJobForm.module.$error.required}">
+                <select class="form-control" name="module" ng-model="master.auth_mode" required>
+                    <option value="pam">pam</option>
+                    <option value="ldap">ldap</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Function</label>
+            <div class="col-xs-9" ng-class="{'has-error': addJobForm.function.$error.required}">
+                <select class="form-control" name="function" ng-model="master.auth_mode" required>
+                    <option value="pam">pam</option>
+                    <option value="ldap">ldap</option>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary site-btn-form" ng-click="addMaster(master)" ng-disabled="addJobForm.$invalid">Save</button>
+    <button class="btn btn-primary site-btn-form" ui-sref="salt.dashboard.jobs.jobs.list" ui-sref-opts="{reload: true}">Cancel</button>
+</div>

@@ -1,0 +1,525 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Reactor System</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Reactor System">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/events-reactors.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="reactor-system">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="reactor-system">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Reactor System</h1>
+                        <div class="body conbody">
+                           <p class="p">Salt version 0.11.0 introduced the reactor system. The premise behind the
+                              reactor system is that with Salt's events and the ability to execute commands,
+                              a logic engine could be put in place to allow events to trigger actions, or
+                              more accurately, reactions.
+                           </p>
+                           
+                           <p class="p">This system binds sls files to event tags on the master. These sls files then
+                              define reactions. This means that the reactor system has two parts. First, the
+                              reactor option needs to be set in the master configuration file.  The reactor
+                              option allows for event tags to be associated with sls reaction files. Second,
+                              these reaction files use highdata (like the state system) to define reactions
+                              to be executed.
+                           </p>
+                           
+                           <div class="section" id="reactor-system__event-system">
+                              <h2 class="title sectiontitle">Event System</h2>
+                              <p class="p">A basic understanding of the event system is required to understand reactors.
+                                 The event system is a local ZeroMQ PUB interface which fires salt events. This
+                                 event bus is an open system used for sending information notifying Salt and
+                                 other systems about operations.
+                              </p>
+                              
+                              <p class="p">The event system fires events with a very specific criteria. Every event has a
+                                 <strong class="ph b">tag</strong>. Event tags allow for fast top level filtering of events. In
+                                 addition to the tag, each event has a data structure. This data structure is a
+                                 dict, which contains information about the event.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="reactor-system__mapping-events-to-reactor-sls-files">
+                              <h2 class="title sectiontitle">Mapping Events to Reactor SLS Files</h2>
+                              <p class="p">Reactor SLS files and event tags are associated in the master config file.
+                                 By default this is /etc/salt/master, or /etc/salt/master.d/reactor.conf.
+                              </p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0: </span>Added Reactor support for <tt class="ph tt">salt://</tt> file paths.
+                              </p>
+                              
+                              <p class="p">In the master config section 'reactor:' is a list of event tags to be matched
+                                 and each event tag has a list of reactor SLS files to be run.
+                              </p>
+                              <pre class="pre codeblock language-yaml">reactor:                            # Master config section "reactor"
+
+  - 'salt/minion/*/start':          # Match tag "salt/minion/*/start"
+    - /srv/reactor/start.sls        # Things to do when a minion starts
+    - /srv/reactor/monitor.sls      # Other things to do
+
+  - 'salt/cloud/*/destroyed':       # Globs can be used to matching tags
+    - /srv/reactor/destroy/*.sls    # Globs can be used to match file names
+
+  - 'myco/custom/event/tag':        # React to custom event tags
+    - salt://reactor/mycustom.sls   # Put reactor files under file_roots</pre>
+                              <p class="p">Reactor sls files are similar to state and pillar sls files.  They are
+                                 by default yaml + Jinja templates and are passed familiar context variables.
+                              </p>
+                              
+                              <p class="p">They differ because of the addition of the <tt class="ph tt">tag</tt> and <tt class="ph tt">data</tt> variables.
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">The <tt class="ph tt">tag</tt> variable is just the tag in the fired event.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">The <tt class="ph tt">data</tt> variable is the event's data dict.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <p class="p">Here is a simple reactor sls:</p>
+                              <pre class="pre codeblock language-yaml">{% if data['id'] == 'mysql1' %}
+highstate_run:
+  local.state.highstate:
+    - tgt: mysql1
+{% endif %}</pre>
+                              <p class="p">This simple reactor file uses Jinja to further refine the reaction to be made.
+                                 If the <tt class="ph tt">id</tt> in the event data is <tt class="ph tt">mysql1</tt> (in other words, if the name of
+                                 the minion is <tt class="ph tt">mysql1</tt>) then the following reaction is defined.  The same
+                                 data structure and compiler used for the state system is used for the reactor
+                                 system. The only difference is that the data is matched up to the salt command
+                                 API and the runner system.  In this example, a command is published to the
+                                 <tt class="ph tt">mysql1</tt> minion with a function of <tt class="ph tt">state.highstate</tt>. Similarly, a runner
+                                 can be called:
+                              </p>
+                              <pre class="pre codeblock language-yaml">{% if data['data']['overstate'] == 'refresh' %}
+overstate_run:
+  runner.state.over
+{% endif %}</pre>
+                              <p class="p">This example will execute the state.overstate runner and initiate an overstate
+                                 execution.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="reactor-system__fire-an-event">
+                              <h2 class="title sectiontitle">Fire an event</h2>
+                              <p class="p">To fire an event from a minion call <tt class="ph tt">event.send</tt></p>
+                              <pre class="pre codeblock language-bash">salt-call event.send 'foo' '{overstate: refresh}'</pre>
+                              <p class="p">After this is called, any reactor sls files matching event tag <tt class="ph tt">foo</tt> will
+                                 execute with <tt class="ph tt">{{ data['data']['overstate'] }}</tt> equal to <tt class="ph tt">'refresh'</tt>.
+                              </p>
+                              
+                              <p class="p">See 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.event.html#salt.modules.event">salt.modules.event</a> for more information.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="reactor-system__knowing-what-event-is-being-fired">
+                              <h2 class="title sectiontitle">Knowing what event is being fired</h2>
+                              <p class="p">The best way to see exactly what events are fired and what data is available in
+                                 each event is to use the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/runners/all/salt.runners.state.html#salt.runners.state.event">state.event runner</a>.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="../event/master_events.html#event-master-events">Common Salt Events</a></p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Example usage:</p>
+                              <pre class="pre codeblock language-bash">salt-run state.event pretty=True</pre>
+                              <p class="p">Example output:</p>
+                              <pre class="pre codeblock language-text">salt/job/20150213001905721678/new       {
+    "_stamp": "2015-02-13T00:19:05.724583",
+    "arg": [],
+    "fun": "test.ping",
+    "jid": "20150213001905721678",
+    "minions": [
+        "jerry"
+    ],
+    "tgt": "*",
+    "tgt_type": "glob",
+    "user": "root"
+}
+salt/job/20150213001910749506/ret/jerry {
+    "_stamp": "2015-02-13T00:19:11.136730",
+    "cmd": "_return",
+    "fun": "saltutil.find_job",
+    "fun_args": [
+        "20150213001905721678"
+    ],
+    "id": "jerry",
+    "jid": "20150213001910749506",
+    "retcode": 0,
+    "return": {},
+    "success": true
+}</pre>
+                              </div>
+                           
+                           <div class="section" id="reactor-system__debugging-the-reactor">
+                              <h2 class="title sectiontitle">Debugging the Reactor</h2>
+                              <p class="p">The best window into the Reactor is to run the master in the foreground with
+                                 debug logging enabled. The output will include when the master sees the event,
+                                 what the master does in response to that event, and it will also include the
+                                 rendered SLS file (or any errors generated while rendering the SLS file).
+                              </p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">Stop the master.</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Start the master manually:</p>
+                                    <pre class="pre codeblock language-bash">salt-master -l debug</pre>
+                                    </li>
+                                 
+                              </ol>
+                              
+                           </div>
+                           
+                           <div class="section" id="reactor-system__understanding-the-structure-of-reactor-formulas">
+                              <h2 class="title sectiontitle">Understanding the Structure of Reactor Formulas</h2>
+                              <p class="p"><strong class="ph b">I.e., when to use `arg` and `kwarg` and when to specify the function
+                                    arguments directly.</strong></p>
+                              
+                              <p class="p">While the reactor system uses the same basic data structure as the state
+                                 system, the functions that will be called using that data structure are
+                                 different functions than are called via Salt's state system. The Reactor can
+                                 call Runner modules using the <span class="keyword title_reference">runner</span> prefix, Wheel modules using the <span class="keyword title_reference">wheel</span>
+                                 prefix, and can also cause minions to run Execution modules using the <span class="keyword title_reference">local</span>
+                                 prefix.
+                              </p>
+                              
+                              <p class="p"><span class="keyword versionmodified">Changed in version 2014.7.0: </span>The <tt class="ph tt">cmd</tt> prefix was renamed to <tt class="ph tt">local</tt> for consistency with other
+                                 parts of Salt. A backward-compatible alias was added for <tt class="ph tt">cmd</tt>.
+                              </p>
+                              
+                              <p class="p">The Reactor runs on the master and calls functions that exist on the master. In
+                                 the case of Runner and Wheel functions the Reactor can just call those
+                                 functions directly since they exist on the master and are run on the master.
+                              </p>
+                              
+                              <p class="p">In the case of functions that exist on minions and are run on minions, the
+                                 Reactor still needs to call a function on the master in order to send the
+                                 necessary data to the minion so the minion can execute that function.
+                              </p>
+                              
+                              <p class="p">The Reactor calls functions exposed in 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/clients/index.html#client-apis">Salt's Python API documentation</a>. and thus the structure of Reactor files very transparently
+                                 reflects the function signatures of those functions.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="reactor-system__calling-execution-modules-on-minions">
+                              <h2 class="title sectiontitle">Calling Execution modules on Minions</h2>
+                              <p class="p">The Reactor sends commands down to minions in the exact same way Salt's CLI
+                                 interface does. It calls a function locally on the master that sends the name
+                                 of the function as well as a list of any arguments and a dictionary of any
+                                 keyword arguments that the minion should use to execute that function.
+                              </p>
+                              
+                              <p class="p">Specifically, the Reactor calls the async version of 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/clients/index.html#salt.client.LocalClient.cmd">this function</a>. You can see that function has 'arg' and 'kwarg'
+                                 parameters which are both values that are sent down to the minion.
+                              </p>
+                              
+                              <p class="p">Executing remote commands maps to the <strong class="ph b">LocalClient</strong> interface which is
+                                 used by the <strong class="ph b">salt</strong> command. This interface more specifically maps to
+                                 the <strong class="ph b">cmd_async</strong> method inside of the <strong class="ph b">LocalClient</strong> class. This
+                                 means that the arguments passed are being passed to the <strong class="ph b">cmd_async</strong>
+                                 method, not the remote method. A field starts with <strong class="ph b">local</strong> to use the
+                                 <strong class="ph b">LocalClient</strong> subsystem. The result is, to execute a remote command,
+                                 a reactor formula would look like this:
+                              </p>
+                              <pre class="pre codeblock language-yaml">clean_tmp:
+  local.cmd.run:
+    - tgt: '*'
+    - arg:
+      - rm -rf /tmp/*</pre>
+                              <p class="p">The <tt class="ph tt">arg</tt> option takes a list of arguments as they would be presented on the
+                                 command line, so the above declaration is the same as running this salt
+                                 command:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' cmd.run 'rm -rf /tmp/*'</pre>
+                              <p class="p">Use the <tt class="ph tt">expr_form</tt> argument to specify a matcher:
+                              </p>
+                              <pre class="pre codeblock language-yaml">clean_tmp:
+  local.cmd.run:
+    - tgt: 'os:Ubuntu'
+    - expr_form: grain
+    - arg:
+      - rm -rf /tmp/*
+
+
+clean_tmp:
+  local.cmd.run:
+    - tgt: 'G@roles:hbase_master'
+    - expr_form: compound
+    - arg:
+      - rm -rf /tmp/*</pre>
+                              <p class="p">Any other parameters in the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/clients/index.html#salt.client.LocalClient.cmd">LocalClient().cmd()</a> method can be specified as well.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="reactor-system__calling-runner-modules-and-wheel-modules">
+                              <h2 class="title sectiontitle">Calling Runner modules and Wheel modules</h2>
+                              <p class="p">Calling Runenr modules and wheel modules from the Reactor uses a more direct
+                                 syntax since the function is being executed locally instead of sending a
+                                 command to a remote system to be executed there. There are no 'arg' or 'kwarg'
+                                 parameters (unless the Runenr function or Wheel function accepts a paramter
+                                 with either of those names.)
+                              </p>
+                              
+                              <p class="p">For example:</p>
+                              <pre class="pre codeblock language-yaml">clear_the_grains_cache_for_all_minions:
+  runner.cache.clear_grains</pre>
+                              <p class="p">If 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/runners/all/salt.runners.cache.html#salt.runners.cache.clear_grains">the runner takes arguments</a> then
+                                 they can be specified as well:
+                              </p>
+                              <pre class="pre codeblock language-yaml">spin_up_more_web_machines:
+  runner.cloud.profile:
+    - prof: centos_6
+    - instances:
+      - web11       # These VM names would be generated via Jinja in a
+      - web12       # real-world example.</pre>
+                              </div>
+                           
+                           <div class="section head3" id="reactor-system__passing-event-data-to-minions-or-orchestrate-as-pillar">
+                              <h2 class="title sectiontitle">Passing event data to Minions or Orchestrate as Pillar</h2>
+                              <p class="p">An interesting trick to pass data from the Reactor script to
+                                 <tt class="ph tt">state.highstate</tt> or <tt class="ph tt">state.sls</tt> is to pass it as inline Pillar data since
+                                 both functions take a keyword argument named <tt class="ph tt">pillar</tt>.
+                              </p>
+                              
+                              <p class="p">The following example uses Salt's Reactor to listen for the event that is fired
+                                 when the key for a new minion is accepted on the master using <tt class="ph tt">salt-key</tt>.
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/etc/salt/master.d/reactor.conf</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">reactor:
+  - 'salt/key':
+    - /srv/salt/haproxy/react_new_minion.sls</pre>
+                              <p class="p">The Reactor then fires a <tt class="ph tt">state.sls</tt> command targeted to the HAProxy servers
+                                 and passes the ID of the new minion from the event to the state file via inline
+                                 Pillar.
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/haproxy/react_new_minion.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">{% if data['act'] == 'accept' and data['id'].startswith('web') %}
+add_new_minion_to_pool:
+  local.state.sls:
+    - tgt: 'haproxy*'
+    - arg:
+      - haproxy.refresh_pool
+    - kwarg:
+        pillar:
+          new_minion: {{ data['id'] }}
+{% endif %}</pre>
+                              <p class="p">The above command is equivalent to the following command at the CLI:</p>
+                              <pre class="pre codeblock language-bash">salt 'haproxy*' state.sls haproxy.refresh_pool 'pillar={new_minion: minionid}'</pre>
+                              <p class="p">This works with Orchestrate files as well:</p>
+                              <pre class="pre codeblock language-yaml">call_some_orchestrate_file:
+  runner.state.orchestrate:
+    - mods: some_orchestrate_file
+    - pillar:
+        stuff: things</pre>
+                              <p class="p">Which is equivalent to the following command at the CLI:</p>
+                              <pre class="pre codeblock language-bash">salt-run state.orchestrate some_orchestrate_file pillar='{stuff: things}'</pre>
+                              <p class="p">Finally, that data is available in the state file using the normal Pillar
+                                 lookup syntax. The following example is grabbing web server names and IP
+                                 addresses from 
+                                 		
+                                 			&nbsp;<a class="xref" href="../mine/index.html#index-0__salt-mine">Salt Mine</a>. If this state is invoked from the
+                                 Reactor then the custom Pillar value from above will be available and the new
+                                 minion will be added to the pool but with the <tt class="ph tt">disabled</tt> flag so that HAProxy
+                                 won't yet direct traffic to it.
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/haproxy/refresh_pool.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">{% set new_minion = salt['pillar.get']('new_minion') %}
+
+listen web *:80
+    balance source
+    {% for server,ip in salt['mine.get']('web*', 'network.interfaces', ['eth0']).items() %}
+    {% if server == new_minion %}
+    server {{ server }} {{ ip }}:80 disabled
+    {% else %}
+    server {{ server }} {{ ip }}:80 check
+    {% endif %}
+    {% endfor %}</pre>
+                              </div>
+                           
+                           <div class="section" id="reactor-system__a-complete-example">
+                              <h2 class="title sectiontitle">A Complete Example</h2>
+                              <p class="p">In this example, we're going to assume that we have a group of servers that
+                                 will come online at random and need to have keys automatically accepted. We'll
+                                 also add that we don't want all servers being automatically accepted. For this
+                                 example, we'll assume that all hosts that have an id that starts with 'ink'
+                                 will be automatically accepted and have state.highstate executed. On top of
+                                 this, we're going to add that a host coming up that was replaced (meaning a new
+                                 key) will also be accepted.
+                              </p>
+                              
+                              <p class="p">Our master configuration will be rather simple. All minions that attempte to
+                                 authenticate will match the <strong class="ph b">tag</strong> of <strong class="ph b">salt/auth</strong>. When it comes
+                                 to the minion key being accepted, we get a more refined <strong class="ph b">tag</strong> that
+                                 includes the minion id, which we can use for matching.
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/etc/salt/master.d/reactor.conf</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">reactor:
+  - 'salt/auth':
+    - /srv/reactor/auth-pending.sls
+  - 'salt/minion/ink*/start':
+    - /srv/reactor/auth-complete.sls</pre>
+                              <p class="p">In this sls file, we say that if the key was rejected we will delete the key on
+                                 the master and then also tell the master to ssh in to the minion and tell it to
+                                 restart the minion, since a minion process will die if the key is rejected.
+                              </p>
+                              
+                              <p class="p">We also say that if the key is pending and the id starts with ink we will
+                                 accept the key. A minion that is waiting on a pending key will retry
+                                 authentication every ten seconds by default.
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/reactor/auth-pending.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">{# Ink server faild to authenticate -- remove accepted key #}
+{% if not data['result'] and data['id'].startswith('ink') %}
+minion_remove:
+  wheel.key.delete:
+    - match: {{ data['id'] }}
+minion_rejoin:
+  local.cmd.run:
+    - tgt: salt-master.domain.tld
+    - arg:
+      - ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "{{ data['id'] }}" 'sleep 10 &amp;&amp; /etc/init.d/salt-minion restart'
+{% endif %}
+
+{# Ink server is sending new key -- accept this key #}
+{% if 'act' in data and data['act'] == 'pend' and data['id'].startswith('ink') %}
+minion_add:
+  wheel.key.accept:
+    - match: {{ data['id'] }}
+{% endif %}</pre>
+                              <p class="p">No if statements are needed here because we already limited this action to just
+                                 Ink servers in the master configuration.
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/reactor/auth-complete.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">{# When an Ink server connects, run state.highstate. #}
+highstate_run:
+  local.state.highstate:
+    - tgt: {{ data['id'] }}
+    - ret: smtp_return</pre>
+                              <p class="p">The above will also return the highstate result data using the <span class="keyword title_reference">smtp_return</span>
+                                 returner. The returner needs to be configured on the minion for this to
+                                 work. See 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/returners/all/salt.returners.smtp_return.html#salt.returners.smtp_return">salt.returners.smtp_return</a> documentation for
+                                 that.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="reactor-system__minion-start-reactor">
+                              <h2 class="title sectiontitle">Syncing Custom Types on Minion Start</h2>
+                              <p class="p">Salt will sync all custom types (by running a 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.saltutil.html#salt.modules.saltutil.sync_all">saltutil.sync_all</a>) on every highstate. However, there is a
+                                 chicken-and-egg issue where, on the initial highstate, a minion will not yet
+                                 have these custom types synced when the top file is first compiled. This can be
+                                 worked around with a simple reactor which watches for <tt class="ph tt">minion_start</tt> events,
+                                 which each minion fires when it first starts up and connects to the master.
+                              </p>
+                              
+                              <p class="p">On the master, create <strong class="ph b">/srv/reactor/sync_grains.sls</strong> with the following
+                                 contents:
+                              </p>
+                              <pre class="pre codeblock language-yaml">sync_grains:
+  local.saltutil.sync_grains:
+    - tgt: {{ data['id'] }}</pre>
+                              <p class="p">And in the master config file, add the following reactor configuration:</p>
+                              <pre class="pre codeblock language-yaml">reactor:
+  - 'minion_start':
+    - /srv/reactor/sync_grains.sls</pre>
+                              <p class="p">This will cause the master to instruct each minion to sync its custom grains
+                                 when it starts, making these grains available when the initial highstate is
+                                 executed.
+                              </p>
+                              
+                              <p class="p">Other types can be synced by replacing <tt class="ph tt">local.saltutil.sync_grains</tt> with
+                                 <tt class="ph tt">local.saltutil.sync_modules</tt>, <tt class="ph tt">local.saltutil.sync_all</tt>, or whatever else
+                                 suits the intended use case.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

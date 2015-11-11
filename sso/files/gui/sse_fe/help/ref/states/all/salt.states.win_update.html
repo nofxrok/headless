@@ -1,0 +1,498 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.win_update</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.win_update">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-win-update">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-win-update">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.win_update</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-win-update__module-salt.states.win_update"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="management-of-the-windows-update-agent">
+                           <h2 class="title topictitle2">Management of the windows update agent</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">Set windows updates to run by category. Default behavior is to install
+                                    all updates that do not require user interaction to complete.
+                                 </p>
+                                 
+                                 <p class="p">Optionally set <tt class="ph tt">category</tt> to a category of your choice to only
+                                    install certain updates. Default is to set to install all available updates.
+                                 </p>
+                                 
+                                 <p class="p">The following example will install all Security and Critical Updates,
+                                    and download but not install standard updates.
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">updates:
+  win_update.installed:
+    - categories:
+      - 'Critical Updates'
+      - 'Security Updates'
+  win_update.downloaded:
+    - categories:
+      - 'Updates'</pre>
+                                 <p class="p">You can also specify a number of features about the update to have a
+                                    fine grain approach to specific types of updates. These are the following
+                                    features/states of updates available for configuring:
+                                 </p>
+                                 <pre class="pre codeblock language-text">'UI' - User interaction required, skipped by default
+'downloaded' - Already downloaded, skipped by default (downloading)
+'present' - Present on computer, included by default (installing)
+'installed' - Already installed, skipped by default
+'reboot' - Reboot required, included by default
+'hidden' - skip those updates that have been hidden.
+'software' - Software updates, included by default
+'driver' - driver updates, skipped by default</pre>
+                                 <p class="p">The following example installs all driver updates that don't require a reboot:</p>
+                                 <pre class="pre codeblock language-yaml">gryffindor:
+  win_update.installed:
+    - includes:
+      - driver: True
+      - software: False
+      - reboot: False</pre>
+                                 <p class="p">To just update your windows machine, add this your sls:</p>
+                                 <pre class="pre codeblock language-yaml">updates:
+  win_update.installed</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.win_update.downloaded">
+                              <h3 class="title topictitle3">downloaded</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.win_update.downloaded(
+								name,
+								categories=None,
+								includes=None,
+								retries=10
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Cache updates for later install.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d430634e79" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d430634e81" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d430634e79" class="stentry propvalue">name:</td>
+                                       
+                                       <td valign="top" headers="d430634e81" class="stentry propdesc">
+                                          <p class="p">if categories is left empty, it will be assumed that you are passing the category
+                                             option
+                                             through the name. These are separate because you can only have one name, but can have
+                                             multiple categories.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d430634e79" class="stentry propvalue">categories:</td>
+                                       
+                                       <td valign="top" headers="d430634e81" class="stentry propdesc">
+                                          <p class="p">the list of categories to be downloaded. These are simply strings in the update's
+                                             information, so there is no enumeration of the categories available. Some known categories:
+                                          </p>
+                                          <pre class="pre codeblock language-text">Updates
+Windows 7
+Critical Updates
+Security Updates
+Update Rollups</pre>
+                                          </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d430634e79" class="stentry propvalue">includes:</td>
+                                       
+                                       <td valign="top" headers="d430634e81" class="stentry propdesc">
+                                          <p class="p">a list of features of the updates to cull by. Available features:</p>
+                                          <pre class="pre codeblock language-text">'UI' - User interaction required, skipped by default
+'downloaded' - Already downloaded, skipped by default (downloading)
+'present' - Present on computer, included by default (installing)
+'installed' - Already installed, skipped by default
+'reboot' - Reboot required, included by default
+'hidden' - skip those updates that have been hidden.
+'software' - Software updates, included by default
+'driver' - driver updates, skipped by default</pre>
+                                          </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d430634e79" class="stentry propvalue">retries</td>
+                                       
+                                       <td valign="top" headers="d430634e81" class="stentry propdesc">
+                                          <p class="p">Number of retries to make before giving up. This is total, not per
+                                             step.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.win_update.installed">
+                              <h3 class="title topictitle3">installed</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.win_update.installed(
+								name,
+								categories=None,
+								includes=None,
+								retries=10
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Install specified windows updates.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d430634e139" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d430634e141" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d430634e139" class="stentry propvalue">name:</td>
+                                       
+                                       <td valign="top" headers="d430634e141" class="stentry propdesc">
+                                          <p class="p">if categories is left empty, it will be assumed that you are passing the category
+                                             option
+                                             through the name. These are separate because you can only have one name, but can have
+                                             multiple categories.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d430634e139" class="stentry propvalue">categories:</td>
+                                       
+                                       <td valign="top" headers="d430634e141" class="stentry propdesc">
+                                          <p class="p">the list of categories to be downloaded. These are simply strings in the update's
+                                             information, so there is no enumeration of the categories available. Some known categories:
+                                          </p>
+                                          <pre class="pre codeblock language-text">Updates
+Windows 7
+Critical Updates
+Security Updates
+Update Rollups</pre>
+                                          </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d430634e139" class="stentry propvalue">includes:</td>
+                                       
+                                       <td valign="top" headers="d430634e141" class="stentry propdesc">
+                                          <p class="p">a list of features of the updates to cull by. Available features:</p>
+                                          <pre class="pre codeblock language-text">'UI' - User interaction required, skipped by default
+'downloaded' - Already downloaded, skipped by default (downloading)
+'present' - Present on computer, included by default (installing)
+'installed' - Already installed, skipped by default
+'reboot' - Reboot required, included by default
+'hidden' - skip those updates that have been hidden.
+'software' - Software updates, included by default
+'driver' - driver updates, skipped by default</pre>
+                                          </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d430634e139" class="stentry propvalue">retries</td>
+                                       
+                                       <td valign="top" headers="d430634e141" class="stentry propdesc">
+                                          <p class="p">Number of retries to make before giving up. This is total, not per
+                                             step.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.win_update.PyWinUpdater">
+                           <h2 class="title topictitle2">PyWinUpdater Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.win_update.PyWinUpdater(
+									categories=None,
+									skipUI=True,
+									skipDownloaded=True,
+									skipInstalled=True,
+									skipReboot=False,
+									skipPresent=True,
+									softwareUpdates=True,
+									driverUpdates=False,
+									skipHidden=True
+									)</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.win_update.PyWinUpdater.AutoSearch">
+                              <h3 class="title topictitle3">PyWinUpdater.AutoSearch Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">AutoSearch( )</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.win_update.PyWinUpdater.Download">
+                              <h3 class="title topictitle3">PyWinUpdater.Download Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">Download( )</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.win_update.PyWinUpdater.GetAvailableCategories">
+                              <h3 class="title topictitle3">PyWinUpdater.GetAvailableCategories Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GetAvailableCategories( )</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.win_update.PyWinUpdater.GetCategories">
+                              <h3 class="title topictitle3">PyWinUpdater.GetCategories Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GetCategories( )</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.win_update.PyWinUpdater.GetDownloadResults">
+                              <h3 class="title topictitle3">PyWinUpdater.GetDownloadResults Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GetDownloadResults( )</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.win_update.PyWinUpdater.GetInstallationResults">
+                              <h3 class="title topictitle3">PyWinUpdater.GetInstallationResults Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">GetInstallationResults( )</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.win_update.PyWinUpdater.Install">
+                              <h3 class="title topictitle3">PyWinUpdater.Install Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">Install( )</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.win_update.PyWinUpdater.Search">
+                              <h3 class="title topictitle3">PyWinUpdater.Search Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">Search(
+								searchString
+								)</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.win_update.PyWinUpdater.SetCategories">
+                              <h3 class="title topictitle3">PyWinUpdater.SetCategories Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">SetCategories(
+								categories
+								)</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.win_update.PyWinUpdater.SetInclude">
+                              <h3 class="title topictitle3">PyWinUpdater.SetInclude Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">SetInclude(
+								include,
+								state
+								)</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.win_update.PyWinUpdater.SetIncludes">
+                              <h3 class="title topictitle3">PyWinUpdater.SetIncludes Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">SetIncludes(
+								includes
+								)</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

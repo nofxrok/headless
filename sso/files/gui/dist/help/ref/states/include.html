@@ -1,0 +1,107 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Include and Exclude</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Include and Exclude">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="include-and-exclude">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="include-and-exclude">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Include and Exclude</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p">Salt sls files can include other sls files and exclude sls files that have been
+                                 otherwise included. This allows for an sls file to easily extend or manipulate
+                                 other sls files.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="include-and-exclude__include">
+                              <h2 class="title sectiontitle">Include</h2>
+                              <p class="p">When other sls files are included, everything defined in the included sls file
+                                 will be added to the state run. When including define a list of sls formulas
+                                 to include:
+                              </p>
+                              <pre class="pre codeblock language-yaml">include:
+  - http
+  - libvirt</pre>
+                              <p class="p">The include statement will include sls formulas from the same environment
+                                 that the including sls formula is in. But the environment can be explicitly
+                                 defined in the configuration to override the running environment, therefore
+                                 if an sls formula needs to be included from an external environment named "dev"
+                                 the following syntax is used:
+                              </p>
+                              <pre class="pre codeblock language-yaml">include:
+  - dev: http</pre>
+                              </div>
+                           
+                           <div class="section" id="include-and-exclude__relative-include">
+                              <h2 class="title sectiontitle">Relative Include</h2>
+                              <p class="p">In Salt 0.16.0 the capability to include sls formulas which are relative to
+                                 the running sls formula was added, simply precede the formula name with a
+                                 <span class="keyword title_reference">.</span>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">include:
+  - .virt
+  - .virt.hyper</pre>
+                              </div>
+                           
+                           <div class="section" id="include-and-exclude__exclude">
+                              <h2 class="title sectiontitle">Exclude</h2>
+                              <p class="p">The exclude statement, added in Salt 0.10.3 allows an sls to hard exclude
+                                 another sls file or a specific id. The component is excluded after the
+                                 high data has been compiled, so nothing should be able to override an
+                                 exclude.
+                              </p>
+                              
+                              <p class="p">Since the exclude can remove an id or an sls the type of component to
+                                 exclude needs to be defined. an exclude statement that verifies that the
+                                 running highstate does not contain the <span class="keyword title_reference">http</span> sls and the <span class="keyword title_reference">/etc/vimrc</span> id
+                                 would look like this:
+                              </p>
+                              <pre class="pre codeblock language-yaml">exclude:
+  - sls: http
+  - id: /etc/vimrc</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

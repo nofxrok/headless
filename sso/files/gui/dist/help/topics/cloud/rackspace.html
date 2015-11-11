@@ -1,0 +1,262 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Getting Started With Rackspace</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Getting Started With Rackspace">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/cloud-providers.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="getting-started-with-rackspace">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="getting-started-with-rackspace">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Getting Started With Rackspace</h1>
+                        <div class="body conbody">
+                           <p class="p">Rackspace is a major public cloud platform which may be configured using either
+                              the <span class="keyword title_reference">rackspace</span> or the <span class="keyword title_reference">openstack</span> driver, depending on your needs.
+                           </p>
+                           
+                           <p class="p">Please note that the <span class="keyword title_reference">rackspace</span> driver is only intended for 1st gen instances,
+                              aka, "the old cloud" at Rackspace. It is required for 1st gen instances, but
+                              will <em class="ph i">not</em> work with OpenStack-based instances. Unless you explicitly have a
+                              reason to use it, it is highly recommended that you use the <span class="keyword title_reference">openstack</span> driver
+                              instead.
+                           </p>
+                           
+                           <div class="section" id="getting-started-with-rackspace__dependencies">
+                              <h2 class="title sectiontitle">Dependencies</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Libcloud &gt;= 0.13.2</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="getting-started-with-rackspace__configuration">
+                              <h2 class="title sectiontitle">Configuration</h2>
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm">To use the <span class="keyword title_reference">openstack</span> driver (recommended), set up the cloud configuration at
+                                 </dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p"><tt class="ph tt">/etc/salt/cloud.providers</tt> or
+                                       <tt class="ph tt">/etc/salt/cloud.providers.d/rackspace.conf</tt>:
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              <pre class="pre codeblock language-yaml">my-rackspace-config:
+  # Set the location of the salt-master
+  #
+  minion:
+    master: saltmaster.example.com
+
+  # Configure Rackspace using the OpenStack plugin
+  #
+  identity_url: 'https://identity.api.rackspacecloud.com/v2.0/tokens'
+  compute_name: cloudServersOpenStack
+  protocol: ipv4
+
+  # Set the compute region:
+  #
+  compute_region: DFW
+
+  # Configure Rackspace authentication credentials
+  #
+  user: myname
+  tenant: 123456
+  apikey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  provider: openstack</pre>
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm">To use the <span class="keyword title_reference">rackspace</span> driver, set up the cloud configuration at
+                                 </dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p"><tt class="ph tt">/etc/salt/cloud.providers</tt> or
+                                       <tt class="ph tt">/etc/salt/cloud.providers.d/rackspace.conf</tt>:
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              <pre class="pre codeblock language-yaml">my-rackspace-config:
+  provider: rackspace
+  # The Rackspace login user
+  user: fred
+  # The Rackspace user's apikey
+  apikey: 901d3f579h23c8v73q9</pre>
+                              <p class="p">The settings that follow are for using Rackspace with the <span class="keyword title_reference">openstack</span> driver,
+                                 and will not work with the <span class="keyword title_reference">rackspace</span> driver.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="getting-started-with-rackspace__compute-region">
+                              <h2 class="title sectiontitle">Compute Region</h2>
+                              <p class="p">Rackspace currently has six compute regions which may be used:</p>
+                              <pre class="pre codeblock language-bash">DFW -&gt; Dallas/Forth Worth
+ORD -&gt; Chicago
+SYD -&gt; Sydney
+LON -&gt; London
+IAD -&gt; Northern Virginia
+HKG -&gt; Hong Kong</pre>
+                              <p class="p">Note: Currently the LON region is only available with a UK account, and UK accounts
+                                 cannot access other regions
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="getting-started-with-rackspace__authentication">
+                              <h2 class="title sectiontitle">Authentication</h2>
+                              <p class="p">The <tt class="ph tt">user</tt> is the same user as is used to log into the Rackspace Control
+                                 Panel. The <tt class="ph tt">tenant</tt> and <tt class="ph tt">apikey</tt> can be found in the API Keys area of the
+                                 Control Panel. The <tt class="ph tt">apikey</tt> will be labeled as API Key (and may need to be
+                                 generated), and <tt class="ph tt">tenant</tt> will be labeled as Cloud Account Number.
+                              </p>
+                              
+                              <p class="p">An initial profile can be configured in <tt class="ph tt">/etc/salt/cloud.profiles</tt> or
+                                 <tt class="ph tt">/etc/salt/cloud.profiles.d/rackspace.conf</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">openstack_512:
+    provider: my-rackspace-config
+    size: 512 MB Standard
+    image: Ubuntu 12.04 LTS (Precise Pangolin)</pre>
+                              <p class="p">To instantiate a machine based on this profile:</p>
+                              <pre class="pre codeblock language-bash"># salt-cloud -p openstack_512 myinstance</pre>
+                              <p class="p">This will create a virtual machine at Rackspace with the name <tt class="ph tt">myinstance</tt>.
+                                 This operation may take several minutes to complete, depending on the current
+                                 load at the Rackspace data center.
+                              </p>
+                              
+                              <p class="p">Once the instance has been created with salt-minion installed, connectivity to
+                                 it can be verified with Salt:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt myinstance test.ping</pre>
+                              </div>
+                           
+                           <div class="section head3" id="getting-started-with-rackspace__rackconnect-environments">
+                              <h2 class="title sectiontitle">RackConnect Environments</h2>
+                              <p class="p">Rackspace offers a hybrid hosting configuration option called RackConnect that
+                                 allows you to use a physical firewall appliance with your cloud servers. When
+                                 this service is in use the public_ip assigned by nova will be replaced by a NAT
+                                 ip on the firewall. For salt-cloud to work properly it must use the newly
+                                 assigned "access ip" instead of the Nova assigned public ip. You can enable that
+                                 capability by adding this to your profiles:
+                              </p>
+                              <pre class="pre codeblock language-yaml">openstack_512:
+    provider: my-openstack-config
+    size: 512 MB Standard
+    image: Ubuntu 12.04 LTS (Precise Pangolin)
+    rackconnect: True</pre>
+                              </div>
+                           
+                           <div class="section head3" id="getting-started-with-rackspace__managed-cloud-environments">
+                              <h2 class="title sectiontitle">Managed Cloud Environments</h2>
+                              <p class="p">Rackspace offers a managed service level of hosting. As part of the managed
+                                 service level you have the ability to choose from base of lamp installations on
+                                 cloud server images.  The post build process for both the base and the lamp
+                                 installations used Chef to install things such as the cloud monitoring agent and
+                                 the cloud backup agent. It also takes care of installing the lamp stack if
+                                 selected. In order to prevent the post installation process from stomping over
+                                 the bootstrapping you can add the below to your profiles.
+                              </p>
+                              <pre class="pre codeblock language-yaml">openstack_512:
+    provider: my-rackspace-config
+    size: 512 MB Standard
+    image: Ubuntu 12.04 LTS (Precise Pangolin)
+    managedcloud: True</pre>
+                              </div>
+                           
+                           <div class="section head3" id="getting-started-with-rackspace__first-and-next-generation-images">
+                              <h2 class="title sectiontitle">First and Next Generation Images</h2>
+                              <p class="p">Rackspace provides two sets of virtual machine images, <em class="ph i">first</em>, and <em class="ph i">next</em>
+                                 generation. As of <tt class="ph tt">0.8.9</tt> salt-cloud will default to using the <em class="ph i">next</em>
+                                 generation images. To force the use of first generation images, on the profile
+                                 configuration please add:
+                              </p>
+                              <pre class="pre codeblock language-yaml">FreeBSD-9.0-512:
+  provider: my-rackspace-config
+  size: 512 MB Standard
+  image: FreeBSD 9.0
+  force_first_gen: True</pre>
+                              </div>
+                           
+                           <div class="section head3" id="getting-started-with-rackspace__private-subnets">
+                              <h2 class="title sectiontitle">Private Subnets</h2>
+                              <p class="p">By default salt-cloud will not add Rackspace private networks to new servers.   To
+                                 enable
+                                 a private network to a server instantiated by salt cloud, add the following section
+                                 to the provider file (typically  <tt class="ph tt">/etc/salt/cloud.providers.d/rackspace.conf</tt>)
+                              </p>
+                              <pre class="pre codeblock language-yaml">networks:
+  - fixed:
+    # This is the private network
+    - private-network-id
+    # This is Rackspace's "PublicNet"
+    - 00000000-0000-0000-0000-000000000000
+    # This is Rackspace's "ServiceNet"
+    - 11111111-1111-1111-1111-111111111111</pre>
+                              <p class="p">To get the Rackspace private network ID, go to Networking, Networks and hover over
+                                 the private network name.
+                              </p>
+                              
+                              <p class="p">The order of the networks in the above code block does not map to the order of the
+                                 ethernet devices on newly created servers.   Public IP will always be first ( eth0
+                                 )
+                                 followed by servicenet ( eth1 ) and then private networks.
+                              </p>
+                              
+                              <p class="p">Enabling the private network per above gives the option of using the private subnet
+                                 for
+                                 all master-minion communication, including the bootstrap install of salt-minion. 
+                                 To
+                                 enable the minion to use the private subnet, update the master: line in the minion:
+                                 section of the providers file.  To configure the master to only listen on the private
+                                 subnet IP, update the interface: line in the /etc/salt/master file to be the private
+                                 subnet IP of the salt master.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

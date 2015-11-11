@@ -1,0 +1,295 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.portage_config</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.portage_config">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-portage-config">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-portage-config">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.portage_config</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-portage-config__module-salt.modules.portage_config"></span></p>
+                              
+                              <p class="p">Configure <tt class="ph tt">portage(5)</tt></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.portage_config.append_to_package_conf">
+                           <h2 class="title topictitle2">append_to_package_conf</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.portage_config.append_to_package_conf(
+								conf,
+								atom='',
+								flags=None,
+								string='',
+								overwrite=False
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Append a string or a list of flags for a given package or DEPEND atom to a
+                                    given configuration file.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' portage_config.append_to_package_conf use string="app-admin/salt ldap -libvirt"
+salt '*' portage_config.append_to_package_conf use atom="&gt; = app-admin/salt-0.14.1" flags="['ldap', '-libvirt']"</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.portage_config.append_use_flags">
+                           <h2 class="title topictitle2">append_use_flags</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.portage_config.append_use_flags(
+								atom,
+								uses=None,
+								overwrite=False
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Append a list of use flags for a given package or DEPEND atom</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' portage_config.append_use_flags "app-admin/salt[ldap, -libvirt]"
+salt '*' portage_config.append_use_flags "&gt;=app-admin/salt-0.14.1" "['ldap', '-libvirt']"</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.portage_config.enforce_nice_config">
+                           <h2 class="title topictitle2">enforce_nice_config</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.portage_config.enforce_nice_config( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Enforce a nice tree structure for /etc/portage/package.* configuration
+                                    files.
+                                 </p>
+                                 
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <dl class="dl definition_list">
+                                       <dt class="dt dlterm">
+                                          		
+                                          			&nbsp;<a class="xref" href="salt.modules.ebuild.html#salt.modules.ebuild.ex_mod_init">salt.modules.ebuild.ex_mod_init()</a></dt>
+                                       
+                                       <dd class="dd">
+                                          <p class="p">for information on automatically running this when pkg is used.</p>
+                                          
+                                       </dd>
+                                       
+                                    </dl>
+                                    
+                                 </aside>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' portage_config.enforce_nice_config</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.portage_config.get_flags_from_package_conf">
+                           <h2 class="title topictitle2">get_flags_from_package_conf</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.portage_config.get_flags_from_package_conf(
+								conf,
+								atom
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Get flags for a given package or DEPEND atom.
+                                    Warning: This only works if the configuration files tree is in the correct
+                                    format (the one enforced by enforce_nice_config)
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' portage_config.get_flags_from_package_conf license salt</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.portage_config.get_missing_flags">
+                           <h2 class="title topictitle2">get_missing_flags</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.portage_config.get_missing_flags(
+								conf,
+								atom,
+								flags
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Find out which of the given flags are currently not set.
+                                    CLI Example:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' portage_config.get_missing_flags use salt "['ldap', '-libvirt', 'openssl']"</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.portage_config.has_flag">
+                           <h2 class="title topictitle2">has_flag</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.portage_config.has_flag(
+								conf,
+								atom,
+								flag
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Verify if the given package or DEPEND atom has the given flag.
+                                    Warning: This only works if the configuration files tree is in the correct
+                                    format (the one enforced by enforce_nice_config)
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' portage_config.has_flag license salt Apache-2.0</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.portage_config.has_use">
+                           <h2 class="title topictitle2">has_use</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.portage_config.has_use(
+								atom,
+								use
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Verify if the given package or DEPEND atom has the given use flag.
+                                    Warning: This only works if the configuration files tree is in the correct
+                                    format (the one enforced by enforce_nice_config)
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' portage_config.has_use salt libvirt</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.portage_config.is_present">
+                           <h2 class="title topictitle2">is_present</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.portage_config.is_present(
+								conf,
+								atom
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Tell if a given package or DEPEND atom is present in the configuration
+                                    files tree.
+                                    Warning: This only works if the configuration files tree is in the correct
+                                    format (the one enforced by enforce_nice_config)
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' portage_config.is_present unmask salt</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

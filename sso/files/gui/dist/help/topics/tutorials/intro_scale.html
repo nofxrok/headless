@@ -1,0 +1,353 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Using salt at scale</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Using salt at scale">
+      
+      <meta name="DC.Relation" scheme="URI" content="../installation/architecture.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="using-salt-at-scale">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="using-salt-at-scale">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Using salt at scale</h1>
+                        <div class="body conbody">
+                           <p class="p">The focus of this tutorial will be building a Salt infrastructure for handling
+                              large numbers of minions. This will include tuning, topology, and best practices.
+                           </p>
+                           
+                           <p class="p">For how to install the saltmaster please
+                              go here: <a class="xref" href="http://docs.saltstack.com/topics/installation/index.html" target="_blank">Installing saltstack</a></p>
+                           
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">This tutorial is intended for large installations, although these same settings
+                                 won't hurt, it may not be worth the complexity to smaller installations.
+                              </p>
+                              
+                              <p class="p">When used with minions, the term 'many' refers to at least a thousand
+                                 and 'a few' always means 500.
+                              </p>
+                              
+                              <p class="p">For simplicity reasons, this tutorial will default to the standard ports
+                                 used by salt.
+                              </p>
+                              
+                           </aside>
+                           
+                           <div class="section" id="using-salt-at-scale__the-master">
+                              <h2 class="title sectiontitle">The Master</h2>
+                              <p class="p">The most common problems on the salt-master are:</p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">too many minions authing at once</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">too many minions re-authing at once</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">too many minions re-connecting at once</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">too many minions returning at once</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">too few resources (CPU/HDD)</p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                              <p class="p">The first three are all "thundering herd" problems. To mitigate these issues
+                                 we must configure the minions to back-off appropriately when the master is
+                                 under heavy load.
+                              </p>
+                              
+                              <p class="p">The fourth is caused by masters with little hardware resources in combination
+                                 with a possible bug in ZeroMQ. At least thats what it looks like till today
+                                 (<a class="xref" href="https://github.com/saltstack/salt/issues/11865" target="_blank">Issue 118651</a>,
+                                 <a class="xref" href="https://github.com/saltstack/salt/issues/5948" target="_blank">Issue 5948</a>,
+                                 <a class="xref" href="https://groups.google.com/forum/#!searchin/salt-users/lots$20of$20minions/salt-users/WxothArv2Do/t12MigMQDFAJ" target="_blank">Mail thread</a>)
+                              </p>
+                              
+                              <p class="p">To fully understand each problem, it is important to understand, how salt works.</p>
+                              
+                              <p class="p">Very briefly, the saltmaster offers two services to the minions.</p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">a job publisher on port 4505</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">an open port 4506 to receive the minions returns</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <p class="p">All minions are always connected to the publisher on port 4505 and only connect
+                                 to the open return port 4506 if necessary. On an idle master, there will only
+                                 be connections on port 4505.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="using-salt-at-scale__too-many-minions-authing">
+                              <h2 class="title sectiontitle">Too many minions authing</h2>
+                              <p class="p">When the minion service is first started up, it will connect to its master's publisher
+                                 on port 4505. If too many minions are started at once, this can cause a "thundering
+                                 herd".
+                                 This can be avoided by not starting too many minions at once.
+                              </p>
+                              
+                              <p class="p">The connection itself usually isn't the culprit, the more likely cause of master-side
+                                 issues is the authentication that the minion must do with the master. If the master
+                                 is too heavily loaded to handle the auth request it will time it out. The minion
+                                 will then wait <span class="keyword title_reference">acceptance_wait_time</span> to retry. If <span class="keyword title_reference">acceptance_wait_time_max</span> is
+                                 set then the minion will increase its wait time by the <span class="keyword title_reference">acceptance_wait_time</span> each
+                                 subsequent retry until reaching <span class="keyword title_reference">acceptance_wait_time_max</span>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="using-salt-at-scale__too-many-minions-re-authing">
+                              <h2 class="title sectiontitle">Too many minions re-authing</h2>
+                              <p class="p">This is most likely to happen in the testing phase, when all minion keys have
+                                 already been accepted, the framework is being tested and parameters change
+                                 frequently in the masters configuration file.
+                              </p>
+                              
+                              <p class="p">In a few cases (master restart, remove minion key, etc.) the salt-master generates
+                                 a new AES-key to encrypt its publications with. The minions aren't notified of
+                                 this but will realize this on the next pub job they receive. When the minion
+                                 receives such a job it will then re-auth with the master. Since Salt does minion-side
+                                 filtering this means that all the minions will re-auth on the next command published
+                                 on the master-- causing another "thundering herd". This can be avoided by
+                                 setting the
+                              </p>
+                              <pre class="pre codeblock language-yaml">random_reauth_delay: 60</pre>
+                              <p class="p">in the minions configuration file to a higher value and stagger the amount
+                                 of re-auth attempts. Increasing this value will of course increase the time
+                                 it takes until all minions are reachable via salt commands.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="using-salt-at-scale__too-many-minions-re-connecting">
+                              <h2 class="title sectiontitle">Too many minions re-connecting</h2>
+                              <p class="p">By default the zmq socket will re-connect every 100ms which for some larger
+                                 installations may be too quick. This will control how quickly the TCP session is
+                                 re-established, but has no bearing on the auth load.
+                              </p>
+                              
+                              <p class="p">To tune the minions sockets reconnect attempts, there are a few values in
+                                 the sample configuration file (default values)
+                              </p>
+                              <pre class="pre codeblock language-yaml">recon_default: 100ms
+recon_max: 5000
+recon_randomize: True</pre>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">recon_default: the default value the socket should use, i.e. 100ms</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">recon_max: the max value that the socket should use as a delay before trying to reconnect</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">recon_randomize: enables randomization between recon_default and recon_max</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <p class="p">To tune this values to an existing environment, a few decision have to be made.</p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">How long can one wait, before the minions should be online and reachable via salt?</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">How many reconnects can the master handle without a syn flood?</p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                              <p class="p">These questions can not be answered generally. Their answers depend on the
+                                 hardware and the administrators requirements.
+                              </p>
+                              
+                              <p class="p">Here is an example scenario with the goal, to have all minions reconnect
+                                 within a 60 second time-frame on a salt-master service restart.
+                              </p>
+                              <pre class="pre codeblock language-yaml">recon_default: 1000
+recon_max: 59000
+recon_randomize: True</pre>
+                              <p class="p">Each minion will have a randomized reconnect value between 'recon_default'
+                                 and 'recon_default + recon_max', which in this example means between 1000ms
+                                 and 60000ms (or between 1 and 60 seconds). The generated random-value will
+                                 be doubled after each attempt to reconnect (ZeroMQ default behavior).
+                              </p>
+                              
+                              <p class="p">Lets say the generated random value is 11 seconds (or 11000ms).</p>
+                              <pre class="pre codeblock language-bash">reconnect 1: wait 11 seconds
+reconnect 2: wait 22 seconds
+reconnect 3: wait 33 seconds
+reconnect 4: wait 44 seconds
+reconnect 5: wait 55 seconds
+reconnect 6: wait time is bigger than 60 seconds (recon_default + recon_max)
+reconnect 7: wait 11 seconds
+reconnect 8: wait 22 seconds
+reconnect 9: wait 33 seconds
+reconnect x: etc.</pre>
+                              <p class="p">With a thousand minions this will mean</p>
+                              <pre class="pre codeblock language-text">1000/60 = ~16</pre>
+                              <p class="p">round about 16 connection attempts a second. These values should be altered to
+                                 values that match your environment. Keep in mind though, that it may grow over
+                                 time and that more minions might raise the problem again.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="using-salt-at-scale__too-many-minions-returning-at-once">
+                              <h2 class="title sectiontitle">Too many minions returning at once</h2>
+                              <p class="p">This can also happen during the testing phase, if all minions are addressed at
+                                 once with
+                              </p>
+                              <pre class="pre codeblock language-bash">$ salt * test.ping</pre>
+                              <p class="p">it may cause thousands of minions trying to return their data to the salt-master
+                                 open port 4506. Also causing a flood of syn-flood if the master can't handle that
+                                 many
+                                 returns at once.
+                              </p>
+                              
+                              <p class="p">This can be easily avoided with salts batch mode:</p>
+                              <pre class="pre codeblock language-bash">$ salt * test.ping -b 50</pre>
+                              <p class="p">This will only address 50 minions at once while looping through all addressed
+                                 minions.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="using-salt-at-scale__too-few-resources">
+                              <h2 class="title sectiontitle">Too few resources</h2>
+                              <p class="p">The masters resources always have to match the environment. There is no way
+                                 to give good advise without knowing the environment the master is supposed to
+                                 run in.  But here are some general tuning tips for different situations:
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="using-salt-at-scale__the-master-is-cpu-bound">
+                              <h2 class="title sectiontitle">The master is CPU bound</h2>
+                              <p class="p">Salt uses RSA-Key-Pairs on the masters and minions end. Both generate 4096
+                                 bit key-pairs on first start. While the key-size for the master is currently
+                                 not configurable, the minions keysize can be configured with different
+                                 key-sizes. For example with a 2048 bit key:
+                              </p>
+                              <pre class="pre codeblock language-yaml">keysize: 2048</pre>
+                              <p class="p">With thousands of decryptions, the amount of time that can be saved on the
+                                 masters end should not be neglected. See here for reference:
+                                 <a class="xref" href="https://github.com/saltstack/salt/pull/9235" target="_blank">Pull Request 9235</a> how much
+                                 influence the key-size can have.
+                              </p>
+                              
+                              <p class="p">Downsizing the salt-masters key is not that important, because the minions
+                                 do not encrypt as many messages as the master does.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="using-salt-at-scale__the-master-is-disk-io-bound">
+                              <h2 class="title sectiontitle">The master is disk IO bound</h2>
+                              <p class="p">By default, the master saves every minion's return for every job in its
+                                 job-cache. The cache can then be used later, to lookup results for previous
+                                 jobs. The default directory for this is:
+                              </p>
+                              <pre class="pre codeblock language-yaml">cachedir: /var/cache/salt</pre>
+                              <p class="p">and then in the <tt class="ph tt">/proc</tt> directory.
+                              </p>
+                              
+                              <p class="p">Each job return for every minion is saved in a single file. Over time this
+                                 directory can grow quite large, depending on the number of published jobs. The
+                                 amount of files and directories will scale with the number of jobs published and
+                                 the retention time defined by
+                              </p>
+                              <pre class="pre codeblock language-yaml">keep_jobs: 24</pre>
+                              <pre class="pre codeblock language-text">250 jobs/day * 2000 minions returns = 500.000 files a day</pre>
+                              <p class="p">If no job history is needed, the job cache can be disabled:</p>
+                              <pre class="pre codeblock language-yaml">job_cache: False</pre>
+                              <p class="p">If the job cache is necessary there are (currently) 2 options:</p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">ext_job_cache: this will have the minions store their return data directly
+                                       into a returner (not sent through the master)
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">master_job_cache (New in <span class="keyword title_reference">2014.7.0</span>): this will make the master store the job
+                                       data using a returner (instead of the local job cache on disk).
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

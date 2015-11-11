@@ -1,0 +1,165 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Getting Started With DigitalOcean</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Getting Started With DigitalOcean">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/cloud-providers.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="getting-started-with-digitalocean">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="getting-started-with-digitalocean">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Getting Started With DigitalOcean</h1>
+                        <div class="body conbody">
+                           <p class="p">DigitalOcean is a public cloud provider that specializes in Linux instances.</p>
+                           
+                           <div class="section" id="getting-started-with-digitalocean__configuration">
+                              <h2 class="title sectiontitle">Configuration</h2>
+                              <p class="p">Using Salt for DigitalOcean requires a personal_access_token, an ssh_key_file,
+                                 and at least one SSH key name in ssh_key_names, more can be added by comma-separating
+                                 them.
+                                 The personal_access_token can be found in the Digital Ocean web interface,
+                                 in the "Apps &amp; API" section. The SSH key name can be found under the "SSH Keys" section.
+                              </p>
+                              <pre class="pre codeblock language-yaml"># Note: This example is for /etc/salt/cloud.providers or any file in the
+# /etc/salt/cloud.providers.d/ directory.
+
+my-digitalocean-config:
+  provider: digital_ocean
+  personal_access_token: xxx
+  ssh_key_file: /path/to/ssh/key/file
+  ssh_key_names: my-key-name,my-key-name-2
+  location: New York 1</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-digitalocean__profiles">
+                              <h2 class="title sectiontitle">Profiles</h2>
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-digitalocean__cloud-profiles">
+                              <h2 class="title sectiontitle">Cloud Profiles</h2>
+                              <p class="p">Set up an initial profile at <tt class="ph tt">/etc/salt/cloud.profiles</tt> or in the
+                                 <tt class="ph tt">/etc/salt/cloud.profiles.d/</tt> directory:
+                              </p>
+                              <pre class="pre codeblock language-yaml">digitalocean-ubuntu:
+    provider: my-digitalocean-config
+    image: Ubuntu 14.04 x32
+    size: 512MB
+    location: New York 1
+    private_networking: True
+    backups_enabled: True
+    ipv6: True</pre>
+                              <p class="p">Sizes can be obtained using the <tt class="ph tt">--list-sizes</tt> option for the <tt class="ph tt">salt-cloud</tt>
+                                 command:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-cloud --list-sizes my-digitalocean-config
+my-digitalocean-config:
+    ----------
+    digital_ocean:
+        ----------
+        512MB:
+            ----------
+            cost_per_hour:
+                0.00744
+            cost_per_month:
+                5.0
+            cpu:
+                1
+            disk:
+                20
+            id:
+                66
+            memory:
+                512
+            name:
+                512MB
+            slug:
+                None
+...SNIP...</pre>
+                              <p class="p">Images can be obtained using the <tt class="ph tt">--list-images</tt> option for the <tt class="ph tt">salt-cloud</tt>
+                                 command:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-cloud --list-images my-digitalocean-config
+my-digitalocean-config:
+    ----------
+    digital_ocean:
+        ----------
+        Arch Linux 2013.05 x64:
+            ----------
+            distribution:
+                Arch Linux
+            id:
+                350424
+            name:
+                Arch Linux 2013.05 x64
+            public:
+                True
+            slug:
+                None
+...SNIP...</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">DigitalOcean's concept of <tt class="ph tt">Applications</tt> is nothing more than a
+                                    pre-configured instance (same as a normal Droplet). You will find examples
+                                    such <tt class="ph tt">Docker 0.7 Ubuntu 13.04 x64</tt> and <tt class="ph tt">Wordpress on Ubuntu 12.10</tt>
+                                    when using the <tt class="ph tt">--list-images</tt> option. These names can be used just like
+                                    the rest of the standard instances when specifying an image in the cloud
+                                    profile configuration.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">If your domain's DNS is managed with DigitalOcean, you can automatically
+                                    create A-records for newly created droplets. Use <tt class="ph tt">create_dns_record: True</tt>
+                                    in your config to enable this. Add <tt class="ph tt">delete_dns_record: True</tt> to also
+                                    delete records when a droplet is destroyed.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Additional documentation is available from <a class="xref" href="https://www.digitalocean.com/community/articles/automated-provisioning-of-digitalocean-cloud-servers-with-salt-cloud-on-ubuntu-12-04" target="_blank">DigitalOcean</a>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

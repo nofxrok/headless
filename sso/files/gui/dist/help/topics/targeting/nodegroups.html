@@ -1,0 +1,111 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Node groups</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Node groups">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="targeting-nodegroups">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="targeting-nodegroups">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Node groups</h1>
+                        <div class="body conbody">
+                           <p class="p ids"><span class="ph" id="targeting-nodegroups__node-groups"></span></p>
+                           
+                           <p class="p">Nodegroups are declared using a compound target specification. The compound
+                              target documentation can be found 
+                              		
+                              			&nbsp;<a class="xref" href="compound.html#targeting-compound">here</a>.
+                           </p>
+                           
+                           <p class="p">The 
+                              		
+                              			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__nodegroups">nodegroups</a> master config file parameter is used to define
+                              nodegroups. Here's an example nodegroup configuration within
+                              <tt class="ph tt">/etc/salt/master</tt>:
+                           </p>
+                           <pre class="pre codeblock language-yaml">nodegroups:
+  group1: 'L@foo.domain.com,bar.domain.com,baz.domain.com or bl*.domain.com'
+  group2: 'G@os:Debian and foo.domain.com'
+  group3: 'G@os:Debian and N@group1'</pre>
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">The <tt class="ph tt">L</tt> within group1 is matching a list of minions, while the <tt class="ph tt">G</tt> in
+                                 group2 is matching specific grains. See the 
+                                 		
+                                 			&nbsp;<a class="xref" href="compound.html#targeting-compound">compound matchers</a> documentation for more details.
+                              </p>
+                              
+                           </aside>
+                           
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">Nodgroups can reference other nodegroups as seen in <tt class="ph tt">group3</tt>.  Ensure
+                                 that you do not have circular references.  Circular references will be
+                                 detected and cause partial expansion with a logged error message.
+                              </p>
+                              
+                           </aside>
+                           
+                           <p class="p">To match a nodegroup on the CLI, use the <tt class="ph tt">-N</tt> command-line option:
+                           </p>
+                           <pre class="pre codeblock language-bash">salt -N group1 test.ping</pre>
+                           <p class="p">To match a nodegroup in your 
+                              		
+                              			&nbsp;<a class="xref" href="../../glossary.html#glossary__term-top-file">top file</a>, make sure to put <tt class="ph tt">- match:
+                                 nodegroup</tt> on the line directly following the nodegroup name.
+                           </p>
+                           <pre class="pre codeblock language-yaml">base:
+  group1:
+    - match: nodegroup
+    - webserver</pre>
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">When adding or modifying nodegroups to a master configuration file, the master must
+                                 be restarted
+                                 for those changes to be fully recognized.
+                              </p>
+                              
+                              <p class="p">A limited amount of functionality, such as targeting with -N from the command-line
+                                 may be
+                                 available without a restart.
+                              </p>
+                              
+                           </aside>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

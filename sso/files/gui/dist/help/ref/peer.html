@@ -1,0 +1,153 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Peer Communication</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Peer Communication">
+      
+      <meta name="DC.Relation" scheme="URI" content="../ent/administration.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="peer">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="peer">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Peer Communication</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="peer__peer-communication"></span></p>
+                              
+                              <p class="p">Salt 0.9.0 introduced the capability for Salt minions to publish commands. The
+                                 intent of this feature is not for Salt minions to act as independent brokers
+                                 one with another, but to allow Salt minions to pass commands to each other.
+                              </p>
+                              
+                              <p class="p">In Salt 0.10.0 the ability to execute runners from the master was added. This
+                                 allows for the master to return collective data from runners back to the
+                                 minions via the peer interface.
+                              </p>
+                              
+                              <p class="p">The peer interface is configured through two options in the master
+                                 configuration file. For minions to send commands from the master the <tt class="ph tt">peer</tt>
+                                 configuration is used. To allow for minions to execute runners from the master
+                                 the <tt class="ph tt">peer_run</tt> configuration is used.
+                              </p>
+                              
+                              <p class="p">Since this presents a viable security risk by allowing minions access to the
+                                 master publisher the capability is turned off by default. The minions can be
+                                 allowed access to the master publisher on a per minion basis based on regular
+                                 expressions. Minions with specific ids can be allowed access to certain Salt
+                                 modules and functions.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="peer__peer-configuration">
+                              <h2 class="title sectiontitle">Peer Configuration</h2>
+                              <p class="p">The configuration is done under the <tt class="ph tt">peer</tt> setting in the Salt master
+                                 configuration file, here are a number of configuration possibilities.
+                              </p>
+                              
+                              <p class="p">The simplest approach is to enable all communication for all minions, this is
+                                 only recommended for very secure environments.
+                              </p>
+                              <pre class="pre codeblock language-yaml">peer:
+  .*:
+    - .*</pre>
+                              <p class="p">This configuration will allow minions with IDs ending in example.com access
+                                 to the test, ps, and pkg module functions.
+                              </p>
+                              <pre class="pre codeblock language-yaml">peer:
+  .*example.com:
+    - test.*
+    - ps.*
+    - pkg.*</pre>
+                              <p class="p">The configuration logic is simple, a regular expression is passed for matching
+                                 minion ids, and then a list of expressions matching minion functions is
+                                 associated with the named minion. For instance, this configuration will also
+                                 allow minions ending with foo.org access to the publisher.
+                              </p>
+                              <pre class="pre codeblock language-yaml">peer:
+  .*example.com:
+    - test.*
+    - ps.*
+    - pkg.*
+  .*foo.org:
+    - test.*
+    - ps.*
+    - pkg.*</pre>
+                              </div>
+                           
+                           <div class="section" id="peer__peer-runner-communication">
+                              <h2 class="title sectiontitle">Peer Runner Communication</h2>
+                              <p class="p">Configuration to allow minions to execute runners from the master is done via
+                                 the <tt class="ph tt">peer_run</tt> option on the master. The <tt class="ph tt">peer_run</tt> configuration follows
+                                 the same logic as the <tt class="ph tt">peer</tt> option. The only difference is that access is
+                                 granted to runner modules.
+                              </p>
+                              
+                              <p class="p">To open up access to all minions to all runners:</p>
+                              <pre class="pre codeblock language-yaml">peer_run:
+  .*:
+    - .*</pre>
+                              <p class="p">This configuration will allow minions with IDs ending in example.com access
+                                 to the manage and jobs runner functions.
+                              </p>
+                              <pre class="pre codeblock language-yaml">peer_run:
+  .*example.com:
+    - manage.*
+    - jobs.*</pre>
+                              </div>
+                           
+                           <div class="section" id="peer__using-peer-communication">
+                              <h2 class="title sectiontitle">Using Peer Communication</h2>
+                              <p class="p">The publish module was created to manage peer communication. The publish module
+                                 comes with a number of functions to execute peer communication in different
+                                 ways. Currently there are three functions in the publish module. These examples
+                                 will show how to test the peer system via the salt-call command.
+                              </p>
+                              
+                              <p class="p">To execute test.ping on all minions:</p>
+                              <pre class="pre codeblock language-bash"># salt-call publish.publish \* test.ping</pre>
+                              <p class="p">To execute the manage.up runner:</p>
+                              <pre class="pre codeblock language-bash"># salt-call publish.runner manage.up</pre>
+                              <p class="p">To match minions using other matchers, use <tt class="ph tt">expr_form</tt>:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-call publish.publish 'webserv* and not G@os:Ubuntu' test.ping expr_form='compound'</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

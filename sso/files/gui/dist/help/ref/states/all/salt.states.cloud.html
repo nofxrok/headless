@@ -1,0 +1,441 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.cloud</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.cloud">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-cloud">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-cloud">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.cloud</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-cloud__module-salt.states.cloud"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="using-states-instead-of-maps-to-deploy-clouds">
+                           <h2 class="title topictitle2">Using states instead of maps to deploy clouds</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                 
+                                 <p class="p">Use this minion to spin up a cloud instance:</p>
+                                 <pre class="pre codeblock language-yaml">my-ec2-instance:
+  cloud.profile:
+    my-ec2-config</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.cloud.absent">
+                              <h3 class="title topictitle3">absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cloud.absent(
+								name,
+								onlyif=None,
+								unless=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure that no instances with the specified names exist.</p>
+                                    
+                                    <p class="p">CAUTION: This is a destructive state, which will search all
+                                       configured cloud providers for the named instance,
+                                       and destroy it.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d363670e62" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d363670e64" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d363670e62" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d363670e64" class="stentry propdesc">
+                                          <p class="p">The name of the instance to destroy</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d363670e62" class="stentry propvalue">onlyif</td>
+                                       
+                                       <td valign="top" headers="d363670e64" class="stentry propdesc">
+                                          <p class="p">Do run the state only if is unless succeed</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d363670e62" class="stentry propvalue">unless</td>
+                                       
+                                       <td valign="top" headers="d363670e64" class="stentry propdesc">
+                                          <p class="p">Do not run the state at least unless succeed</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.cloud.present">
+                              <h3 class="title topictitle3">present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cloud.present(
+								name,
+								cloud_provider,
+								onlyif=None,
+								unless=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Spin up a single instance on a cloud provider, using salt-cloud. This state
+                                       does not take a profile argument; rather, it takes the arguments that would
+                                       normally be configured as part of the state.
+                                    </p>
+                                    
+                                    <p class="p">Note that while this function does take any configuration argument that
+                                       would normally be used to create an instance, it will not verify the state
+                                       of any of those arguments on an existing instance. Stateful properties of
+                                       an instance should be configured using their own individual state (i.e.,
+                                       cloud.tagged, cloud.untagged, etc).
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d363670e114" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d363670e116" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d363670e114" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d363670e116" class="stentry propdesc">
+                                          <p class="p">The name of the instance to create</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d363670e114" class="stentry propvalue">cloud_provider</td>
+                                       
+                                       <td valign="top" headers="d363670e116" class="stentry propdesc">
+                                          <p class="p">The name of the cloud provider to use</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d363670e114" class="stentry propvalue">onlyif</td>
+                                       
+                                       <td valign="top" headers="d363670e116" class="stentry propdesc">
+                                          <p class="p">Do run the state only if is unless succeed</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d363670e114" class="stentry propvalue">unless</td>
+                                       
+                                       <td valign="top" headers="d363670e116" class="stentry propdesc">
+                                          <p class="p">Do not run the state at least unless succeed</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.cloud.profile">
+                              <h3 class="title topictitle3">profile</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cloud.profile(
+								name,
+								profile,
+								onlyif=None,
+								unless=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Create a single instance on a cloud provider, using a salt-cloud profile.</p>
+                                    
+                                    <p class="p">Note that while profiles used this function do take any configuration
+                                       argument that would normally be used to create an instance using a profile,
+                                       this state will not verify the state of any of those arguments on an
+                                       existing instance. Stateful properties of an instance should be configured
+                                       using their own individual state (i.e., cloud.tagged, cloud.untagged, etc).
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d363670e172" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d363670e174" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d363670e172" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d363670e174" class="stentry propdesc">
+                                          <p class="p">The name of the instance to create</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d363670e172" class="stentry propvalue">profile</td>
+                                       
+                                       <td valign="top" headers="d363670e174" class="stentry propdesc">
+                                          <p class="p">The name of the cloud profile to use</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d363670e172" class="stentry propvalue">onlyif</td>
+                                       
+                                       <td valign="top" headers="d363670e174" class="stentry propdesc">
+                                          <p class="p">Do run the state only if is unless succeed</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d363670e172" class="stentry propvalue">unless</td>
+                                       
+                                       <td valign="top" headers="d363670e174" class="stentry propdesc">
+                                          <p class="p">Do not run the state at least unless succeed</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d363670e172" class="stentry propvalue">kwargs</td>
+                                       
+                                       <td valign="top" headers="d363670e174" class="stentry propdesc">
+                                          <p class="p">Any profile override or addition</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.cloud.volume_absent">
+                              <h3 class="title topictitle3">volume_absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cloud.volume_absent(
+								name,
+								provider=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Check that a block volume exists.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.cloud.volume_attached">
+                              <h3 class="title topictitle3">volume_attached</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cloud.volume_attached(
+								name,
+								server_name,
+								provider=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Check if a block volume is attached.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.cloud.volume_detached">
+                              <h3 class="title topictitle3">volume_detached</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cloud.volume_detached(
+								name,
+								server_name=None,
+								provider=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Check if a block volume is attached.</p>
+                                    
+                                    <p class="p">Returns True if server or Volume do not exist.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.cloud.volume_present">
+                              <h3 class="title topictitle3">volume_present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.cloud.volume_present(
+								name,
+								provider=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Check that a block volume exists.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

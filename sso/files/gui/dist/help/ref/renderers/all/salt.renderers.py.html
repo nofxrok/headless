@@ -1,0 +1,227 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.renderers.py</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.renderers.py">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../renderers.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-renderers-py">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-renderers-py">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.renderers.py</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-renderers-py__module-salt.renderers.py"></span></p>
+                              
+                              <p class="p">Pure python state renderer</p>
+                              
+                              <p class="p">The SLS file should contain a function called <tt class="ph tt">run</tt> which returns high state
+                                 data.
+                              </p>
+                              
+                              <p class="p">In this module, a few objects are defined for you, giving access to Salt's
+                                 execution functions, grains, pillar, etc. They are:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">__salt__</tt> - 
+                                       		
+                                       			&nbsp;<a class="xref" href="../../modules/all/index.html#all-salt-modules">Execution functions</a> (i.e.
+                                       <tt class="ph tt">__salt__['test.echo']('foo')</tt>)
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">__grains__</tt> - 
+                                       		
+                                       			&nbsp;<a class="xref" href="../../../topics/targeting/grains.html#targeting-grains">Grains</a> (i.e. <tt class="ph tt">__grains__['os']</tt>)
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">__pillar__</tt> - 
+                                       		
+                                       			&nbsp;<a class="xref" href="../../../topics/pillar/index.html#pillar">Pillar data</a> (i.e. <tt class="ph tt">__pillar__['foo']</tt>)
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">__opts__</tt> - Minion configuration options
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">__env__</tt> - The effective salt fileserver environment (i.e. <tt class="ph tt">base</tt>). Also
+                                       referred to as a "saltenv". <tt class="ph tt">__env__</tt> should not be modified in a pure
+                                       python SLS file. To use a different environment, the environment should be
+                                       set when executing the state. This can be done in a couple different ways:
+                                    </p>
+                                    
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">Using the <tt class="ph tt">saltenv</tt> argument on the salt CLI (i.e. <tt class="ph tt">salt '*' state.sls foo.bar.baz saltenv=env_name</tt>).
+                                          </p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">By adding a <tt class="ph tt">saltenv</tt> argument to an individual state within the SLS
+                                             file. In other words, adding a line like this to the state's data
+                                             structure: <tt class="ph tt">{'saltenv': 'env_name'}</tt></p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">__sls__</tt> - The SLS path of the file. For example, if the root of the base
+                                       environment is <tt class="ph tt">/srv/salt</tt>, and the SLS file is
+                                       <tt class="ph tt">/srv/salt/foo/bar/baz.sls</tt>, then <tt class="ph tt">__sls__</tt> in that file will be
+                                       <tt class="ph tt">foo.bar.baz</tt>.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              <pre class="pre codeblock language-python"> #!py
+
+ def run():
+     config = {}
+
+     if __grains__['os'] == 'Ubuntu':
+         user = 'ubuntu'
+         group = 'ubuntu'
+         home = '/home/{0}'.format(user)
+     else:
+         user = 'root'
+         group = 'root'
+         home = '/root/'
+
+     config['s3cmd'] = {
+         'pkg': [
+             'installed',
+             {'name': 's3cmd'},
+         ],
+     }
+
+     config[home + '/.s3cfg'] = {
+         'file.managed': [
+             {'source': 'salt://s3cfg/templates/s3cfg'},
+             {'template': 'jinja'},
+             {'user': user},
+             {'group': group},
+             {'mode': 600},
+             {'context': {
+                 'aws_key': __pillar__['AWS_ACCESS_KEY_ID'],
+                 'aws_secret_key': __pillar__['AWS_SECRET_ACCESS_KEY'],
+                 },
+             },
+         ],
+     }
+
+     return config</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.renderers.py.render">
+                           <h2 class="title topictitle2">render</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.renderers.py.render(
+								template,
+								saltenv='base',
+								sls='',
+								tmplpath=None,
+								**kws
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Render the python module's components</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr>
+                                    
+                                    <th id="d325660e145-value" valign="bottom" align="left">Value</th>
+                                    
+                                    <th id="d325660e145-desc" valign="bottom" align="left">Description</th>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d325660e145-value" class="stentry propvalue">Return type</td>
+                                    
+                                    <td valign="top" headers="d325660e145-desc" class="stentry propdesc">
+                                       <p class="p">
+                                          		
+                                          			&nbsp;<a class="xref" href="../../states/all/salt.states.redismod.html#salt.states.redismod.string">string</a></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

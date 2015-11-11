@@ -1,0 +1,762 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.jboss7</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.jboss7">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-jboss7">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-jboss7">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.jboss7</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-jboss7__module-salt.states.jboss7"></span></p>
+                              
+                              <p class="p">Manage JBoss 7 Application Server via CLI interface</p>
+                              
+                              <p class="p">This state uses jboss-cli.sh script from JBoss installation and parses its output
+                                 to determine execution result.
+                              </p>
+                              
+                              <p class="p">In order to run each state, jboss_config dictionary with the following properties
+                                 must be passed:
+                              </p>
+                              <pre class="pre codeblock language-yaml">jboss:
+   cli_path: '/opt/jboss/jboss-7.0/bin/jboss-cli.sh'
+   controller: 10.11.12.13:9999
+   cli_user: 'jbossadm'
+   cli_password: 'jbossadm'</pre>
+                              <p class="p">If controller doesn't require password, then passing cli_user and cli_password parameters
+                                 is not obligatory.
+                              </p>
+                              
+                              <p class="p">Example of application deployment:</p>
+                              <pre class="pre codeblock language-yaml">application_deployed:
+ jboss7.deployed:
+  - artifact:
+      artifactory_url: http://artifactory.intranet.company.com/artifactory
+      repository: 'ext-release-local'
+      artifact_id: 'webcomponent'
+      group_id: 'com.company.application'
+      packaging: 'war'
+      version: '0.1'
+      target_dir: '/tmp'
+   - jboss_config:
+      cli_path: '/opt/jboss/jboss-7.0/bin/jboss-cli.sh'
+      controller: 10.11.12.13:9999
+      cli_user: 'jbossadm'
+      cli_password: 'jbossadm'</pre>
+                              <p class="p">Since same dictionary with configuration will be used in all the states, it is much
+                                 more convenient to move jboss configuration and other properties
+                                 to pillar. For example, configuration of jboss server, artifactory address and application
+                                 version could be moved to pillars:
+                              </p>
+                              <pre class="pre codeblock language-yaml">application_deployed:
+ jboss7.deployed:
+  - artifact:
+      artifactory_url: {{ pillar['artifactory']['url'] }}
+      repository: {{ pillar['artifactory']['repository'] }}
+      artifact_id: 'webcomponent'
+      group_id: 'com.company.application'
+      packaging: 'war'
+      version: {{ pillar['webcomponent-artifact']['version'] }}
+      latest_snapshot: {{ pillar['webcomponent-artifact']['latest_snapshot'] }}
+      repository: {{ pillar['webcomponent-artifact']['repository'] }}
+  - jboss_config: {{ pillar['jboss'] }}</pre>
+                              <p class="p">Configuration in pillars:</p>
+                              <pre class="pre codeblock language-yaml">artifactory:
+   url: 'http://artifactory.intranet.company.com/artifactory'
+   repository: 'libs-snapshots-local'
+
+webcomponent-artifact:
+   repository: 'libs-snapshots-local'
+   latest_snapshot: True
+   version: -1 #If latest_snapshot then version is ignored</pre>
+                              <p class="p">For the sake of brevity, examples for each state assume that jboss_config is moved
+                                 to pillars.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.states.jboss7.bindings_exist">
+                           <h2 class="title topictitle2">bindings_exist</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.jboss7.bindings_exist(
+								name,
+								jboss_config,
+								bindings
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Ensures that given JNDI binding are present on the server.
+                                    If a binding doesn't exist on the server it will be created.
+                                    If it already exists its value will be changed.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d384541e70" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d384541e72" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d384541e70" class="stentry propvalue">jboss_config:</td>
+                                    
+                                    <td valign="top" headers="d384541e72" class="stentry propdesc">
+                                       <p class="p">Dict with connection properties (see state description)</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d384541e70" class="stentry propvalue">bindings:</td>
+                                    
+                                    <td valign="top" headers="d384541e72" class="stentry propdesc">
+                                       <p class="p">Dict with bindings to set.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Example:</p>
+                                 <pre class="pre codeblock language-yaml">jndi_entries_created:
+  jboss7.bindings_exist:
+   - bindings:
+      'java:global/sampleapp/environment': 'DEV'
+      'java:global/sampleapp/configurationFile': '/var/opt/sampleapp/config.properties'
+   - jboss_config: {{ pillar['jboss'] }}</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.jboss7.datasource_exists">
+                           <h2 class="title topictitle2">datasource_exists</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.jboss7.datasource_exists(
+								name,
+								jboss_config,
+								datasource_properties,
+								recreate=False
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Ensures that a datasource with given properties exist on the jboss instance.
+                                    If datasource doesn't exist, it is created, otherwise only the properties that are
+                                    different will be updated.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d384541e121" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d384541e123" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d384541e121" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d384541e123" class="stentry propdesc">
+                                       <p class="p">Datasource property name</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d384541e121" class="stentry propvalue">jboss_config</td>
+                                    
+                                    <td valign="top" headers="d384541e123" class="stentry propdesc">
+                                       <p class="p">Dict with connection properties (see state description)</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d384541e121" class="stentry propvalue">datasource_properties</td>
+                                    
+                                    <td valign="top" headers="d384541e123" class="stentry propdesc">
+                                       <p class="p">Dict with datasource properties</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d384541e121" class="stentry propvalue">recreate</td>
+                                    
+                                    <td valign="top" headers="d384541e123" class="stentry propdesc">
+                                       <p class="p">If set to True and datasource exists it will be removed and created again. However,
+                                          if there are deployments that depend on the datasource, it will not me possible to
+                                          remove it.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Example:</p>
+                                 <pre class="pre codeblock language-yaml">sampleDS:
+  jboss7.datasource_exists:
+   - recreate: False
+   - datasource_properties:
+       driver-name: mysql
+       connection-url: 'jdbc:mysql://localhost:3306/sampleDatabase'
+       jndi-name: 'java:jboss/datasources/sampleDS'
+       user-name: sampleuser
+       password: secret
+       min-pool-size: 3
+       use-java-context: True
+   - jboss_config: {{ pillar['jboss'] }}</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.jboss7.deployed">
+                           <h2 class="title topictitle2">deployed</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.jboss7.deployed(
+								name,
+								jboss_config,
+								artifact=None,
+								salt_source=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Ensures that the given application is deployed on server.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d384541e184" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d384541e186" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d384541e184" class="stentry propvalue">jboss_config:</td>
+                                    
+                                    <td valign="top" headers="d384541e186" class="stentry propdesc">
+                                       <p class="p">Dict with connection properties (see state description)</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d384541e184" class="stentry propvalue">artifact:</td>
+                                    
+                                    <td valign="top" headers="d384541e186" class="stentry propdesc">
+                                       <dl class="dl definition_list">
+                                          <dt class="dt dlterm">If set, the artifact will be fetched from artifactory. This is a Dict object with
+                                             the following properties:
+                                          </dt>
+                                          
+                                          <dd class="dd">
+                                             <ul class="ul">
+                                                <li class="li">
+                                                   <p class="p">artifactory_url: Full url to artifactory instance, for example: <a class="xref" href="http://artifactory.intranet.company.com/artifactory" target="_blank">http://artifactory.intranet.company.com/artifactory</a></p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">repository: One of the repositories, for example: libs-snapshots, ext-release-local,
+                                                      etc..
+                                                   </p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">artifact_id: Artifact ID of the artifact</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">group_id: Group ID of the artifact</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">packaging: war/jar/ear, etc...</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">version: Artifact version. If latest_snapshot is set to True, the value of this attribute
+                                                      will be ignored, and newest snapshot will be taken instead.
+                                                   </p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">latest_snapshot: If set to True and repository is a snapshot repository it will automatically
+                                                      select the newest snapshot.
+                                                   </p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">snapshot_version: Exact version of the snapshot (with timestamp). A snapshot version
+                                                      may have several builds and a way to differentiate is to provide a build timestamp.
+                                                   </p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">target_dir: Temporary directory on minion where artifacts will be downloaded</p>
+                                                   
+                                                </li>
+                                                
+                                             </ul>
+                                             
+                                          </dd>
+                                          
+                                       </dl>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d384541e184" class="stentry propvalue">salt_source:</td>
+                                    
+                                    <td valign="top" headers="d384541e186" class="stentry propdesc">
+                                       <dl class="dl definition_list">
+                                          <dt class="dt dlterm">If set, the artifact to be deployed will be fetched from salt master. This is a Dict
+                                             object with the following properties:
+                                          </dt>
+                                          
+                                          <dd class="dd">
+                                             <ul class="ul">
+                                                <li class="li">
+                                                   <p class="p">source: File on salt master (eg. salt://application-web-0.39.war)</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">target_file: Temporary file on minion to save file to (eg. '/tmp/application-web-0.39.war')</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">undeploy: Regular expression to match against existing deployments. If any deployment
+                                                      matches the regular expression then it will be undeployed.
+                                                   </p>
+                                                   
+                                                </li>
+                                                
+                                             </ul>
+                                             
+                                          </dd>
+                                          
+                                       </dl>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">The deployment consists of the following steps:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">Fetch artifact (salt filesystem, artifact or filesystem on minion)</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">Check if same artifact is not deployed yet (perhaps with different version)</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">Undeploy the artifact if it is already deployed</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">Deploy the new artifact</p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">Examples:</p>
+                                 
+                                 <p class="p">Deployment of a file from Salt file system:</p>
+                                 <pre class="pre codeblock language-yaml">application_deployed:
+  jboss7.deployed:
+   - salt_source:
+        source: salt://application-web-0.39.war
+        target_file: '/tmp/application-web-0.39.war'
+        undeploy: 'application-web-.*'
+   - jboss_config: {{ pillar['jboss'] }}</pre>
+                                 <p class="p">Here, application-web-0.39.war file is downloaded from Salt file system to /tmp/application-web-0.39.war
+                                    file on minion.
+                                    Existing deployments are checked if any of them matches 'application-web-.*' regular
+                                    expression, and if so then it
+                                    is undeployed before deploying the application. This is useful to automate deployment
+                                    of new application versions.
+                                 </p>
+                                 
+                                 <p class="p">JBoss state is capable of deploying artifacts directly from Artifactory repository.
+                                    Here are some examples of deployments:
+                                 </p>
+                                 
+                                 <ol class="ol">
+                                    <li class="li">
+                                       <p class="p">Deployment of released version of artifact from Artifactory.</p>
+                                       
+                                    </li>
+                                    
+                                 </ol>
+                                 <pre class="pre codeblock language-yaml">application_deployed:
+  jboss7.deployed:
+   - artifact:
+       artifactory_url: http://artifactory.intranet.company.com/artifactory
+       repository: 'ext-release-local'
+       artifact_id: 'webcomponent'
+       group_id: 'com.company.application'
+       packaging: 'war'
+       version: '0.1'
+       target_dir: '/tmp'
+    - jboss_config: {{ pillar['jboss'] }}</pre>
+                                 <p class="p">This performs the following operations:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">Download artifact from artifactory. In the example above the artifact will be fetched
+                                          from: <a class="xref" href="http://artifactory.intranet.company.com/artifactory/ext-release-local/com/company/application/webcomponent/0.1/webcomponent-0.1.war" target="_blank">http://artifactory.intranet.company.com/artifactory/ext-release-local/com/company/application/webcomponent/0.1/webcomponent-0.1.war</a>
+                                          As a rule, for released versions the artifacts are downloaded from: artifactory_url/repository/group_id_with_slashed_instead_of_dots/artifact_id/version/artifact_id-version.packaging'
+                                          This follows artifactory convention for artifact resolution. By default the artifact
+                                          will be downloaded to /tmp directory on minion.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">Connect to JBoss via controller (defined in jboss_config dict) and check if the artifact
+                                          is not deployed already. In case of artifactory
+                                          it will check if any deployment's name starts with artifact_id value. If deployment
+                                          already exists it will be undeployed
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">Deploy the downloaded artifact to JBoss via cli interface.</p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <ol class="ol">
+                                    <li class="li">
+                                       <p class="p">Deployment of last updated version of given SNAPSHOT version of artifact from Artifactory.</p>
+                                       
+                                    </li>
+                                    
+                                 </ol>
+                                 <pre class="pre codeblock language-yaml">application_deployed:
+  jboss7.deployed:
+   - artifact:
+       artifactory_url: http://artifactory.intranet.company.com/artifactory
+       repository: 'ext-snapshot-local'
+       artifact_id: 'webcomponent'
+       group_id: 'com.company.application'
+       packaging: 'war'
+       version: '0.1-SNAPSHOT'
+    - jboss_config: {{ pillar['jboss'] }}</pre>
+                                 <p class="p">Deploying snapshot version involves an additional step of resolving the exact version
+                                    of the artifact (including the timestamp), which
+                                    is not necessary when deploying a release.
+                                    In the example above first a request will be made to retrieve the update timestamp
+                                    from:
+                                    <a class="xref" href="http://artifactory.intranet.company.com/artifactory/ext-snapshot-local/com/company/application/webcomponent/0.1-SNAPSHOT/maven-metadata.xml" target="_blank">http://artifactory.intranet.company.com/artifactory/ext-snapshot-local/com/company/application/webcomponent/0.1-SNAPSHOT/maven-metadata.xml</a>
+                                    Then the artifact will be fetched from
+                                    <a class="xref" href="http://artifactory.intranet.company.com/artifactory/ext-snapshot-local/com/company/application/webcomponent/0.1-SNAPSHOT/webcomponent-RESOLVED_SNAPSHOT_VERSION.war" target="_blank">http://artifactory.intranet.company.com/artifactory/ext-snapshot-local/com/company/application/webcomponent/0.1-SNAPSHOT/webcomponent-RESOLVED_SNAPSHOT_VERSION.war</a></p>
+                                 
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p">In order to perform a snapshot deployment you have to:</p>
+                                    
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">Set repository to a snapshot repository.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">Choose a version that ends with "SNAPSHOT" string.
+                                             Snapshot repositories have a different layout and provide some extra information that
+                                             is needed for deployment of the last or a specific snapshot.
+                                          </p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </aside>
+                                 
+                                 <ol class="ol">
+                                    <li class="li">
+                                       <p class="p">Deployment of SNAPSHOT version (with exact timestamp) of artifact from Artifactory.</p>
+                                       
+                                    </li>
+                                    
+                                 </ol>
+                                 
+                                 <p class="p">If you need to deploy an exact version of the snapshot you may provide snapshot_version
+                                    parameter.
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">application_deployed:
+  jboss7.deployed:
+   - artifact:
+       artifactory_url: http://artifactory.intranet.company.com/artifactory
+       repository: 'ext-snapshot-local'
+       artifact_id: 'webcomponent'
+       group_id: 'com.company.application'
+       packaging: 'war'
+       version: '0.1-SNAPSHOT'
+       snapshot_version: '0.1-20141023.131756-19'
+    - jboss_config: {{ pillar['jboss'] }}</pre>
+                                 <p class="p">In this example the artifact will be retrieved from:
+                                    <a class="xref" href="http://artifactory.intranet.company.com/artifactory/ext-snapshot-local/com/company/application/webcomponent/0.1-SNAPSHOT/webcomponent-0.1-20141023.131756-19.war" target="_blank">http://artifactory.intranet.company.com/artifactory/ext-snapshot-local/com/company/application/webcomponent/0.1-SNAPSHOT/webcomponent-0.1-20141023.131756-19.war</a></p>
+                                 
+                                 <ol class="ol">
+                                    <li class="li">
+                                       <p class="p">Deployment of latest snapshot of artifact from Artifactory.</p>
+                                       
+                                    </li>
+                                    
+                                 </ol>
+                                 <pre class="pre codeblock language-yaml">application_deployed:
+  jboss7.deployed:
+   - artifact:
+       artifactory_url: http://artifactory.intranet.company.com/artifactory
+       repository: 'ext-snapshot-local'
+       artifact_id: 'webcomponent'
+       group_id: 'com.company.application'
+       packaging: 'war'
+       latest_snapshot: True
+    - jboss_config: {{ pillar['jboss'] }}</pre>
+                                 <p class="p">Instead of providing an exact version of a snapshot it is sometimes more convenient
+                                    to get the newest version. If artifact.latest_snapshot
+                                    is set to True, then the newest snapshot will be downloaded from Artifactory. In this
+                                    case it is not necessary to specify version.
+                                    This is particulary useful when integrating with CI tools that will deploy the current
+                                    snapshot to the Artifactory.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.jboss7.reloaded">
+                           <h2 class="title topictitle2">reloaded</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.jboss7.reloaded(
+								name,
+								jboss_config,
+								timeout=60,
+								interval=5
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Reloads configuration of jboss server.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d384541e379" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d384541e381" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d384541e379" class="stentry propvalue">jboss_config:</td>
+                                    
+                                    <td valign="top" headers="d384541e381" class="stentry propdesc">
+                                       <p class="p">Dict with connection properties (see state description)</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d384541e379" class="stentry propvalue">timeout:</td>
+                                    
+                                    <td valign="top" headers="d384541e381" class="stentry propdesc">
+                                       <p class="p">Time to wait until jboss is back in running state. Default timeout is 60s.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d384541e379" class="stentry propvalue">interval:</td>
+                                    
+                                    <td valign="top" headers="d384541e381" class="stentry propdesc">
+                                       <p class="p">Interval between state checks. Default interval is 5s. Decreasing the interval may
+                                          slightly decrease waiting time
+                                          but be aware that every status check is a call to jboss-cli which is a java process.
+                                          If interval is smaller than
+                                          process cleanup time it may easily lead to excessive resource consumption.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">This step performs the following operations:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">Ensures that server is in running or reload-required state (by reading server-state
+                                          attribute)
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">Reloads configuration</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">Waits for server to reload and be in running state</p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">Example:</p>
+                                 <pre class="pre codeblock language-yaml">configuration_reloaded:
+   jboss7.reloaded:
+    - jboss_config: {{ pillar['jboss'] }}</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

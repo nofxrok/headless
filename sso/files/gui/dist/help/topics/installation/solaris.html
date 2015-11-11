@@ -1,0 +1,209 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Solaris</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Solaris">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="solaris">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="solaris">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Solaris</h1>
+                        <div class="body conbody">
+                           <p class="p">Salt was added to the OpenCSW package repository in September of 2012 by Romeo
+                              Theriault &lt;<a class="xref" href="mailto:romeot@hawaii.edu" target="_blank">romeot@hawaii.edu</a>&gt; at version 0.10.2 of Salt. It has mainly been
+                              tested on Solaris 10 (sparc), though it is built for and has been tested
+                              minimally on Solaris 10 (x86), Solaris 9 (sparc/x86) and 11 (sparc/x86).
+                              (Please let me know if you're using it on these platforms!) Most of the testing
+                              has also just focused on the minion, though it has verified that the master
+                              starts up successfully on Solaris 10.
+                           </p>
+                           
+                           <p class="p">Comments and patches for better support on these platforms is very welcome.</p>
+                           
+                           <p class="p">As of version 0.10.4, Solaris is well supported under salt, with all of the
+                              following working well:
+                           </p>
+                           
+                           <ol class="ol">
+                              <li class="li">
+                                 <p class="p">remote execution</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">grain detection</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">service control with SMF</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">'pkg' states with 'pkgadd' and 'pkgutil' modules</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">cron modules/states</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">user and group modules/states</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">shadow password management modules/states</p>
+                                 
+                              </li>
+                              
+                           </ol>
+                           
+                           <p class="p">Salt is dependent on the following additional packages. These will
+                              automatically be installed as dependencies of the <tt class="ph tt">py_salt</tt> package:
+                           </p>
+                           
+                           <ul class="ul">
+                              <li class="li">
+                                 <p class="p">py_yaml</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">py_pyzmq</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">py_jinja2</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">py_msgpack_python</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">py_m2crypto</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">py_crypto</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">python</p>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                           <div class="section" id="solaris__installation">
+                              <h2 class="title sectiontitle">Installation</h2>
+                              <p class="p">To install Salt from the OpenCSW package repository you first need to install
+                                 <a class="xref" href="http://www.opencsw.org/manual/for-administrators/getting-started.html" target="_blank">pkgutil</a> assuming you don't already have it installed:
+                              </p>
+                              
+                              <p class="p">On Solaris 10:</p>
+                              <pre class="pre codeblock language-bash">pkgadd -d http://get.opencsw.org/now</pre>
+                              <p class="p">On Solaris 9:</p>
+                              <pre class="pre codeblock language-bash">wget http://mirror.opencsw.org/opencsw/pkgutil.pkg
+pkgadd -d pkgutil.pkg all</pre>
+                              <p class="p">Once pkgutil is installed you'll need to edit it's config file
+                                 <tt class="ph tt">/etc/opt/csw/pkgutil.conf</tt> to point it at the unstable catalog:
+                              </p>
+                              <pre class="pre codeblock language-diff">- #mirror=http://mirror.opencsw.org/opencsw/testing
++ mirror=http://mirror.opencsw.org/opencsw/unstable</pre>
+                              <p class="p">OK, time to install salt.</p>
+                              <pre class="pre codeblock language-bash"># Update the catalog
+root&gt; /opt/csw/bin/pkgutil -U
+# Install salt
+root&gt; /opt/csw/bin/pkgutil -i -y py_salt</pre>
+                              </div>
+                           
+                           <div class="section" id="solaris__minion-configuration">
+                              <h2 class="title sectiontitle">Minion Configuration</h2>
+                              <p class="p">Now that salt is installed you can find it's configuration files in
+                                 <tt class="ph tt">/etc/opt/csw/salt/</tt>.
+                              </p>
+                              
+                              <p class="p">You'll want to edit the minion config file to set the name of your salt master
+                                 server:
+                              </p>
+                              <pre class="pre codeblock language-diff">- #master: salt
++ master: your-salt-server</pre>
+                              <p class="p">If you would like to use <a class="xref" href="http://www.opencsw.org/manual/for-administrators/getting-started.html" target="_blank">pkgutil</a> as the default package provider for your
+                                 Solaris minions, you can do so using the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/minion.html#configuration-salt-minion__providers">providers</a> option in the
+                                 minion config file.
+                              </p>
+                              
+                              <p class="p">You can now start the salt minion like so:</p>
+                              
+                              <p class="p">On Solaris 10:</p>
+                              <pre class="pre codeblock language-bash">svcadm enable salt-minion</pre>
+                              <p class="p">On Solaris 9:</p>
+                              <pre class="pre codeblock language-bash">/etc/init.d/salt-minion start</pre>
+                              <p class="p">You should now be able to log onto the salt master and check to see if the
+                                 salt-minion key is awaiting acceptance:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-key -l un</pre>
+                              <p class="p">Accept the key:</p>
+                              <pre class="pre codeblock language-bash">salt-key -a &lt;your-salt-minion&gt;</pre>
+                              <p class="p">Run a simple test against the minion:</p>
+                              <pre class="pre codeblock language-bash">salt '&lt;your-salt-minion&gt;' test.ping</pre>
+                              </div>
+                           
+                           <div class="section" id="solaris__troubleshooting">
+                              <h2 class="title sectiontitle">Troubleshooting</h2>
+                              <p class="p">Logs are in <tt class="ph tt">/var/log/salt</tt></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

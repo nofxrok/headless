@@ -1,0 +1,288 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.mysql_user</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.mysql_user">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-mysql-user">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-mysql-user">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.mysql_user</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-mysql-user__module-salt.states.mysql_user"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="management-of-mysql-users">
+                           <h2 class="title topictitle2">Management of MySQL users</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <dl class="dl field_list">
+                                    <dt class="dt dlterm">depends</dt>
+                                    
+                                    <dd class="dd">
+                                       <ul class="ul">
+                                          <li class="li">
+                                             <p class="p">MySQLdb Python module</p>
+                                             
+                                          </li>
+                                          
+                                       </ul>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">configuration</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">See 
+                                          		
+                                          			&nbsp;<a class="xref" href="../../modules/all/salt.modules.mysql.html#salt.modules.mysql">salt.modules.mysql</a> for setup instructions.
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 <pre class="pre codeblock language-yaml">frank:
+  mysql_user.present:
+    - host: localhost
+    - password: bobcat</pre>
+                                 <p class="p"><span class="keyword versionmodified">New in version 0.16.2: </span>Authentication overrides have been added.
+                                 </p>
+                                 
+                                 <p class="p">The MySQL authentication information specified in the minion config file can be
+                                    overridden in states using the following arguments: <tt class="ph tt">connection_host</tt>,
+                                    <tt class="ph tt">connection_port</tt>, <tt class="ph tt">connection_user</tt>, <tt class="ph tt">connection_pass</tt>,
+                                    <tt class="ph tt">connection_db</tt>, <tt class="ph tt">connection_unix_socket</tt>, <tt class="ph tt">connection_default_file</tt> and
+                                    <tt class="ph tt">connection_charset</tt>.
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">frank:
+  mysql_user.present:
+    - host: localhost
+    - password: "bob@cat"
+    - connection_user: someuser
+    - connection_pass: somepass
+    - connection_charset: utf8
+    - saltenv:
+      - LC_ALL: "en_US.utf8"</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.mysql_user.absent">
+                              <h3 class="title topictitle3">absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.mysql_user.absent(
+								name,
+								host='localhost',
+								**connection_args
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure that the named user is absent</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d399727e107" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d399727e109" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d399727e107" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d399727e109" class="stentry propdesc">
+                                          <p class="p">The name of the user to remove</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.mysql_user.present">
+                              <h3 class="title topictitle3">present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.mysql_user.present(
+								name,
+								host='localhost',
+								password=None,
+								password_hash=None,
+								allow_passwordless=False,
+								unix_socket=False,
+								**connection_args
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure that the named user is present with the specified properties. A
+                                       passwordless user can be configured by omitting <tt class="ph tt">password</tt> and
+                                       <tt class="ph tt">password_hash</tt>, and setting <tt class="ph tt">allow_passwordless</tt> to <tt class="ph tt">True</tt>.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d399727e157" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d399727e159" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d399727e157" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d399727e159" class="stentry propdesc">
+                                          <p class="p">The name of the user to manage</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d399727e157" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d399727e159" class="stentry propdesc">
+                                          <p class="p">Host for which this user/password combo applies</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d399727e157" class="stentry propvalue">password</td>
+                                       
+                                       <td valign="top" headers="d399727e159" class="stentry propdesc">
+                                          <p class="p">The password to use for this user. Will take precedence over the
+                                             <tt class="ph tt">password_hash</tt> option if both are specified.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d399727e157" class="stentry propvalue">password_hash</td>
+                                       
+                                       <td valign="top" headers="d399727e159" class="stentry propdesc">
+                                          <p class="p">The password in hashed form. Be sure to quote the password because YAML
+                                             doesn't like the <tt class="ph tt">*</tt>. A password hash can be obtained from the mysql
+                                             command-line client like so:
+                                          </p>
+                                          <pre class="pre codeblock language-">mysql&gt; SELECT PASSWORD('mypass');
++-------------------------------------------+
+| PASSWORD('mypass')                        |
++-------------------------------------------+
+| *6C8989366EAF75BB670AD8EA7A7FC1176A95CEF4 |
++-------------------------------------------+
+1 row in set (0.00 sec)</pre>
+                                          </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d399727e157" class="stentry propvalue">allow_passwordless</td>
+                                       
+                                       <td valign="top" headers="d399727e159" class="stentry propdesc">
+                                          <p class="p">If <tt class="ph tt">True</tt>, then <tt class="ph tt">password</tt> and <tt class="ph tt">password_hash</tt> can be omitted to
+                                             permit a passwordless login.
+                                          </p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 0.16.2.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d399727e157" class="stentry propvalue">unix_socket</td>
+                                       
+                                       <td valign="top" headers="d399727e159" class="stentry propdesc">
+                                          <p class="p">If <tt class="ph tt">True</tt> and allow_passwordless is <tt class="ph tt">True</tt>, the unix_socket auth
+                                             plugin will be used.
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

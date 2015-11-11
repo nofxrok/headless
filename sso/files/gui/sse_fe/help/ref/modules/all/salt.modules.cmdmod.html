@@ -1,0 +1,854 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.cmdmod</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.cmdmod">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-cmdmod">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-cmdmod">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.cmdmod</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-cmdmod__module-salt.modules.cmdmod"></span></p>
+                              
+                              <p class="p">A module for shelling out</p>
+                              
+                              <p class="p">Keep in mind that this module is insecure, in that it can give whomever has
+                                 access to the master root execution access to all salt minions.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.cmdmod.exec_code">
+                           <h2 class="title topictitle2">exec_code</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cmdmod.exec_code(
+								lang,
+								code,
+								cwd=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Pass in two strings, the first naming the executable language, aka -
+                                    python2, python3, ruby, perl, lua, etc. the second string containing
+                                    the code you wish to execute. The stdout will be returned.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.exec_code ruby 'puts "cheese"'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cmdmod.exec_code_all">
+                           <h2 class="title topictitle2">exec_code_all</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cmdmod.exec_code_all(
+								lang,
+								code,
+								cwd=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Pass in two strings, the first naming the executable language, aka -
+                                    python2, python3, ruby, perl, lua, etc. the second string containing
+                                    the code you wish to execute. All cmd artifacts (stdout, stderr, retcode, pid)
+                                    will be returned.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.exec_code_all ruby 'puts "cheese"'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cmdmod.has_exec">
+                           <h2 class="title topictitle2">has_exec</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cmdmod.has_exec(
+								cmd
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Returns true if the executable is available on the minion, false otherwise</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.has_exec cat</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cmdmod.retcode">
+                           <h2 class="title topictitle2">retcode</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cmdmod.retcode(
+								cmd,
+								cwd=None,
+								stdin=None,
+								runas=None,
+								shell='/bin/bash',
+								python_shell=None,
+								env=None,
+								clean_env=False,
+								template=None,
+								umask=None,
+								output_loglevel='debug',
+								timeout=None,
+								reset_system_locale=True,
+								ignore_retcode=False,
+								saltenv='base',
+								use_vt=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Execute a shell command and return the command's return code.</p>
+                                 
+                                 <p class="p">Note that <tt class="ph tt">env</tt> represents the environment variables for the command, and
+                                    should be formatted as a dict, or a YAML string which resolves to a dict.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr>
+                                    
+                                    <th id="d73769e142-value" valign="bottom" align="left">Value</th>
+                                    
+                                    <th id="d73769e142-desc" valign="bottom" align="left">Description</th>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d73769e142-value" class="stentry propvalue">Return type</td>
+                                    
+                                    <td valign="top" headers="d73769e142-desc" class="stentry propdesc">
+                                       <p class="p"><a class="xref" href="http://docs.python.org/3/library/functions.html#int" target="_blank">int</a></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d73769e142-value" class="stentry propvalue">Return type</td>
+                                    
+                                    <td valign="top" headers="d73769e142-desc" class="stentry propdesc">
+                                       <p class="p"><a class="xref" href="http://docs.python.org/3/library/constants.html#None" target="_blank">None</a></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d73769e142-value" class="stentry propvalue">Returns</td>
+                                    
+                                    <td valign="top" headers="d73769e142-desc" class="stentry propdesc">
+                                       <p class="p">Return Code as an int or None if there was an exception.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.retcode "file /bin/bash"</pre>
+                                 <p class="p">The template arg can be set to 'jinja' or another supported template
+                                    engine to render the command arguments before execution.
+                                    For example:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.retcode template=jinja "file {{grains.pythonpath[0]}}/python"</pre>
+                                 <p class="p">A string of standard input can be specified for the command to be run using
+                                    the <tt class="ph tt">stdin</tt> parameter. This can be useful in cases where sensitive
+                                    information must be read from standard input.:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.retcode "grep f" stdin='one\ntwo\nthree\nfour\nfive\n'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cmdmod.run">
+                           <h2 class="title topictitle2">run</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cmdmod.run(
+								cmd,
+								cwd=None,
+								stdin=None,
+								runas=None,
+								shell='/bin/bash',
+								python_shell=None,
+								env=None,
+								clean_env=False,
+								template=None,
+								rstrip=True,
+								umask=None,
+								output_loglevel='debug',
+								timeout=None,
+								reset_system_locale=True,
+								ignore_retcode=False,
+								saltenv='base',
+								use_vt=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Execute the passed command and return the output as a string</p>
+                                 
+                                 <p class="p">Note that <tt class="ph tt">env</tt> represents the environment variables for the command, and
+                                    should be formatted as a dict, or a YAML string which resolves to a dict.
+                                 </p>
+                                 
+                                 <p class="p">WARNING: This function does not process commands through a shell
+                                    unless the python_shell flag is set to True. This means that any
+                                    shell-specific functionality such as 'echo' or the use of pipes,
+                                    redirection or &amp;&amp;, should either be migrated to cmd.shell or
+                                    have the python_shell=True flag set here.
+                                 </p>
+                                 
+                                 <p class="p">The use of python_shell=True means that the shell will accept _any_ input
+                                    including potentially malicious commands such as 'good_command;rm -rf /'.
+                                    Be absolutely certain that you have sanitized your input prior to using
+                                    python_shell=True
+                                    <strong class="ph b">*********************************************************************</strong></p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.run "ls -l | awk '/foo/{print \$2}'"</pre>
+                                 <p class="p">The template arg can be set to 'jinja' or another supported template
+                                    engine to render the command arguments before execution.
+                                    For example:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.run template=jinja "ls -l /tmp/{{grains.id}} | awk '/foo/{print \$2}'"</pre>
+                                 <p class="p">Specify an alternate shell with the shell parameter:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.run "Get-ChildItem C:\ " shell='powershell'</pre>
+                                 <p class="p">A string of standard input can be specified for the command to be run using
+                                    the <tt class="ph tt">stdin</tt> parameter. This can be useful in cases where sensitive
+                                    information must be read from standard input.:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.run "grep f" stdin='one\ntwo\nthree\nfour\nfive\n'</pre>
+                                 <p class="p">If an equal sign (<tt class="ph tt">=</tt>) appears in an argument to a Salt command it is
+                                    interpreted as a keyword argument in the format <tt class="ph tt">key=val</tt>. That
+                                    processing can be bypassed in order to pass an equal sign through to the
+                                    remote shell command by manually specifying the kwarg:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.run cmd='sed -e s/=/:/g'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cmdmod.run_all">
+                           <h2 class="title topictitle2">run_all</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cmdmod.run_all(
+								cmd,
+								cwd=None,
+								stdin=None,
+								runas=None,
+								shell='/bin/bash',
+								python_shell=None,
+								env=None,
+								clean_env=False,
+								template=None,
+								rstrip=True,
+								umask=None,
+								output_loglevel='debug',
+								timeout=None,
+								reset_system_locale=True,
+								ignore_retcode=False,
+								saltenv='base',
+								use_vt=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Execute the passed command and return a dict of return data</p>
+                                 
+                                 <p class="p">Note that <tt class="ph tt">env</tt> represents the environment variables for the command, and
+                                    should be formatted as a dict, or a YAML string which resolves to a dict.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.run_all "ls -l | awk '/foo/{print \$2}'"</pre>
+                                 <p class="p">The template arg can be set to 'jinja' or another supported template
+                                    engine to render the command arguments before execution.
+                                    For example:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.run_all template=jinja "ls -l /tmp/{{grains.id}} | awk '/foo/{print \$2}'"</pre>
+                                 <p class="p">A string of standard input can be specified for the command to be run using
+                                    the <tt class="ph tt">stdin</tt> parameter. This can be useful in cases where sensitive
+                                    information must be read from standard input.:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.run_all "grep f" stdin='one\ntwo\nthree\nfour\nfive\n'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cmdmod.run_chroot">
+                           <h2 class="title topictitle2">run_chroot</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cmdmod.run_chroot(
+								root,
+								cmd,
+								stdin=None,
+								output_loglevel='debug',
+								**kw
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">This function runs <a class="xref" href="salt.modules.cmdmod.html#salt.modules.cmdmod.run_all">cmd.run_all</a> wrapped
+                                    within a chroot, with dev and proc mounted in the chroot
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d73769e329" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d73769e331" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d73769e329" class="stentry propvalue">stdin</td>
+                                    
+                                    <td valign="top" headers="d73769e331" class="stentry propdesc">
+                                       <p class="p">Standard input to be used for the command</p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2014.7.1.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d73769e329" class="stentry propvalue">output_loglevel</td>
+                                    
+                                    <td valign="top" headers="d73769e331" class="stentry propdesc">
+                                       <p class="p">Level at which to log the output from the command. Set to <tt class="ph tt">quiet</tt> to
+                                          suppress logging.
+                                       </p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2014.7.1.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.run_chroot /var/lib/lxc/container_name/rootfs 'sh /tmp/bootstrap.sh'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cmdmod.run_stderr">
+                           <h2 class="title topictitle2">run_stderr</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cmdmod.run_stderr(
+								cmd,
+								cwd=None,
+								stdin=None,
+								runas=None,
+								shell='/bin/bash',
+								python_shell=None,
+								env=None,
+								clean_env=False,
+								template=None,
+								rstrip=True,
+								umask=None,
+								output_loglevel='debug',
+								timeout=None,
+								reset_system_locale=True,
+								ignore_retcode=False,
+								saltenv='base',
+								use_vt=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Execute a command and only return the standard error</p>
+                                 
+                                 <p class="p">Note that <tt class="ph tt">env</tt> represents the environment variables for the command, and
+                                    should be formatted as a dict, or a YAML string which resolves to a dict.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.run_stderr "ls -l | awk '/foo/{print \$2}'"</pre>
+                                 <p class="p">The template arg can be set to 'jinja' or another supported template
+                                    engine to render the command arguments before execution.
+                                    For example:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.run_stderr template=jinja "ls -l /tmp/{{grains.id}} | awk '/foo/{print \$2}'"</pre>
+                                 <p class="p">A string of standard input can be specified for the command to be run using
+                                    the <tt class="ph tt">stdin</tt> parameter. This can be useful in cases where sensitive
+                                    information must be read from standard input.:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.run_stderr "grep f" stdin='one\ntwo\nthree\nfour\nfive\n'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cmdmod.run_stdout">
+                           <h2 class="title topictitle2">run_stdout</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cmdmod.run_stdout(
+								cmd,
+								cwd=None,
+								stdin=None,
+								runas=None,
+								shell='/bin/bash',
+								python_shell=None,
+								env=None,
+								clean_env=False,
+								template=None,
+								rstrip=True,
+								umask=None,
+								output_loglevel='debug',
+								timeout=None,
+								reset_system_locale=True,
+								ignore_retcode=False,
+								saltenv='base',
+								use_vt=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Execute a command, and only return the standard out</p>
+                                 
+                                 <p class="p">Note that <tt class="ph tt">env</tt> represents the environment variables for the command, and
+                                    should be formatted as a dict, or a YAML string which resolves to a dict.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.run_stdout "ls -l | awk '/foo/{print \$2}'"</pre>
+                                 <p class="p">The template arg can be set to 'jinja' or another supported template
+                                    engine to render the command arguments before execution.
+                                    For example:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.run_stdout template=jinja "ls -l /tmp/{{grains.id}} | awk '/foo/{print \$2}'"</pre>
+                                 <p class="p">A string of standard input can be specified for the command to be run using
+                                    the <tt class="ph tt">stdin</tt> parameter. This can be useful in cases where sensitive
+                                    information must be read from standard input.:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.run_stdout "grep f" stdin='one\ntwo\nthree\nfour\nfive\n'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cmdmod.script">
+                           <h2 class="title topictitle2">script</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cmdmod.script(
+								source,
+								args=None,
+								cwd=None,
+								stdin=None,
+								runas=None,
+								shell='/bin/bash',
+								python_shell=None,
+								env=None,
+								template=None,
+								umask=None,
+								output_loglevel='debug',
+								quiet=False,
+								timeout=None,
+								reset_system_locale=True,
+								__env__=None,
+								saltenv='base',
+								use_vt=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Download a script from a remote location and execute the script locally.
+                                    The script can be located on the salt master file server or on an HTTP/FTP
+                                    server.
+                                 </p>
+                                 
+                                 <p class="p">The script will be executed directly, so it can be written in any available
+                                    programming language.
+                                 </p>
+                                 
+                                 <p class="p">The script can also be formatted as a template, the default is jinja.
+                                    Arguments for the script can be specified as well.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.script salt://scripts/runme.sh
+salt '*' cmd.script salt://scripts/runme.sh 'arg1 arg2 "arg 3"'
+salt '*' cmd.script salt://scripts/windows_task.ps1 args=' -Input c:\tmp\infile.txt' shell='powershell'</pre>
+                                 <p class="p">A string of standard input can be specified for the command to be run using
+                                    the <tt class="ph tt">stdin</tt> parameter. This can be useful in cases where sensitive
+                                    information must be read from standard input.:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.script salt://scripts/runme.sh stdin='one\ntwo\nthree\nfour\nfive\n'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cmdmod.script_retcode">
+                           <h2 class="title topictitle2">script_retcode</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cmdmod.script_retcode(
+								source,
+								args=None,
+								cwd=None,
+								stdin=None,
+								runas=None,
+								shell='/bin/bash',
+								python_shell=None,
+								env=None,
+								template='jinja',
+								umask=None,
+								timeout=None,
+								reset_system_locale=True,
+								__env__=None,
+								saltenv='base',
+								output_loglevel='debug',
+								use_vt=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Download a script from a remote location and execute the script locally.
+                                    The script can be located on the salt master file server or on an HTTP/FTP
+                                    server.
+                                 </p>
+                                 
+                                 <p class="p">The script will be executed directly, so it can be written in any available
+                                    programming language.
+                                 </p>
+                                 
+                                 <p class="p">The script can also be formatted as a template, the default is jinja.</p>
+                                 
+                                 <p class="p">Only evaluate the script return code and do not block for terminal output</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.script_retcode salt://scripts/runme.sh
+salt '*' cmd.script_retcode salt://scripts/runme.sh 'arg1 arg2 "arg 3"'
+salt '*' cmd.script_retcode salt://scripts/windows_task.ps1 args=' -Input c:\tmp\infile.txt' shell='powershell'</pre>
+                                 <p class="p">A string of standard input can be specified for the command to be run using
+                                    the <tt class="ph tt">stdin</tt> parameter. This can be useful in cases where sensitive
+                                    information must be read from standard input.:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.script_retcode salt://scripts/runme.sh stdin='one\ntwo\nthree\nfour\nfive\n'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cmdmod.shell">
+                           <h2 class="title topictitle2">shell</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cmdmod.shell(
+								cmd,
+								cwd=None,
+								stdin=None,
+								runas=None,
+								shell='/bin/bash',
+								env=None,
+								clean_env=False,
+								template=None,
+								rstrip=True,
+								umask=None,
+								output_loglevel='debug',
+								quiet=False,
+								timeout=None,
+								reset_system_locale=True,
+								ignore_retcode=False,
+								saltenv='base',
+								use_vt=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Execute the passed command and return the output as a string.</p>
+                                 
+                                 <p class="p">WARNING: This passes the cmd argument directly to the shell
+                                    without any further processing! Be absolutely sure that you
+                                    have properly santized the command passed to this function
+                                    and do not use untrusted inputs.
+                                    <strong class="ph b">********************************************************</strong></p>
+                                 
+                                 <p class="p">Note that <tt class="ph tt">env</tt> represents the environment variables for the command, and
+                                    should be formatted as a dict, or a YAML string which resolves to a dict.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.shell "ls -l | awk '/foo/{print \$2}'"</pre>
+                                 <p class="p">The template arg can be set to 'jinja' or another supported template
+                                    engine to render the command arguments before execution.
+                                    For example:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.shell template=jinja "ls -l /tmp/{{grains.id}} | awk '/foo/{print \$2}'"</pre>
+                                 <p class="p">Specify an alternate shell with the shell parameter:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.shell "Get-ChildItem C:\ " shell='powershell'</pre>
+                                 <p class="p">A string of standard input can be specified for the command to be run using
+                                    the <tt class="ph tt">stdin</tt> parameter. This can be useful in cases where sensitive
+                                    information must be read from standard input.:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.shell "grep f" stdin='one\ntwo\nthree\nfour\nfive\n'</pre>
+                                 <p class="p">If an equal sign (<tt class="ph tt">=</tt>) appears in an argument to a Salt command it is
+                                    interpreted as a keyword argument in the format <tt class="ph tt">key=val</tt>. That
+                                    processing can be bypassed in order to pass an equal sign through to the
+                                    remote shell command by manually specifying the kwarg:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.shell cmd='sed -e s/=/:/g'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cmdmod.shells">
+                           <h2 class="title topictitle2">shells</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cmdmod.shells( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Lists the valid shells on this system via the /etc/shells file</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-">salt '*' cmd.shells</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cmdmod.tty">
+                           <h2 class="title topictitle2">tty</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cmdmod.tty(
+								device,
+								echo=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Echo a string to a specific tty</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.tty tty0 'This is a test'
+salt '*' cmd.tty pts3 'This is a test'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cmdmod.which">
+                           <h2 class="title topictitle2">which</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cmdmod.which(
+								cmd
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Returns the path of an executable available on the minion, None otherwise</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.which cat</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cmdmod.which_bin">
+                           <h2 class="title topictitle2">which_bin</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cmdmod.which_bin(
+								cmds
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Returns the first command found in a list of commands</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cmd.which_bin '[pip2, pip, pip-python]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

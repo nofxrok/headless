@@ -1,0 +1,421 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.mysql_grants</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.mysql_grants">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-mysql-grants">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-mysql-grants">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.mysql_grants</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-mysql-grants__module-salt.states.mysql_grants"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="management-of-mysql-grants-user-permissions">
+                           <h2 class="title topictitle2">Management of MySQL grants (user permissions)</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <dl class="dl field_list">
+                                    <dt class="dt dlterm">depends</dt>
+                                    
+                                    <dd class="dd">
+                                       <ul class="ul">
+                                          <li class="li">
+                                             <p class="p">MySQLdb Python module</p>
+                                             
+                                          </li>
+                                          
+                                       </ul>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">configuration</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">See 
+                                          		
+                                          			&nbsp;<a class="xref" href="../../modules/all/salt.modules.mysql.html#salt.modules.mysql">salt.modules.mysql</a> for setup instructions.
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 
+                                 <p class="p">The mysql_grants module is used to grant and revoke MySQL permissions.</p>
+                                 
+                                 <p class="p">The <tt class="ph tt">name</tt> you pass in purely symbolic and does not have anything to do
+                                    with the grant itself.
+                                 </p>
+                                 
+                                 <p class="p">The <tt class="ph tt">database</tt> parameter needs to specify a 'priv_level' in the same
+                                    specification as defined in the MySQL documentation:
+                                 </p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">*</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">*.*</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">db_name.*</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">db_name.tbl_name</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">etc...</p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 <pre class="pre codeblock language-yaml">frank_exampledb:
+   mysql_grants.present:
+    - grant: select,insert,update
+    - database: exampledb.*
+    - user: frank
+    - host: localhost
+
+frank_otherdb:
+  mysql_grants.present:
+    - grant: all privileges
+    - database: otherdb.*
+    - user: frank
+
+restricted_singletable:
+  mysql_grants.present:
+    - grant: select
+    - database: somedb.sometable
+    - user: joe</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.mysql_grants.absent">
+                              <h3 class="title topictitle3">absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.mysql_grants.absent(
+								name,
+								grant=None,
+								database=None,
+								user=None,
+								host='localhost',
+								grant_option=False,
+								escape=True,
+								**connection_args
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure that the grant is absent</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d397294e102" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d397294e104" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d397294e102" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d397294e104" class="stentry propdesc">
+                                          <p class="p">The name (key) of the grant to add</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d397294e102" class="stentry propvalue">grant</td>
+                                       
+                                       <td valign="top" headers="d397294e104" class="stentry propdesc">
+                                          <p class="p">The grant priv_type (i.e. select,insert,update OR all privileges)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d397294e102" class="stentry propvalue">database</td>
+                                       
+                                       <td valign="top" headers="d397294e104" class="stentry propdesc">
+                                          <p class="p">The database priv_level (i.e. db.tbl OR db.*)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d397294e102" class="stentry propvalue">user</td>
+                                       
+                                       <td valign="top" headers="d397294e104" class="stentry propdesc">
+                                          <p class="p">The user to apply the grant to</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d397294e102" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d397294e104" class="stentry propdesc">
+                                          <p class="p">The network/host that the grant should apply to</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.mysql_grants.present">
+                              <h3 class="title topictitle3">present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.mysql_grants.present(
+								name,
+								grant=None,
+								database=None,
+								user=None,
+								host='localhost',
+								grant_option=False,
+								escape=True,
+								revoke_first=False,
+								ssl_option=False,
+								**connection_args
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure that the grant is present with the specified properties</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d397294e164" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d397294e166" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d397294e164" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d397294e166" class="stentry propdesc">
+                                          <p class="p">The name (key) of the grant to add</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d397294e164" class="stentry propvalue">grant</td>
+                                       
+                                       <td valign="top" headers="d397294e166" class="stentry propdesc">
+                                          <p class="p">The grant priv_type (i.e. select,insert,update OR all privileges)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d397294e164" class="stentry propvalue">database</td>
+                                       
+                                       <td valign="top" headers="d397294e166" class="stentry propdesc">
+                                          <p class="p">The database priv_level (i.e. db.tbl OR db.*)</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d397294e164" class="stentry propvalue">user</td>
+                                       
+                                       <td valign="top" headers="d397294e166" class="stentry propdesc">
+                                          <p class="p">The user to apply the grant to</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d397294e164" class="stentry propvalue">host</td>
+                                       
+                                       <td valign="top" headers="d397294e166" class="stentry propdesc">
+                                          <p class="p">The network/host that the grant should apply to</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d397294e164" class="stentry propvalue">grant_option</td>
+                                       
+                                       <td valign="top" headers="d397294e166" class="stentry propdesc">
+                                          <p class="p">Adds the WITH GRANT OPTION to the defined grant. Default is <tt class="ph tt">False</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d397294e164" class="stentry propvalue">escape</td>
+                                       
+                                       <td valign="top" headers="d397294e166" class="stentry propdesc">
+                                          <p class="p">Defines if the database value gets escaped or not. Default is <tt class="ph tt">True</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d397294e164" class="stentry propvalue">revoke_first</td>
+                                       
+                                       <td valign="top" headers="d397294e166" class="stentry propdesc">
+                                          <p class="p">By default, MySQL will not do anything if you issue a command to grant
+                                             privileges that are more restrictive than what's already in place. This
+                                             effectively means that you cannot downgrade permissions without first
+                                             revoking permissions applied to a db.table/user pair first.
+                                          </p>
+                                          
+                                          <p class="p">To have Salt forcibly revoke perms before applying a new grant, enable
+                                             the 'revoke_first options.
+                                          </p>
+                                          
+                                          <p class="p">WARNING: This will <em class="ph i">remove</em> permissions for a database before attempting
+                                             to apply new permissions. There is no guarantee that new permissions
+                                             will be applied correctly which can leave your database security in an
+                                             unknown and potentially dangerous state.
+                                             Use with caution!
+                                          </p>
+                                          
+                                          <p class="p">Default is <tt class="ph tt">False</tt></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d397294e164" class="stentry propvalue">ssl_option</td>
+                                       
+                                       <td valign="top" headers="d397294e166" class="stentry propdesc">
+                                          <p class="p">Adds the specified ssl options for the connecting user as requirements for
+                                             this grant. Value is a list of single-element dicts corresponding to the
+                                             list of ssl options to use.
+                                          </p>
+                                          
+                                          <p class="p">Possible key/value pairings for the dicts in the value:</p>
+                                          <pre class="pre codeblock language-text">- SSL: True
+- X509: True
+- SUBJECT: &lt;subject&gt;
+- ISSUER: &lt;issuer&gt;
+- CIPHER: &lt;cipher&gt;</pre>
+                                          <p class="p">The non-boolean ssl options take a string as their values, which should
+                                             be an appropriate value as specified by the MySQL documentation for these
+                                             options.
+                                          </p>
+                                          
+                                          <p class="p">Default is <tt class="ph tt">False</tt> (no ssl options will be used)
+                                          </p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

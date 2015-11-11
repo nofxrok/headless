@@ -1,0 +1,17 @@
+{% for usr in ['expadmin','nate','Nathan'] %}
+{{ usr }}:
+  user:
+    - present
+    {% if {{ usr }} == expadmin %}
+    - fullname: Super Admin
+    {% endif %}
+    - password: Ch@ng3m3!
+    - groups:
+      - Administrators
+      - Remote Desktop Users 
+{% endfor %}
+
+#win_firewall.disabled:    # Disable the Windows Firewall
+
+#rdp:
+#  - enabled     # Enable RDP on Windows    
