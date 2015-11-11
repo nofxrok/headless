@@ -1,0 +1,613 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Salt Master Events</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Salt Master Events">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="event-master-events">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="event-master-events">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Salt Master Events</h1>
+                        <div class="body conbody">
+                           <p class="p ids"><span class="ph" id="event-master-events__salt-master-events"></span></p>
+                           
+                           <p class="p">These events are fired on the Salt Master event bus. This list is <strong class="ph b">not</strong>
+                              comprehensive.
+                           </p>
+                           
+                           <div class="section" id="event-master-events__authentication-events">
+                              <h2 class="title sectiontitle">Authentication events</h2>
+                              <p class="p"><strong class="ph b">salt/auth</strong></p>
+                              
+                              <p class="p">Fired when a minion performs an authentication check with the master.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Variables</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">id -- The minion ID.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">act -- The current status of the minion key: <tt class="ph tt">accept</tt>, <tt class="ph tt">pend</tt>,
+                                             <tt class="ph tt">reject</tt>.
+                                          </p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">pub -- The minion public key.</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                           <div class="section" id="event-master-events__start-events">
+                              <h2 class="title sectiontitle">Start events</h2>
+                              <p class="p"><strong class="ph b">salt/minion/&lt;MID&gt;/start</strong></p>
+                              
+                              <p class="p">Fired every time a minion connects to the Salt master.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Variables</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">id -- The minion ID.</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                           <div class="section" id="event-master-events__key-events">
+                              <h2 class="title sectiontitle">Key events</h2>
+                              <p class="p"><strong class="ph b">salt/key</strong></p>
+                              
+                              <p class="p">Fired when accepting and rejecting minions keys on the Salt master.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Variables</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">id -- The minion ID.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">act -- The new status of the minion key: <tt class="ph tt">accept</tt>, <tt class="ph tt">pend</tt>,
+                                             <tt class="ph tt">reject</tt>.
+                                          </p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                           <div class="section" id="event-master-events__job-events">
+                              <h2 class="title sectiontitle">Job events</h2>
+                              <p class="p"><strong class="ph b">salt/job/&lt;JID&gt;/new</strong></p>
+                              
+                              <p class="p">Fired as a new job is sent out to minions.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Variables</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">jid -- The job ID.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">tgt -- The target of the job: <tt class="ph tt">*</tt>, a minion ID,
+                                             <tt class="ph tt">G@os_family:RedHat</tt>, etc.
+                                          </p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">tgt_type -- The type of targeting used: <tt class="ph tt">glob</tt>, <tt class="ph tt">grain</tt>,
+                                             <tt class="ph tt">compound</tt>, etc.
+                                          </p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">fun -- The function to run on minions: <tt class="ph tt">test.ping</tt>,
+                                             <tt class="ph tt">network.interfaces</tt>, etc.
+                                          </p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">arg -- A list of arguments to pass to the function that will be
+                                             called.
+                                          </p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">minions -- A list of minion IDs that Salt expects will return data for
+                                             this job.
+                                          </p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">user -- The name of the user that ran the command as defined in Salt's
+                                             Client ACL or external auth.
+                                          </p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><strong class="ph b">salt/job/&lt;JID&gt;/ret/&lt;MID&gt;</strong></p>
+                              
+                              <p class="p">Fired each time a minion returns data for a job.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Variables</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">id -- The minion ID.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">jid -- The job ID.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">retcode -- The return code for the job.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">fun -- The function the minion ran. E.g., <tt class="ph tt">test.ping</tt>.
+                                          </p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">return -- The data returned from the execution module.</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                           <div class="section" id="event-master-events__event-master-presence">
+                              <h2 class="title sectiontitle">Presence events</h2>
+                              <p class="p"><strong class="ph b">salt/presence/present</strong></p>
+                              
+                              <p class="p">Events fired on a regular interval about currently connected, newly
+                                 connected, or recently disconnected minions. Requires the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__presence_events">presence_events</a> setting to be enabled.
+                              </p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Variables</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">present -- A list of minions that are currently connected to the Salt
+                                       master.
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><strong class="ph b">salt/presence/change</strong></p>
+                              
+                              <p class="p">Fired when the Presence system detects new minions connect or disconnect.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Variables</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">new -- A list of minions that have connected since the last presence
+                                             event.
+                                          </p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">lost -- A list of minions that have disconnected since the last
+                                             presence event.
+                                          </p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                           <div class="section" id="event-master-events__cloud-events">
+                              <h2 class="title sectiontitle">Cloud Events</h2>
+                              <p class="p">Unlike other Master events, <tt class="ph tt">salt-cloud</tt> events are not fired on behalf of a
+                                 Salt Minion. Instead, <tt class="ph tt">salt-cloud</tt> events are fired on behalf of a VM. This
+                                 is because the minion-to-be may not yet exist to fire events to or also may have
+                                 been destroyed.
+                              </p>
+                              
+                              <p class="p">This behavior is reflected by the <tt class="ph tt">name</tt> variable in the event data for
+                                 <tt class="ph tt">salt-cloud</tt> events as compared to the <tt class="ph tt">id</tt> variable for Salt
+                                 Minion-triggered events.
+                              </p>
+                              
+                              <p class="p"><strong class="ph b">salt/cloud/&lt;VM NAME&gt;/creating</strong></p>
+                              
+                              <p class="p">Fired when salt-cloud starts the VM creation process.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Variables</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">name -- the name of the VM being created.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">event -- description of the event.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">provider -- the cloud provider of the VM being created.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">profile -- the cloud profile for the VM being created.</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><strong class="ph b">salt/cloud/&lt;VM NAME&gt;/deploying</strong></p>
+                              
+                              <p class="p">Fired when the VM is available and salt-cloud begins deploying Salt to the
+                                 new VM.
+                              </p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Variables</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">name -- the name of the VM being created.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">event -- description of the event.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">kwargs -- options available as the deploy script is invoked:
+                                             <tt class="ph tt">conf_file</tt>, <tt class="ph tt">deploy_command</tt>, <tt class="ph tt">display_ssh_output</tt>, <tt class="ph tt">host</tt>,
+                                             <tt class="ph tt">keep_tmp</tt>, <tt class="ph tt">key_filename</tt>, <tt class="ph tt">make_minion</tt>, <tt class="ph tt">minion_conf</tt>,
+                                             <tt class="ph tt">name</tt>, <tt class="ph tt">parallel</tt>, <tt class="ph tt">preseed_minion_keys</tt>, <tt class="ph tt">script</tt>,
+                                             <tt class="ph tt">script_args</tt>, <tt class="ph tt">script_env</tt>, <tt class="ph tt">sock_dir</tt>, <tt class="ph tt">start_action</tt>,
+                                             <tt class="ph tt">sudo</tt>, <tt class="ph tt">tmp_dir</tt>, <tt class="ph tt">tty</tt>, <tt class="ph tt">username</tt></p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><strong class="ph b">salt/cloud/&lt;VM NAME&gt;/requesting</strong></p>
+                              
+                              <p class="p">Fired when salt-cloud sends the request to create a new VM.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Variables</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">event -- description of the event.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">location -- the location of the VM being requested.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">kwargs -- options available as the VM is being requested:
+                                             <tt class="ph tt">Action</tt>, <tt class="ph tt">ImageId</tt>, <tt class="ph tt">InstanceType</tt>, <tt class="ph tt">KeyName</tt>, <tt class="ph tt">MaxCount</tt>,
+                                             <tt class="ph tt">MinCount</tt>, <tt class="ph tt">SecurityGroup.1</tt></p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><strong class="ph b">salt/cloud/&lt;VM NAME&gt;/querying</strong></p>
+                              
+                              <p class="p">Fired when salt-cloud queries data for a new instance.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Variables</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">event -- description of the event.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">instance_id -- the ID of the new VM.</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><strong class="ph b">salt/cloud/&lt;VM NAME&gt;/tagging</strong></p>
+                              
+                              <p class="p">Fired when salt-cloud tags a new instance.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Variables</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">event -- description of the event.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">tags -- tags being set on the new instance.</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><strong class="ph b">salt/cloud/&lt;VM NAME&gt;/waiting_for_ssh</strong></p>
+                              
+                              <p class="p">Fired while the salt-cloud deploy process is waiting for ssh to become
+                                 available on the new instance.
+                              </p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Variables</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">event -- description of the event.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">ip_address -- IP address of the new instance.</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><strong class="ph b">salt/cloud/&lt;VM NAME&gt;/deploy_script</strong></p>
+                              
+                              <p class="p">Fired once the deploy script is finished.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Variables</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">event -- description of the event.</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><strong class="ph b">salt/cloud/&lt;VM NAME&gt;/created</strong></p>
+                              
+                              <p class="p">Fired once the new instance has been fully created.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Variables</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">name -- the name of the VM being created.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">event -- description of the event.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">instance_id -- the ID of the new instance.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">provider -- the cloud provider of the VM being created.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">profile -- the cloud profile for the VM being created.</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><strong class="ph b">salt/cloud/&lt;VM NAME&gt;/destroying</strong></p>
+                              
+                              <p class="p">Fired when salt-cloud requests the destruction of an instance.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Variables</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">name -- the name of the VM being created.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">event -- description of the event.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">instance_id -- the ID of the new instance.</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><strong class="ph b">salt/cloud/&lt;VM NAME&gt;/destroyed</strong></p>
+                              
+                              <p class="p">Fired when an instance has been destroyed.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Variables</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">name -- the name of the VM being created.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">event -- description of the event.</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">instance_id -- the ID of the new instance.</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

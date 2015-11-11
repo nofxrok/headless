@@ -1,0 +1,1417 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.postgres</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.postgres">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-postgres">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-postgres">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.postgres</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-postgres__module-salt.modules.postgres"></span></p>
+                              
+                              <p class="p">Module to provide Postgres compatibility to salt.</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">configuration</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">In order to connect to Postgres, certain configuration is
+                                       required in /etc/salt/minion on the relevant minions. Some sample configs
+                                       might look like:
+                                    </p>
+                                    <pre class="pre codeblock language-">postgres.host: 'localhost'
+postgres.port: '5432'
+postgres.user: 'postgres' -&gt; db user
+postgres.pass: ''
+postgres.maintenance_db: 'postgres'</pre>
+                                    <p class="p">The default for the maintenance_db is 'postgres' and in most cases it can
+                                       be left at the default setting.
+                                       This data can also be passed into pillar. Options passed into opts will
+                                       overwrite options passed into pillar
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">note</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">This module uses MD5 hashing which may not be compliant with certain
+                                       security audits.
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.postgres.available_extensions">
+                           <h2 class="title topictitle2">available_extensions</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.available_extensions(
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List available postgresql extensions</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.available_extensions</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.create_extension">
+                           <h2 class="title topictitle2">create_extension</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.create_extension(
+								name,
+								if_not_exists=None,
+								schema=None,
+								ext_version=None,
+								from_version=None,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Install a postgresql extension</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.create_extension 'adminpack'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.create_metadata">
+                           <h2 class="title topictitle2">create_metadata</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.create_metadata(
+								name,
+								ext_version=None,
+								schema=None,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Get lifecycle information about an extension</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.create_metadata adminpack</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.db_alter">
+                           <h2 class="title topictitle2">db_alter</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.db_alter(
+								name,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								tablespace=None,
+								owner=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Change tablespace or/and owner of database.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.db_alter dbname owner=otheruser</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.db_create">
+                           <h2 class="title topictitle2">db_create</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.db_create(
+								name,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								tablespace=None,
+								encoding=None,
+								lc_collate=None,
+								lc_ctype=None,
+								owner=None,
+								template=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Adds a databases to the Postgres server.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.db_create 'dbname'
+
+salt '*' postgres.db_create 'dbname' template=template_postgis</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.db_exists">
+                           <h2 class="title topictitle2">db_exists</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.db_exists(
+								name,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Checks if a database exists on the Postgres server.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.db_exists 'dbname'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.db_list">
+                           <h2 class="title topictitle2">db_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.db_list(
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return dictionary with information about databases of a Postgres server.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.db_list</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.db_remove">
+                           <h2 class="title topictitle2">db_remove</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.db_remove(
+								name,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Removes a databases from the Postgres server.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.db_remove 'dbname'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.drop_extension">
+                           <h2 class="title topictitle2">drop_extension</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.drop_extension(
+								name,
+								if_exists=None,
+								restrict=None,
+								cascade=None,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Drop an installed postgresql extension</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.drop_extension 'adminpack'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.get_available_extension">
+                           <h2 class="title topictitle2">get_available_extension</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.get_available_extension(
+								name,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Get info about an available postgresql extension</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.get_available_extension plpgsql</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.get_installed_extension">
+                           <h2 class="title topictitle2">get_installed_extension</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.get_installed_extension(
+								name,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Get info about an installed postgresql extension</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.get_installed_extension plpgsql</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.group_create">
+                           <h2 class="title topictitle2">group_create</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.group_create(
+								groupname,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								createdb=None,
+								createuser=None,
+								createroles=None,
+								encrypted=None,
+								login=None,
+								inherit=None,
+								superuser=None,
+								replication=None,
+								rolepassword=None,
+								groups=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Creates a Postgres group. A group is postgres is similar to a user, but
+                                    cannot login.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.group_create 'groupname' user='user' \
+        host='hostname' port='port' password='password' \
+        rolepassword='rolepassword'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.group_remove">
+                           <h2 class="title topictitle2">group_remove</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.group_remove(
+								groupname,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Removes a group from the Postgres server.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.group_remove 'groupname'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.group_update">
+                           <h2 class="title topictitle2">group_update</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.group_update(
+								groupname,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								createdb=None,
+								createroles=None,
+								createuser=None,
+								encrypted=None,
+								inherit=None,
+								login=None,
+								superuser=None,
+								replication=None,
+								rolepassword=None,
+								groups=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Updates a postgres group</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.group_update 'username' user='user' \
+        host='hostname' port='port' password='password' \
+        rolepassword='rolepassword'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.installed_extensions">
+                           <h2 class="title topictitle2">installed_extensions</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.installed_extensions(
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List installed postgresql extensions</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.installed_extensions</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.is_available_extension">
+                           <h2 class="title topictitle2">is_available_extension</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.is_available_extension(
+								name,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Test if a specific extension is available</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.is_available_extension</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.is_installed_extension">
+                           <h2 class="title topictitle2">is_installed_extension</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.is_installed_extension(
+								name,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Test if a specific extension is installed</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.is_installed_extension</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.owner_to">
+                           <h2 class="title topictitle2">owner_to</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.owner_to(
+								dbname,
+								ownername,
+								user=None,
+								host=None,
+								port=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Set the owner of all schemas, functions, tables, views and sequences to
+                                    the given username.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.owner_to 'dbname' 'username'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.psql_query">
+                           <h2 class="title topictitle2">psql_query</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.psql_query(
+								query,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Run an SQL-Query and return the results as a list. This command
+                                    only supports SELECT statements.  This limitation can be worked around
+                                    with a query like this:
+                                 </p>
+                                 
+                                 <p class="p">WITH updated AS (UPDATE pg_authid SET rolconnlimit = 2000 WHERE
+                                    rolname = 'rolename' RETURNING rolconnlimit) SELECT * FROM updated;
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.psql_query 'select * from pg_stat_activity'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.role_get">
+                           <h2 class="title topictitle2">role_get</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.role_get(
+								name,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None,
+								return_password=False
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a dict with information about users of a Postgres server.</p>
+                                 
+                                 <p class="p">Set return_password to True to get password hash in the result.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.role_get postgres</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.schema_create">
+                           <h2 class="title topictitle2">schema_create</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.schema_create(
+								dbname,
+								name,
+								owner=None,
+								user=None,
+								db_user=None,
+								db_password=None,
+								db_host=None,
+								db_port=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Creates a Postgres schema.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.schema_create dbname name owner='owner' \
+        user='user' \
+        db_user='user' db_password='password'
+        db_host='hostname' db_port='port'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.schema_exists">
+                           <h2 class="title topictitle2">schema_exists</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.schema_exists(
+								dbname,
+								name,
+								db_user=None,
+								db_password=None,
+								db_host=None,
+								db_port=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Checks if a schema exists on the Postgres server.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.schema_exists dbname schemaname</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d206957e683" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d206957e685" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e683" class="stentry propvalue">dbname</td>
+                                    
+                                    <td valign="top" headers="d206957e685" class="stentry propdesc">
+                                       <p class="p">Database name we query on</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e683" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d206957e685" class="stentry propdesc">
+                                       <p class="p">Schema name we look for</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e683" class="stentry propvalue">db_user</td>
+                                    
+                                    <td valign="top" headers="d206957e685" class="stentry propdesc">
+                                       <p class="p">database username if different from config or default</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e683" class="stentry propvalue">db_password</td>
+                                    
+                                    <td valign="top" headers="d206957e685" class="stentry propdesc">
+                                       <p class="p">user password if any password for a specified user</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e683" class="stentry propvalue">db_host</td>
+                                    
+                                    <td valign="top" headers="d206957e685" class="stentry propdesc">
+                                       <p class="p">Database host if different from config or default</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e683" class="stentry propvalue">db_port</td>
+                                    
+                                    <td valign="top" headers="d206957e685" class="stentry propdesc">
+                                       <p class="p">Database port if different from config or default</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.schema_get">
+                           <h2 class="title topictitle2">schema_get</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.schema_get(
+								dbname,
+								name,
+								db_user=None,
+								db_password=None,
+								db_host=None,
+								db_port=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Return a dict with information about schemas in a database.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.schema_get dbname name</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d206957e755" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d206957e757" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e755" class="stentry propvalue">dbname</td>
+                                    
+                                    <td valign="top" headers="d206957e757" class="stentry propdesc">
+                                       <p class="p">Database name we query on</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e755" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d206957e757" class="stentry propdesc">
+                                       <p class="p">Schema name we look for</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e755" class="stentry propvalue">db_user</td>
+                                    
+                                    <td valign="top" headers="d206957e757" class="stentry propdesc">
+                                       <p class="p">database username if different from config or default</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e755" class="stentry propvalue">db_password</td>
+                                    
+                                    <td valign="top" headers="d206957e757" class="stentry propdesc">
+                                       <p class="p">user password if any password for a specified user</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e755" class="stentry propvalue">db_host</td>
+                                    
+                                    <td valign="top" headers="d206957e757" class="stentry propdesc">
+                                       <p class="p">Database host if different from config or default</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e755" class="stentry propvalue">db_port</td>
+                                    
+                                    <td valign="top" headers="d206957e757" class="stentry propdesc">
+                                       <p class="p">Database port if different from config or default</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.schema_list">
+                           <h2 class="title topictitle2">schema_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.schema_list(
+								dbname,
+								db_user=None,
+								db_password=None,
+								db_host=None,
+								db_port=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Return a dict with information about schemas in a Postgres database.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.schema_list dbname</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d206957e827" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d206957e829" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e827" class="stentry propvalue">dbname</td>
+                                    
+                                    <td valign="top" headers="d206957e829" class="stentry propdesc">
+                                       <p class="p">Database name we query on</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e827" class="stentry propvalue">db_user</td>
+                                    
+                                    <td valign="top" headers="d206957e829" class="stentry propdesc">
+                                       <p class="p">database username if different from config or default</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e827" class="stentry propvalue">db_password</td>
+                                    
+                                    <td valign="top" headers="d206957e829" class="stentry propdesc">
+                                       <p class="p">user password if any password for a specified user</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e827" class="stentry propvalue">db_host</td>
+                                    
+                                    <td valign="top" headers="d206957e829" class="stentry propdesc">
+                                       <p class="p">Database host if different from config or default</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e827" class="stentry propvalue">db_port</td>
+                                    
+                                    <td valign="top" headers="d206957e829" class="stentry propdesc">
+                                       <p class="p">Database port if different from config or default</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.schema_remove">
+                           <h2 class="title topictitle2">schema_remove</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.schema_remove(
+								dbname,
+								name,
+								user=None,
+								db_user=None,
+								db_password=None,
+								db_host=None,
+								db_port=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Removes a schema from the Postgres server.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.schema_remove dbname schemaname</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d206957e893" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d206957e895" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e893" class="stentry propvalue">dbname</td>
+                                    
+                                    <td valign="top" headers="d206957e895" class="stentry propdesc">
+                                       <p class="p">Database name we work on</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e893" class="stentry propvalue">schemaname</td>
+                                    
+                                    <td valign="top" headers="d206957e895" class="stentry propdesc">
+                                       <p class="p">The schema's name we'll remove</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e893" class="stentry propvalue">user</td>
+                                    
+                                    <td valign="top" headers="d206957e895" class="stentry propdesc">
+                                       <p class="p">System user all operations should be performed on behalf of</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e893" class="stentry propvalue">db_user</td>
+                                    
+                                    <td valign="top" headers="d206957e895" class="stentry propdesc">
+                                       <p class="p">database username if different from config or default</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e893" class="stentry propvalue">db_password</td>
+                                    
+                                    <td valign="top" headers="d206957e895" class="stentry propdesc">
+                                       <p class="p">user password if any password for a specified user</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e893" class="stentry propvalue">db_host</td>
+                                    
+                                    <td valign="top" headers="d206957e895" class="stentry propdesc">
+                                       <p class="p">Database host if different from config or default</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d206957e893" class="stentry propvalue">db_port</td>
+                                    
+                                    <td valign="top" headers="d206957e895" class="stentry propdesc">
+                                       <p class="p">Database port if different from config or default</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.user_create">
+                           <h2 class="title topictitle2">user_create</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.user_create(
+								username,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								createdb=None,
+								createuser=None,
+								createroles=None,
+								inherit=None,
+								login=None,
+								connlimit=None,
+								encrypted=None,
+								superuser=None,
+								replication=None,
+								rolepassword=None,
+								groups=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Creates a Postgres user.</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.user_create 'username' user='user' \
+        host='hostname' port='port' password='password' \
+        rolepassword='rolepassword'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.user_exists">
+                           <h2 class="title topictitle2">user_exists</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.user_exists(
+								name,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Checks if a user exists on the Postgres server.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.user_exists 'username'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.user_list">
+                           <h2 class="title topictitle2">user_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.user_list(
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None,
+								return_password=False
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a dict with information about users of a Postgres server.</p>
+                                 
+                                 <p class="p">Set return_password to True to get password hash in the result.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.user_list</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.user_remove">
+                           <h2 class="title topictitle2">user_remove</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.user_remove(
+								username,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Removes a user from the Postgres server.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.user_remove 'username'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.user_update">
+                           <h2 class="title topictitle2">user_update</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.user_update(
+								username,
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								createdb=None,
+								createuser=None,
+								createroles=None,
+								encrypted=None,
+								superuser=None,
+								inherit=None,
+								login=None,
+								connlimit=None,
+								replication=None,
+								rolepassword=None,
+								groups=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Updates a Postgres user.</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.user_update 'username' user='user' \
+        host='hostname' port='port' password='password' \
+        rolepassword='rolepassword'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.postgres.version">
+                           <h2 class="title topictitle2">version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.postgres.version(
+								user=None,
+								host=None,
+								port=None,
+								maintenance_db=None,
+								password=None,
+								runas=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the version of a Postgres server.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' postgres.version</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

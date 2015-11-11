@@ -1,0 +1,626 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Returners</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Returners">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/administration.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="returners">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="returners">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Returners</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p">By default the return values of the commands sent to the Salt minions are
+                                 returned to the Salt master, however anything at all can be done with the results
+                                 data.
+                              </p>
+                              
+                              <p class="p">By using a Salt returner, results data can be redirected to external data-stores
+                                 for analysis and archival.
+                              </p>
+                              
+                              <p class="p">Returners pull their configuration values from the Salt minions. Returners are only
+                                 configured once, which is generally at load time.
+                              </p>
+                              
+                              <p class="p">The returner interface allows the return data to be sent to any system that
+                                 can receive data. This means that return data can be sent to a Redis server,
+                                 a MongoDB server, a MySQL server, or any system.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="all/index.html#all-salt-returners">Full list of builtin returners</a></p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="returners__using-returners">
+                              <h2 class="title sectiontitle">Using Returners</h2>
+                              <p class="p">All Salt commands will return the command data back to the master. Specifying
+                                 returners will ensure that the data is _also_ sent to the specified returner
+                                 interfaces.
+                              </p>
+                              
+                              <p class="p">Specifying what returners to use is done when the command is invoked:</p>
+                              <pre class="pre codeblock language-bash">salt '*' test.ping --return redis_return</pre>
+                              <p class="p">This command will ensure that the redis_return returner is used.</p>
+                              
+                              <p class="p">It is also possible to specify multiple returners:</p>
+                              <pre class="pre codeblock language-bash">salt '*' test.ping --return mongo_return,redis_return,cassandra_return</pre>
+                              <p class="p">In this scenario all three returners will be called and the data from the
+                                 test.ping command will be sent out to the three named returners.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="returners__writing-a-returner">
+                              <h2 class="title sectiontitle">Writing a Returner</h2>
+                              <p class="p">A returner is a Python module containing at minimum a <tt class="ph tt">returner</tt> function.
+                                 Other optional functions can be included to add support for
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/jobs/job_cache.html#managing-the-job-cache__master-job-cache">Master Job Cache</a>, 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/jobs/job_cache.html#managing-the-job-cache__external-job-cache">External Job Cache</a>, and <span class="ph refid" id="returners__event-returners">Event Returners</span>.
+                              </p>
+                              
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm"><tt class="ph tt">returner</tt></dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">The <tt class="ph tt">returner</tt> function must accept a single argument. The argument
+                                       contains return data from the called minion function. If the minion
+                                       function <tt class="ph tt">test.ping</tt> is called, the value of the argument will be a
+                                       dictionary. Run the following command from a Salt master to get a sample
+                                       of the dictionary:
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              <pre class="pre codeblock language-bash">salt-call --local --metadata test.ping --out=pprint</pre>
+                              <pre class="pre codeblock language-python">import redis
+import json
+
+def returner(ret):
+    '''
+    Return information to a redis server
+    '''
+    # Get a redis connection
+    serv = redis.Redis(
+                host='redis-serv.example.com',
+                port=6379,
+                db='0')
+    serv.sadd("%(id)s:jobs" % ret, ret['jid'])
+    serv.set("%(jid)s:%(id)s" % ret, json.dumps(ret['return']))
+    serv.sadd('jobs', ret['jid'])
+    serv.sadd(ret['jid'], ret['id'])</pre>
+                              <p class="p">The above example of a returner set to send the data to a Redis server
+                                 serializes the data as JSON and sets it in redis.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="returners__master-job-cache-support">
+                              <h2 class="title sectiontitle">Master Job Cache Support</h2>
+                              <p class="p">
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/jobs/job_cache.html#managing-the-job-cache__master-job-cache">Master Job Cache</a>, 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/jobs/job_cache.html#managing-the-job-cache__external-job-cache">External Job Cache</a>, and <span class="ph refid" id="returners__event-returners">Event Returners</span>.
+                                 Salt's 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/jobs/job_cache.html#managing-the-job-cache__master-job-cache">Master Job Cache</a> allows returners to be used as a pluggable
+                                 replacement for the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/jobs/job_cache.html#managing-the-job-cache__default-job-cache">Default Job Cache</a>. In order to do so, a returner
+                                 must implement the following functions:
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The code samples contained in this section were taken from the cassandra_cql
+                                    returner.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm"><tt class="ph tt">prep_jid</tt></dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Ensures that job ids (jid) don't collide, unless passed_jid is provided.</p>
+                                    
+                                    <p class="p"><tt class="ph tt">nochache</tt> is an optional boolean that indicates if return data
+                                       should be cached. <tt class="ph tt">passed_jid</tt> is a caller provided jid which should be
+                                       returned unconditionally.
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              <pre class="pre codeblock language-python">def prep_jid(nocache, passed_jid=None):  # pylint: disable=unused-argument
+    '''
+    Do any work necessary to prepare a JID, including sending a custom id
+    '''
+    return passed_jid if passed_jid is not None else salt.utils.jid.gen_jid()</pre>
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm"><tt class="ph tt">save_load</tt></dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Save job information.  The <tt class="ph tt">jid</tt> is generated by <tt class="ph tt">prep_jid</tt> and should
+                                       be considered a unique identifier for the job. The jid, for example, could
+                                       be used as the primary/unique key in a database. The <tt class="ph tt">load</tt> is what is
+                                       returned to a Salt master by a minion. The following code example stores
+                                       the load as a JSON string in the salt.jids table.
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              <pre class="pre codeblock language-python">def save_load(jid, load):
+    '''
+    Save the load to the specified jid id
+    '''
+    query = '''INSERT INTO salt.jids (
+                 jid, load
+               ) VALUES (
+                 '{0}', '{1}'
+               );'''.format(jid, json.dumps(load))
+
+    # cassandra_cql.cql_query may raise a CommandExecutionError
+    try:
+        __salt__['cassandra_cql.cql_query'](query)
+    except CommandExecutionError:
+        log.critical('Could not save load in jids table.')
+        raise
+    except Exception as e:
+        log.critical('''Unexpected error while inserting into
+         jids: {0}'''.format(str(e)))
+        raise</pre>
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm"><tt class="ph tt">get_load</tt></dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">must accept a job id (jid) and return the job load stored by <tt class="ph tt">save_load</tt>,
+                                       or an empty dictionary when not found.
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              <pre class="pre codeblock language-python">def get_load(jid):
+    '''
+    Return the load data that marks a specified jid
+    '''
+    query = '''SELECT load FROM salt.jids WHERE jid = '{0}';'''.format(jid)
+
+    ret = {}
+
+    # cassandra_cql.cql_query may raise a CommandExecutionError
+    try:
+        data = __salt__['cassandra_cql.cql_query'](query)
+        if data:
+            load = data[0].get('load')
+            if load:
+                ret = json.loads(load)
+    except CommandExecutionError:
+        log.critical('Could not get load from jids table.')
+        raise
+    except Exception as e:
+        log.critical('''Unexpected error while getting load from
+         jids: {0}'''.format(str(e)))
+        raise
+
+    return ret</pre>
+                              </div>
+                           
+                           <div class="section" id="returners__external-job-cache-support">
+                              <h2 class="title sectiontitle">External Job Cache Support</h2>
+                              <p class="p">Salt's 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/jobs/job_cache.html#managing-the-job-cache__external-job-cache">External Job Cache</a> extends the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/jobs/job_cache.html#managing-the-job-cache__master-job-cache">Master Job Cache</a>. External
+                                 Job Cache support requires the following functions in addition to what is
+                                 required for Master Job Cache support:
+                              </p>
+                              
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm"><tt class="ph tt">get_jid</tt></dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Return a dictionary containing the information (load) returned by each
+                                       minion when the specified job id was executed.
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">Sample:</p>
+                              <pre class="pre codeblock language-JSON">{
+    "local": {
+        "master_minion": {
+            "fun_args": [],
+            "jid": "20150330121011408195",
+            "return": true,
+            "retcode": 0,
+            "success": true,
+            "cmd": "_return",
+            "_stamp": "2015-03-30T12:10:12.708663",
+            "fun": "test.ping",
+            "id": "master_minion"
+        }
+    }
+}</pre>
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm"><tt class="ph tt">get_fun</tt></dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Return a dictionary of minions that called a given Salt function as their
+                                       last function call.
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">Sample:</p>
+                              <pre class="pre codeblock language-JSON">{
+    "local": {
+        "minion1": "test.ping",
+        "minion3": "test.ping",
+        "minion2": "test.ping"
+    }
+}</pre>
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm"><tt class="ph tt">get_jids</tt></dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Return a list of all job ids.</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">Sample:</p>
+                              <pre class="pre codeblock language-JSON">{
+    "local": [
+        "20150330121011408195",
+        "20150330195922139916"
+    ]
+}</pre>
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm"><tt class="ph tt">get_minions</tt></dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Returns a list of minions</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">Sample:</p>
+                              <pre class="pre codeblock language-JSON">{
+     "local": [
+         "minion3",
+         "minion2",
+         "minion1",
+         "master_minion"
+     ]
+}</pre>
+                              <p class="p">Please refer to one or more of the existing returners (i.e. mysql,
+                                 cassandra_cql) if you need further clarification.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="returners__event-support">
+                              <h2 class="title sectiontitle">Event Support</h2>
+                              <p class="p">An <tt class="ph tt">event_return</tt> function must be added to the returner module to allow
+                                 events to be logged from a master via the returner. A list of events are passed
+                                 to the function by the master.
+                              </p>
+                              
+                              <p class="p">The following example was taken from the MySQL returner. In this example, each
+                                 event is inserted into the salt_events table keyed on the event tag. The tag
+                                 contains the jid and therefore is guaranteed to be unique.
+                              </p>
+                              <pre class="pre codeblock language-python">def event_return(events):
+ '''
+ Return event to mysql server
+
+ Requires that configuration be enabled via 'event_return'
+ option in master config.
+ '''
+ with _get_serv(events, commit=True) as cur:
+     for event in events:
+         tag = event.get('tag', '')
+         data = event.get('data', '')
+         sql = '''INSERT INTO `salt_events` (`tag`, `data`, `master_id` )
+                  VALUES (%s, %s, %s)'''
+         cur.execute(sql, (tag, json.dumps(data), __opts__['id']))</pre>
+                              </div>
+                           
+                           <div class="section" id="returners__custom-returners">
+                              <h2 class="title sectiontitle">Custom Returners</h2>
+                              <p class="p">Place custom returners in a <tt class="ph tt">_returners</tt> directory within the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__file_roots">file_roots</a> specified by the master config file.
+                              </p>
+                              
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm">Custom returners are distributed when any of the following are called:</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="../modules/all/salt.modules.state.html#salt.modules.state.highstate">state.highstate</a></p>
+                                    
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="../modules/all/salt.modules.saltutil.html#salt.modules.saltutil.sync_returners">saltutil.sync_returners</a></p>
+                                    
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="../modules/all/salt.modules.saltutil.html#salt.modules.saltutil.sync_all">saltutil.sync_all</a></p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">Any custom returners which have been synced to a minion that are named the
+                                 same as one of Salt's default set of returners will take the place of the
+                                 default returner with the same name.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="returners__naming-the-returner">
+                              <h2 class="title sectiontitle">Naming the Returner</h2>
+                              <p class="p">Note that a returner's default name is its filename (i.e. <tt class="ph tt">foo.py</tt> becomes
+                                 returner <tt class="ph tt">foo</tt>), but that its name can be overridden by using a
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../modules/index.html#execution-modules__virtual-modules">__virtual__ function</a>. A good example of this can be
+                                 found in the <a class="xref" href="https://github.com/saltstack/salt/tree/develop/salt/returners/redis_return.py" target="_blank">redis</a> returner, which is named <tt class="ph tt">redis_return.py</tt> but is
+                                 loaded as simply <tt class="ph tt">redis</tt>:
+                              </p>
+                              <pre class="pre codeblock language-python">try:
+    import redis
+    HAS_REDIS = True
+except ImportError:
+    HAS_REDIS = False
+
+__virtualname__ = 'redis'
+
+def __virtual__():
+    if not HAS_REDIS:
+        return False
+    return __virtualname__</pre>
+                              </div>
+                           
+                           <div class="section" id="returners__testing-the-returner">
+                              <h2 class="title sectiontitle">Testing the Returner</h2>
+                              <p class="p">The <tt class="ph tt">returner</tt>, <tt class="ph tt">prep_jid</tt>, <tt class="ph tt">save_load</tt>, <tt class="ph tt">get_load</tt>, and
+                                 <tt class="ph tt">event_return</tt> functions can be tested by configuring the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/jobs/job_cache.html#managing-the-job-cache__master-job-cache">Master Job Cache</a> and <span class="ph refid" id="returners__event-returners">Event Returners</span> in the master config
+                                 file and submitting a job to <tt class="ph tt">test.ping</tt> each minion from the master.
+                              </p>
+                              
+                              <p class="p">Once you have successfully exercised the Master Job Cache functions, test the
+                                 External Job Cache functions using the <tt class="ph tt">ret</tt> execution module.
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-call ret.get_jids cassandra_cql --output=json
+salt-call ret.get_fun cassandra_cql test.ping --output=json
+salt-call ret.get_minions cassandra_cql --output=json
+salt-call ret.get_jid cassandra_cql 20150330121011408195 --output=json</pre>
+                              </div>
+                           
+                           <div class="section" id="returners__event-returners">
+                              <h2 class="title sectiontitle">Event Returners</h2>
+                              <p class="p">For maximimum visibility into the history of events across a Salt
+                                 infrastructure, all events seen by a salt master may be logged to a returner.
+                              </p>
+                              
+                              <p class="p">To enable event logging, set the <tt class="ph tt">event_return</tt> configuration option in the
+                                 master config to returner which should be designated as the handler for event
+                                 returns.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Not all returners support event returns. Verify a returner has an
+                                    <tt class="ph tt">event_return()</tt> function before using.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">On larger installations, many hundreds of events may be generated on a
+                                    busy master every second. Be certain to closely monitor the storage of
+                                    a given returner as Salt can easily overwhealm an underpowered server
+                                    with thousands of returns.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="returners__full-list-of-returners">
+                              <h2 class="title sectiontitle">Full List of Returners</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="all/index.html#all-salt-returners">Full list of builtin returner modules</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.carbon_return.html#salt-returners-carbon-return">salt.returners.carbon_return</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.cassandra_return.html#salt-returners-cassandra-return">salt.returners.cassandra_return</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.couchbase_return.html#salt-returners-couchbase-return">salt.returners.couchbase_return</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.returners.couchbase_return.html#salt-returners-couchbase-return__jid">JID</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.returners.couchbase_return.html#salt-returners-couchbase-return__jid-minion-id">JID/MINION_ID</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.couchdb_return.html#salt-returners-couchdb-return">salt.returners.couchdb_return</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.returners.couchdb_return.html#salt-returners-couchdb-return__on-concurrent-database-access">On concurrent database access</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.django_return.html#salt-returners-django-return">salt.returners.django_return</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.elasticsearch_return.html#salt-returners-elasticsearch-return">salt.returners.elasticsearch_return</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.etcd_return.html#salt-returners-etcd-return">salt.returners.etcd_return</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.kafka_return.html#salt-returners-kafka-return">salt.returners.kafka_return</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.local.html#salt-returners-local">salt.returners.local</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.local_cache.html#salt-returners-local-cache">salt.returners.local_cache</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.memcache_return.html#salt-returners-memcache-return">salt.returners.memcache_return</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.mongo_future_return.html#salt-returners-mongo-future-return">salt.returners.mongo_future_return</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.mongo_return.html#salt-returners-mongo-return">salt.returners.mongo_return</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.multi_returner.html#salt-returners-multi-returner">salt.returners.multi_returner</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.mysql.html#salt-returners-mysql">salt.returners.mysql</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.odbc.html#salt-returners-odbc">salt.returners.odbc</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.postgres.html#salt-returners-postgres">salt.returners.postgres</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.postgres_local_cache.html#salt-returners-postgres-local-cache">salt.returners.postgres_local_cache</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.redis_return.html#salt-returners-redis-return">salt.returners.redis_return</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.sentry_return.html#salt-returners-sentry-return">salt.returners.sentry_return</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.sms_return.html#salt-returners-sms-return">salt.returners.sms_return</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.smtp_return.html#salt-returners-smtp-return">salt.returners.smtp_return</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.sqlite3_return.html#salt-returners-sqlite3">salt.returners.sqlite3</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.syslog_return.html#salt-returners-syslog-return">salt.returners.syslog_return</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.returners.xmpp_return.html#salt-returners-xmpp-return">salt.returners.xmpp_return</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

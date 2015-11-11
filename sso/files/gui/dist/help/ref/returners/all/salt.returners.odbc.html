@@ -1,0 +1,384 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.returners.odbc</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.returners.odbc">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../returners.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-returners-odbc">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-returners-odbc">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.returners.odbc</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-returners-odbc__module-salt.returners.odbc"></span></p>
+                              
+                              <p class="p">Return data to an ODBC compliant server.  This driver was
+                                 developed with Microsoft SQL Server in mind, but theoretically
+                                 could be used to return data to any compliant ODBC database
+                                 as long as there is a working ODBC driver for it on your
+                                 minion platform.
+                              </p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">maintainer</dt>
+                                 
+                                 <dd class="dd">
+                                    <ol class="ol">
+                                       <li class="li">
+                                          <ol class="ol" type="a">
+                                             <li class="li">
+                                                <p class="p">Oldham (<a class="xref" href="mailto:cr@saltstack.com" target="_blank">cr@saltstack.com</a>)
+                                                </p>
+                                                
+                                             </li>
+                                             
+                                          </ol>
+                                          
+                                       </li>
+                                       
+                                    </ol>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">maturity</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">New</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">unixodbc, pyodbc, freetds (for SQL Server)</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">platform</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">all</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">To enable this returner the minion will need</p>
+                              
+                              <p class="p">On Linux:</p>
+                              
+                              <blockquote class="lq">
+                                 <p class="p">unixodbc (<a class="xref" href="http://www.unixodbc.org" target="_blank">http://www.unixodbc.org</a>)
+                                    pyodbc (<span class="keyword title_reference">pip install pyodbc</span>)
+                                    The FreeTDS ODBC driver for SQL Server (<a class="xref" href="http://www.freetds.org" target="_blank">http://www.freetds.org</a>)
+                                    or another compatible ODBC driver
+                                 </p>
+                                 
+                              </blockquote>
+                              
+                              <p class="p">On Windows:</p>
+                              
+                              <blockquote class="lq">
+                                 <p class="p">TBD</p>
+                                 
+                              </blockquote>
+                              
+                              <p class="p">unixODBC and FreeTDS need to be configured via /etc/odbcinst.ini and
+                                 /etc/odbc.ini.
+                              </p>
+                              
+                              <p class="p">/etc/odbcinst.ini:</p>
+                              <pre class="pre codeblock language-">[TDS]
+Description=TDS
+Driver=/usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so</pre>
+                              <p class="p">(Note the above Driver line needs to point to the location of the FreeTDS
+                                 shared library.  This example is for Ubuntu 14.04.)
+                              </p>
+                              
+                              <p class="p">/etc/odbc.ini:</p>
+                              <pre class="pre codeblock language-">[TS]
+Description = "Salt Returner"
+Driver=TDS
+Server = &lt;your server ip or fqdn&gt;
+Port = 1433
+Database = salt
+Trace = No</pre>
+                              <p class="p">Also you need the following values configured in the minion or master config.
+                                 Configure as you see fit:
+                              </p>
+                              <pre class="pre codeblock language-">returner.odbc.dsn: 'TS'
+returner.odbc.user: 'salt'
+returner.odbc.passwd: 'salt'</pre>
+                              <p class="p">Alternative configuration values can be used by prefacing the configuration.
+                                 Any values not found in the alternative configuration will be pulled from
+                                 the default location:
+                              </p>
+                              <pre class="pre codeblock language-">alternative.returner.odbc.dsn: 'TS'
+alternative.returner.odbc.user: 'salt'
+alternative.returner.odbc.passwd: 'salt'</pre>
+                              <p class="p">Running the following commands against Microsoft SQL Server in the desired
+                                 database as the appropriate user should create the database tables
+                                 correctly.  Replace with equivalent SQL for other ODBC-compliant servers
+                              </p>
+                              <pre class="pre codeblock language-sql">  --
+  -- Table structure for table 'jids'
+  --
+
+  if OBJECT_ID('dbo.jids', 'U') is not null
+      DROP TABLE dbo.jids
+
+  CREATE TABLE dbo.jids (
+     jid   varchar(255) PRIMARY KEY,
+     load  varchar(MAX) NOT NULL
+   );
+
+  --
+  -- Table structure for table 'salt_returns'
+  --
+  IF OBJECT_ID('dbo.salt_returns', 'U') IS NOT NULL
+      DROP TABLE dbo.salt_returns;
+
+  CREATE TABLE dbo.salt_returns (
+     added     datetime not null default (getdate()),
+     fun       varchar(100) NOT NULL,
+     jid       varchar(255) NOT NULL,
+     retval    varchar(MAX) NOT NULL,
+     id        varchar(255) NOT NULL,
+     success   bit default(0) NOT NULL,
+     full_ret  varchar(MAX)
+   );
+
+  CREATE INDEX salt_returns_added on dbo.salt_returns(added);
+  CREATE INDEX salt_returns_id on dbo.salt_returns(id);
+  CREATE INDEX salt_returns_jid on dbo.salt_returns(jid);
+  CREATE INDEX salt_returns_fun on dbo.salt_returns(fun);
+
+To use this returner, append '--return odbc' to the salt command.
+
+.. code-block:: bash
+
+  salt '*' status.diskusage --return odbc
+
+To use the alternative configuration, append '--return_config alternative' to the salt command.
+
+.. versionadded:: 2015.2.0
+
+.. code-block:: bash
+
+  salt '*' test.ping --return odbc --return_config alternative</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.returners.odbc.get_fun">
+                           <h2 class="title topictitle2">get_fun</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.odbc.get_fun(
+								fun
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a dict of the last function called for all minions</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.odbc.get_jid">
+                           <h2 class="title topictitle2">get_jid</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.odbc.get_jid(
+								jid
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the information returned when the specified job id was executed</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.odbc.get_jids">
+                           <h2 class="title topictitle2">get_jids</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.odbc.get_jids( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of all job ids</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.odbc.get_load">
+                           <h2 class="title topictitle2">get_load</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.odbc.get_load(
+								jid
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the load data that marks a specified jid</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.odbc.get_minions">
+                           <h2 class="title topictitle2">get_minions</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.odbc.get_minions( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of minions</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.odbc.prep_jid">
+                           <h2 class="title topictitle2">prep_jid</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.odbc.prep_jid(
+								nocache=False,
+								passed_jid=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Do any work necessary to prepare a JID, including sending a custom id</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.odbc.returner">
+                           <h2 class="title topictitle2">returner</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.odbc.returner(
+								ret
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return data to an odbc server</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.odbc.save_load">
+                           <h2 class="title topictitle2">save_load</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.odbc.save_load(
+								jid,
+								load
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Save the load to the specified jid id</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

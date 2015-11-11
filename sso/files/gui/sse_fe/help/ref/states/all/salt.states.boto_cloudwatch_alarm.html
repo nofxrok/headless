@@ -1,0 +1,307 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.boto_cloudwatch_alarm</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.boto_cloudwatch_alarm">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-boto-cloudwatch-alarm">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-boto-cloudwatch-alarm">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.boto_cloudwatch_alarm</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-boto-cloudwatch-alarm__module-salt.states.boto_cloudwatch_alarm"></span></p>
+                              
+                              <p class="p">Manage Cloudwatch alarms</p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Create and destroy cloudwatch alarms. Be aware that this interacts with
+                                 Amazon's services, and so may incur charges.
+                              </p>
+                              
+                              <p class="p">This module uses boto, which can be installed via package, or pip.</p>
+                              
+                              <p class="p">This module accepts explicit credentials but can also utilize
+                                 IAM roles assigned to the instance trough Instance Profiles. Dynamic
+                                 credentials are then automatically obtained from AWS API and no further
+                                 configuration is necessary. More Information available at:
+                              </p>
+                              
+                              <p class="p"><a class="xref" href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html" target="_blank">http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html</a></p>
+                              
+                              <p class="p">If IAM roles are not used you need to specify them either in a pillar or
+                                 in the minion's config file:
+                              </p>
+                              <pre class="pre codeblock language-">cloudwatch.keyid: GKTADJGHEIQSXMKKRBJ08H
+cloudwatch.key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs</pre>
+                              <p class="p">It's also possible to specify key, keyid and region via a profile, either
+                                 as a passed in dict, or as a string to pull from pillars or minion config:
+                              </p>
+                              <pre class="pre codeblock language-yaml">myprofile:
+  keyid: GKTADJGHEIQSXMKKRBJ08H
+  key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs
+  region: us-east-1</pre>
+                              <pre class="pre codeblock language-yaml">my test alarm:
+  boto_cloudwatch_alarm.present:
+    - name: my test alarm
+    - attributes:
+        metric: ApproximateNumberOfMessagesVisible
+        namespace: AWS/SQS
+        statistic: Average
+        comparison: "&gt;="
+        threshold: 20000.0
+        period: 60
+        evaluation_periods: 1
+        description: test alarm via salt
+        dimensions:
+          QueueName:
+            - the-sqs-queue-name
+        alarm_actions:
+          - arn:aws:sns:us-east-1:1111111:myalerting-action</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.states.boto_cloudwatch_alarm.absent">
+                           <h2 class="title topictitle2">absent</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.boto_cloudwatch_alarm.absent(
+								name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Ensure the named cloudwatch alarm is deleted.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d354976e71" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d354976e73" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d354976e71" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d354976e73" class="stentry propdesc">
+                                       <p class="p">Name of the alarm.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d354976e71" class="stentry propvalue">region</td>
+                                    
+                                    <td valign="top" headers="d354976e73" class="stentry propdesc">
+                                       <p class="p">Region to connect to.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d354976e71" class="stentry propvalue">key</td>
+                                    
+                                    <td valign="top" headers="d354976e73" class="stentry propdesc">
+                                       <p class="p">Secret key to be used.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d354976e71" class="stentry propvalue">keyid</td>
+                                    
+                                    <td valign="top" headers="d354976e73" class="stentry propdesc">
+                                       <p class="p">Access key to be used.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d354976e71" class="stentry propvalue">profile</td>
+                                    
+                                    <td valign="top" headers="d354976e73" class="stentry propdesc">
+                                       <p class="p">A dict with region, key and keyid, or a pillar key (string)
+                                          that contains a dict with region, key and keyid.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.boto_cloudwatch_alarm.present">
+                           <h2 class="title topictitle2">present</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.boto_cloudwatch_alarm.present(
+								name,
+								attributes,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Ensure the cloudwatch alarm exists.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d354976e133" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d354976e135" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d354976e133" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d354976e135" class="stentry propdesc">
+                                       <p class="p">Name of the alarm</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d354976e133" class="stentry propvalue">attributes</td>
+                                    
+                                    <td valign="top" headers="d354976e135" class="stentry propdesc">
+                                       <p class="p">A dict of key/value cloudwatch alarm attributes.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d354976e133" class="stentry propvalue">region</td>
+                                    
+                                    <td valign="top" headers="d354976e135" class="stentry propdesc">
+                                       <p class="p">Region to connect to.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d354976e133" class="stentry propvalue">key</td>
+                                    
+                                    <td valign="top" headers="d354976e135" class="stentry propdesc">
+                                       <p class="p">Secret key to be used.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d354976e133" class="stentry propvalue">keyid</td>
+                                    
+                                    <td valign="top" headers="d354976e135" class="stentry propdesc">
+                                       <p class="p">Access key to be used.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d354976e133" class="stentry propvalue">profile</td>
+                                    
+                                    <td valign="top" headers="d354976e135" class="stentry propdesc">
+                                       <p class="p">A dict with region, key and keyid, or a pillar key (string)
+                                          that contains a dict with region, key and keyid.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

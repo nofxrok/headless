@@ -1,0 +1,1444 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.nova</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.nova">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-nova">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-nova">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.nova</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-nova__module-salt.modules.nova"></span></p>
+                              
+                              <p class="p">Module for handling OpenStack Nova calls</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">novaclient Python module</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">configuration</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">This module is not usable until the user, password, tenant, and
+                                       auth URL are specified either in a pillar or in the minion's config file.
+                                       For example:
+                                    </p>
+                                    <pre class="pre codeblock language-">keystone.user: admin
+keystone.password: verybadpass
+keystone.tenant: admin
+keystone.auth_url: 'http://127.0.0.1:5000/v2.0/'
+# Optional
+keystone.region_name: 'regionOne'</pre>
+                                    <p class="p">If configuration for multiple OpenStack accounts is required, they can be
+                                       set up as different configuration profiles:
+                                       For example:
+                                    </p>
+                                    <pre class="pre codeblock language-">openstack1:
+  keystone.user: admin
+  keystone.password: verybadpass
+  keystone.tenant: admin
+  keystone.auth_url: 'http://127.0.0.1:5000/v2.0/'
+
+openstack2:
+  keystone.user: admin
+  keystone.password: verybadpass
+  keystone.tenant: admin
+  keystone.auth_url: 'http://127.0.0.2:5000/v2.0/'</pre>
+                                    <p class="p">With this configuration in place, any of the nova functions can make use of
+                                       a configuration profile by declaring it explicitly.
+                                       For example:
+                                    </p>
+                                    <pre class="pre codeblock language-">salt '*' nova.flavor_list profile=openstack1</pre>
+                                    </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.nova.boot">
+                           <h2 class="title topictitle2">boot</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.boot(
+								name,
+								flavor_id=0,
+								image_id=0,
+								profile=None,
+								timeout=300
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Boot (create) a new instance</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d179277e72" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d179277e74" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e72" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d179277e74" class="stentry propdesc">
+                                       <p class="p">Name of the new instance (must be first)</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e72" class="stentry propvalue">flavor_id</td>
+                                    
+                                    <td valign="top" headers="d179277e74" class="stentry propdesc">
+                                       <p class="p">Unique integer ID for the flavor</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e72" class="stentry propvalue">image_id</td>
+                                    
+                                    <td valign="top" headers="d179277e74" class="stentry propdesc">
+                                       <p class="p">Unique integer ID for the image</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e72" class="stentry propvalue">timeout</td>
+                                    
+                                    <td valign="top" headers="d179277e74" class="stentry propdesc">
+                                       <p class="p">How long to wait, after creating the instance, for the provider to
+                                          return information about it (default 300 seconds).
+                                       </p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.boot myinstance flavor_id=4596 image_id=2</pre>
+                                 <p class="p">The flavor_id and image_id are obtained from nova.flavor_list and
+                                    nova.image_list
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.flavor_list
+salt '*' nova.image_list</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.delete">
+                           <h2 class="title topictitle2">delete</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.delete(
+								instance_id,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Delete an instance</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d179277e142" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d179277e144" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e142" class="stentry propvalue">instance_id</td>
+                                    
+                                    <td valign="top" headers="d179277e144" class="stentry propdesc">
+                                       <p class="p">ID of the instance to be deleted</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.delete 1138</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.flavor_create">
+                           <h2 class="title topictitle2">flavor_create</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.flavor_create(
+								name,
+								flavor_id=0,
+								ram=0,
+								disk=0,
+								vcpus=1,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Add a flavor to nova (nova flavor-create). The following parameters are
+                                    required:
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d179277e187" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d179277e189" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e187" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d179277e189" class="stentry propdesc">
+                                       <p class="p">Name of the new flavor (must be first)</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e187" class="stentry propvalue">flavor_id</td>
+                                    
+                                    <td valign="top" headers="d179277e189" class="stentry propdesc">
+                                       <p class="p">Unique integer ID for the new flavor</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e187" class="stentry propvalue">ram</td>
+                                    
+                                    <td valign="top" headers="d179277e189" class="stentry propdesc">
+                                       <p class="p">Memory size in MB</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e187" class="stentry propvalue">disk</td>
+                                    
+                                    <td valign="top" headers="d179277e189" class="stentry propdesc">
+                                       <p class="p">Disk size in GB</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e187" class="stentry propvalue">vcpus</td>
+                                    
+                                    <td valign="top" headers="d179277e189" class="stentry propdesc">
+                                       <p class="p">Number of vcpus</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.flavor_create myflavor flavor_id=6                 ram=4096 disk=10 vcpus=1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.flavor_delete">
+                           <h2 class="title topictitle2">flavor_delete</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.flavor_delete(
+								flavor_id,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Delete a flavor from nova by id (nova flavor-delete)</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.flavor_delete 7</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.flavor_list">
+                           <h2 class="title topictitle2">flavor_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.flavor_list(
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of available flavors (nova flavor-list)</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.flavor_list</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.image_list">
+                           <h2 class="title topictitle2">image_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.image_list(
+								name=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of available images (nova images-list + nova image-show)
+                                    If a name is provided, only that image will be displayed.
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.image_list
+salt '*' nova.image_list myimage</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.image_meta_delete">
+                           <h2 class="title topictitle2">image_meta_delete</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.image_meta_delete(
+								image_id=None,
+								name=None,
+								keys=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Delete a key=value pair from the metadata for an image
+                                    (nova image-meta set)
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.image_meta_delete                 6f52b2ff-0b31-4d84-8fd1-af45b84824f6 keys=cheese
+salt '*' nova.image_meta_delete name=myimage keys=salad,beans</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.image_meta_set">
+                           <h2 class="title topictitle2">image_meta_set</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.image_meta_set(
+								image_id=None,
+								name=None,
+								profile=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Sets a key=value pair in the metadata for an image (nova image-meta set)</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.image_meta_set 6f52b2ff-0b31-4d84-8fd1-af45b84824f6                 cheese=gruyere
+salt '*' nova.image_meta_set name=myimage salad=pasta beans=baked</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.keypair_add">
+                           <h2 class="title topictitle2">keypair_add</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.keypair_add(
+								name,
+								pubfile=None,
+								pubkey=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Add a keypair to nova (nova keypair-add)</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.keypair_add mykey pubfile='/home/myuser/.ssh/id_rsa.pub'
+salt '*' nova.keypair_add mykey pubkey='ssh-rsa &lt;key&gt; myuser@mybox'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.keypair_delete">
+                           <h2 class="title topictitle2">keypair_delete</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.keypair_delete(
+								name,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Add a keypair to nova (nova keypair-delete)</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.keypair_delete mykey'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.keypair_list">
+                           <h2 class="title topictitle2">keypair_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.keypair_list(
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of available keypairs (nova keypair-list)</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.keypair_list</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.list_">
+                           <h2 class="title topictitle2">list_</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.list_(
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">To maintain the feel of the nova command line, this function simply calls
+                                    the server_list function.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.lock">
+                           <h2 class="title topictitle2">lock</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.lock(
+								instance_id,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Lock an instance</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d179277e514" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d179277e516" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e514" class="stentry propvalue">instance_id</td>
+                                    
+                                    <td valign="top" headers="d179277e516" class="stentry propdesc">
+                                       <p class="p">ID of the instance to be locked</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.lock 1138</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.resume">
+                           <h2 class="title topictitle2">resume</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.resume(
+								instance_id,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Resume an instance</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d179277e559" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d179277e561" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e559" class="stentry propvalue">instance_id</td>
+                                    
+                                    <td valign="top" headers="d179277e561" class="stentry propdesc">
+                                       <p class="p">ID of the instance to be resumed</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.resume 1138</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.secgroup_create">
+                           <h2 class="title topictitle2">secgroup_create</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.secgroup_create(
+								name,
+								description,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Add a secgroup to nova (nova secgroup-create)</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.secgroup_create mygroup 'This is my security group'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.secgroup_delete">
+                           <h2 class="title topictitle2">secgroup_delete</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.secgroup_delete(
+								name,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Delete a secgroup to nova (nova secgroup-delete)</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.secgroup_delete mygroup</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.secgroup_list">
+                           <h2 class="title topictitle2">secgroup_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.secgroup_list(
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of available security groups (nova items-list)</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.secgroup_list</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.server_by_name">
+                           <h2 class="title topictitle2">server_by_name</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.server_by_name(
+								name,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Return information about a server</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d179277e691" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d179277e693" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e691" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d179277e693" class="stentry propdesc">
+                                       <p class="p">Server Name</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.server_by_name myserver profile=openstack</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.server_list">
+                           <h2 class="title topictitle2">server_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.server_list(
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return list of active servers</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.show</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.server_list_detailed">
+                           <h2 class="title topictitle2">server_list_detailed</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.server_list_detailed(
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return detailed list of active servers</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.server_list_detailed</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.server_show">
+                           <h2 class="title topictitle2">server_show</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.server_show(
+								server_id,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return detailed information for an active server</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.server_show &lt;server_id&gt;</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.show">
+                           <h2 class="title topictitle2">show</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.show(
+								server_id,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">To maintain the feel of the nova command line, this function simply calls
+                                    the server_show function.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.show</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.suspend">
+                           <h2 class="title topictitle2">suspend</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.suspend(
+								instance_id,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Suspend an instance</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d179277e853" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d179277e855" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e853" class="stentry propvalue">instance_id</td>
+                                    
+                                    <td valign="top" headers="d179277e855" class="stentry propdesc">
+                                       <p class="p">ID of the instance to be suspended</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.suspend 1138</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.volume_attach">
+                           <h2 class="title topictitle2">volume_attach</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.volume_attach(
+								name,
+								server_name,
+								device='/dev/xvdb',
+								profile=None,
+								timeout=300
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Attach a block storage volume</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d179277e898" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d179277e900" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e898" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d179277e900" class="stentry propdesc">
+                                       <p class="p">Name of the new volume to attach</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e898" class="stentry propvalue">server_name</td>
+                                    
+                                    <td valign="top" headers="d179277e900" class="stentry propdesc">
+                                       <p class="p">Name of the server to attach to</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e898" class="stentry propvalue">device</td>
+                                    
+                                    <td valign="top" headers="d179277e900" class="stentry propdesc">
+                                       <p class="p">Name of the device on the server</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e898" class="stentry propvalue">profile</td>
+                                    
+                                    <td valign="top" headers="d179277e900" class="stentry propdesc">
+                                       <p class="p">Profile to build on</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.volume_attach myblock slice.example.com profile=openstack
+salt '*' nova.volume_attach myblock server.example.com                 device='/dev/xvdb' profile=openstack</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.volume_create">
+                           <h2 class="title topictitle2">volume_create</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.volume_create(
+								name,
+								size=100,
+								snapshot=None,
+								voltype=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Create a block storage volume</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d179277e961" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d179277e963" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e961" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d179277e963" class="stentry propdesc">
+                                       <p class="p">Name of the new volume (must be first)</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e961" class="stentry propvalue">size</td>
+                                    
+                                    <td valign="top" headers="d179277e963" class="stentry propdesc">
+                                       <p class="p">Volume size</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e961" class="stentry propvalue">snapshot</td>
+                                    
+                                    <td valign="top" headers="d179277e963" class="stentry propdesc">
+                                       <p class="p">Block storage snapshot id</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e961" class="stentry propvalue">voltype</td>
+                                    
+                                    <td valign="top" headers="d179277e963" class="stentry propdesc">
+                                       <p class="p">Type of storage</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e961" class="stentry propvalue">profile</td>
+                                    
+                                    <td valign="top" headers="d179277e963" class="stentry propdesc">
+                                       <p class="p">Profile to build on</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.volume_create myblock size=300 profile=openstack</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.volume_delete">
+                           <h2 class="title topictitle2">volume_delete</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.volume_delete(
+								name,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Destroy the volume</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d179277e1030" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d179277e1032" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e1030" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d179277e1032" class="stentry propdesc">
+                                       <p class="p">Name of the volume</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e1030" class="stentry propvalue">profile</td>
+                                    
+                                    <td valign="top" headers="d179277e1032" class="stentry propdesc">
+                                       <p class="p">Profile to build on</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.volume_delete myblock profile=openstack</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.volume_detach">
+                           <h2 class="title topictitle2">volume_detach</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.volume_detach(
+								name,
+								profile=None,
+								timeout=300
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Attach a block storage volume</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d179277e1081" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d179277e1083" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e1081" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d179277e1083" class="stentry propdesc">
+                                       <p class="p">Name of the new volume to attach</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e1081" class="stentry propvalue">server_name</td>
+                                    
+                                    <td valign="top" headers="d179277e1083" class="stentry propdesc">
+                                       <p class="p">Name of the server to detach from</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e1081" class="stentry propvalue">profile</td>
+                                    
+                                    <td valign="top" headers="d179277e1083" class="stentry propdesc">
+                                       <p class="p">Profile to build on</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.volume_detach myblock profile=openstack</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.volume_list">
+                           <h2 class="title topictitle2">volume_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.volume_list(
+								search_opts=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">List storage volumes</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d179277e1138" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d179277e1140" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e1138" class="stentry propvalue">search_opts</td>
+                                    
+                                    <td valign="top" headers="d179277e1140" class="stentry propdesc">
+                                       <p class="p">Dictionary of search options</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e1138" class="stentry propvalue">profile</td>
+                                    
+                                    <td valign="top" headers="d179277e1140" class="stentry propdesc">
+                                       <p class="p">Profile to use</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.volume_list                 search_opts='{"display_name": "myblock"}'                 profile=openstack</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nova.volume_show">
+                           <h2 class="title topictitle2">volume_show</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nova.volume_show(
+								name,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Create a block storage volume</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d179277e1189" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d179277e1191" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e1189" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d179277e1191" class="stentry propdesc">
+                                       <p class="p">Name of the volume</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d179277e1189" class="stentry propvalue">profile</td>
+                                    
+                                    <td valign="top" headers="d179277e1191" class="stentry propdesc">
+                                       <p class="p">Profile to use</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nova.volume_show myblock profile=openstack</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

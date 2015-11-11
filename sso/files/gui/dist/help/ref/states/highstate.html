@@ -1,0 +1,447 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Highstate data structure definitions</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Highstate data structure definitions">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="states-highstate">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="states-highstate">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Highstate data structure definitions</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="states-highstate__highstate-data-structure-definitions"></span></p>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-highstate__the-salt-state-tree">
+                              <h2 class="title sectiontitle">The Salt State Tree</h2>
+                              <p class="p">A state tree is a collection of <tt class="ph tt">SLS</tt> files that live under the directory
+                                 specified in 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__file_roots">file_roots</a>. A state tree can be organized into
+                                 <tt class="ph tt">SLS modules</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-highstate__states-highstate-top-file">
+                              <h2 class="title sectiontitle">Top file</h2>
+                              <p class="p">The main state file that instructs minions what environment and modules to use
+                                 during state execution.
+                              </p>
+                              
+                              <p class="p">Configurable via 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__state_top">state_top</a>.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="top.html#states-top">A detailed description of the top file</a></p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-highstate__include-declaration">
+                              <h2 class="title sectiontitle">Include declaration</h2>
+                              <p class="p">Defines a list of <a class="xref" href="highstate.html#states-highstate__module-reference">Module reference</a> strings to include in this <tt class="ph tt">SLS</tt>.
+                              </p>
+                              
+                              <p class="p">Occurs only in the top level of the highstate structure.</p>
+                              
+                              <p class="p">Example:</p>
+                              <pre class="pre codeblock language-yaml">include:
+  - edit.vim
+  - http.server</pre>
+                              </div>
+                           
+                           <div class="section" id="states-highstate__module-reference">
+                              <h2 class="title sectiontitle">Module reference</h2>
+                              <p class="p">The name of a SLS module defined by a separate SLS file and residing on
+                                 the Salt Master. A module named <tt class="ph tt">edit.vim</tt> is a reference to the SLS
+                                 file <tt class="ph tt">salt://edit/vim.sls</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-highstate__id-declaration">
+                              <h2 class="title sectiontitle">ID declaration</h2>
+                              <p class="p">Defines an individual highstate component. Always references a value of a
+                                 dictionary containing keys referencing <a class="xref" href="highstate.html#states-highstate__state-declaration">State declaration</a> and
+                                 <a class="xref" href="highstate.html#states-highstate__requisite-declaration">Requisite declaration</a>. Can be overridden by a <a class="xref" href="highstate.html#states-highstate__name-declaration">Name declaration</a> or
+                                 a <a class="xref" href="highstate.html#states-highstate__names-declaration">Names declaration</a>.
+                              </p>
+                              
+                              <p class="p">Occurs on the top level or under the <a class="xref" href="highstate.html#states-highstate__extend-declaration">Extend declaration</a>.
+                              </p>
+                              
+                              <p class="p">Must be unique across entire state tree. If the same ID declaration is
+                                 used twice, only the first one matched will be used. All subsequent
+                                 ID declarations with the same name will be ignored.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Naming gotchas</p>
+                                 
+                                 <p class="p">In Salt versions earlier than 0.9.7, ID declarations containing dots would
+                                    result in unpredictable highstate output.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-highstate__extend-declaration">
+                              <h2 class="title sectiontitle">Extend declaration</h2>
+                              <p class="p">Extends a <a class="xref" href="highstate.html#states-highstate__name-declaration">Name declaration</a> from an included <tt class="ph tt">SLS module</tt>. The
+                                 keys of the extend declaration always define existing :ref`ID declaration`
+                                 which have been defined in included
+                                 <tt class="ph tt">SLS modules</tt>.
+                              </p>
+                              
+                              <p class="p">Occurs only in the top level and defines a dictionary.</p>
+                              
+                              <p class="p">States cannot be extended more than once in a single state run.</p>
+                              
+                              <p class="p">Extend declarations are useful for adding-to or overriding parts of a
+                                 <a class="xref" href="highstate.html#states-highstate__state-declaration">State declaration</a> that is defined in another <tt class="ph tt">SLS</tt> file. In the
+                                 following contrived example, the shown <tt class="ph tt">mywebsite.sls</tt> file is <tt class="ph tt">include</tt>
+                                 -ing and <tt class="ph tt">extend</tt> -ing the <tt class="ph tt">apache.sls</tt> module in order to add a <tt class="ph tt">watch</tt>
+                                 declaration that will restart Apache whenever the Apache configuration file,
+                                 <tt class="ph tt">mywebsite</tt> changes.
+                              </p>
+                              <pre class="pre codeblock language-yaml">include:
+  - apache
+
+extend:
+  apache:
+    service:
+      - watch:
+        - file: mywebsite
+
+mywebsite:
+  file.managed:
+    - name: /var/www/mysite</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">watch_in and require_in</p>
+                                 
+                                 <p class="p">Sometimes it is more convenient to use the 
+                                    		
+                                    			&nbsp;<a class="xref" href="requisites.html#requisites__requisites-watch-in">watch_in</a> or 
+                                    		
+                                    			&nbsp;<a class="xref" href="requisites.html#requisites__requisites-require-in">require_in</a> syntax
+                                    instead of extending another <tt class="ph tt">SLS</tt> file.
+                                 </p>
+                                 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="requisites.html#requisites">State Requisites</a></p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-highstate__state-declaration">
+                              <h2 class="title sectiontitle">State declaration</h2>
+                              <p class="p">A list which contains one string defining the <a class="xref" href="highstate.html#states-highstate__function-declaration">Function declaration</a> and
+                                 any number of <a class="xref" href="highstate.html#states-highstate__function-arg-declaration">Function arg declaration</a> dictionaries.
+                              </p>
+                              
+                              <p class="p">Can, optionally, contain a number of additional components like the
+                                 name override components — <a class="xref" href="highstate.html#states-highstate__name-declaration">name</a> and
+                                 <a class="xref" href="highstate.html#states-highstate__names-declaration">names</a>. Can also contain <a class="xref" href="highstate.html#states-highstate__requisite-declaration">requisite
+                                    declarations</a>.
+                              </p>
+                              
+                              <p class="p">Occurs under an <a class="xref" href="highstate.html#states-highstate__id-declaration">ID declaration</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-highstate__requisite-declaration">
+                              <h2 class="title sectiontitle">Requisite declaration</h2>
+                              <p class="p">A list containing <a class="xref" href="highstate.html#states-highstate__requisite-reference">requisite references</a>.
+                              </p>
+                              
+                              <p class="p">Used to build the action dependency tree. While Salt states are made to
+                                 execute in a deterministic order, this order is managed by requiring
+                                 and watching other Salt states.
+                              </p>
+                              
+                              <p class="p">Occurs as a list component under a <a class="xref" href="highstate.html#states-highstate__state-declaration">State declaration</a> or as a
+                                 key under an <a class="xref" href="highstate.html#states-highstate__id-declaration">ID declaration</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-highstate__requisite-reference">
+                              <h2 class="title sectiontitle">Requisite reference</h2>
+                              <p class="p">A single key dictionary. The key is the name of the referenced
+                                 <a class="xref" href="highstate.html#states-highstate__state-declaration">State declaration</a> and the value is the ID of the referenced
+                                 <a class="xref" href="highstate.html#states-highstate__id-declaration">ID declaration</a>.
+                              </p>
+                              
+                              <p class="p">Occurs as a single index in a <a class="xref" href="highstate.html#states-highstate__requisite-declaration">Requisite declaration</a> list.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-highstate__function-declaration">
+                              <h2 class="title sectiontitle">Function declaration</h2>
+                              <p class="p">The name of the function to call within the state. A state declaration
+                                 can contain only a single function declaration.
+                              </p>
+                              
+                              <p class="p">For example, the following state declaration calls the 
+                                 		
+                                 			&nbsp;<a class="xref" href="all/salt.states.pkg.html#salt.states.pkg.installed">installed</a> function in the <tt class="ph tt">pkg</tt> state module:
+                              </p>
+                              <pre class="pre codeblock language-yaml">httpd:
+  pkg.installed: []</pre>
+                              <p class="p">The function can be declared inline with the state as a shortcut.
+                                 The actual data structure is compiled to this form:
+                              </p>
+                              <pre class="pre codeblock language-yaml">httpd:
+  pkg:
+    - installed</pre>
+                              <p class="p">Where the function is a string in the body of the state declaration.
+                                 Technically when the function is declared in dot notation the compiler
+                                 converts it to be a string in the state declaration list. Note that the
+                                 use of the first example more than once in an ID declaration is invalid
+                                 yaml.
+                              </p>
+                              
+                              <p class="p">INVALID:</p>
+                              <pre class="pre codeblock language-yaml">httpd:
+  pkg.installed
+  service.running</pre>
+                              <p class="p">When passing a function without arguments and another state declaration
+                                 within a single ID declaration, then the long or "standard" format
+                                 needs to be used since otherwise it does not represent a valid data
+                                 structure.
+                              </p>
+                              
+                              <p class="p">VALID:</p>
+                              <pre class="pre codeblock language-yaml">httpd:
+  pkg.installed: []
+  service.running: []</pre>
+                              <p class="p">Occurs as the only index in the <a class="xref" href="highstate.html#states-highstate__state-declaration">State declaration</a> list.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-highstate__function-arg-declaration">
+                              <h2 class="title sectiontitle">Function arg declaration</h2>
+                              <p class="p">A single key dictionary referencing a Python type which is to be passed
+                                 to the named <a class="xref" href="highstate.html#states-highstate__function-declaration">Function declaration</a> as a parameter. The type must
+                                 be the data type expected by the function.
+                              </p>
+                              
+                              <p class="p">Occurs under a <a class="xref" href="highstate.html#states-highstate__function-declaration">Function declaration</a>.
+                              </p>
+                              
+                              <p class="p">For example in the following state declaration <tt class="ph tt">user</tt>, <tt class="ph tt">group</tt>, and
+                                 <tt class="ph tt">mode</tt> are passed as arguments to the 
+                                 		
+                                 			&nbsp;<a class="xref" href="all/salt.states.file.html#salt.states.file.managed">managed</a> function in the <tt class="ph tt">file</tt> state module:
+                              </p>
+                              <pre class="pre codeblock language-yaml">/etc/http/conf/http.conf:
+  file.managed:
+    - user: root
+    - group: root
+    - mode: 644</pre>
+                              </div>
+                           
+                           <div class="section" id="states-highstate__id10">
+                              <h2 class="title sectiontitle">Name declaration</h2>
+                              <p class="p">Overrides the <tt class="ph tt">name</tt> argument of a <a class="xref" href="highstate.html#states-highstate__state-declaration">State declaration</a>. If
+                                 <tt class="ph tt">name</tt> is not specified the <a class="xref" href="highstate.html#states-highstate__id-declaration">ID declaration</a> satisfies the
+                                 <tt class="ph tt">name</tt> argument.
+                              </p>
+                              
+                              <p class="p">The name is always a single key dictionary referencing a string.</p>
+                              
+                              <p class="p">Overriding <tt class="ph tt">name</tt> is useful for a variety of scenarios.
+                              </p>
+                              
+                              <p class="p">For example, avoiding clashing ID declarations. The following two state
+                                 declarations cannot both have <tt class="ph tt">/etc/motd</tt> as the ID declaration:
+                              </p>
+                              <pre class="pre codeblock language-yaml">motd_perms:
+  file.managed:
+    - name: /etc/motd
+    - mode: 644
+
+motd_quote:
+  file.append:
+    - name: /etc/motd
+    - text: "Of all smells, bread; of all tastes, salt."</pre>
+                              <p class="p">Another common reason to override <tt class="ph tt">name</tt> is if the ID declaration is long and
+                                 needs to be referenced in multiple places. In the example below it is much
+                                 easier to specify <tt class="ph tt">mywebsite</tt> than to specify
+                                 <tt class="ph tt">/etc/apache2/sites-available/mywebsite.com</tt> multiple times:
+                              </p>
+                              <pre class="pre codeblock language-yaml">mywebsite:
+  file.managed:
+    - name: /etc/apache2/sites-available/mywebsite.com
+    - source: salt://mywebsite.com
+
+a2ensite mywebsite.com:
+  cmd.wait:
+    - unless: test -L /etc/apache2/sites-enabled/mywebsite.com
+    - watch:
+      - file: mywebsite
+
+apache2:
+  service.running:
+    - watch:
+      - file: mywebsite</pre>
+                              </div>
+                           
+                           <div class="section" id="states-highstate__id11">
+                              <h2 class="title sectiontitle">Names declaration</h2>
+                              <p class="p">Expands the contents of the containing <a class="xref" href="highstate.html#states-highstate__state-declaration">State declaration</a> into
+                                 multiple state declarations, each with its own name.
+                              </p>
+                              
+                              <p class="p">For example, given the following state declaration:</p>
+                              <pre class="pre codeblock language-yaml">python-pkgs:
+  pkg.installed:
+    - names:
+      - python-django
+      - python-crypto
+      - python-yaml</pre>
+                              <p class="p">Once converted into the lowstate data structure the above state
+                                 declaration will be expanded into the following three state declarations:
+                              </p>
+                              <pre class="pre codeblock language-yaml">python-django:
+  pkg.installed
+
+python-crypto:
+  pkg.installed
+
+python-yaml:
+  pkg.installed</pre>
+                              <p class="p">Other values can be overridden during the expansion by providing an additional
+                                 dictionary level.
+                              </p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              <pre class="pre codeblock language-yaml">ius:
+  pkgrepo.managed:
+    - humanname: IUS Community Packages for Enterprise Linux 6 - $basearch
+    - gpgcheck: 1
+    - baseurl: http://mirror.rackspace.com/ius/stable/CentOS/6/$basearch
+    - gpgkey: http://dl.iuscommunity.org/pub/ius/IUS-COMMUNITY-GPG-KEY
+    - names:
+        - ius
+        - ius-devel:
+            - baseurl: http://mirror.rackspace.com/ius/development/CentOS/6/$basearch</pre>
+                              </div>
+                           
+                           <div class="section" id="states-highstate__states-highstate-example">
+                              <h2 class="title sectiontitle">Large example</h2>
+                              <p class="p">Here is the layout in yaml using the names of the highdata structure
+                                 components.
+                              </p>
+                              <pre class="pre codeblock language-yaml">&lt;Include Declaration&gt;:
+  - &lt;Module Reference&gt;
+  - &lt;Module Reference&gt;
+
+&lt;Extend Declaration&gt;:
+  &lt;ID Declaration&gt;:
+    [&lt;overrides&gt;]
+
+
+# standard declaration
+
+&lt;ID Declaration&gt;:
+  &lt;State Module&gt;:
+    - &lt;Function&gt;
+    - &lt;Function Arg&gt;
+    - &lt;Function Arg&gt;
+    - &lt;Function Arg&gt;
+    - &lt;Name&gt;: &lt;name&gt;
+    - &lt;Requisite Declaration&gt;:
+      - &lt;Requisite Reference&gt;
+      - &lt;Requisite Reference&gt;
+
+
+# inline function and names
+
+&lt;ID Declaration&gt;:
+  &lt;State Module&gt;.&lt;Function&gt;:
+    - &lt;Function Arg&gt;
+    - &lt;Function Arg&gt;
+    - &lt;Function Arg&gt;
+    - &lt;Names&gt;:
+      - &lt;name&gt;
+      - &lt;name&gt;
+      - &lt;name&gt;
+    - &lt;Requisite Declaration&gt;:
+      - &lt;Requisite Reference&gt;
+      - &lt;Requisite Reference&gt;
+
+
+# multiple states for single id
+
+&lt;ID Declaration&gt;:
+  &lt;State Module&gt;:
+    - &lt;Function&gt;
+    - &lt;Function Arg&gt;
+    - &lt;Name&gt;: &lt;name&gt;
+    - &lt;Requisite Declaration&gt;:
+      - &lt;Requisite Reference&gt;
+  &lt;State Module&gt;:
+    - &lt;Function&gt;
+    - &lt;Function Arg&gt;
+    - &lt;Names&gt;:
+      - &lt;name&gt;
+      - &lt;name&gt;
+    - &lt;Requisite Declaration&gt;:
+      - &lt;Requisite Reference&gt;</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

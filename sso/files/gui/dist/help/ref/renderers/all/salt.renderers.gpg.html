@@ -1,0 +1,186 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.renderers.gpg</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.renderers.gpg">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../renderers.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-renderers-gpg">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-renderers-gpg">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.renderers.gpg</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-renderers-gpg__module-salt.renderers.gpg"></span></p>
+                              
+                              <p class="p">Renderer that will decrypt GPG ciphers</p>
+                              
+                              <p class="p">Any key in the SLS file can be a GPG cipher, and this renderer will decrypt
+                                 it before passing it off to Salt. This allows you to safely store secrets in
+                                 source control, in such a way that only your Salt master can decrypt them and
+                                 distribute them only to the minions that need them.
+                              </p>
+                              
+                              <p class="p">The typical use-case would be to use ciphers in your pillar data, and keep a
+                                 secret key on your master. You can put the public key in source control so that
+                                 developers can add new secrets quickly and easily.
+                              </p>
+                              
+                              <p class="p">This renderer requires the python-gnupg package. Be careful to install the
+                                 <tt class="ph tt">python-gnupg</tt> package, not the <tt class="ph tt">gnupg</tt> package, or you will get errors.
+                              </p>
+                              
+                              <p class="p">To set things up, you will first need to generate a keypair. On your master,
+                                 run:
+                              </p>
+                              <pre class="pre codeblock language-bash"># gpg --gen-key --homedir /etc/salt/gpgkeys</pre>
+                              <p class="p">Do not supply a password for your keypair, and use a name that makes sense
+                                 for your application. Be sure to back up your gpg directory someplace safe!
+                              </p>
+                              
+                              <p class="p">To retrieve the public key:</p>
+                              <pre class="pre codeblock language-bash"># gpg --armor --homedir /etc/salt/gpgkeys --armor --export &lt;KEY-NAME&gt;           &gt; exported_pubkey.gpg</pre>
+                              <p class="p">Now, to encrypt secrets, copy the public key to your local machine and run:</p>
+                              <pre class="pre codeblock language-bash">$ gpg --import exported_pubkey.gpg</pre>
+                              <p class="p">To generate a cipher from a secret:</p>
+                              <pre class="pre codeblock language-bash">$ echo -n "supersecret" | gpg --homedir --armor --encrypt -r &lt;KEY-name&gt;</pre>
+                              <p class="p">Set up the renderer on your master by adding something like this line to your
+                                 config:
+                              </p>
+                              <pre class="pre codeblock language-yaml">renderer: jinja | yaml | gpg</pre>
+                              <p class="p">Now you can include your ciphers in your pillar data like so:</p>
+                              <pre class="pre codeblock language-yaml">a-secret: |
+  -----BEGIN PGP MESSAGE-----
+  Version: GnuPG v1
+
+  hQEMAweRHKaPCfNeAQf9GLTN16hCfXAbPwU6BbBK0unOc7i9/etGuVc5CyU9Q6um
+  QuetdvQVLFO/HkrC4lgeNQdM6D9E8PKonMlgJPyUvC8ggxhj0/IPFEKmrsnv2k6+
+  cnEfmVexS7o/U1VOVjoyUeliMCJlAz/30RXaME49Cpi6No2+vKD8a4q4nZN1UZcG
+  RhkhC0S22zNxOXQ38TBkmtJcqxnqT6YWKTUsjVubW3bVC+u2HGqJHu79wmwuN8tz
+  m4wBkfCAd8Eyo2jEnWQcM4TcXiF01XPL4z4g1/9AAxh+Q4d8RIRP4fbw7ct4nCJv
+  Gr9v2DTF7HNigIMl4ivMIn9fp+EZurJNiQskLgNbktJGAeEKYkqX5iCuB1b693hJ
+  FKlwHiJt5yA8X2dDtfk8/Ph1Jx2TwGS+lGjlZaNqp3R1xuAZzXzZMLyZDe5+i3RJ
+  skqmFTbOiA==
+  =Eqsm
+  -----END PGP MESSAGE-----</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.renderers.gpg.decrypt_ciphertext">
+                           <h2 class="title topictitle2">decrypt_ciphertext</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.renderers.gpg.decrypt_ciphertext(
+								c,
+								gpg
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Given a block of ciphertext as a string, and a gpg object, try to decrypt
+                                    the cipher and return the decrypted string. If the cipher cannot be
+                                    decrypted, log the error, and return the ciphertext back out.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.renderers.gpg.decrypt_object">
+                           <h2 class="title topictitle2">decrypt_object</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.renderers.gpg.decrypt_object(
+								o,
+								gpg
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Recursively try to decrypt any object. If the object is a string, and
+                                    it contains a valid GPG header, decrypt it, otherwise keep going until
+                                    a string is found.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.renderers.gpg.render">
+                           <h2 class="title topictitle2">render</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.renderers.gpg.render(
+								gpg_data,
+								saltenv='base',
+								sls='',
+								argline='',
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Create a gpg object given a gpg_keydir, and then use it to try to decrypt
+                                    the data to be rendered.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

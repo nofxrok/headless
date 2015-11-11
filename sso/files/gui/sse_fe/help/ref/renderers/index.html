@@ -1,0 +1,444 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Renderers</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Renderers">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/administration.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="id1">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="id1">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Renderers</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="id1__renderers"></span></p>
+                              
+                              <p class="p">The Salt state system operates by gathering information from common data
+                                 types such as lists, dictionaries, and strings that would be familiar
+                                 to any developer.
+                              </p>
+                              
+                              <p class="p">SLS files are translated from whatever data templating format they are written
+                                 in back into Python data types to be consumed by Salt.
+                              </p>
+                              
+                              <p class="p">By default SLS files are rendered as Jinja templates and then parsed as YAML
+                                 documents. But since the only thing the state system cares about is raw data,
+                                 the SLS files can be any structured format that can be dreamed up.
+                              </p>
+                              
+                              <p class="p">Currently there is support for <tt class="ph tt">Jinja + YAML</tt>, <tt class="ph tt">Mako + YAML</tt>,
+                                 <tt class="ph tt">Wempy + YAML</tt>, <tt class="ph tt">Jinja + json</tt>, <tt class="ph tt">Mako + json</tt> and <tt class="ph tt">Wempy + json</tt>.
+                              </p>
+                              
+                              <p class="p">Renderers can be written to support any template type. This means that the
+                                 Salt states could be managed by XML files, HTML files, Puppet files, or any
+                                 format that can be translated into the Pythonic data structure used by the state
+                                 system.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="id1__multiple-renderers">
+                              <h2 class="title sectiontitle">Multiple Renderers</h2>
+                              <p class="p">A default renderer is selected in the master configuration file by providing
+                                 a value to the <tt class="ph tt">renderer</tt> key.
+                              </p>
+                              
+                              <p class="p">When evaluating an SLS, more than one renderer can be used.</p>
+                              
+                              <p class="p">When rendering SLS files, Salt checks for the presence of a Salt-specific
+                                 shebang line.
+                              </p>
+                              
+                              <p class="p">The shebang line directly calls the name of the renderer as it is specified
+                                 within Salt. One of the most common reasons to use multiple renderers is to
+                                 use the Python or <tt class="ph tt">py</tt> renderer.
+                              </p>
+                              
+                              <p class="p">Below, the first line is a shebang that references the <tt class="ph tt">py</tt> renderer.
+                              </p>
+                              <pre class="pre codeblock language-python">#!py
+
+def run():
+    '''
+    Install the python-mako package
+    '''
+    return {'include': ['python'],
+            'python-mako': {'pkg': ['installed']}}</pre>
+                              </div>
+                           
+                           <div class="section" id="id1__renderers-composing">
+                              <h2 class="title sectiontitle">Composing Renderers</h2>
+                              <p class="p">A renderer can be composed from other renderers by connecting them in a series
+                                 of pipes(<tt class="ph tt">|</tt>).
+                              </p>
+                              
+                              <p class="p">In fact, the default <tt class="ph tt">Jinja + YAML</tt> renderer is implemented by connecting a YAML
+                                 renderer to a Jinja renderer. Such renderer configuration is specified as: <tt class="ph tt">jinja | yaml</tt>.
+                              </p>
+                              
+                              <p class="p">Other renderer combinations are possible:</p>
+                              
+                              <blockquote class="lq">
+                                 <dl class="dl definition_list">
+                                    <dt class="dt dlterm"><tt class="ph tt">yaml</tt></dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">i.e, just YAML, no templating.</p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm"><tt class="ph tt">mako | yaml</tt></dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">pass the input to the <tt class="ph tt">mako</tt> renderer, whose output is then fed into the
+                                          <tt class="ph tt">yaml</tt> renderer.
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm"><tt class="ph tt">jinja | mako | yaml</tt></dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">This one allows you to use both jinja and mako templating syntax in the
+                                          input and then parse the final rendered output as YAML.
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 
+                              </blockquote>
+                              
+                              <p class="p">The following is a contrived example SLS file using the <tt class="ph tt">jinja | mako | yaml</tt> renderer:
+                              </p>
+                              <pre class="pre codeblock language-python">#!jinja|mako|yaml
+
+An_Example:
+  cmd.run:
+    - name: |
+        echo "Using Salt ${grains['saltversion']}" \
+             "from path {{grains['saltpath']}}."
+    - cwd: /
+
+&lt;%doc&gt; ${...} is Mako's notation, and so is this comment. &lt;/%doc&gt;
+{#     Similarly, {{...}} is Jinja's notation, and so is this comment. #}</pre>
+                              <p class="p">For backward compatibility, <tt class="ph tt">jinja | yaml</tt> can also be written as
+                                 <tt class="ph tt">yaml_jinja</tt>, and similarly, the <tt class="ph tt">yaml_mako</tt>, <tt class="ph tt">yaml_wempy</tt>,
+                                 <tt class="ph tt">json_jinja</tt>, <tt class="ph tt">json_mako</tt>, and <tt class="ph tt">json_wempy</tt> renderers are all supported.
+                              </p>
+                              
+                              <p class="p">Keep in mind that not all renderers can be used alone or with any other renderers.
+                                 For example, the template renderers shouldn't be used alone as their outputs are
+                                 just strings, which still need to be parsed by another renderer to turn them into
+                                 highstate data structures.
+                              </p>
+                              
+                              <p class="p">For example, it doesn't make sense to specify <tt class="ph tt">yaml | jinja</tt> because the
+                                 output of the YAML renderer is a highstate data structure (a dict in Python), which
+                                 cannot be used as the input to a template renderer. Therefore, when combining
+                                 renderers, you should know what each renderer accepts as input and what it returns
+                                 as output.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="id1__writing-renderers">
+                              <h2 class="title sectiontitle">Writing Renderers</h2>
+                              <p class="p">A custom renderer must be a Python module placed in the renderers directory and the
+                                 module implement the <tt class="ph tt">render</tt> function.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">render</tt> function will be passed the path of the SLS file as an argument.
+                              </p>
+                              
+                              <p class="p">The purpose of of <tt class="ph tt">render</tt> function is to  parse the passed file and to return
+                                 the Python data structure derived from the file.
+                              </p>
+                              
+                              <p class="p">Custom renderers must be placed in a <tt class="ph tt">_renderers</tt> directory within the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__file_roots">file_roots</a> specified by the master config file.
+                              </p>
+                              
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm">Custom renderers are distributed when any of the following are run:</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="../modules/all/salt.modules.state.html#salt.modules.state.highstate">state.highstate</a></p>
+                                    
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="../modules/all/salt.modules.saltutil.html#salt.modules.saltutil.sync_renderers">saltutil.sync_renderers</a></p>
+                                    
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="../modules/all/salt.modules.saltutil.html#salt.modules.saltutil.sync_all">saltutil.sync_all</a></p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">Any custom renderers which have been synced to a minion, that are named the
+                                 same as one of Salt's default set of renderers, will take the place of the
+                                 default renderer with the same name.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="id1__examples">
+                              <h2 class="title sectiontitle">Examples</h2>
+                              <p class="p">The best place to find examples of renderers is in the Salt source code.</p>
+                              
+                              <p class="p">Documentation for renderers included with Salt can be found here:</p>
+                              
+                              <p class="p"><a class="xref" href="https://github.com/saltstack/salt/blob/develop/salt/renderers" target="_blank">https://github.com/saltstack/salt/blob/develop/salt/renderers</a></p>
+                              
+                              <p class="p">Here is a simple YAML renderer example:</p>
+                              <pre class="pre codeblock language-python">import yaml
+def render(yaml_data, env='', sls='', **kws):
+    if not isinstance(yaml_data, basestring):
+        yaml_data = yaml_data.read()
+    data = yaml.load(yaml_data)
+    return data if data else {}</pre>
+                              </div>
+                           
+                           <div class="section" id="id1__full-list-of-renderers">
+                              <h2 class="title sectiontitle">Full List of Renderers</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="all/index.html#all-salt-renderers">Full list of builtin renderer modules</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.renderers.cheetah.html#salt-renderers-cheetah">salt.renderers.cheetah</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.renderers.genshi.html#salt-renderers-genshi">salt.renderers.genshi</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.renderers.gpg.html#salt-renderers-gpg">salt.renderers.gpg</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.renderers.jinja.html#salt-renderers-jinja">salt.renderers.jinja</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.jinja.html#salt-renderers-jinja__jinja-in-states">Jinja in States</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.jinja.html#salt-renderers-jinja__include-and-import">Include and Import</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.jinja.html#salt-renderers-jinja__macros">Macros</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.jinja.html#salt-renderers-jinja__template-inheritance">Template Inheritance</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.jinja.html#salt-renderers-jinja__filters">Filters</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.jinja.html#salt-renderers-jinja__jinja-in-files">Jinja in Files</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.jinja.html#salt-renderers-jinja__calling-salt-functions">Calling Salt Functions</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.jinja.html#salt-renderers-jinja__debugging">Debugging</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.renderers.json.html#salt-renderers-json">salt.renderers.json</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.renderers.mako.html#salt-renderers-mako">salt.renderers.mako</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.renderers.msgpack.html#salt-renderers-msgpack">salt.renderers.msgpack</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.renderers.py.html#salt-renderers-py">salt.renderers.py</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.renderers.pydsl.html#salt-renderers-pydsl">salt.renderers.pydsl</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.pydsl.html#salt-renderers-pydsl__special-integration-with-the-cmd-state">Special integration with the cmd state</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.pydsl.html#salt-renderers-pydsl__implicit-ordering-of-states">Implicit ordering of states</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.pydsl.html#salt-renderers-pydsl__render-time-state-execution">Render time state execution</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.pydsl.html#salt-renderers-pydsl__integration-with-the-stateconf-renderer">Integration with the stateconf renderer</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.pydsl.html#salt-renderers-pydsl__importing-custom-python-modules">Importing custom Python modules</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.renderers.pyobjects.html#salt-renderers-pyobjects">salt.renderers.pyobjects</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.pyobjects.html#salt-renderers-pyobjects__creating-state-data">Creating state data</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.pyobjects.html#salt-renderers-pyobjects__context-managers-and-requisites">Context Managers and requisites</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.pyobjects.html#salt-renderers-pyobjects__including-and-extending">Including and Extending</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.pyobjects.html#salt-renderers-pyobjects__importing-from-other-state-files">Importing from other state files</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.pyobjects.html#salt-renderers-pyobjects__salt-object">Salt object</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.pyobjects.html#salt-renderers-pyobjects__pillar-grain-mine-config-data">Pillar, grain, mine &amp; config data</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.pyobjects.html#salt-renderers-pyobjects__map-data">Map Data</a></li>
+                                             
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.pyobjects.html#salt-renderers-pyobjects__todo">TODO</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.renderers.stateconf.html#salt-renderers-stateconf">salt.renderers.stateconf</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.renderers.wempy.html#salt-renderers-wempy">salt.renderers.wempy</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.renderers.yaml.html#salt-renderers-yaml">salt.renderers.yaml</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.yaml.html#salt-renderers-yaml__understanding-yaml">Understanding YAML</a><ul class="ul">
+                                                   <li class="li">
+                                                      		
+                                                      			&nbsp;<a class="xref" href="all/salt.renderers.yaml.html#salt-renderers-yaml__rule-one-indentation">Rule One: Indentation</a></li>
+                                                   
+                                                   <li class="li">
+                                                      		
+                                                      			&nbsp;<a class="xref" href="all/salt.renderers.yaml.html#salt-renderers-yaml__rule-two-colons">Rule Two: Colons</a></li>
+                                                   
+                                                   <li class="li">
+                                                      		
+                                                      			&nbsp;<a class="xref" href="all/salt.renderers.yaml.html#salt-renderers-yaml__rule-three-dashes">Rule Three: Dashes</a></li>
+                                                   
+                                                   <li class="li">
+                                                      		
+                                                      			&nbsp;<a class="xref" href="all/salt.renderers.yaml.html#salt.renderers.yaml">Reference</a></li>
+                                                   
+                                                </ul>
+                                                
+                                             </li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="all/salt.renderers.yamlex.html#salt-renderers-yamlex">salt.renderers.yamlex</a><ul class="ul">
+                                             <li class="li">
+                                                		
+                                                			&nbsp;<a class="xref" href="all/salt.renderers.yamlex.html#salt.renderers.yamlex">Reference</a></li>
+                                             
+                                          </ul>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

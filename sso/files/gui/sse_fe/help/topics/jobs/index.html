@@ -1,0 +1,385 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Job Management</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Job Management">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/administration.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="job_cache.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="schedule.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="job-management">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="job-management">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Job Management</h1>
+                        <div class="body conbody">
+                           <p class="p"><span class="keyword versionmodified">New in version 0.9.7.</span></p>
+                           
+                           <p class="p">Since Salt executes jobs running on many systems, Salt needs to be able to
+                              manage jobs running on many systems.
+                           </p>
+                           
+                           <div class="section" id="job-management__the-minion-proc-system">
+                              <h2 class="title sectiontitle">The Minion proc System</h2>
+                              <p class="p">Salt Minions maintain a <em class="ph i">proc</em> directory in the Salt <tt class="ph tt">cachedir</tt>. The <em class="ph i">proc</em>
+                                 directory maintains files named after the executed job ID. These files contain
+                                 the information about the current running jobs on the minion and allow for
+                                 jobs to be looked up. This is located in the <em class="ph i">proc</em> directory under the
+                                 cachedir, with a default configuration it is under <tt class="ph tt">/var/cache/salt/proc</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="job-management__functions-in-the-saltutil-module">
+                              <h2 class="title sectiontitle">Functions in the saltutil Module</h2>
+                              <p class="p">Salt 0.9.7 introduced a few new functions to the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.saltutil.html#salt-modules-saltutil">saltutil</a> module for managing
+                                 jobs. These functions are:
+                              </p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">running</tt>
+                                       Returns the data of all running jobs that are found in the <em class="ph i">proc</em> directory.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">find_job</tt>
+                                       Returns specific data about a certain job based on job id.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">signal_job</tt>
+                                       Allows for a given jid to be sent a signal.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">term_job</tt>
+                                       Sends a termination signal (SIGTERM, 15) to the process controlling the
+                                       specified job.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">kill_job</tt>
+                                       Sends a kill signal (SIGKILL, 9) to the process controlling the
+                                       specified job.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                              <p class="p">These functions make up the core of the back end used to manage jobs at the
+                                 minion level.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="job-management__the-jobs-runner">
+                              <h2 class="title sectiontitle">The jobs Runner</h2>
+                              <p class="p">A convenience runner front end and reporting system has been added as well.
+                                 The jobs runner contains functions to make viewing data easier and cleaner.
+                              </p>
+                              
+                              <p class="p">The jobs runner contains a number of functions...</p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="job-management__active">
+                              <h2 class="title sectiontitle">active</h2>
+                              <p class="p">The active function runs saltutil.running on all minions and formats the
+                                 return data about all running jobs in a much more usable and compact format.
+                                 The active function will also compare jobs that have returned and jobs that
+                                 are still running, making it easier to see what systems have completed a job
+                                 and what systems are still being waited on.
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-run jobs.active</pre>
+                              </div>
+                           
+                           <div class="section head3" id="job-management__lookup-jid">
+                              <h2 class="title sectiontitle">lookup_jid</h2>
+                              <p class="p">When jobs are executed the return data is sent back to the master and cached.
+                                 By default it is cached for 24 hours, but this can be configured via the
+                                 <tt class="ph tt">keep_jobs</tt> option in the master configuration.
+                                 Using the lookup_jid runner will display the same return data that the initial
+                                 job invocation with the salt command would display.
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-run jobs.lookup_jid &lt;job id number&gt;</pre>
+                              </div>
+                           
+                           <div class="section head3" id="job-management__list-jobs">
+                              <h2 class="title sectiontitle">list_jobs</h2>
+                              <p class="p">Before finding a historic job, it may be required to find the job id. list_jobs
+                                 will parse the cached execution data and display all of the job data for jobs
+                                 that have already, or partially returned.
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-run jobs.list_jobs</pre>
+                              </div>
+                           
+                           <div class="section" id="job-management__scheduling-jobs">
+                              <h2 class="title sectiontitle">Scheduling Jobs</h2>
+                              <p class="p">In Salt versions greater than 0.12.0, the scheduling system allows incremental
+                                 executions on minions or the master. The schedule system exposes the execution
+                                 of any execution function on minions or any runner on the master.
+                              </p>
+                              
+                              <p class="p">Scheduling is enabled via the <tt class="ph tt">schedule</tt> option on either the master or minion
+                                 config files, or via a minion's pillar data. Schedules that are impletemented via
+                                 pillar data, only need to refresh the minion's pillar data, for example by using
+                                 <tt class="ph tt">saltutil.refresh_pillar</tt>. Schedules implemented in the master or minion config
+                                 have to restart the application in order for the schedule to be implemented.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The scheduler executes different functions on the master and minions. When
+                                    running on the master the functions reference runner functions, when
+                                    running on the minion the functions specify execution functions.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">A scheduled run has no output on the minion unless the config is set to info level
+                                 or higher. Refer to 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/minion.html#configuration-salt-minion">minion logging settings</a>.
+                              </p>
+                              
+                              <p class="p">Specify <tt class="ph tt">maxrunning</tt> to ensure that there are no more than N copies of
+                                 a particular routine running.  Use this for jobs that may be long-running
+                                 and could step on each other or otherwise double execute.  The default for
+                                 <tt class="ph tt">maxrunning</tt> is 1.
+                              </p>
+                              
+                              <p class="p">States are executed on the minion, as all states are. You can pass positional
+                                 arguments and provide a yaml dict of named arguments.
+                              </p>
+                              <pre class="pre codeblock language-yaml">schedule:
+  job1:
+    function: state.sls
+    seconds: 3600
+    args:
+      - httpd
+    kwargs:
+      test: True</pre>
+                              <p class="p">This will schedule the command: state.sls httpd test=True every 3600 seconds
+                                 (every hour)
+                              </p>
+                              <pre class="pre codeblock language-yaml">schedule:
+  job1:
+    function: state.sls
+    seconds: 3600
+    args:
+      - httpd
+    kwargs:
+      test: True
+    splay: 15</pre>
+                              <p class="p">This will schedule the command: state.sls httpd test=True every 3600 seconds
+                                 (every hour) splaying the time between 0 and 15 seconds
+                              </p>
+                              <pre class="pre codeblock language-yaml">schedule:
+  job1:
+    function: state.sls
+    seconds: 3600
+    args:
+      - httpd
+    kwargs:
+      test: True
+    splay:
+      start: 10
+      end: 15</pre>
+                              <p class="p">This will schedule the command: state.sls httpd test=True every 3600 seconds
+                                 (every hour) splaying the time between 10 and 15 seconds
+                              </p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Frequency of jobs can also be specified using date strings supported by
+                                 the python dateutil library. This requires python-dateutil to be installed on
+                                 the minion.
+                              </p>
+                              <pre class="pre codeblock language-yaml">schedule:
+  job1:
+    function: state.sls
+    args:
+      - httpd
+    kwargs:
+      test: True
+    when: 5:00pm</pre>
+                              <p class="p">This will schedule the command: state.sls httpd test=True at 5:00pm minion
+                                 localtime.
+                              </p>
+                              <pre class="pre codeblock language-yaml">schedule:
+  job1:
+    function: state.sls
+    args:
+      - httpd
+    kwargs:
+      test: True
+    when:
+        - Monday 5:00pm
+        - Tuesday 3:00pm
+        - Wednesday 5:00pm
+        - Thursday 3:00pm
+        - Friday 5:00pm</pre>
+                              <p class="p">This will schedule the command: state.sls httpd test=True at 5pm on Monday,
+                                 Wednesday, and Friday, and 3pm on Tuesday and Thursday.
+                              </p>
+                              <pre class="pre codeblock language-yaml">schedule:
+  job1:
+    function: state.sls
+    seconds: 3600
+    args:
+      - httpd
+    kwargs:
+      test: True
+    range:
+        start: 8:00am
+        end: 5:00pm</pre>
+                              <p class="p">This will schedule the command: state.sls httpd test=True every 3600 seconds
+                                 (every hour) between the hours of 8am and 5pm.  The range parameter must be a
+                                 dictionary with the date strings using the dateutil format. This requires
+                                 python-dateutil to be installed on the minion.
+                              </p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">The scheduler also supports ensuring that there are no more than N copies of
+                                 a particular routine running.  Use this for jobs that may be long-running
+                                 and could step on each other or pile up in case of infrastructure outage.
+                              </p>
+                              
+                              <p class="p">The default for maxrunning is 1.</p>
+                              <pre class="pre codeblock language-yaml">schedule:
+  long_running_job:
+      function: big_file_transfer
+      jid_include: True</pre>
+                              </div>
+                           
+                           <div class="section" id="job-management__states">
+                              <h2 class="title sectiontitle">States</h2><pre class="pre codeblock language-yaml">schedule:
+  log-loadavg:
+    function: cmd.run
+    seconds: 3660
+    args:
+      - 'logger -t salt &lt; /proc/loadavg'
+    kwargs:
+      stateful: False
+      shell: \bin\sh</pre>
+                              </div>
+                           
+                           <div class="section" id="job-management__highstates">
+                              <h2 class="title sectiontitle">Highstates</h2>
+                              <p class="p">To set up a highstate to run on a minion every 60 minutes set this in the
+                                 minion config or pillar:
+                              </p>
+                              <pre class="pre codeblock language-yaml">schedule:
+  highstate:
+    function: state.highstate
+    minutes: 60</pre>
+                              <p class="p">Time intervals can be specified as seconds, minutes, hours, or days.</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="job-management__runners">
+                              <h2 class="title sectiontitle">Runners</h2>
+                              <p class="p">Runner executions can also be specified on the master within the master
+                                 configuration file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">schedule:
+  overstate:
+    function: state.over
+    seconds: 35
+    minutes: 30
+    hours: 3</pre>
+                              <p class="p">The above configuration will execute the state.over runner every 3 hours,
+                                 30 minutes and 35 seconds, or every 12,635 seconds.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="job-management__scheduler-with-returner">
+                              <h2 class="title sectiontitle">Scheduler With Returner</h2>
+                              <p class="p">The scheduler is also useful for tasks like gathering monitoring data about
+                                 a minion, this schedule option will gather status data and send it to a MySQL
+                                 returner database:
+                              </p>
+                              <pre class="pre codeblock language-yaml">schedule:
+  uptime:
+    function: status.uptime
+    seconds: 60
+    returner: mysql
+  meminfo:
+    function: status.meminfo
+    minutes: 5
+    returner: mysql</pre>
+                              <p class="p">Since specifying the returner repeatedly can be tiresome, the
+                                 <tt class="ph tt">schedule_returner</tt> option is available to specify one or a list of global
+                                 returners to be used by the minions when scheduling.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links">
+                           
+                           <ul class="ullinks">
+                              
+                              <li class="link ulchildlink"><strong><a href="job_cache.html">Managing the Job Cache</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="schedule.html">States</a></strong><br>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                        </div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

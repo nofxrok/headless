@@ -1,0 +1,734 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.cp</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.cp">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-cp">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-cp">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.cp</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-cp__module-salt.modules.cp"></span></p>
+                              
+                              <p class="p">Minion side functions for salt-cp</p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.cp.cache_dir">
+                           <h2 class="title topictitle2">cache_dir</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.cache_dir(
+								path,
+								saltenv='base',
+								include_empty=False,
+								include_pat=None,
+								exclude_pat=None,
+								env=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Download and cache everything under a directory from the master</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d79560e47" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d79560e49" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d79560e47" class="stentry propvalue">include_pat</td>
+                                    
+                                    <td valign="top" headers="d79560e49" class="stentry propdesc">
+                                       <p class="p">Glob or regex to narrow down the files cached from the given path. If
+                                          matching with a regex, the regex must be prefixed with <tt class="ph tt">E@</tt>,
+                                          otherwise the expression will be interpreted as a glob.
+                                       </p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d79560e47" class="stentry propvalue">exclude_pat</td>
+                                    
+                                    <td valign="top" headers="d79560e49" class="stentry propdesc">
+                                       <p class="p">Glob or regex to exclude certain files from being cached from the given
+                                          path. If matching with a regex, the regex must be prefixed with <tt class="ph tt">E@</tt>,
+                                          otherwise the expression will be interpreted as a glob.
+                                       </p>
+                                       
+                                       <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                          <p class="p">If used with <tt class="ph tt">include_pat</tt>, files matching this pattern will be
+                                             excluded from the subset of files defined by <tt class="ph tt">include_pat</tt>.
+                                          </p>
+                                          
+                                       </aside>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.cache_dir salt://path/to/dir
+salt '*' cp.cache_dir salt://path/to/dir include_pat='E@*.py$'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.cache_file">
+                           <h2 class="title topictitle2">cache_file</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.cache_file(
+								path,
+								saltenv='base',
+								env=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Used to cache a single file on the salt-minion
+                                    Returns the location of the new cached file on the minion
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.cache_file salt://path/to/file</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.cache_files">
+                           <h2 class="title topictitle2">cache_files</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.cache_files(
+								paths,
+								saltenv='base',
+								env=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Used to gather many files from the master, the gathered files will be
+                                    saved in the minion cachedir reflective to the paths retrieved from the
+                                    master.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.cache_files salt://pathto/file1,salt://pathto/file1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.cache_local_file">
+                           <h2 class="title topictitle2">cache_local_file</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.cache_local_file(
+								path
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Cache a local file on the minion in the localfiles cache</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.cache_local_file /etc/hosts</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.cache_master">
+                           <h2 class="title topictitle2">cache_master</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.cache_master(
+								saltenv='base',
+								env=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Retrieve all of the files on the master and cache them locally</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.cache_master</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.get_dir">
+                           <h2 class="title topictitle2">get_dir</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.get_dir(
+								path,
+								dest,
+								saltenv='base',
+								template=None,
+								gzip=None,
+								env=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Used to recursively copy a directory from the salt master</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.get_dir salt://path/to/dir/ /minion/dest</pre>
+                                 <p class="p">get_dir supports the same template and gzip arguments as get_file.</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.get_file">
+                           <h2 class="title topictitle2">get_file</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.get_file(
+								path,
+								dest,
+								saltenv='base',
+								makedirs=False,
+								template=None,
+								gzip=None,
+								env=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Used to get a single file from the salt master</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.get_file salt://path/to/file /minion/dest</pre>
+                                 <p class="p">Template rendering can be enabled on both the source and destination file
+                                    names like so:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.get_file "salt://{{grains.os}}/vimrc" /etc/vimrc template=jinja</pre>
+                                 <p class="p">This example would instruct all Salt minions to download the vimrc from a
+                                    directory with the same name as their os grain and copy it to /etc/vimrc
+                                 </p>
+                                 
+                                 <p class="p">For larger files, the cp.get_file module also supports gzip compression.
+                                    Because gzip is CPU-intensive, this should only be used in scenarios where
+                                    the compression ratio is very high (e.g. pretty-printed JSON or YAML
+                                    files).
+                                 </p>
+                                 
+                                 <p class="p">Use the <em class="ph i">gzip</em> named argument to enable it.  Valid values are 1..9, where 1
+                                    is the lightest compression and 9 the heaviest.  1 uses the least CPU on
+                                    the master (and minion), 9 uses the most.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.get_file_str">
+                           <h2 class="title topictitle2">get_file_str</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.get_file_str(
+								path,
+								saltenv='base',
+								env=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the contents of a file from a URL</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.get_file_str salt://my/file</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.get_template">
+                           <h2 class="title topictitle2">get_template</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.get_template(
+								path,
+								dest,
+								template='jinja',
+								saltenv='base',
+								env=None,
+								makedirs=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Render a file as a template before setting it down.
+                                    Warning, order is not the same as in fileclient.cp for
+                                    non breaking old API.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.get_template salt://path/to/template /minion/dest</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.get_url">
+                           <h2 class="title topictitle2">get_url</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.get_url(
+								path,
+								dest,
+								saltenv='base',
+								env=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Used to get a single file from a URL.</p>
+                                 
+                                 <p class="p">The default behaviuor is to write the fetched file to the given
+                                    destination path. To simply return the text contents instead, set destination to
+                                    None.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.get_url salt://my/file /tmp/mine
+salt '*' cp.get_url http://www.slashdot.org /tmp/index.html</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.hash_file">
+                           <h2 class="title topictitle2">hash_file</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.hash_file(
+								path,
+								saltenv='base',
+								env=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the hash of a file, to get the hash of a file on the
+                                    salt master file server prepend the path with salt://&lt;file on server&gt;
+                                    otherwise, prepend the file with / for a local file.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.hash_file salt://path/to/file</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.is_cached">
+                           <h2 class="title topictitle2">is_cached</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.is_cached(
+								path,
+								saltenv='base',
+								env=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a boolean if the given path on the master has been cached on the
+                                    minion
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.is_cached salt://path/to/file</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.list_master">
+                           <h2 class="title topictitle2">list_master</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.list_master(
+								saltenv='base',
+								prefix='',
+								env=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List all of the files stored on the master</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.list_master</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.list_master_dirs">
+                           <h2 class="title topictitle2">list_master_dirs</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.list_master_dirs(
+								saltenv='base',
+								prefix='',
+								env=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List all of the directories stored on the master</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.list_master_dirs</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.list_master_symlinks">
+                           <h2 class="title topictitle2">list_master_symlinks</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.list_master_symlinks(
+								saltenv='base',
+								prefix='',
+								env=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List all of the symlinks stored on the master</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.list_master_symlinks</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.list_minion">
+                           <h2 class="title topictitle2">list_minion</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.list_minion(
+								saltenv='base',
+								env=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List all of the files cached on the minion</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.list_minion</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.list_states">
+                           <h2 class="title topictitle2">list_states</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.list_states(
+								saltenv='base',
+								env=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List all of the available state modules in an environment</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.list_states</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.push">
+                           <h2 class="title topictitle2">push</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.push(
+								path,
+								keep_symlinks=False
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Push a file from the minion up to the master, the file will be saved to
+                                    the salt master in the master's minion files cachedir
+                                    (defaults to <tt class="ph tt">/var/cache/salt/master/minions/minion-id/files</tt>)
+                                 </p>
+                                 
+                                 <p class="p">Since this feature allows a minion to push a file up to the master server
+                                    it is disabled by default for security purposes. To enable, set
+                                    <tt class="ph tt">file_recv</tt> to <tt class="ph tt">True</tt> in the master configuration file, and restart the
+                                    master.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d79560e612" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d79560e614" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d79560e612" class="stentry propvalue">keep_symlinks</td>
+                                    
+                                    <td valign="top" headers="d79560e614" class="stentry propdesc">
+                                       <p class="p">Keep the path value without resolving its canonical form</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.push /etc/fstab
+salt '*' cp.push /etc/system-release keep_symlinks=True</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.push_dir">
+                           <h2 class="title topictitle2">push_dir</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.push_dir(
+								path,
+								glob=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Push a directory from the minion up to the master, the files will be saved
+                                    to the salt master in the master's minion files cachedir (defaults to
+                                    <tt class="ph tt">/var/cache/salt/master/minions/minion-id/files</tt>).  It also has a glob
+                                    for matching specific files using globbing.
+                                 </p>
+                                 
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">Since this feature allows a minion to push files up to the master server it
+                                    is disabled by default for security purposes. To enable, set <tt class="ph tt">file_recv</tt>
+                                    to <tt class="ph tt">True</tt> in the master configuration file, and restart the master.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' cp.push /usr/lib/mysql
+salt '*' cp.push_dir /etc/modprobe.d/ glob='*.conf'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.cp.recv">
+                           <h2 class="title topictitle2">recv</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.cp.recv(
+								files,
+								dest
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Used with salt-cp, pass the files dict, and the destination.</p>
+                                 
+                                 <p class="p">This function receives small fast copy files from the master via salt-cp.
+                                    It does not work via the CLI.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

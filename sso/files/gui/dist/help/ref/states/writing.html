@@ -1,0 +1,380 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>State Modules</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="State Modules">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="state-modules">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="state-modules">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">State Modules</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p">State Modules are the components that map to actual enforcement and management
+                                 of Salt states.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="state-modules__states-are-easy-to-write">
+                              <h2 class="title sectiontitle">States are Easy to Write!</h2>
+                              <p class="p">State Modules should be easy to write and straightforward. The information
+                                 passed to the SLS data structures will map directly to the states modules.
+                              </p>
+                              
+                              <p class="p">Mapping the information from the SLS data is simple, this example should
+                                 illustrate:
+                              </p>
+                              <pre class="pre codeblock language-yaml">/etc/salt/master: # maps to "name"
+  file: # maps to State module filename e.g. https://github.com/saltstack/salt/tree/develop/salt/states/file.py
+    - managed # maps to the managed function in the file State module
+    - user: root # one of many options passed to the manage function
+    - group: root
+    - mode: 644
+    - source: salt://salt/master</pre>
+                              <p class="p">Therefore this SLS data can be directly linked to a module, function, and
+                                 arguments passed to that function.
+                              </p>
+                              
+                              <p class="p">This does issue the burden, that function names, state names and function
+                                 arguments should be very human readable inside state modules, since they
+                                 directly define the user interface.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">Keyword Arguments</strong><p class="p">Salt passes a number of keyword arguments to states when rendering them,
+                                    including the environment, a unique identifier for the state, and more.
+                                    Additionally, keep in mind that the requisites for a state are part of the
+                                    keyword arguments. Therefore, if you need to iterate through the keyword
+                                    arguments in a state, these must be considered and handled appropriately.
+                                    One such example is in the 
+                                    		
+                                    			&nbsp;<a class="xref" href="all/salt.states.pkgrepo.html#salt.states.pkgrepo.managed">pkgrepo.managed</a> state, which needs to be able to handle
+                                    arbitrary keyword arguments and pass them to module execution functions.
+                                    An example of how these keyword arguments can be handled can be found
+                                    <a class="xref" href="https://github.com/saltstack/salt/blob/v0.16.2/salt/states/pkgrepo.py#L163-183" target="_blank">here</a>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="state-modules__using-custom-state-modules">
+                              <h2 class="title sectiontitle">Using Custom State Modules</h2>
+                              <p class="p">Place your custom state modules inside a <tt class="ph tt">_states</tt> directory within the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../configuration/master.html#configuration-salt-master__file_roots">file_roots</a> specified by the master config file. These custom
+                                 state modules can then be distributed in a number of ways. Custom state modules
+                                 are distributed when 
+                                 		
+                                 			&nbsp;<a class="xref" href="../modules/all/salt.modules.state.html#salt.modules.state.highstate">state.highstate</a> is
+                                 run, or by executing the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../modules/all/salt.modules.saltutil.html#salt.modules.saltutil.sync_states">saltutil.sync_states</a> or 
+                                 		
+                                 			&nbsp;<a class="xref" href="../modules/all/salt.modules.saltutil.html#salt.modules.saltutil.sync_all">saltutil.sync_all</a> functions.
+                              </p>
+                              
+                              <p class="p">Any custom states which have been synced to a minion, that are named the
+                                 same as one of Salt's default set of states, will take the place of the default
+                                 state with the same name. Note that a state's default name is its filename
+                                 (i.e. <tt class="ph tt">foo.py</tt> becomes state <tt class="ph tt">foo</tt>), but that its name can be overridden
+                                 by using a 
+                                 		
+                                 			&nbsp;<a class="xref" href="../modules/index.html#execution-modules__virtual-modules">__virtual__ function</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="state-modules__cross-calling-modules">
+                              <h2 class="title sectiontitle">Cross Calling Modules</h2>
+                              <p class="p">As with Execution Modules, State Modules can also make use of the <tt class="ph tt">__salt__</tt>
+                                 and <tt class="ph tt">__grains__</tt> data.
+                              </p>
+                              
+                              <p class="p">It is important to note that the real work of state management should not be
+                                 done in the state module unless it is needed. A good example is the pkg state
+                                 module. This module does not do any package management work, it just calls the
+                                 pkg execution module. This makes the pkg state module completely generic, which
+                                 is why there is only one pkg state module and many backend pkg execution
+                                 modules.
+                              </p>
+                              
+                              <p class="p">On the other hand some modules will require that the logic be placed in the
+                                 state module, a good example of this is the file module. But in the vast
+                                 majority of cases this is not the best approach, and writing specific
+                                 execution modules to do the backend work will be the optimal solution.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="state-modules__return-data">
+                              <h2 class="title sectiontitle">Return Data</h2>
+                              <p class="p">A State Module must return a dict containing the following keys/values:</p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p"><strong class="ph b">name:</strong> The same value passed to the state as "name".
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><strong class="ph b">changes:</strong> A dict describing the changes made. Each thing changed should
+                                       be a key, with its value being another dict with keys called "old" and "new"
+                                       containing the old/new values. For example, the pkg state's <strong class="ph b">changes</strong> dict
+                                       has one key for each package changed, with the "old" and "new" keys in its
+                                       sub-dict containing the old and new versions of the package.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><strong class="ph b">result:</strong> A boolean value. <em class="ph i">True</em> if the action was successful, otherwise
+                                       <em class="ph i">False</em>.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><strong class="ph b">comment:</strong> A string containing a summary of the result.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="state-modules__test-state">
+                              <h2 class="title sectiontitle">Test State</h2>
+                              <p class="p">All states should check for and support <tt class="ph tt">test</tt> being passed in the options.
+                                 This will return data about what changes would occur if the state were actually
+                                 run. An example of such a check could look like this:
+                              </p>
+                              <pre class="pre codeblock language-python"># Return comment of changes if test.
+if __opts__['test']:
+    ret['result'] = None
+    ret['comment'] = 'State Foo will execute with param {0}'.format(bar)
+    return ret</pre>
+                              <p class="p">Make sure to test and return before performing any real actions on the minion.</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="state-modules__watcher-function">
+                              <h2 class="title sectiontitle">Watcher Function</h2>
+                              <p class="p">If the state being written should support the watch requisite then a watcher
+                                 function needs to be declared. The watcher function is called whenever the
+                                 watch requisite is invoked and should be generic to the behavior of the state
+                                 itself.
+                              </p>
+                              
+                              <p class="p">The watcher function should accept all of the options that the normal state
+                                 functions accept (as they will be passed into the watcher function).
+                              </p>
+                              
+                              <p class="p">A watcher function typically is used to execute state specific reactive
+                                 behavior, for instance, the watcher for the service module restarts the
+                                 named service and makes it useful for the watcher to make the service
+                                 react to changes in the environment.
+                              </p>
+                              
+                              <p class="p">The watcher function also needs to return the same data that a normal state
+                                 function returns.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="state-modules__mod-init-interface">
+                              <h2 class="title sectiontitle">Mod_init Interface</h2>
+                              <p class="p">Some states need to execute something only once to ensure that an environment
+                                 has been set up, or certain conditions global to the state behavior can be
+                                 predefined. This is the realm of the mod_init interface.
+                              </p>
+                              
+                              <p class="p">A state module can have a function called <strong class="ph b">mod_init</strong> which executes when the
+                                 first state of this type is called. This interface was created primarily to
+                                 improve the pkg state. When packages are installed the package metadata needs
+                                 to be refreshed, but refreshing the package metadata every time a package is
+                                 installed is wasteful. The mod_init function for the pkg state sets a flag down
+                                 so that the first, and only the first, package installation attempt will refresh
+                                 the package database (the package database can of course be manually called to
+                                 refresh via the <tt class="ph tt">refresh</tt> option in the pkg state).
+                              </p>
+                              
+                              <p class="p">The mod_init function must accept the <strong class="ph b">Low State Data</strong> for the given
+                                 executing state as an argument. The low state data is a dict and can be seen by
+                                 executing the state.show_lowstate function. Then the mod_init function must
+                                 return a bool. If the return value is True, then the mod_init function will not
+                                 be executed again, meaning that the needed behavior has been set up. Otherwise,
+                                 if the mod_init function returns False, then the function will be called the
+                                 next time.
+                              </p>
+                              
+                              <p class="p">A good example of the mod_init function is found in the pkg state module:</p>
+                              <pre class="pre codeblock language-python">def mod_init(low):
+    '''
+    Refresh the package database here so that it only needs to happen once
+    '''
+    if low['fun'] == 'installed' or low['fun'] == 'latest':
+        rtag = __gen_rtag()
+        if not os.path.exists(rtag):
+            open(rtag, 'w+').write('')
+        return True
+    else:
+        return False</pre>
+                              <p class="p">The mod_init function in the pkg state accepts the low state data as <tt class="ph tt">low</tt>
+                                 and then checks to see if the function being called is going to install
+                                 packages, if the function is not going to install packages then there is no
+                                 need to refresh the package database. Therefore if the package database is
+                                 prepared to refresh, then return True and the mod_init will not be called
+                                 the next time a pkg state is evaluated, otherwise return False and the mod_init
+                                 will be called next time a pkg state is evaluated.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="state-modules__full-state-module-example">
+                              <h2 class="title sectiontitle">Full State Module Example</h2>
+                              <p class="p">The following is a simplistic example of a full state module and function.
+                                 Remember to call out to execution modules to perform all the real work. The
+                                 state module should only perform "before" and "after" checks.
+                              </p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">Make a custom state module by putting the code into a file at the following
+                                       path: <strong class="ph b">/srv/salt/_states/my_custom_state.py</strong>.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Distribute the custom state module to the minions:</p>
+                                    <pre class="pre codeblock language-bash">salt '*' saltutil.sync_states</pre>
+                                    </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Write a new state to use the custom state by making a new state file, for
+                                       instance <strong class="ph b">/srv/salt/my_custom_state.sls</strong>.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Add the following SLS configuration to the file created in Step 3:</p>
+                                    <pre class="pre codeblock language-yaml">human_friendly_state_id:        # An arbitrary state ID declaration.
+  my_custom_state:              # The custom state module name.
+    - enforce_custom_thing      # The function in the custom state module.
+    - name: a_value             # Maps to the ``name`` parameter in the custom function.
+    - foo: Foo                  # Specify the required ``foo`` parameter.
+    - bar: False                # Override the default value for the ``bar`` parameter.</pre>
+                                    </li>
+                                 
+                              </ol>
+                              
+                           </div>
+                           
+                           <div class="section" id="state-modules__example-state-module">
+                              <h2 class="title sectiontitle">Example state module</h2><pre class="pre codeblock language-python">import salt.exceptions
+
+def enforce_custom_thing(name, foo, bar=True):
+    '''
+    Enforce the state of a custom thing
+
+    This state module does a custom thing. It calls out to the execution module
+    ``my_custom_module`` in order to check the current system and perform any
+    needed changes.
+
+    name
+        The thing to do something to
+    foo
+        A required argument
+    bar : True
+        An argument with a default value
+    '''
+    ret = {'name': name, 'changes': {}, 'result': False, 'comment': ''}
+
+    # Start with basic error-checking. Do all the passed parameters make sense
+    # and agree with each-other?
+    if bar == True and foo.startswith('Foo'):
+        raise salt.exceptions.SaltInvocationError(
+            'Argument "foo" cannot start with "Foo" if argument "bar" is True.')
+
+    # Check the current state of the system. Does anything need to change?
+    current_state = __salt__['my_custom_module.current_state'](name)
+
+    if current_state == foo:
+        ret['result'] = True
+        ret['comment'] = 'System already in the correct state'
+        return ret
+
+    # The state of the system does need to be changed. Check if we're running
+    # in ``test=true`` mode.
+    if __opts__['test'] == True:
+        ret['comment'] = 'The state of "{0}" will be changed.'.format(name)
+        ret['changes'] = {
+            'old': current_state,
+            'new': 'Description, diff, whatever of the new state',
+        }
+
+        # Return ``None`` when running with ``test=true``.
+        ret['result'] = None
+
+        return ret
+
+    # Finally, make the actual change and return the result.
+    new_state = __salt__['my_custom_module.change_state'](name, foo)
+
+    ret['comment'] = 'The state of "{0}" was changed!'.format(name)
+
+    ret['changes'] = {
+        'old': current_state,
+        'new': new_state,
+    }
+
+    ret['result'] = True
+
+    return ret</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

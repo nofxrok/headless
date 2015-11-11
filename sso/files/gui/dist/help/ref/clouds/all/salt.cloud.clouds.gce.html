@@ -1,0 +1,1183 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.cloud.clouds.gce</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.cloud.clouds.gce">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../cloud-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-cloud-clouds-gce">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-cloud-clouds-gce">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.cloud.clouds.gce</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-cloud-clouds-gce__module-salt.cloud.clouds.gce"></span></p>
+                              
+                              <p class="p">Copyright 2013 Google Inc. All Rights Reserved.</p>
+                              
+                              <p class="p">Licensed under the Apache License, Version 2.0 (the "License");
+                                 you may not use this file except in compliance with the License.
+                                 You may obtain a copy of the License at
+                              </p>
+                              
+                              <blockquote class="lq">
+                                 <p class="p"><a class="xref" href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">http://www.apache.org/licenses/LICENSE-2.0</a></p>
+                                 
+                              </blockquote>
+                              
+                              <p class="p">Unless required by applicable law or agreed to in writing, software
+                                 distributed under the License is distributed on an "AS IS" BASIS,
+                                 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                                 See the License for the specific language governing permissions and
+                                 limitations under the License.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="google-compute-engine-module">
+                           <h2 class="title topictitle2">Google Compute Engine Module</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">The Google Compute Engine module.  This module interfaces with Google Compute
+                                    Engine.  To authenticate to GCE, you will need to create a Service Account.
+                                 </p>
+                                 
+                                 <dl class="dl definition_list">
+                                    <dt class="dt dlterm">Setting up Service Account Authentication:</dt>
+                                    
+                                    <dd class="dd">
+                                       <ul class="ul">
+                                          <li class="li">
+                                             <p class="p">Go to the Cloud Console at: <a class="xref" href="https://cloud.google.com/console" target="_blank">https://cloud.google.com/console</a>.
+                                             </p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Create or navigate to your desired Project.</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Make sure Google Compute Engine service is enabled under the Services
+                                                section.
+                                             </p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Go to "APIs and auth" and then the "Registered apps" section.</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Click the "REGISTER APP" button and give it a meaningful name.</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Select "Web Application" and click "Register".</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Select Certificate, then "Generate Certificate"</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Copy the Email Address for inclusion in your /etc/salt/cloud file
+                                                in the 'service_account_email_address' setting.
+                                             </p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Download the Private Key</p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">The key that you download is a PKCS12 key.  It needs to be converted to
+                                                the PEM format.
+                                             </p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Convert the key using OpenSSL (the default password is 'notasecret'):
+                                                C{openssl pkcs12 -in PRIVKEY.p12 -passin pass:notasecret     -nodes -nocerts | openssl
+                                                rsa -out ~/PRIVKEY.pem}
+                                             </p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Add the full path name of the converted private key to your
+                                                /etc/salt/cloud file as 'service_account_private_key' setting.
+                                             </p>
+                                             
+                                          </li>
+                                          
+                                          <li class="li">
+                                             <p class="p">Consider using a more secure location for your private key.</p>
+                                             
+                                          </li>
+                                          
+                                       </ul>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 <pre class="pre codeblock language-yaml">my-gce-config:
+  # The Google Cloud Platform Project ID
+  project: google.com:erjohnso
+  # The Service ACcount client ID
+  service_account_email_address: 1234567890@developer.gserviceaccount.com
+  # The location of the private key (PEM format)
+  service_account_private_key: /home/erjohnso/PRIVKEY.pem
+  provider: gce
+  # Specify whether to use public or private IP for deploy script.
+  # Valid options are:
+  #     private_ips - The salt-master is also hosted with GCE
+  #     public_ips - The salt-master is hosted outside of GCE
+  ssh_interface: public_ips</pre>
+                                 <dl class="dl field_list">
+                                    <dt class="dt dlterm">maintainer</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">Eric Johnson &lt;<a class="xref" href="mailto:erjohnso@google.com" target="_blank">erjohnso@google.com</a>&gt;
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">maturity</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">new</p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">depends</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">libcloud &gt;= 0.14.1</p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">depends</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">pycrypto &gt;= 2.1</p>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.attach_disk">
+                              <h3 class="title topictitle3">attach_disk</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.attach_disk(
+								name=None,
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Attach an existing disk to an existing instance.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -a attach_disk myinstance disk_name=mydisk mode=READ_WRITE</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.attach_lb">
+                              <h3 class="title topictitle3">attach_lb</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.attach_lb(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Add an existing node/member to an existing load-balancer configuration.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f attach_lb gce name=lb member=myinstance</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.avail_images">
+                              <h3 class="title topictitle3">avail_images</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.avail_images(
+								conn=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a dict of all available VM images on the cloud provider with
+                                       relevant data
+                                    </p>
+                                    
+                                    <p class="p">Note that for GCE, there are custom images within the project, but the
+                                       generic images are in other projects.  This returns a dict of images in
+                                       the project plus images in 'debian-cloud' and 'centos-cloud' (If there is
+                                       overlap in names, the one in the current project is used.)
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.avail_locations">
+                              <h3 class="title topictitle3">avail_locations</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.avail_locations(
+								conn=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a dict of all available VM locations on the cloud provider with
+                                       relevant data
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.avail_sizes">
+                              <h3 class="title topictitle3">avail_sizes</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.avail_sizes(
+								conn=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a dict of available instances sizes (a.k.a machine types) and
+                                       convert them to something more serializable.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.create">
+                              <h3 class="title topictitle3">create</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.create(
+								vm_=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create a single GCE instance from a data dict.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.create_address">
+                              <h3 class="title topictitle3">create_address</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.create_address(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create a static address in a region.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f create_address gce name=my-ip region=us-central1 address=IP</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.create_disk">
+                              <h3 class="title topictitle3">create_disk</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.create_disk(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create a new persistent disk. Must specify <span class="keyword title_reference">disk_name</span> and <span class="keyword title_reference">location</span>.
+                                       Can also specify an <span class="keyword title_reference">image</span> or <span class="keyword title_reference">snapshot</span> but if neither of those are
+                                       specified, a <span class="keyword title_reference">size</span> (in GB) is required.
+                                    </p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f create_disk gce disk_name=pd size=300 location=us-central1-b</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.create_fwrule">
+                              <h3 class="title topictitle3">create_fwrule</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.create_fwrule(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create a GCE firewall rule. The 'default' network is used if not specified.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f create_fwrule gce name=allow-http allow=tcp:80</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.create_hc">
+                              <h3 class="title topictitle3">create_hc</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.create_hc(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create an HTTP health check configuration.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f create_hc gce name=hc path=/healthy port=80</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.create_lb">
+                              <h3 class="title topictitle3">create_lb</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.create_lb(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create a load-balancer configuration.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f create_lb gce name=lb region=us-central1 ports=80</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.create_network">
+                              <h3 class="title topictitle3">create_network</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.create_network(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create a GCE network.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f create_network gce name=mynet cidr=10.10.10.0/24</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.create_snapshot">
+                              <h3 class="title topictitle3">create_snapshot</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.create_snapshot(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create a new disk snapshot. Must specify <span class="keyword title_reference">name</span> and  <span class="keyword title_reference">disk_name</span>.
+                                    </p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f create_snapshot gce name=snap1 disk_name=pd</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.delete_address">
+                              <h3 class="title topictitle3">delete_address</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.delete_address(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Permanently delete a static address.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f delete_address gce name=my-ip</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.delete_disk">
+                              <h3 class="title topictitle3">delete_disk</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.delete_disk(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Permanently delete a persistent disk.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f delete_disk gce disk_name=pd</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.delete_fwrule">
+                              <h3 class="title topictitle3">delete_fwrule</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.delete_fwrule(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Permanently delete a firewall rule.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f delete_fwrule gce name=allow-http</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.delete_hc">
+                              <h3 class="title topictitle3">delete_hc</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.delete_hc(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Permanently delete a health check.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f delete_hc gce name=hc</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.delete_lb">
+                              <h3 class="title topictitle3">delete_lb</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.delete_lb(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Permanently delete a load-balancer.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f delete_lb gce name=lb</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.delete_network">
+                              <h3 class="title topictitle3">delete_network</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.delete_network(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Permanently delete a network.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f delete_network gce name=mynet</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.delete_snapshot">
+                              <h3 class="title topictitle3">delete_snapshot</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.delete_snapshot(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Permanently delete a disk snapshot.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f delete_snapshot gce name=disk-snap-1</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.destroy">
+                              <h3 class="title topictitle3">destroy</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.destroy(
+								vm_name,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Call 'destroy' on the instance.  Can be called with "-a destroy" or -d</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -a destroy myinstance1 myinstance2 ...
+salt-cloud -d myinstance1 myinstance2 ...</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.detach_disk">
+                              <h3 class="title topictitle3">detach_disk</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.detach_disk(
+								name=None,
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Detach a disk from an instance.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -a detach_disk myinstance disk_name=mydisk</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.detach_lb">
+                              <h3 class="title topictitle3">detach_lb</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.detach_lb(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Remove an existing node/member from an existing load-balancer configuration.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f detach_lb gce name=lb member=myinstance</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.get_configured_provider">
+                              <h3 class="title topictitle3">get_configured_provider</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.get_configured_provider( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the first configured instance.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.get_conn">
+                              <h3 class="title topictitle3">get_conn</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.get_conn( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a conn object for the passed VM data</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.get_lb_conn">
+                              <h3 class="title topictitle3">get_lb_conn</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.get_lb_conn(
+								gce_driver=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a load-balancer conn object</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.list_nodes">
+                              <h3 class="title topictitle3">list_nodes</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.list_nodes(
+								conn=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a list of the VMs that are on the provider</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.list_nodes_full">
+                              <h3 class="title topictitle3">list_nodes_full</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.list_nodes_full(
+								conn=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a list of the VMs that are on the provider, with all fields</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.list_nodes_select">
+                              <h3 class="title topictitle3">list_nodes_select</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.list_nodes_select(
+								conn=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a list of the VMs that are on the provider, with select fields</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.reboot">
+                              <h3 class="title topictitle3">reboot</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.reboot(
+								vm_name,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Call GCE 'reset' on the instance.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -a reboot myinstance</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.script">
+                              <h3 class="title topictitle3">script</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.script(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the script deployment object</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.show_address">
+                              <h3 class="title topictitle3">show_address</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.show_address(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Show the details of an existing static address.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f show_address gce name=mysnapshot region=us-central1</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.show_disk">
+                              <h3 class="title topictitle3">show_disk</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.show_disk(
+								name=None,
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Show the details of an existing disk.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -a show_disk myinstance disk_name=mydisk
+salt-cloud -f show_disk gce disk_name=mydisk</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.show_fwrule">
+                              <h3 class="title topictitle3">show_fwrule</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.show_fwrule(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Show the details of an existing firewall rule.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f show_fwrule gce name=allow-http</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.show_hc">
+                              <h3 class="title topictitle3">show_hc</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.show_hc(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Show the details of an existing health check.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f show_hc gce name=hc</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.show_instance">
+                              <h3 class="title topictitle3">show_instance</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.show_instance(
+								vm_name,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Show the details of the existing instance.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.show_lb">
+                              <h3 class="title topictitle3">show_lb</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.show_lb(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Show the details of an existing load-balancer.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f show_lb gce name=lb</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.show_network">
+                              <h3 class="title topictitle3">show_network</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.show_network(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Show the details of an existing network.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f show_network gce name=mynet</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.gce.show_snapshot">
+                              <h3 class="title topictitle3">show_snapshot</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.gce.show_snapshot(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Show the details of an existing snapshot.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud -f show_snapshot gce name=mysnapshot</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

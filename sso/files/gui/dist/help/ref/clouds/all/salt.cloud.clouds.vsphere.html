@@ -1,0 +1,599 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.cloud.clouds.vsphere</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.cloud.clouds.vsphere">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../cloud-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-cloud-clouds-vsphere">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-cloud-clouds-vsphere">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.cloud.clouds.vsphere</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-cloud-clouds-vsphere__module-salt.cloud.clouds.vsphere"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="vsphere-cloud-module">
+                           <h2 class="title topictitle2">vSphere Cloud Module</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">The vSphere cloud module is used to control access to VMWare vSphere.</p>
+                                 
+                                 <dl class="dl field_list">
+                                    <dt class="dt dlterm">depends</dt>
+                                    
+                                    <dd class="dd">
+                                       <ul class="ul">
+                                          <li class="li">
+                                             <p class="p">PySphere Python module</p>
+                                             
+                                          </li>
+                                          
+                                       </ul>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 
+                                 <p class="p">Note: Ensure python pysphere module is installed by running following one-liner
+                                    check. The output should be 0.
+                                 </p>
+                                 <pre class="pre codeblock language-bash">python -c "import pysphere" ; echo $?</pre>
+                                 <p class="p">Use of this module only requires a URL, username and password. Set up the cloud
+                                    configuration at:
+                                 </p>
+                                 
+                                 <p class="p"><tt class="ph tt">/etc/salt/cloud.providers</tt> or <tt class="ph tt">/etc/salt/cloud.providers.d/vsphere.conf</tt>:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">my-vsphere-config:
+  provider: vsphere
+  user: myuser
+  password: verybadpass
+  url: 'https://10.1.1.1:443'</pre>
+                                 <p class="p">Note: Your URL may or may not look like any of the following, depending on how
+                                    your VMWare installation is configured:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">10.1.1.1
+10.1.1.1:443
+https://10.1.1.1:443
+https://10.1.1.1:443/sdk
+10.1.1.1:443/sdk</pre>
+                                 <dl class="dl definition_list">
+                                    <dt class="dt dlterm">folder: Name of the folder that will contain the new VM. If not set, the VM will</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">be added to the folder the original VM belongs to.</p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">resourcepool: MOR of the resourcepool to be used for the new vm. If not set, it</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">uses the same resourcepool than the original vm.</p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">datastore: MOR of the datastore where the virtual machine should be located. If</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">not specified, the current datastore is used.</p>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">host: MOR of the host where the virtual machine should be registered.</dt>
+                                    
+                                    <dd class="dd">
+                                       <dl class="dl definition_list">
+                                          <dt class="dt dlterm">IF not specified:</dt>
+                                          
+                                          <dd class="dd">
+                                             <ul class="ul">
+                                                <li class="li">
+                                                   <p class="p">if resourcepool is not specified, current host is used.</p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">if resourcepool is specified, and the target pool represents a
+                                                      stand-alone host, the host is used.
+                                                   </p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">if resourcepool is specified, and the target pool represents a
+                                                      DRS-enabled cluster, a host selected by DRS is used.
+                                                   </p>
+                                                   
+                                                </li>
+                                                
+                                                <li class="li">
+                                                   <p class="p">if resourcepool is specified and the target pool represents a cluster
+                                                      without DRS enabled, an InvalidArgument exception will be thrown.
+                                                   </p>
+                                                   
+                                                </li>
+                                                
+                                             </ul>
+                                             
+                                          </dd>
+                                          
+                                       </dl>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">template: Specifies whether or not the new virtual machine should be marked as a</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">template. Default is False.</p>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.avail_images">
+                              <h3 class="title topictitle3">avail_images</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.avail_images( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a dict of all available VM images on the cloud provider.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.avail_locations">
+                              <h3 class="title topictitle3">avail_locations</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.avail_locations( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a dict of all available VM locations on the cloud provider with
+                                       relevant data
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.create">
+                              <h3 class="title topictitle3">create</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.create(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create a single VM from a data dict</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.destroy">
+                              <h3 class="title topictitle3">destroy</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.destroy(
+								name,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Destroy a node.</p>
+                                    
+                                    <p class="p">CLI Example:</p>
+                                    <pre class="pre codeblock language-bash">salt-cloud --destroy mymachine</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.get_configured_provider">
+                              <h3 class="title topictitle3">get_configured_provider</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.get_configured_provider( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the first configured instance.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.get_conn">
+                              <h3 class="title topictitle3">get_conn</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.get_conn( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a conn object for the passed VM data</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.list_clusters">
+                              <h3 class="title topictitle3">list_clusters</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.list_clusters(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">List the clusters for this VMware environment</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.list_datacenters">
+                              <h3 class="title topictitle3">list_datacenters</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.list_datacenters(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">List the data centers for this VMware environment</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.list_datastores">
+                              <h3 class="title topictitle3">list_datastores</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.list_datastores(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">List the datastores for this VMware environment</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.list_folders">
+                              <h3 class="title topictitle3">list_folders</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.list_folders(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">List the folders for this VMWare environment</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.list_hosts">
+                              <h3 class="title topictitle3">list_hosts</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.list_hosts(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">List the hosts for this VMware environment</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.list_nodes">
+                              <h3 class="title topictitle3">list_nodes</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.list_nodes(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a list of the VMs that are on the provider, with basic fields</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.list_nodes_full">
+                              <h3 class="title topictitle3">list_nodes_full</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.list_nodes_full(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a list of the VMs that are on the provider with full details</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.list_nodes_min">
+                              <h3 class="title topictitle3">list_nodes_min</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.list_nodes_min(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a list of the nodes in the provider, with no details</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.list_nodes_select">
+                              <h3 class="title topictitle3">list_nodes_select</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.list_nodes_select( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a list of the VMs that are on the provider, with select fields</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.list_resourcepools">
+                              <h3 class="title topictitle3">list_resourcepools</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.list_resourcepools(
+								kwargs=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">List the hosts for this VMware environment</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.script">
+                              <h3 class="title topictitle3">script</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.script(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the script deployment object</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.show_instance">
+                              <h3 class="title topictitle3">show_instance</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.show_instance(
+								name,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Show the details from vSphere concerning a guest</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.vsphere.wait_for_ip">
+                              <h3 class="title topictitle3">wait_for_ip</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.vsphere.wait_for_ip(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

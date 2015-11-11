@@ -1,0 +1,212 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>SaltStack Formulas - QuickStart Guide</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="SaltStack Enterprise Help Center">
+      
+      <meta name="abstract" content="">
+      
+      <meta name="description" content="">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="concept_z5t_tpb_gq">
+
+       <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/bootstrap/css/core.min.css">
+       <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/bootstrap/css/getstarted.min.css">
+
+       <script type="text/javascript" src="../themes/bootstrap/js/webhelp.min.js"></script>
+
+      </head>
+   <body>
+   <a id="ss-logo-jumbotron" href="/help/ent/gui.html"></a>
+      <div class="jumbotron active_texture">
+          <div class="container">
+              <h1><!--<i class="glyphicon glyphicon-question-sign"></i>-->SaltStack Enterprise</h1>
+              <h3>Quick Start Guide</h3>
+          </div>
+      </div>
+      <div id="wrapper">
+
+
+              <div class="container-fluid">
+                  <div class="row">
+                      <div class="col-lg-12">
+                          <ol class="progtrckr" data-progtrckr-steps="8">
+                              <!--<li class="progtrckr-done"><a href="overview.html">Overview</a></li>-->
+                              <li class="progtrckr-done"><a href="index.html">Demo Environment</a></li>
+                              <li class="progtrckr-done"><a href="install.html">Install SaltStack</a></li>
+                              <li class="progtrckr-done"><a href="remotex.html">Execute Commands</a></li>
+                              <li class="progtrckr-done"><a href="targeting.html">Target Systems</a></li>
+                              <li class="progtrckr-done">Define Configurations</li>
+                              <li class="progtrckr-todo"><a href="top.html">Group Configurations</a></li>
+                              <li class="progtrckr-todo"><a href="highstate.html">The 'High State'</a></li>
+                              <li class="progtrckr-todo"><a href="next.html">Next Steps</a></li>
+                          </ol>
+                      </div>
+                      </div>
+
+                <!--<div class="row">
+                    <div class="col-lg-12"></div>
+                </div>-->
+<div class="row">
+
+</div>
+
+
+              <div class="row">
+                  <div class="col-lg-1"></div>
+                  <div class="col-lg-10">
+
+
+                          <h1 class="title topictitle1">Create A State File</h1>
+                          <div class="body conbody">
+                              <p class="shortdesc"></p>
+
+                              <div class="section gs-overview" id="concept_ivf_bcn_vp__section_EF69791A73AB411AA070F467095A5130">
+                                  <p class="p gs-overview-sub"><span class="ph">You'll learn how to:</span></p>
+
+                                  <ul class="ul" id="concept_ivf_bcn_vp__ul_qjt_rhn_tp">
+                                      <li class="li" id="concept_ivf_bcn_vp__li_B7E78094456C4DC19C4B6133FC46D104">Define a repeatable, customized definition of an application configuration.
+                                      </li>
+
+                                      <li class="li" id="concept_ivf_bcn_vp__li_FB2FDC1241D542D6AE9BF6349D7E374F">Insert system specific variables to simplify re-use.
+                                      </li>
+
+                                      <li>Insert simple conditions using requisites.</li>
+
+
+                                  </ul>
+
+                                  <p class="p gs-overview-sub gs-time"><span class="ph">Estimated time: 15
+                                    			 minutes</span>&nbsp;<i class="glyphicon glyphicon-time"></i></p>
+
+                                  <p class="p gs-overview-sub gs-difficulty-2"><span class="ph">Difficulty</span>:
+                                      &nbsp;<i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star-empty"></i><i class="glyphicon glyphicon-star-empty"></i><i class="glyphicon glyphicon-star-empty"></i>
+                                  </p>
+
+                              </div>
+
+
+                              <div class="section gs-mainbody" id="concept_ivf_bcn_vp__section_D6F77362DCE342D9B67DE9E631A365C6">
+                                  <div class="section gs-terms gs-sidebar" id="concept_ivf_bcn_vp__section_043E1272A3E94500934501DFABE4DCF9">
+
+                                      <h4>Your States are <i>Your</i> States!</h4>
+                                      <p>States are completely custom. You define the name, the commands to run, and any possible dependencies. This can be a bit overwhelming when you are getting started, so start small and work your way up to more complex states. After some practice you'll be defining configurations like a boss, and there is <a href="https://groups.google.com/forum/#!forum/salt-users" target="_blank">help</a> out there if you get stuck.</p>
+
+                                      <h4 class="sidebar">YAML?</h4>
+                                      <p>Salt uses a simple format, called YAML, to describe State configurations. This is what you need to know:</p>
+                                      <ul>
+                                          <li>YAML uses a fixed indentation scheme to represent relationships between data layers. Salt requires that the indentation for each level consists of exactly two spaces. Do not use tabs.</li>
+
+                                          <li>A dash represents an item in a list.</li>
+
+                                          <li>Key value pairs are represented by <i>key</i>:<i>value</i></li>
+                                          <!--<li>Any line that contains a newline will not be parsed by YAML.</li>-->
+                                      </ul>
+
+
+                                  </div>
+
+                                  <p>Remote execution is a big time saver, but it has some shortcomings. Most tasks you perform are a combination of many commands, tests, and operations, each with their own nuances and points-of-failure. Often an attempt is made to combine all of these steps in a master shell script, but these quickly get unwieldy and introduce their own headaches.</p>
+
+                                  <p>To solve this, SaltStack configuration management lets you create a re-usable configuration template, called a State, that describes everything required to put an application into a known configuration. States leverage the power of the execution modules we learned about in the previous section, and multiple execution modules can be used in a single state.</p>
+
+                                <p>States are much easier to understand when you see them in action, so let's make one. States are described using YAML, and are simple to create and read.</p>
+
+                                  <p>To simplify this demo, our vagrant file maps the /srv/salt folder on your Salt Master to the local salt-vagrant-demo-master/saltstack folder. This means that you can use a local text editor and the local file system to test. To create our first state, create a new text file and add the following:</p>
+
+                                  <pre class="pre codeblock language-yaml">install_network_packages:
+  pkg.installed:
+    - pkgs:
+      - rsync
+      - lftp
+      - curl</pre>
+<p>Save this file as salt-vagrant-demo-master/saltstack/salt/nettools.sls:</p>
+
+                                  <img class="imgcenter" width="50%" src="images/vagrant-nettools.png">
+
+                                  <h4>Managing Files</h4>
+
+                                  <p>Getting packages installed usually isn't as complicated as getting those packages in a functional state. SaltStack provides a wide range of tools to manage configuration files and copy entire directories of supplemental files to managed systems.</p>
+
+                                  <p>For example, if we want to distribute a global configuration file for lftp that limits download rates, we can do this using file.managed.</p>
+
+                                  <pre class="pre codeblock language-yaml">install_network_packages:
+  pkg.installed:
+    - pkgs:
+      - rsync
+      - lftp
+      - curl
+
+copy_lftp_conf:
+  file.managed:
+    - name: /etc/lftp.conf
+    - source: salt://lftp.conf.template</pre>
+
+                                  <p>However, instead of redistributing the entire file to change one line, let's use the file.append state module to simply insert the new line we want to add:</p>
+
+                                  <pre class="pre codeblock language-yaml">install_network_packages:
+  pkg.installed:
+    - pkgs:
+      - rsync
+      - lftp
+      - curl
+
+update_lftp_conf:
+  file.append:
+    - name: /etc/lftp.conf
+    - text: set net:limit-rate 100000:500000</pre>
+
+                                  <p>Lets go ahead and test this State file. We'll learn about a more powerful method to apply states in the next section, but for now you can use the state.sls command to apply a state directly from the command line.</p>
+
+                                  <p>Back on your Salt Master, run the following command to apply the state we created:</p>
+
+                                  <pre class="pre codeblock language-bash">salt minion2 state.sls nettools</pre>
+
+                                  <p>As you might have guessed, you can use the targeting mechanism to apply this state to any set of minions. For now just pick one of your minions to get the state. If everything goes well, you'll get output similar to this (click to enlarge):</p>
+
+
+                                  <img class="imgcenter" height="300px" src="images/vagrant-state-apply.png">
+
+
+                                  <p>If that is not cool enough, apply the state again to the same minion, and look at the output:</p>
+
+                                  <img class="imgcenter" height="300px" src="images/vagrant-state-apply2.png">
+
+                                  <p>Salt determines that the system is already in the correct state, so nothing is changed. Nice.</p>
+
+                                  <h4>Restarting Services, Requisites, Variables and more</h4>
+
+                                  <p>There is a lot more power to the state system than we'll be able to cover here. States can restart services if changes are made, copy entire directories, require other states run first, use variables, and much more. </p>
+
+                                  <p>For now a basic understanding of states is enough to get started. Remember the powerful method we mentioned earlier to apply states? Let's tackle that.</p>
+
+                                  <a href="top.html"><button id="next-button" type="button" class="btn btn-primary">
+                                      Next <span class="glyphicon glyphicon-chevron-right"></span></button></a>
+                                  <div class="footer"></div>
+                              </div>
+
+                  </div>
+                  <div class="col-lg-1"></div>
+
+
+              </div>
+              <div class="row">
+                  <div class="col-lg-12">
+
+                  </div>
+              </div>
+
+                  </div>
+              </div>
+</div>
+   </body>
+</html>

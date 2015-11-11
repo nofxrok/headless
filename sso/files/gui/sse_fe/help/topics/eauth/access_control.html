@@ -1,0 +1,101 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Access Control System</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Access Control System">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/user-auth.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="acl">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="acl">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Access Control System</h1>
+                        <div class="body conbody">
+                           <p class="p ids"><span class="ph" id="acl__access-control-system"></span></p>
+                           
+                           <p class="p"><span class="keyword versionmodified">New in version 0.10.4.</span></p>
+                           
+                           <p class="p">Salt maintains a standard system used to open granular control to non
+                              administrative users to execute Salt commands. The access control system
+                              has been applied to all systems used to configure access to non administrative
+                              control interfaces in Salt.These interfaces include, the <tt class="ph tt">peer</tt> system, the
+                              <tt class="ph tt">external auth</tt> system and the <tt class="ph tt">client acl</tt> system.
+                           </p>
+                           
+                           <p class="p">The access control system mandated a standard configuration syntax used in
+                              all of the three aforementioned systems. While this adds functionality to the
+                              configuration in 0.10.4, it does not negate the old configuration.
+                           </p>
+                           
+                           <p class="p">Now specific functions can be opened up to specific minions from specific users
+                              in the case of external auth and client ACLs, and for specific minions in the
+                              case of the peer system.
+                           </p>
+                           
+                           <p class="p">The access controls are manifested using matchers in these configurations:</p>
+                           <pre class="pre codeblock language-yaml">client_acl:
+  fred:
+    - web\*:
+      - pkg.list_pkgs
+      - test.*
+      - apache.*</pre>
+                           <p class="p">In the above example, fred is able to send commands only to minions which match
+                              the specified glob target. This can be expanded to include other functions for
+                              other minions based on standard targets.
+                           </p>
+                           <pre class="pre codeblock language-yaml">external_auth:
+  pam:
+    dave:
+      - test.ping
+      - mongo\*:
+        - network.*
+      - log\*:
+        - network.*
+        - pkg.*
+      - 'G@os:RedHat':
+        - kmod.*
+    steve:
+      - .*</pre>
+                           <p class="p">The above allows for all minions to be hit by test.ping by dave, and adds a
+                              few functions that dave can execute on other minions. It also allows steve
+                              unrestricted access to salt commands.
+                           </p>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

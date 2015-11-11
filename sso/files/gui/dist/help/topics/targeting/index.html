@@ -1,0 +1,224 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Targeting Minions</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Targeting Minions">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/fundamentals.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="globbing.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="grains.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="ipcidr.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="compound.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="nodegroups.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="batch.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="range.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="targeting">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="targeting">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Targeting Minions</h1>
+                        <div class="body conbody">
+                           <p class="p ids"><span class="ph" id="targeting__targeting-minions"></span></p>
+                           
+                           <p class="p">Targeting minions is specifying which minions should run a command or execute a
+                              state by matching against hostnames, or system information, or defined groups,
+                              or even combinations thereof.
+                           </p>
+                           
+                           <p class="p">For example the command <tt class="ph tt">salt web1 apache.signal restart</tt> to restart the
+                              Apache httpd server specifies the machine <tt class="ph tt">web1</tt> as the target and the
+                              command will only be run on that one minion.
+                           </p>
+                           
+                           <p class="p">Similarly when using States, the following 
+                              		
+                              			&nbsp;<a class="xref" href="../../glossary.html#glossary__term-top-file">top file</a> specifies that only
+                              the <tt class="ph tt">web1</tt> minion should execute the contents of <tt class="ph tt">webserver.sls</tt>:
+                           </p>
+                           <pre class="pre codeblock language-yaml">base:
+  'web1':
+    - webserver</pre>
+                           <p class="p">There are many ways to target individual minions or groups of minions in Salt:</p>
+                           
+                           <ul class="ul">
+                              <li class="li">
+                                 		
+                                 			&nbsp;<a class="xref" href="globbing.html#targeting-glob">Matching the minion id</a><ul class="ul">
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="globbing.html#targeting-glob__globbing">Globbing</a></li>
+                                    
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="globbing.html#targeting-glob__regular-expressions">Regular Expressions</a></li>
+                                    
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="globbing.html#targeting-glob__lists">Lists</a></li>
+                                    
+                                 </ul>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 		
+                                 			&nbsp;<a class="xref" href="grains.html#targeting-grains">Grains</a><ul class="ul">
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="grains.html#targeting-grains__listing-grains">Listing Grains</a></li>
+                                    
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="grains.html#targeting-grains__grains-in-the-minion-config">Grains in the Minion Config</a></li>
+                                    
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="grains.html#targeting-grains__grains-in-etc-salt-grains">Grains in /etc/salt/grains</a></li>
+                                    
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="grains.html#targeting-grains__matching-grains-in-the-top-file">Matching Grains in the Top File</a></li>
+                                    
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="grains.html#targeting-grains__writing-grains">Writing Grains</a></li>
+                                    
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="grains.html#targeting-grains__precedence">Precedence</a></li>
+                                    
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="grains.html#targeting-grains__examples-of-grains">Examples of Grains</a></li>
+                                    
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="grains.html#targeting-grains__syncing-grains">Syncing Grains</a></li>
+                                    
+                                 </ul>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 		
+                                 			&nbsp;<a class="xref" href="ipcidr.html#targeting-ipcidr">Subnet/IP Address Matching</a></li>
+                              
+                              <li class="li">
+                                 		
+                                 			&nbsp;<a class="xref" href="compound.html#targeting-compound">Compound matchers</a><ul class="ul">
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="compound.html#targeting-compound__precedence-matching">Precedence Matching</a></li>
+                                    
+                                 </ul>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 		
+                                 			&nbsp;<a class="xref" href="nodegroups.html#targeting-nodegroups">Node groups</a></li>
+                              
+                              <li class="li">
+                                 		
+                                 			&nbsp;<a class="xref" href="batch.html#targeting-batch">Batch Size</a></li>
+                              
+                              <li class="li">
+                                 		
+                                 			&nbsp;<a class="xref" href="range.html#targeting-range">SECO Range</a><ul class="ul">
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="range.html#targeting-range__prerequisites">Prerequisites</a></li>
+                                    
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="range.html#targeting-range__preparing-salt">Preparing Salt</a></li>
+                                    
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="range.html#targeting-range__targeting-with-range">Targeting with Range</a></li>
+                                    
+                                 </ul>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links">
+                           
+                           <ul class="ullinks">
+                              
+                              <li class="link ulchildlink"><strong><a href="globbing.html">Matching the minion id</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="grains.html">Grains</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="ipcidr.html">Subnet/IP Address Matching</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="compound.html">Compound matchers</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="nodegroups.html">Node groups</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="batch.html">Batch Size</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="range.html">SECO Range</a></strong><br>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                        </div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

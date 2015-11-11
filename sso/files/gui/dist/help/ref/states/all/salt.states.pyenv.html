@@ -1,0 +1,308 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.pyenv</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.pyenv">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-pyenv">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-pyenv">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.pyenv</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-pyenv__module-salt.states.pyenv"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="managing-python-installations-with-pyenv">
+                           <h2 class="title topictitle2">Managing python installations with pyenv</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">This module is used to install and manage python installations with pyenv.
+                                    Different versions of python can be installed, and uninstalled. pyenv will
+                                    be installed automatically the first time it is needed and can be updated
+                                    later. This module will <em class="ph i">not</em> automatically install packages which pyenv
+                                    will need to compile the versions of python.
+                                 </p>
+                                 
+                                 <p class="p">If pyenv is run as the root user then it will be installed to /usr/local/pyenv,
+                                    otherwise it will be installed to the users ~/.pyenv directory. To make
+                                    pyenv available in the shell you may need to add the pyenv/shims and pyenv/bin
+                                    directories to the users PATH. If you are installing as root and want other
+                                    users to be able to access pyenv then you will need to add pyenv_ROOT to
+                                    their environment.
+                                 </p>
+                                 
+                                 <p class="p">This is how a state configuration could look like:</p>
+                                 <pre class="pre codeblock language-yaml">pyenv-deps:
+  pkg.installed:
+    - pkgs:
+      - make
+      - build-essential
+      - libssl-dev
+      - zlib1g-dev
+      - libbz2-dev
+      - libreadline-dev
+      - libsqlite3-dev
+      - wget
+      - curl
+      - llvm
+python-2.6:
+  pyenv.absent:
+    - require:
+      - pkg: pyenv-deps
+
+python-2.7.6:
+  pyenv.installed:
+    - default: True
+    - require:
+      - pkg: pyenv-deps</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.pyenv.absent">
+                              <h3 class="title topictitle3">absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.pyenv.absent(
+								name,
+								user=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Verify that the specified python is not installed with pyenv. pyenv
+                                       is installed if necessary.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d413688e64" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d413688e66" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d413688e64" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d413688e66" class="stentry propdesc">
+                                          <p class="p">The version of python to uninstall</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d413688e64" class="stentry propvalue">user: None</td>
+                                       
+                                       <td valign="top" headers="d413688e66" class="stentry propdesc">
+                                          <p class="p">The user to run pyenv as.</p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p"><span class="keyword versionmodified">New in version 0.16.0.</span></p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.pyenv.install_pyenv">
+                              <h3 class="title topictitle3">install_pyenv</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.pyenv.install_pyenv(
+								name,
+								user=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Install pyenv if not installed. Allows you to require pyenv be installed
+                                       prior to installing the plugins. Useful if you want to install pyenv
+                                       plugins via the git or file modules and need them installed before
+                                       installing any rubies.
+                                    </p>
+                                    
+                                    <p class="p">Use the pyenv.root configuration option to set the path for pyenv if you
+                                       want a system wide install that is not in a user home dir.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d413688e119" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d413688e121" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d413688e119" class="stentry propvalue">user: None</td>
+                                       
+                                       <td valign="top" headers="d413688e121" class="stentry propdesc">
+                                          <p class="p">The user to run pyenv as.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.pyenv.installed">
+                              <h3 class="title topictitle3">installed</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.pyenv.installed(
+								name,
+								default=False,
+								user=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Verify that the specified python is installed with pyenv. pyenv is
+                                       installed if necessary.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d413688e157" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d413688e159" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d413688e157" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d413688e159" class="stentry propdesc">
+                                          <p class="p">The version of python to install</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d413688e157" class="stentry propvalue">default</td>
+                                       
+                                       <td valign="top" headers="d413688e159" class="stentry propdesc">
+                                          <p class="p">Whether to make this python the default.</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d413688e157" class="stentry propvalue">user: None</td>
+                                       
+                                       <td valign="top" headers="d413688e159" class="stentry propdesc">
+                                          <p class="p">The user to run pyenv as.</p>
+                                          
+                                          <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p"><span class="keyword versionmodified">New in version 0.16.0.</span></p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

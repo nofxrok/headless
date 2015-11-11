@@ -1,0 +1,328 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.debconfmod</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.debconfmod">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-debconfmod">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-debconfmod">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.debconfmod</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-debconfmod__module-salt.states.debconfmod"></span></p>
+                              
+                           </div>
+                           
+                           <div class="section" id="salt-states-debconfmod__management-of-debconf-selections">
+                              <h2 class="title sectiontitle">Management of debconf selections</h2>
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">debconf-utils package</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">The debconfmod state module manages the enforcement of debconf selections,
+                                 this state can set those selections prior to package installation.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="salt-states-debconfmod__available-functions">
+                              <h2 class="title sectiontitle">Available Functions</h2>
+                              <p class="p">The debconfmod state has two functions, the <tt class="ph tt">set</tt> and <tt class="ph tt">set_file</tt> functions
+                              </p>
+                              
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm">set</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Set debconf selections from the state itself</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">set_file</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Set debconf selections from a file</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              <pre class="pre codeblock language-yaml">nullmailer-debconf:
+  debconf.set:
+    - name: nullmailer
+    - data:
+        'shared/mailname': {'type': 'string', 'value': 'server.domain.tld'}
+        'nullmailer/relayhost': {'type': 'string', 'value': 'mail.domain.tld'}
+ferm-debconf:
+  debconf.set:
+    - name: ferm
+    - data:
+        'ferm/enable': {'type': 'boolean', 'value': True}</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Due to how PyYAML imports nested dicts (see 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../../topics/troubleshooting/yaml_idiosyncrasies.html#yaml-idiosyncrasies">here</a>), the values in the <tt class="ph tt">data</tt>
+                                    dict must be indented four spaces instead of two.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.states.debconfmod.set">
+                           <h2 class="title topictitle2">set</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.debconfmod.set(
+								name,
+								data
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Set debconf selections</p>
+                                 <pre class="pre codeblock language-yaml">&lt;state_id&gt;:
+  debconf.set:
+    - name: &lt;name&gt;
+    - data:
+        &lt;question&gt;: {'type': &lt;type&gt;, 'value': &lt;value&gt;}
+        &lt;question&gt;: {'type': &lt;type&gt;, 'value': &lt;value&gt;}
+
+&lt;state_id&gt;:
+  debconf.set:
+    - name: &lt;name&gt;
+    - data:
+        &lt;question&gt;: {'type': &lt;type&gt;, 'value': &lt;value&gt;}
+        &lt;question&gt;: {'type': &lt;type&gt;, 'value': &lt;value&gt;}</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d367381e97" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d367381e99" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d367381e97" class="stentry propvalue">name:</td>
+                                    
+                                    <td valign="top" headers="d367381e99" class="stentry propdesc">
+                                       <p class="p">The package name to set answers for.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d367381e97" class="stentry propvalue">data:</td>
+                                    
+                                    <td valign="top" headers="d367381e99" class="stentry propdesc">
+                                       <p class="p">A set of questions/answers for debconf. Note that everything under
+                                          this must be indented twice.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d367381e97" class="stentry propvalue">question:</td>
+                                    
+                                    <td valign="top" headers="d367381e99" class="stentry propdesc">
+                                       <p class="p">The question the is being pre-answered</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d367381e97" class="stentry propvalue">type:</td>
+                                    
+                                    <td valign="top" headers="d367381e99" class="stentry propdesc">
+                                       <p class="p">The type of question that is being asked (string, boolean, select, etc.)</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d367381e97" class="stentry propvalue">value:</td>
+                                    
+                                    <td valign="top" headers="d367381e99" class="stentry propdesc">
+                                       <p class="p">The answer to the question</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.debconfmod.set_file">
+                           <h2 class="title topictitle2">set_file</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.debconfmod.set_file(
+								name,
+								source,
+								template=None,
+								context=None,
+								defaults=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Set debconf selections from a file or a template</p>
+                                 <pre class="pre codeblock language-yaml">&lt;state_id&gt;:
+  debconf.set_file:
+    - source: salt://pathto/pkg.selections
+
+&lt;state_id&gt;:
+  debconf.set_file:
+    - source: salt://pathto/pkg.selections?saltenv=myenvironment
+
+&lt;state_id&gt;:
+  debconf.set_file:
+    - source: salt://pathto/pkg.selections.jinja2
+    - template: jinja2
+    - context:
+        some_value: "false"</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d367381e161" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d367381e163" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d367381e161" class="stentry propvalue">source:</td>
+                                    
+                                    <td valign="top" headers="d367381e163" class="stentry propdesc">
+                                       <p class="p">The location of the file containing the package selections</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d367381e161" class="stentry propvalue">template</td>
+                                    
+                                    <td valign="top" headers="d367381e163" class="stentry propdesc">
+                                       <p class="p">If this setting is applied then the named templating engine will be
+                                          used to render the package selections file, currently jinja, mako, and
+                                          wempy are supported
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d367381e161" class="stentry propvalue">context</td>
+                                    
+                                    <td valign="top" headers="d367381e163" class="stentry propdesc">
+                                       <p class="p">Overrides default context variables passed to the template.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d367381e161" class="stentry propvalue">defaults</td>
+                                    
+                                    <td valign="top" headers="d367381e163" class="stentry propdesc">
+                                       <p class="p">Default context passed to the template.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

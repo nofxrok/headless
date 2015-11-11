@@ -1,0 +1,495 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.status</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.status">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-status">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-status">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.status</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-status__module-salt.modules.status"></span></p>
+                              
+                              <p class="p">Module for returning various status data about a minion.
+                                 These data can be useful for compiling into stats later.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.status.all_status">
+                           <h2 class="title topictitle2">all_status</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.all_status( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a composite of all status data and info for this minion.
+                                    Warning: There is a LOT here!
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.all_status</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.status.cpuinfo">
+                           <h2 class="title topictitle2">cpuinfo</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.cpuinfo( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the CPU info for this minion</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.cpuinfo</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.status.cpustats">
+                           <h2 class="title topictitle2">cpustats</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.cpustats( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the CPU stats for this minion</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.cpustats</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.status.custom">
+                           <h2 class="title topictitle2">custom</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.custom( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a custom composite of status data and info for this minion,
+                                    based on the minion config file. An example config like might be:
+                                 </p>
+                                 <pre class="pre codeblock language-">status.cpustats.custom: [ 'cpu', 'ctxt', 'btime', 'processes' ]</pre>
+                                 <p class="p">Where status refers to status.py, cpustats is the function
+                                    where we get our data, and custom is this function It is followed
+                                    by a list of keys that we want returned.
+                                 </p>
+                                 
+                                 <p class="p">This function is meant to replace all_status(), which returns
+                                    anything and everything, which we probably don't want.
+                                 </p>
+                                 
+                                 <p class="p">By default, nothing is returned. Warning: Depending on what you
+                                    include, there can be a LOT here!
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.custom</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.status.diskstats">
+                           <h2 class="title topictitle2">diskstats</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.diskstats( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the disk stats for this minion</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.diskstats</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.status.diskusage">
+                           <h2 class="title topictitle2">diskusage</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.diskusage(
+								*args
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the disk usage for this minion</p>
+                                 
+                                 <p class="p">Usage:</p>
+                                 <pre class="pre codeblock language-">salt '*' status.diskusage [paths and/or filesystem types]</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.diskusage         # usage for all filesystems
+salt '*' status.diskusage / /tmp  # usage for / and /tmp
+salt '*' status.diskusage ext?    # usage for ext[234] filesystems
+salt '*' status.diskusage / ext?  # usage for / and all ext filesystems</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.status.loadavg">
+                           <h2 class="title topictitle2">loadavg</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.loadavg( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the load averages for this minion</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.loadavg</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.status.master">
+                           <h2 class="title topictitle2">master</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.master(
+								master=None,
+								connected=True
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">Fire an event if the minion gets disconnected from its master. This
+                                    function is meant to be run via a scheduled job from the minion. If
+                                    master_ip is an FQDN/Hostname, is must be resolvable to a valid IPv4
+                                    address.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.master</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.status.meminfo">
+                           <h2 class="title topictitle2">meminfo</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.meminfo( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the memory info for this minion</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.meminfo</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.status.netdev">
+                           <h2 class="title topictitle2">netdev</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.netdev( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the network device stats for this minion</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.netdev</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.status.netstats">
+                           <h2 class="title topictitle2">netstats</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.netstats( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the network stats for this minion</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.netstats</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.status.nproc">
+                           <h2 class="title topictitle2">nproc</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.nproc( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the number of processing units available on this system</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.nproc</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.status.pid">
+                           <h2 class="title topictitle2">pid</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.pid(
+								sig
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the PID or an empty string if the process is running or not.
+                                    Pass a signature to use to find the process via ps.  Note you can pass
+                                    a Python-compatible regular expression to return all pids of
+                                    processes matching the regexp.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.pid &lt;sig&gt;</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.status.procs">
+                           <h2 class="title topictitle2">procs</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.procs( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the process data</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.procs</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.status.uptime">
+                           <h2 class="title topictitle2">uptime</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.uptime( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the uptime for this minion</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.uptime</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.status.version">
+                           <h2 class="title topictitle2">version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.version( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the system version for this minion</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.version</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.status.vmstats">
+                           <h2 class="title topictitle2">vmstats</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.vmstats( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the virtual memory stats for this minion</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.vmstats</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.status.w">
+                           <h2 class="title topictitle2">w</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.status.w( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of logged in users for this minion, using the w command</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' status.w</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

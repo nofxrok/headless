@@ -1,0 +1,754 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.runners.fileserver</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.runners.fileserver">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../runners.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-runners-fileserver">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-runners-fileserver">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.runners.fileserver</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-runners-fileserver__module-salt.runners.fileserver"></span></p>
+                              
+                              <p class="p">Directly manage the Salt fileserver plugins</p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.runners.fileserver.clear_cache">
+                           <h2 class="title topictitle2">clear_cache</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.fileserver.clear_cache(
+								backend=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                                 
+                                 <p class="p">Clear the fileserver cache from VCS fileserver backends (
+                                    		
+                                    			&nbsp;<a class="xref" href="../../file_server/all/salt.fileserver.gitfs.html#salt.fileserver.gitfs">git</a>, 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../file_server/all/salt.fileserver.hgfs.html#salt.fileserver.hgfs">hg</a>, 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../file_server/all/salt.fileserver.svnfs.html#salt.fileserver.svnfs">svn</a>). Executing this runner with no arguments will
+                                    clear the cache for all enabled VCS fileserver backends, but this
+                                    can be narrowed using the <tt class="ph tt">backend</tt> argument.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d341807e65" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d341807e67" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d341807e65" class="stentry propvalue">backend</td>
+                                    
+                                    <td valign="top" headers="d341807e67" class="stentry propdesc">
+                                       <p class="p">Only clear the update lock for the specified backend(s). If all passed
+                                          backends start with a minus sign (<tt class="ph tt">-</tt>), then these backends will be
+                                          excluded from the enabled backends. However, if there is a mix of
+                                          backends with and without a minus sign (ex: <tt class="ph tt">backend=-roots,git</tt>)
+                                          then the ones starting with a minus sign will be disregarded.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt-run fileserver.clear_cache
+salt-run fileserver.clear_cache backend=git,hg
+salt-run fileserver.clear_cache hg
+salt-run fileserver.clear_cache -roots</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.runners.fileserver.clear_lock">
+                           <h2 class="title topictitle2">clear_lock</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.fileserver.clear_lock(
+								backend=None,
+								remote=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                                 
+                                 <p class="p">Clear the fileserver update lock from VCS fileserver backends (
+                                    		
+                                    			&nbsp;<a class="xref" href="../../file_server/all/salt.fileserver.gitfs.html#salt.fileserver.gitfs">git</a>, 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../file_server/all/salt.fileserver.hgfs.html#salt.fileserver.hgfs">hg</a>, 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../file_server/all/salt.fileserver.svnfs.html#salt.fileserver.svnfs">svn</a>). This should only need to be done if a fileserver
+                                    update was interrupted and a remote is not updating (generating a warning
+                                    in the Master's log file). Executing this runner with no arguments will
+                                    remove all update locks from all enabled VCS fileserver backends, but this
+                                    can be narrowed by using the following arguments:
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d341807e131" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d341807e133" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d341807e131" class="stentry propvalue">backend</td>
+                                    
+                                    <td valign="top" headers="d341807e133" class="stentry propdesc">
+                                       <p class="p">Only clear the update lock for the specified backend(s).</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d341807e131" class="stentry propvalue">remote</td>
+                                    
+                                    <td valign="top" headers="d341807e133" class="stentry propdesc">
+                                       <p class="p">If not None, then any remotes which contain the passed string will have
+                                          their lock cleared. For example, a <tt class="ph tt">remote</tt> value of <strong class="ph b">github</strong> will
+                                          remove the lock from all github.com remotes.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt-run fileserver.clear_lock
+salt-run fileserver.clear_lock backend=git,hg
+salt-run fileserver.clear_lock backend=git remote=github
+salt-run fileserver.clear_lock remote=bitbucket</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.runners.fileserver.dir_list">
+                           <h2 class="title topictitle2">dir_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.fileserver.dir_list(
+								saltenv='base',
+								backend=None,
+								outputter=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Return a list of directories in the given environment</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d341807e188" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d341807e190" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d341807e188" class="stentry propvalue">saltenv</td>
+                                    
+                                    <td valign="top" headers="d341807e190" class="stentry propdesc">
+                                       <p class="p">The salt fileserver environment to be listed</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d341807e188" class="stentry propvalue">backend</td>
+                                    
+                                    <td valign="top" headers="d341807e190" class="stentry propdesc">
+                                       <p class="p">Narrow fileserver backends to a subset of the enabled ones. If all
+                                          passed backends start with a minus sign (<tt class="ph tt">-</tt>), then these backends
+                                          will be excluded from the enabled backends. However, if there is a mix
+                                          of backends with and without a minus sign (ex:
+                                          <tt class="ph tt">backend=-roots,git</tt>) then the ones starting with a minus sign will
+                                          be disregarded.
+                                       </p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt-run fileserver.dir_list
+salt-run fileserver.dir_list saltenv=prod
+salt-run fileserver.dir_list saltenv=dev backend=git
+salt-run fileserver.dir_list base hg,roots
+salt-run fileserver.dir_list -git</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.runners.fileserver.empty_dir_list">
+                           <h2 class="title topictitle2">empty_dir_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.fileserver.empty_dir_list(
+								saltenv='base',
+								backend=None,
+								outputter=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                                 
+                                 <p class="p">Return a list of empty directories in the given environment</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d341807e251" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d341807e253" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d341807e251" class="stentry propvalue">saltenv</td>
+                                    
+                                    <td valign="top" headers="d341807e253" class="stentry propdesc">
+                                       <p class="p">The salt fileserver environment to be listed</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d341807e251" class="stentry propvalue">backend</td>
+                                    
+                                    <td valign="top" headers="d341807e253" class="stentry propdesc">
+                                       <p class="p">Narrow fileserver backends to a subset of the enabled ones. If all
+                                          passed backends start with a minus sign (<tt class="ph tt">-</tt>), then these backends
+                                          will be excluded from the enabled backends. However, if there is a mix
+                                          of backends with and without a minus sign (ex:
+                                          <tt class="ph tt">backend=-roots,git</tt>) then the ones starting with a minus sign will
+                                          be disregarded.
+                                       </p>
+                                       
+                                       <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                          <p class="p">Some backends (such as 
+                                             		
+                                             			&nbsp;<a class="xref" href="../../file_server/all/salt.fileserver.gitfs.html#salt.fileserver.gitfs">git</a> and
+                                             
+                                             		
+                                             			&nbsp;<a class="xref" href="../../file_server/all/salt.fileserver.hgfs.html#salt.fileserver.hgfs">hg</a>) do not support empty directories.
+                                             So, passing <tt class="ph tt">backend=git</tt> or <tt class="ph tt">backend=hg</tt> will result in an
+                                             empty list being returned.
+                                          </p>
+                                          
+                                       </aside>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt-run fileserver.empty_dir_list
+salt-run fileserver.empty_dir_list saltenv=prod
+salt-run fileserver.empty_dir_list backend=roots</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.runners.fileserver.envs">
+                           <h2 class="title topictitle2">envs</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.fileserver.envs(
+								backend=None,
+								sources=False,
+								outputter=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Return the available fileserver environments. If no backend is provided,
+                                    then the environments for all configured backends will be returned.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d341807e325" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d341807e327" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d341807e325" class="stentry propvalue">backend</td>
+                                    
+                                    <td valign="top" headers="d341807e327" class="stentry propdesc">
+                                       <p class="p">Narrow fileserver backends to a subset of the enabled ones.</p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">Changed in version 2015.2.0::: </span>If all passed backends start with a minus sign (<tt class="ph tt">-</tt>), then these
+                                          backends will be excluded from the enabled backends. However, if
+                                          there is a mix of backends with and without a minus sign (ex:
+                                          <tt class="ph tt">backend=-roots,git</tt>) then the ones starting with a minus
+                                          sign will be disregarded.
+                                       </p>
+                                       
+                                       <p class="p">Additionally, fileserver backends can now be passed as a
+                                          comma-separated list. In earlier versions, they needed to be passed
+                                          as a python list (ex: <tt class="ph tt">backend="['roots', 'git']"</tt>)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt-run fileserver.envs
+salt-run fileserver.envs backend=roots,git
+salt-run fileserver.envs git</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.runners.fileserver.file_list">
+                           <h2 class="title topictitle2">file_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.fileserver.file_list(
+								saltenv='base',
+								backend=None,
+								outputter=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Return a list of files from the salt fileserver</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d341807e385" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d341807e387" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d341807e385" class="stentry propvalue">saltenv</td>
+                                    
+                                    <td valign="top" headers="d341807e387" class="stentry propdesc">
+                                       <p class="p">The salt fileserver environment to be listed</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d341807e385" class="stentry propvalue">backend</td>
+                                    
+                                    <td valign="top" headers="d341807e387" class="stentry propdesc">
+                                       <p class="p">Narrow fileserver backends to a subset of the enabled ones. If all
+                                          passed backends start with a minus sign (<tt class="ph tt">-</tt>), then these backends
+                                          will be excluded from the enabled backends. However, if there is a mix
+                                          of backends with and without a minus sign (ex:
+                                          <tt class="ph tt">backend=-roots,git</tt>) then the ones starting with a minus sign will
+                                          be disregarded.
+                                       </p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt-run fileserver.file_list
+salt-run fileserver.file_list saltenv=prod
+salt-run fileserver.file_list saltenv=dev backend=git
+salt-run fileserver.file_list base hg,roots
+salt-run fileserver.file_list -git</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.runners.fileserver.lock">
+                           <h2 class="title topictitle2">lock</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.fileserver.lock(
+								backend=None,
+								remote=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                                 
+                                 <p class="p">Set a fileserver update lock for VCS fileserver backends (
+                                    		
+                                    			&nbsp;<a class="xref" href="../../file_server/all/salt.fileserver.gitfs.html#salt.fileserver.gitfs">git</a>, 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../file_server/all/salt.fileserver.hgfs.html#salt.fileserver.hgfs">hg</a>, 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../file_server/all/salt.fileserver.svnfs.html#salt.fileserver.svnfs">svn</a>).
+                                 </p>
+                                 
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p">This will only operate on enabled backends (those configured in
+                                       ).
+                                    </p>
+                                    
+                                 </aside>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d341807e468" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d341807e470" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d341807e468" class="stentry propvalue">backend</td>
+                                    
+                                    <td valign="top" headers="d341807e470" class="stentry propdesc">
+                                       <p class="p">Only set the update lock for the specified backend(s).</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d341807e468" class="stentry propvalue">remote</td>
+                                    
+                                    <td valign="top" headers="d341807e470" class="stentry propdesc">
+                                       <p class="p">If not None, then any remotes which contain the passed string will have
+                                          their lock cleared. For example, a <tt class="ph tt">remote</tt> value of <tt class="ph tt">*github.com*</tt>
+                                          will remove the lock from all github.com remotes.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt-run fileserver.lock
+salt-run fileserver.lock backend=git,hg
+salt-run fileserver.lock backend=git remote='*github.com*'
+salt-run fileserver.lock remote=bitbucket</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.runners.fileserver.symlink_list">
+                           <h2 class="title topictitle2">symlink_list</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.fileserver.symlink_list(
+								saltenv='base',
+								backend=None,
+								outputter=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Return a list of symlinked files and dirs</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d341807e525" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d341807e527" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d341807e525" class="stentry propvalue">saltenv</td>
+                                    
+                                    <td valign="top" headers="d341807e527" class="stentry propdesc">
+                                       <p class="p">The salt fileserver environment to be listed</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d341807e525" class="stentry propvalue">backend</td>
+                                    
+                                    <td valign="top" headers="d341807e527" class="stentry propdesc">
+                                       <p class="p">Narrow fileserver backends to a subset of the enabled ones. If all
+                                          passed backends start with a minus sign (<tt class="ph tt">-</tt>), then these backends
+                                          will be excluded from the enabled backends. However, if there is a mix
+                                          of backends with and without a minus sign (ex:
+                                          <tt class="ph tt">backend=-roots,git</tt>) then the ones starting with a minus sign will
+                                          be disregarded.
+                                       </p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt-run fileserver.symlink_list
+salt-run fileserver.symlink_list saltenv=prod
+salt-run fileserver.symlink_list saltenv=dev backend=git
+salt-run fileserver.symlink_list base hg,roots
+salt-run fileserver.symlink_list -git</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.runners.fileserver.update">
+                           <h2 class="title topictitle2">update</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.fileserver.update(
+								backend=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Update the fileserver cache. If no backend is provided, then the cache for
+                                    all configured backends will be updated.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d341807e586" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d341807e588" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d341807e586" class="stentry propvalue">backend</td>
+                                    
+                                    <td valign="top" headers="d341807e588" class="stentry propdesc">
+                                       <p class="p">Narrow fileserver backends to a subset of the enabled ones.</p>
+                                       
+                                       <p class="p"><span class="keyword versionmodified">Changed in version 2015.2.0: </span>If all passed backends start with a minus sign (<tt class="ph tt">-</tt>), then these
+                                          backends will be excluded from the enabled backends. However, if
+                                          there is a mix of backends with and without a minus sign (ex:
+                                          <tt class="ph tt">backend=-roots,git</tt>) then the ones starting with a minus
+                                          sign will be disregarded.
+                                       </p>
+                                       
+                                       <p class="p">Additionally, fileserver backends can now be passed as a
+                                          comma-separated list. In earlier versions, they needed to be passed
+                                          as a python list (ex: <tt class="ph tt">backend="['roots', 'git']"</tt>)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt-run fileserver.update
+salt-run fileserver.update backend=roots,git</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

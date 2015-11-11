@@ -1,0 +1,160 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.pillar.s3</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.pillar.s3">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../pillar-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-pillar-s3">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-pillar-s3">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.pillar.s3</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-pillar-s3__module-salt.pillar.s3"></span></p>
+                              
+                              <p class="p">Copy pillar data from a bucket in Amazon S3</p>
+                              
+                              <p class="p">The S3 pillar can be configured in the master config file with the following
+                                 options
+                              </p>
+                              <pre class="pre codeblock language-yaml">ext_pillar:
+  - s3:
+      bucket: my.fancy.pillar.bucket
+      keyid: KASKFJWAKJASJKDAJKSD
+      key: ksladfDLKDALSFKSD93q032sdDasdfasdflsadkf
+      multiple_env: False
+      environment: base
+      verify_ssl: True
+      service_url: s3.amazonaws.com</pre>
+                              <p class="p">The <tt class="ph tt">bucket</tt> parameter specifies the target S3 bucket. It is required.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">keyid</tt> parameter specifies the key id to use when access the S3 bucket.
+                                 It is required.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">key</tt> parameter specifies the key to use when access the S3 bucket. It
+                                 is required.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">multiple_env</tt> defaults to False. It specifies whether the pillar should
+                                 interpret top level folders as pillar environments (see mode section below).
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">environment</tt> defaults to 'base'. It specifies which environment the
+                                 bucket represents when in single environments mode (see mode section below). It
+                                 is ignored if multiple_env is True.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">verify_ssl</tt> parameter defaults to True. It specifies whether to check for
+                                 valid S3 SSL certificates. <em class="ph i">NOTE</em> If you use bucket names with periods, this
+                                 must be set to False else an invalid certificate error will be thrown (issue
+                                 #12200).
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">service_url</tt> parameter defaults to 's3.amazonaws.com'. It specifies the
+                                 base url to use for accessing S3.
+                              </p>
+                              
+                              <p class="p">This pillar can operate in two modes, single environment per bucket or multiple
+                                 environments per bucket.
+                              </p>
+                              
+                              <p class="p">Single environment mode must have this bucket structure:</p>
+                              <pre class="pre codeblock language-text">s3://&lt;bucket name&gt;/&lt;files&gt;</pre>
+                              <p class="p">Multiple environment mode must have this bucket structure:</p>
+                              <pre class="pre codeblock language-text">s3://&lt;bucket name&gt;/&lt;environment&gt;/&lt;files&gt;</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.pillar.s3.ext_pillar">
+                           <h2 class="title topictitle2">ext_pillar</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.pillar.s3.ext_pillar(
+								minion_id,
+								pillar,
+								bucket,
+								key,
+								keyid,
+								verify_ssl,
+								multiple_env=False,
+								environment='base',
+								service_url=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Execute a command and read the output as YAML</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.pillar.s3.S3Credentials">
+                           <h2 class="title topictitle2">S3Credentials Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.pillar.s3.S3Credentials(
+									key,
+									keyid,
+									bucket,
+									service_url,
+									verify_ssl=True
+									)</pre>
+                                 </div>
+                              
+                              <div class="section"></div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,517 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Troubleshooting</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Troubleshooting">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../../enterprise/user-guide.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="unresolvable-reference.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="minion.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="unresolvable-reference.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="troubleshooting">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/bootstrap.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/fonts.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/prism.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/lightbox.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/webhelp.css">
+      <script type="text/javascript" src="../../../themes/bootstrap/js/jquery-1.11.0.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/jquery-ui-1.9.1.custom.min.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/jquery.slimscroll.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/jquery.tocify.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/prism.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/lightbox.min.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/webhelp.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <div id="sidebar-wrapper"><a class="ss-logo" href="/help/home.html"></a><div id="search-form" class="inner-addon left-addon"><i class="glyphicon glyphicon-search"></i><input type="text" class="form-control"></div>
+            <div id="guide-links">
+               <div class="well">
+                  <ul class="nav nav-pills nav-stacked">
+                     <li><a href="/help/gs/index.html"><span class="glyphicon glyphicon glyphicon-th-list"></span> Get Started</a></li>
+                     <li><a href="/help/home.html"><span class="glyphicon glyphicon-home"></span>  Home</a></li>
+                     <li><a href="/help/enterprise/user-guide.html"><span class="glyphicon glyphicon-user"></span> User Guide</a></li>
+                  </ul>
+               </div>
+               <p id="guide-title">Enterprise Help</p>
+            </div>
+            <div class="sidebar-nav">
+               <ul id="gen-links">
+                  <li class=" collapsible  collapsed"><a href="../../../enterprise/use-cases.html">Use Cases</a><ul>
+                        <li class=" no-child "><a href="../../../enterprise/continuous-deployment.html">Continuous Deployment</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/app-stacks.html">Application Stacks</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../../enterprise/cloud.html">Cloud Management</a><ul>
+                              <li class=" no-child "><a href="../../../enterprise/orchestrate.html">Orchestration</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../../enterprise/security-bp.html">Security Best Practices</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/components.html">SaltStack Components</a></li>
+                     </ul>
+                  </li>
+                  <li class=" collapsible  collapsed"><a href="../../../enterprise/deployment.html">Deployment</a><ul>
+                        <li class=" no-child "><a href="../../../enterprise/t_ops_prepare.html">Preparing the SaltStack Ops System</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/t_master_prepare.html">Preparing Masters for SaltStack Ops Integration</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/requirements.html">System Requirements</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/faq.html">Frequently Asked Questions</a></li>
+                     </ul>
+                  </li>
+                  <li class=" no-child "><a href="../../../enterprise/masters.html">View Masters</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/minions.html">View Minions</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/jobs.html">Jobs</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/targets.html">Targets</a></li>
+                  <li class=" collapsible  collapsed"><a href="../../../enterprise/management.html">Admin Management</a><ul>
+                        <li class=" no-child "><a href="../../../enterprise/cfg-masters.html">Manage Masters</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/jobs-all.html">Manage Jobs</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/cfg-users.html">User Accounts</a></li>
+                     </ul>
+                  </li>
+                  <li class=" no-child "><a href="../../../enterprise/web-console-overview.html">Console Overview</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/reports.html">View Reports</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/architecture.html">Architecture Reference</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/glossary.html">Glossary</a></li>
+                  <li class=" collapsible  active"><a href="../../../enterprise/user-guide.html">SaltStack User Guide</a><ul>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/installation/index.html">Installation</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/installation/debian.html">Debian Installation</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/freebsd.html">FreeBSD</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/gentoo.html">Gentoo</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/solaris.html">Solaris</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/ubuntu.html">Ubuntu Installation</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/windows.html">Windows</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/tutorials/index.html">Tutorials</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/standalone_minion.html">Standalone Minion</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/cron.html">Using cron with Salt</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/states_pt1.html">States tutorial, part 1 - Basic Usage</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/states_pt2.html">States tutorial, part 2 - More Complex States, Requisites</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/states_pt4.html">States tutorial, part 4</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/minionfs.html">MinionFS Backend Walkthrough</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/multimaster_pki.html">Multi-Master-PKI Tutorial With Failover</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/writing_tests.html">Writing Salt Tests</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/halite.html">Installing and Configuring Halite</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/targeting/index.html">Targeting Minions</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/globbing.html">Matching the minion id</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/grains.html">Grains</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/ipcidr.html">Subnet/IP Address Matching</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/compound.html">Compound matchers</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/nodegroups.html">Node groups</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/batch.html">Batch Size</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/range.html">SECO Range</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../../user/topics/pillar/index.html">Storing Static Data in the Pillar</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/reactor/index.html">Reactor System</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/eauth/index.html">External Authentication System</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/eauth/access_control.html">Access Control System</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/event/index.html">Salt Event System</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/event/master_events.html">Salt Master Events</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../../user/topics/topology/syndic.html">Salt Syndic</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/topology/proxyminion/index.html">Proxy Minion</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/windows/windows-specific-behavior.html">Windows-specific Behaviour</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/cloud/index.html">Salt Cloud</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/basic.html">Salt Cloud basic usage</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/profiles.html">VM Profiles</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/map.html">Cloud Map File</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/action.html">Cloud Actions</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/function.html">Cloud Functions</a></li>
+                              <li class=" collapsible  collapsed"><a href="../../../user/topics/cloud/provider-specifics.html">Cloud Provider Specifics</a><ul>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/parallels.html">Getting Started With Parallels</a></li>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/proxmox.html">Getting Started With Proxmox</a></li>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/lxc.html">Getting Started With LXC</a></li>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/hpcloud.html">Getting Started With HP Cloud</a></li>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/vexxhost.html">Getting Started with VEXXHOST</a></li>
+                                 </ul>
+                              </li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/deploy.html">OS Support for Cloud VMs</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/features.html">Feature Matrix</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/windows.html">Spinning up Windows Minions</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/netapi/index.html">netapi modules</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/netapi/writing.html">Writing netapi modules</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/virt/index.html">Salt Virt</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/virt/disk.html">Virtual Machine Disk Profiles</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/virt/nic.html">Virtual Machine Network Profiles</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../../user/topics/yaml/index.html">Understanding YAML</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/master_tops/index.html">Master Tops System</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/best_practices.html">Salt Best Practices</a></li>
+                        <li class=" collapsible  active">
+                           <div id="toc"></div>
+                           <ul>
+                              <li class=" no-child "><a href="../../../user/topics/troubleshooting/minion.html">Troubleshooting the Salt Minion</a></li>
+                           </ul>
+                        </li>
+                     </ul>
+                  </li>
+               </ul>
+            </div>
+         </div>
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="troubleshooting">
+                        
+                        <h1 class="title topictitle1">Troubleshooting</h1>
+                        <div class="body conbody">
+                           <p class="p">The intent of the troubleshooting section is to introduce solutions to a
+                              number of common issues encountered by users and the tools that are available
+                              to aid in developing States and Salt code.
+                           </p>
+                           
+                           <div class="section" id="troubleshooting__troubleshooting-the-salt-master">
+                              <h2 class="title sectiontitle">Troubleshooting the Salt Master</h2>
+                              <p class="p">If your Salt master is having issues such as minions not returning data, slow
+                                 execution times, or a variety of other issues, the following links contain
+                                 details on troubleshooting the most common issues encountered:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li"><a class="xref" href="unresolvable-reference.html#__">Troubleshooting the Salt Master</a><ul class="ul">
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#troubleshooting-the-salt-master%20running-state-locally__running-in-the-foreground">Running in the Foreground</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#troubleshooting-the-salt-master%20running-state-locally__what-ports-does-the-master-need-open">What Ports does the Master Need Open?</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#troubleshooting-the-salt-master%20running-state-locally__too-many-open-files">Too many open files</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#troubleshooting-the-salt-master%20running-state-locally__salt-master-stops-responding">Salt Master Stops Responding</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#troubleshooting-the-salt-master%20running-state-locally__live-python-debug-output">Live Python Debug Output</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#troubleshooting-the-salt-master%20running-state-locally__live-salt-master-profiling">Live Salt-Master Profiling</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#troubleshooting-the-salt-master%20running-state-locally__commands-time-out-or-do-not-return-output">Commands Time Out or Do Not Return Output</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#troubleshooting-the-salt-master%20running-state-locally__passing-the-c-option-to-salt-returns-a-permissions-error">Passing the -c Option to Salt Returns a Permissions Error</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#troubleshooting-the-salt-master%20running-state-locally__salt-master-doesn-t-return-anything-while-running-jobs">Salt Master Doesn't Return Anything While Running jobs</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#troubleshooting-the-salt-master%20running-state-locally__salt-master-auth-flooding">Salt Master Auth Flooding</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li"><a class="xref" href="unresolvable-reference.html#troubleshooting-the-salt-master%20running-state-locally__running-state-locally">Running state locally</a></li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting__troubleshooting-the-salt-minion">
+                              <h2 class="title sectiontitle">Troubleshooting the Salt Minion</h2>
+                              <p class="p">In the event that your Salt minion is having issues, a variety of solutions
+                                 and suggestions are available. Please refer to the following links for more information:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li"><a class="xref" href="unresolvable-reference.html#__">Troubleshooting the Salt Minion</a><ul class="ul">
+                                       <li class="li"><a class="xref" href="minion.html#troubleshooting-the-salt-minion__running-in-the-foreground">Running in the Foreground</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="minion.html#troubleshooting-the-salt-minion__what-ports-does-the-minion-need-open">What Ports does the Minion Need Open?</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="minion.html#troubleshooting-the-salt-minion__using-salt-call">Using salt-call</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="minion.html#troubleshooting-the-salt-minion__live-python-debug-output">Live Python Debug Output</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="minion.html#troubleshooting-the-salt-minion__multiprocessing-in-execution-modules">Multiprocessing in Execution Modules</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="minion.html#troubleshooting-the-salt-minion__salt-minion-doesn-t-return-anything-while-running-jobs-locally">Salt Minion Doesn't Return Anything While Running Jobs Locally</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting__running-in-the-foreground">
+                              <h2 class="title sectiontitle">Running in the Foreground</h2>
+                              <p class="p">A great deal of information is available via the debug logging system, if you
+                                 are having issues with minions connecting or not starting run the minion and/or
+                                 master in the foreground:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-master -l debug
+salt-minion -l debug</pre>
+                              <p class="p">Anyone wanting to run Salt daemons via a process supervisor such as <a class="xref" href="http://mmonit.com/monit/" target="_blank">monit</a>,
+                                 <a class="xref" href="http://smarden.org/runit/" target="_blank">runit</a>, or <a class="xref" href="http://supervisord.org/" target="_blank">supervisord</a>, should omit the <tt class="ph tt">-d</tt> argument to the daemons and
+                                 run them in the foreground.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting__what-ports-do-the-master-and-minion-need-open">
+                              <h2 class="title sectiontitle">What Ports do the Master and Minion Need Open?</h2>
+                              <p class="p">No ports need to be opened up on each minion. For the master, TCP ports 4505
+                                 and 4506 need to be open. If you've put both your Salt master and minion in
+                                 debug mode and don't see an acknowledgment that your minion has connected,
+                                 it could very well be a firewall.
+                              </p>
+                              
+                              <p class="p">You can check port connectivity from the minion with the nc command:</p>
+                              <pre class="pre codeblock language-bash">nc -v -z salt.master.ip 4505
+nc -v -z salt.master.ip 4506</pre>
+                              <p class="p">There is also a <a class="xref" href="unresolvable-reference.html#__">firewall configuration</a>
+                                 document that might help as well.
+                              </p>
+                              
+                              <p class="p">If you've enabled the right TCP ports on your operating system or Linux
+                                 distribution's firewall and still aren't seeing connections, check that no
+                                 additional access control system such as <a class="xref" href="https://en.wikipedia.org/wiki/Security-Enhanced_Linux" target="_blank">SELinux</a> or <a class="xref" href="http://wiki.apparmor.net/index.php/Main_Page" target="_blank">AppArmor</a> is blocking
+                                 Salt.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting__using-salt-call">
+                              <h2 class="title sectiontitle">Using salt-call</h2>
+                              <p class="p">The <tt class="ph tt">salt-call</tt> command was originally developed for aiding in the development
+                                 of new Salt modules. Since then, many applications have been developed for
+                                 running any Salt module locally on a minion. These range from the original
+                                 intent of salt-call, development assistance, to gathering more verbose output
+                                 from calls like <a class="xref" href="unresolvable-reference.html#module-salt.modules.state__salt.modules.state.highstate">state.highstate</a>.
+                              </p>
+                              
+                              <p class="p">When creating your state tree, it is generally recommended to invoke
+                                 <a class="xref" href="unresolvable-reference.html#module-salt.modules.state__salt.modules.state.highstate">state.highstate</a> with <tt class="ph tt">salt-call</tt>. This
+                                 displays far more information about the highstate execution than calling it
+                                 remotely. For even more verbosity, increase the loglevel with the same argument
+                                 as <tt class="ph tt">salt-minion</tt>:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-call -l debug state.highstate</pre>
+                              <p class="p">The main difference between using <tt class="ph tt">salt</tt> and using <tt class="ph tt">salt-call</tt> is that
+                                 <tt class="ph tt">salt-call</tt> is run from the minion, and it only runs the selected function on
+                                 that minion. By contrast, <tt class="ph tt">salt</tt> is run from the master, and requires you to
+                                 specify the minions on which to run the command using salt's <a class="xref" href="unresolvable-reference.html#__">targeting
+                                    system</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting__too-many-open-files">
+                              <h2 class="title sectiontitle">Too many open files</h2>
+                              <p class="p">The salt-master needs at least 2 sockets per host that connects to it, one for
+                                 the Publisher and one for response port. Thus, large installations may, upon
+                                 scaling up the number of minions accessing a given master, encounter:
+                              </p>
+                              <pre class="pre codeblock language-bash">12:45:29,289 [salt.master    ][INFO    ] Starting Salt worker process 38
+Too many open files
+sock != -1 (tcp_listener.cpp:335)</pre>
+                              <p class="p">The solution to this would be to check the number of files allowed to be
+                                 opened by the user running salt-master (root by default):
+                              </p>
+                              <pre class="pre codeblock language-bash">[root@salt-master ~]# ulimit -n
+1024</pre>
+                              <p class="p">And modify that value to be at least equal to the number of minions x 2.
+                                 This setting can be changed in limits.conf as the nofile value(s),
+                                 and activated upon new a login of the specified user.
+                              </p>
+                              
+                              <p class="p">So, an environment with 1800 minions, would need 1800 x 2 = 3600 as a minimum.</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting__salt-master-stops-responding">
+                              <h2 class="title sectiontitle">Salt Master Stops Responding</h2>
+                              <p class="p">There are known bugs with ZeroMQ versions less than 2.1.11 which can cause the
+                                 Salt master to not respond properly. If you're running a ZeroMQ version greater
+                                 than or equal to 2.1.9, you can work around the bug by setting the sysctls
+                                 <tt class="ph tt">net.core.rmem_max</tt> and <tt class="ph tt">net.core.wmem_max</tt> to 16777216. Next, set the third
+                                 field in <tt class="ph tt">net.ipv4.tcp_rmem</tt> and <tt class="ph tt">net.ipv4.tcp_wmem</tt> to at least 16777216.
+                              </p>
+                              
+                              <p class="p">You can do it manually with something like:</p>
+                              <pre class="pre codeblock language-bash"># echo 16777216 &gt; /proc/sys/net/core/rmem_max
+# echo 16777216 &gt; /proc/sys/net/core/wmem_max
+# echo "4096 87380 16777216" &gt; /proc/sys/net/ipv4/tcp_rmem
+# echo "4096 87380 16777216" &gt; /proc/sys/net/ipv4/tcp_wmem</pre>
+                              <p class="p">Or with the following Salt state:</p>
+                              <pre class="pre codeblock language-yaml">net.core.rmem_max:
+  sysctl:
+    - present
+    - value: 16777216
+
+net.core.wmem_max:
+  sysctl:
+    - present
+    - value: 16777216
+
+net.ipv4.tcp_rmem:
+  sysctl:
+    - present
+    - value: 4096 87380 16777216
+
+net.ipv4.tcp_wmem:
+  sysctl:
+    - present
+    - value: 4096 87380 16777216</pre>
+                              </div>
+                           
+                           <div class="section" id="troubleshooting__salt-and-selinux">
+                              <h2 class="title sectiontitle">Salt and SELinux</h2>
+                              <p class="p">Currently there are no SELinux policies for Salt. For the most part Salt runs
+                                 without issue when SELinux is running in Enforcing mode. This is because when
+                                 the minion executes as a daemon the type context is changed to <tt class="ph tt">initrc_t</tt>.
+                                 The problem with SELinux arises when using salt-call or running the minion in
+                                 the foreground, since the type context stays <tt class="ph tt">unconfined_t</tt>.
+                              </p>
+                              
+                              <p class="p">This problem is generally manifest in the rpm install scripts when using the
+                                 pkg module. Until a full SELinux Policy is available for Salt the solution
+                                 to this issue is to set the execution context of <tt class="ph tt">salt-call</tt> and
+                                 <tt class="ph tt">salt-minion</tt> to rpm_exec_t:
+                              </p>
+                              <pre class="pre codeblock language-bash"># CentOS 5 and RHEL 5:
+chcon -t system_u:system_r:rpm_exec_t:s0 /usr/bin/salt-minion
+chcon -t system_u:system_r:rpm_exec_t:s0 /usr/bin/salt-call
+
+# CentOS 6 and RHEL 6:
+chcon system_u:object_r:rpm_exec_t:s0 /usr/bin/salt-minion
+chcon system_u:object_r:rpm_exec_t:s0 /usr/bin/salt-call</pre>
+                              <p class="p">This works well, because the <tt class="ph tt">rpm_exec_t</tt> context has very broad control over
+                                 other types.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting__red-hat-enterprise-linux-5">
+                              <h2 class="title sectiontitle">Red Hat Enterprise Linux 5</h2>
+                              <p class="p">Salt requires Python 2.6 or 2.7. Red Hat Enterprise Linux 5 and its variants
+                                 come with Python 2.4 installed by default. When installing on RHEL 5 from the
+                                 <a class="xref" href="http://fedoraproject.org/wiki/EPEL" target="_blank">EPEL repository</a> this is handled for you. But, if you run Salt from git, be
+                                 advised that its dependencies need to be installed from EPEL and that Salt
+                                 needs to be run with the <tt class="ph tt">python26</tt> executable.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting__common-yaml-gotchas">
+                              <h2 class="title sectiontitle">Common YAML Gotchas</h2>
+                              <p class="p">An extensive list of YAML idiosyncrasies has been compiled:</p>
+                              
+                              <ul class="ul">
+                                 <li class="li"><a class="xref" href="unresolvable-reference.html#__">YAML Idiosyncrasies</a><ul class="ul">
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#yaml-idiosyncrasies__spaces-vs-tabs">Spaces vs Tabs</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#yaml-idiosyncrasies__indentation">Indentation</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#yaml-idiosyncrasies__true-false-yes-no-on-off">True/False, Yes/No, On/Off</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#yaml-idiosyncrasies__integers-are-parsed-as-integers">Integers are Parsed as Integers</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#yaml-idiosyncrasies__yaml-does-not-like-double-short-decs">YAML does not like "Double Short Decs"</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#yaml-idiosyncrasies__yaml-support-only-plain-ascii">YAML support only plain ASCII</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#yaml-idiosyncrasies__underscores-stripped-in-integer-definitions">Underscores stripped in Integer Definitions</a></li>
+                                       
+                                       <li class="li"><a class="xref" href="unresolvable-reference.html#yaml-idiosyncrasies__automatic-datetime-conversion">Automatic datetime conversion</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting__live-python-debug-output">
+                              <h2 class="title sectiontitle">Live Python Debug Output</h2>
+                              <p class="p">If the minion or master seems to be unresponsive, a SIGUSR1 can be passed to
+                                 the processes to display where in the code they are running. If encountering a
+                                 situation like this, this debug information can be invaluable. First make
+                                 sure the master of minion are running in the foreground:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-master -l debug
+salt-minion -l debug</pre>
+                              <p class="p">Then pass the signal to the master or minion when it seems to be unresponsive:</p>
+                              <pre class="pre codeblock language-bash">killall -SIGUSR1 salt-master
+killall -SIGUSR1 salt-minion</pre>
+                              <p class="p">Also under BSD and Mac OS X in addition to SIGUSR1 signal, debug subroutine set
+                                 up for SIGINFO which has an advantage of being sent by Ctrl+T shortcut.
+                              </p>
+                              
+                              <p class="p">When filing an issue or sending questions to the mailing list for a problem
+                                 with an unresponsive daemon this information can be invaluable.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting__salt-0-16-x-minions-cannot-communicate-with-a-0-17-x-master">
+                              <h2 class="title sectiontitle">Salt 0.16.x minions cannot communicate with a 0.17.x master</h2>
+                              <p class="p">As of release 0.17.1 you can no longer run different versions of Salt on your
+                                 Master and Minion servers. This is due to a protocol change for security
+                                 purposes. The Salt team will continue to attempt to ensure versions are as
+                                 backwards compatible as possible.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting__debugging-the-master-and-minion">
+                              <h2 class="title sectiontitle">Debugging the Master and Minion</h2>
+                              <p class="p">A list of common <a class="xref" href="unresolvable-reference.html#__">master</a> and
+                                 <a class="xref" href="unresolvable-reference.html#__">minion</a> troubleshooting steps provide a
+                                 starting point for resolving issues you may encounter.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links">
+                           
+                           <ul class="ullinks">
+                              
+                              <li class="link ulchildlink"><strong><a href="unresolvable-reference.html">unresolvable-reference.html</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="minion.html">Troubleshooting the Salt Minion</a></strong><br>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                        </div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+                        <p class="text-muted pull-right"><small>Copyright © 2015 SaltStack.</small></p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

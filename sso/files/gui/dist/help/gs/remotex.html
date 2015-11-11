@@ -1,0 +1,220 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>SaltStack Remote Execution - QuickStart Guide</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="SaltStack Enterprise Help Center">
+      
+      <meta name="abstract" content="">
+      
+      <meta name="description" content="">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="concept_z5t_tpb_gq">
+
+       <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/gui/css/core.min.css">
+       <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/gui/css/getstarted.min.css">
+
+       <script type="text/javascript" src="../themes/gui/js/webhelp.min.js"></script>
+
+   </head>
+   <body>
+   <a id="ss-logo-jumbotron" href="/help/ent/gui.html"></a>
+      <div class="jumbotron active_texture">
+          <div class="container">
+              <h1><!--<i class="glyphicon glyphicon-question-sign"></i>-->SaltStack Fundamentals</h1>
+              <h3>Get Started Guide</h3>
+          </div>
+      </div>
+      <div id="wrapper" class="intro">
+
+
+              <div class="container-fluid">
+                  <div class="row">
+                      <div class="col-lg-12">
+                          <ol class="progtrckr" data-progtrckr-steps="7">
+                              <!--<li class="progtrckr-done"><a href="overview.html">Overview</a></li>-->
+                              <li class="progtrckr-done"><a href="index.html">Demo Environment</a></li>
+                              <li class="progtrckr-done"><a href="install.html">Install SaltStack</a></li>
+                              <li class="progtrckr-done">Execute Commands</li>
+                              <li class="progtrckr-todo"><a href="targeting.html">Target Systems</a></li>
+                              <li class="progtrckr-todo"><a href="formulas.html">Create a Salt Formula</a></li>
+                              <li class="progtrckr-todo"><a href="top.html">Apply and Target Formulas</a></li>
+
+                              <li class="progtrckr-todo"><a href="next.html">Next Steps</a></li>
+                          </ol>
+                      </div>
+                      </div>
+
+                <!--<div class="row">
+                    <div class="col-lg-12"></div>
+                </div>-->
+<div class="row">
+
+</div>
+
+
+              <div class="row">
+                  <div class="col-lg-1"></div>
+                  <div class="col-lg-10">
+
+
+                          <h1 class="title topictitle1">Execute Commands</h1>
+                          <div class="body conbody">
+                              <p class="shortdesc"></p>
+
+                              <div class="section gs-overview" id="concept_ivf_bcn_vp__section_EF69791A73AB411AA070F467095A5130">
+                                  <p class="p gs-overview-sub"><span class="ph">You'll learn how to:</span></p>
+
+                                  <ul class="ul" id="concept_ivf_bcn_vp__ul_qjt_rhn_tp">
+                                      <li class="li" id="concept_ivf_bcn_vp__li_B7E78094456C4DC19C4B6133FC46D104">Remotely execute shell commands on managed systems
+                                      </li>
+
+                                      <li class="li" id="concept_ivf_bcn_vp__li_FB2FDC1241D542D6AE9BF6349D7E374F">Remotely execute Salt execution modules on managed systems
+
+                                      </li>
+
+
+                                  </ul>
+
+                                  <p class="p gs-overview-sub gs-time"><span class="ph">Estimated time: 5
+                                    			 minutes</span>&nbsp;<i class="glyphicon glyphicon-time"></i></p>
+
+                                  <p class="p gs-overview-sub gs-difficulty-1"><span class="ph">Difficulty</span>:
+                                      &nbsp;<i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star-empty"></i><i class="glyphicon glyphicon-star-empty"></i><i class="glyphicon glyphicon-star-empty"></i><i class="glyphicon glyphicon-star-empty"></i>
+                                  </p>
+
+                              </div>
+
+
+                              <div class="section gs-mainbody" id="concept_ivf_bcn_vp__section_D6F77362DCE342D9B67DE9E631A365C6">
+
+
+                                  <p>After you install SaltStack, you are immediately ready to run shell commands, update packages, and distribute files to all managed systems simultaneously. As a bonus, all responses are returned in a consistent, configurable format so you can easily see what did and didn’t work.</p>
+
+                                  <p>10 minutes to measurable productivity? Not bad.</p>
+
+
+                                                                           <div class="section gs-terms gs-sidebar" id="concept_ivf_bcn_vp__section_043E1272A3E94500934501DFABE4DCF9">
+                                              <h4 class="sidebar">Command Syntax</h4>
+                                              <p>Salt commands are executed using a common structure:</p>
+                                              <img width="100%" src="images/cmd-syntax.png"/>
+                                              <p></p>
+                                              <p><b>target</b>: Determines which systems apply the command. Uses hostname globbing by default, but there are many other ways to select and filter that we'll get into later. For now, it is enough to know that <samp class="ph codeph">*</samp> targets all managed systems.</p>
+                                              <p><b>command (module.function)</b>: This is how you leverage the real power of Salt. Commands consist of a module and function, and Salt comes with built-in modules to install software, copy files, check services, and most other tasks you want to automate.</p>
+                                              <p><b>arguments</b>: Provides any extra data needed by the function you are calling. For example, the pkg.install function likes to know which packages you want to install. You tell it using an argument.</p>
+
+                                                                               <h4>Doc</h4>
+
+                                                                               <p>You can pass a module or function name to the <samp class="ph codeph">sys.doc</samp> execution module to get details on any module directly from the command line. This list is filtered based on the target(s).</p>
+
+                                                                               <pre class="pre codeblock language-bash">salt '*' sys.doc</pre>
+
+                                                                               <pre class="pre codeblock language-bash">salt '*' sys.doc pkg</pre>
+
+                                                                               <pre class="pre codeblock language-bash">salt '*' sys.doc pkg.install</pre>
+
+
+                                          </div>
+
+
+                                          <h4>Run a Shell Command</h4>
+
+                                          <p>Salt lets you remotely run shell commands across multiple systems using <samp class="ph codeph">cmd.run</samp>:</p>
+
+                                          <pre class="pre codeblock language-bash">salt '*' cmd.run 'ls -l /etc'</pre>
+
+                                          <p>All managed systems <i>simultaneously</i> and <i>immediately</i> execute this command and then return the output to the Salt Master. Feeling the power?</p>
+                                  <img class="imgcenter" width="50%" src="images/vagrant-cmd-run.png">
+
+                                          <h4>Salt Execution Modules</h4>
+
+                                          <p>While shelling out using <samp class="ph codeph">cmd.run</samp> is certainly useful, the real power comes when you add Salt execution modules. The Salt community has put tremendous effort into creating hundreds of execution modules that simplify most management tasks. Even better, the same command can be used consistently across all supported platforms.</p>
+
+                                          <p>Resist the urge to shell out. Learn the ways of the Salt execution modules.</p>
+
+
+                                    <div class="row">
+                                        <div class="col-lg-8"><h4>Show Disk Usage</h4>
+
+                                            <pre class="pre codeblock language-bash">salt '*' disk.usage</pre></div>
+                                        <div class="col-lg-4"><img class="imgcenter" width= "100%" src="images/vagrant-disk.usage.png"></div>
+                                    </div>
+
+                                  <div class="row">
+                                      <div class="col-lg-8"><h4>Install a Package</h4>
+
+                                          <pre class="pre codeblock language-bash">salt '*' pkg.install cowsay</pre></div>
+
+                                      <div class="col-lg-4"><img class="imgcenter" width= "100%" src="images/vagrant-pkg.install.png"></div>
+                                  </div>
+
+                                  <div class="row">
+                                      <div class="col-lg-8"><h4>List network interfaces</h4>
+
+                                          <pre class="pre codeblock language-bash">salt '*' network.interfaces</pre></div>
+
+                                      <div class="col-lg-4"><img class="imgcenter" width= "100%" src="images/vagrant-network.interfaces.png"></div>
+                                  </div>
+
+
+
+
+
+                                          <p>These are just a few examples of the many execution modules available.</p>
+
+
+                                          <h4>But who runs commands on <i>all</i> of their systems?</h4>
+
+                                              <p>Good question! In the next section, we'll introduce the powerful targeting mechanism that lets you run commands on specific groups of systems.</p>
+
+
+
+
+
+
+                                  <a href="targeting.html"><button id="next-button" type="button" class="btn btn-primary">
+                                      Next <span class="glyphicon glyphicon-chevron-right"></span></button></a>
+                                  <div class="footer"></div>
+                              </div>
+
+                              <!--<div class="section gs-scenario" id="concept_ivf_bcn_vp__section_5191FFF18E494D33AA46064EF96D0F57">
+                                  <h2 class="title sectiontitle">Scenario</h2>
+                                  <p class="p"></p>
+                                  <ul>
+                                      <li>Salt Master server</li>
+                                      <li>Web server</li>
+                                      <li>Database server</li>
+                                  </ul>
+
+
+                              </div>-->
+
+                          </div>
+
+
+
+
+                  </div>
+                  <div class="col-lg-1"></div>
+
+
+              </div>
+              <div class="row">
+                  <div class="col-lg-12">
+
+                  </div>
+              </div>
+
+                  </div>
+              </div>
+
+   </body>
+</html>

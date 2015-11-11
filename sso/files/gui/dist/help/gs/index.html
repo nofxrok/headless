@@ -1,0 +1,151 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>SaltStack Overview - QuickStart Guide</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="SaltStack Enterprise Help Center">
+      
+      <meta name="abstract" content="">
+      
+      <meta name="description" content="">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="concept_z5t_tpb_gq">
+
+       <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/gui/css/core.min.css">
+       <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/gui/css/getstarted.min.css">
+
+       <script type="text/javascript" src="../themes/gui/js/webhelp.min.js"></script>
+
+   </head>
+   <body>
+      <a id="ss-logo-jumbotron" href="/help/ent/gui.html"></a>
+      <div class="jumbotron active_texture">
+          <div class="container">
+              <h1><!--<i class="glyphicon glyphicon-question-sign"></i>-->SaltStack Fundamentals</h1>
+              <h3>Get Started Guide</h3>
+          </div>
+      </div>
+      <div id="wrapper" class="intro">
+
+
+              <div class="container-fluid">
+                  <div class="row">
+                      <div class="col-lg-12">
+                          <ol class="progtrckr" data-progtrckr-steps="7">
+                              <!--<li class="progtrckr-done"><a href="overview.html">Overview</a></li>-->
+                              <li class="progtrckr-done"><a href="index.html">Demo Environment</a></li>
+                              <li class="progtrckr-todo"><a href="install.html">Install SaltStack</a></li>
+                              <li class="progtrckr-todo"><a href="remotex.html">Execute Commands</a></li>
+                              <li class="progtrckr-todo"><a href="targeting.html">Target Systems</a></li>
+                              <li class="progtrckr-todo"><a href="formulas.html">Create a Salt Formula</a></li>
+                              <li class="progtrckr-todo"><a href="top.html">Apply and Target Formulas</a></li>
+
+                              <li class="progtrckr-todo"><a href="next.html">Next Steps</a></li>
+                          </ol>
+                      </div>
+                      </div>
+
+                <!--<div class="row">
+                    <div class="col-lg-12"></div>
+                </div>-->
+
+              <div class="row">
+                  <div class="col-lg-1"></div>
+                  <div class="col-lg-10">
+                      <div class="section gs-sidebar">
+                          <h4  class="sidebar">What if I already have a test environment?</h4>
+
+                          <p>Let's use it! These instructions are intended to get you into a working environment where you can learn SaltStack without a lot of fiddling, but your own environment can be used instead.</p>
+
+
+
+                          </div>
+<p>This Getting Started Guide walks you through the fundamental concepts you need to learn as you start using SaltStack. We'll explain how to:</p>
+                      <ul>
+                          <li>Install SaltStack</li>
+                          <li>Run commands on managed systems</li>
+                          <li>Define re-usable configurations</li>
+                          <li>Apply commands and configurations to specific systems</li>
+                      </ul>
+
+                      <p>Learning SaltStack is a hands-on experience. While you can get the hang of things by reading this guide, SaltStack is easy to set up and we've included several examples you can run to help you learn. Plus, you can keep your demo environment around after you finish to continue to try things out.</p>
+
+
+
+                      <h2>Demo Environment</h2>
+
+
+                      <div class="section gs-sidebar">
+                          <h4 class="sidebar">Vagrant Basics</h4>
+
+                          <p>After you run vagrant up, Vagrant creates and starts several VirtualBox VMs in the background. These virtual machines keep running until you shut them down, so make sure you run vagrant halt when you are finished:
+
+                          <pre class="pre codeblock language-bash">vagrant halt</pre>
+
+                          <p>To start them up again, run vagrant up.</p>
+
+                          <p>If you want to start over, you can run vagrant destroy, and then vagrant up.</p>
+
+
+                      </div>
+
+                      <!--<div class="option-list-item"><span class="glyphicon glyphicon-chevron-right"></span>  <a href="install.html">I have a test environment, let's get on with the installation.</a></div>
+
+                      <div class="option-list-item"><span class="glyphicon glyphicon-chevron-right"></span>  <a href="javascript:$('.test-env').css('visibility','visible');">Let's set up that test environment.</a></div>
+
+                      <div class="option-list-item"><span class="glyphicon glyphicon-chevron-right"></span>  <a href="install.html">I'm just going to follow along, let's get on with it. (this goes to the same place as the first link, we just included it for completeness).</a></div>-->
+
+
+
+                      <!--<div class="test-env">-->
+                          <p>Complete these instructions to set up a simple SaltStack environment. </p>
+
+                          <ol>
+                              <li>Install <a href="https://www.virtualbox.org/" target="_blank">VirtualBox</a>.</li>
+                              <li>Install <a href="https://www.vagrantup.com/" target="_blank">Vagrant</a>.</li>
+                              <li><p>Download <a target="_blank" href="https://github.com/UtahDave/salt-vagrant-demo">https://github.com/UtahDave/salt-vagrant-demo</a>. You can use git or download a zip of the project directly from GitHub:</p>
+
+                              <p><img src="images/github-download.png"></p>
+                              </li>
+                              <li><p>Extract the zip file you downloaded, and then open a command prompt to the extracted folder:</p>
+                                  <img class="nolightbox" height="36px" width="36px" src="images/windows.png" style="float:left;margin-top: 12px"><pre class="pre codeblock language-bash">cd %homepath%\Downloads\salt-vagrant-demo-master</pre>
+                                  <img class="nolightbox" height="36px" width="36px" src="images/mac.png" style="float:left"><pre class="pre codeblock language-bash">cd ~/Downloads/salt-vagrant-demo-master</pre>
+                              </li>
+                              <li>Run vagrant up to start the demo environment:
+                                  <pre class="pre codeblock language-bash">vagrant up</pre>
+                              </li>
+
+
+                          </ol>
+
+                      <p>After Vagrant ups (~10 minutes) and you are back at the command prompt, click Next.</p>
+
+
+
+                      <a href="install.html"><button id="next-button" type="button" class="btn btn-primary">
+                          Next <span class="glyphicon glyphicon-chevron-right"></span></button></a>
+
+
+                      <div class="footer"></div>
+                  </div>
+                  <div class="col-lg-1"></div>
+              </div>
+              <div class="row">
+                  <div class="col-lg-12">
+
+                  </div>
+              </div>
+
+                  </div>
+              </div>
+
+   </body>
+</html>

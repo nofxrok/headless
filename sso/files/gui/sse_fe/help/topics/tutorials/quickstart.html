@@ -1,0 +1,211 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Salt Masterless Quickstart</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Salt Masterless Quickstart">
+      
+      <meta name="DC.Relation" scheme="URI" content="../installation/models.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-masterless-quickstart">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="salt-masterless-quickstart">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Salt Masterless Quickstart</h1>
+                        <div class="body conbody">
+                           <p class="p">Running a masterless salt-minion lets you use Salt's configuration management
+                              for a single machine without calling out to a Salt master on another machine.
+                           </p>
+                           
+                           <p class="p">Since the Salt minion contains such extensive functionality it can be useful
+                              to run it standalone. A standalone minion can be used to do a number of
+                              things:
+                           </p>
+                           
+                           <ul class="ul">
+                              <li class="li">
+                                 <p class="p">Stand up a master server via States (Salting a Salt Master)</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">Use salt-call commands on a system without connectivity to a master</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">Masterless States, run states entirely from files local to the minion</p>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                           <p class="p">It is also useful for testing out state trees before deploying to a production setup.</p>
+                           
+                           <div class="section" id="salt-masterless-quickstart__bootstrap-salt-minion">
+                              <h2 class="title sectiontitle">Bootstrap Salt Minion</h2>
+                              <p class="p">The <a class="xref" href="https://github.com/saltstack/salt-bootstrap" target="_blank">salt-bootstrap</a> script makes bootstrapping a server with Salt simple
+                                 for any OS with a Bourne shell:
+                              </p>
+                              <pre class="pre codeblock language-bash">wget -O - https://bootstrap.saltstack.com | sudo sh</pre>
+                              <p class="p">See the <a class="xref" href="https://github.com/saltstack/salt-bootstrap" target="_blank">salt-bootstrap</a> documentation for other one liners. When using <a class="xref" href="http://www.vagrantup.com/" target="_blank">Vagrant</a>
+                                 to test out salt, the <a class="xref" href="https://github.com/saltstack/salty-vagrant" target="_blank">salty-vagrant</a> tool will  provision the VM for you.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="salt-masterless-quickstart__telling-salt-to-run-masterless">
+                              <h2 class="title sectiontitle">Telling Salt to Run Masterless</h2>
+                              <p class="p">To instruct the minion to not look for a master when running
+                                 the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/minion.html#configuration-salt-minion__file_client">file_client</a> configuration option needs to be set.
+                                 By default the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/minion.html#configuration-salt-minion__file_client">file_client</a> is set to <tt class="ph tt">remote</tt> so that the
+                                 minion knows that file server and pillar data are to be gathered from the
+                                 master. When setting the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/minion.html#configuration-salt-minion__file_client">file_client</a> option to <tt class="ph tt">local</tt> the
+                                 minion is configured to not gather this data from the master.
+                              </p>
+                              <pre class="pre codeblock language-yaml">file_client: local</pre>
+                              <p class="p">Now the salt minion will not look for a master and will assume that the local
+                                 system has all of the file and pillar resources.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">When running Salt in masterless mode, do not run the salt-minion daemon.
+                                    Otherwise, it will attempt to connect to a master and fail. The salt-call
+                                    command stands on its own and does not need the salt-minion daemon.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="salt-masterless-quickstart__create-state-tree">
+                              <h2 class="title sectiontitle">Create State Tree</h2>
+                              <p class="p">Following the successful installation of a salt-minion, the next step is to create
+                                 a state tree, which is where the SLS files that comprise the possible states of the
+                                 minion are stored.
+                              </p>
+                              
+                              <p class="p">The following example walks through the steps necessary to create a state tree that
+                                 ensures that the server has the Apache webserver installed.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">For a complete explanation on Salt States, see the <a class="xref" href="http://docs.saltstack.org/en/latest/topics/tutorials/states_pt1.html" target="_blank">tutorial</a>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">Create the <tt class="ph tt">top.sls</tt> file:
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/top.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">base:
+  '*':
+    - webserver</pre>
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">Create the webserver state tree:</p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                              <p class="p"><tt class="ph tt">/srv/salt/webserver.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">apache:               # ID declaration
+  pkg:                # state declaration
+    - installed       # function declaration</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The apache package has different names on different platforms, for
+                                    instance on Debian/Ubuntu it is apache2, on Fedora/RHEL it is httpd
+                                    and on Arch it is apache
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">The only thing left is to provision our minion using salt-call and the
+                                 highstate command.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="salt-masterless-quickstart__salt-call">
+                              <h2 class="title sectiontitle">Salt-call</h2>
+                              <p class="p">The salt-call command is used to run module functions locally on a minion
+                                 instead of executing them from the master. Normally the salt-call command
+                                 checks into the master to retrieve file server and pillar data, but when
+                                 running standalone salt-call needs to be instructed to not check the master for
+                                 this data:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-call --local state.highstate</pre>
+                              <p class="p">The <tt class="ph tt">--local</tt> flag tells the salt-minion to look for the state tree in the
+                                 local file system and not to contact a Salt Master for instructions.
+                              </p>
+                              
+                              <p class="p">To provide verbose output, use <tt class="ph tt">-l debug</tt>:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-call --local state.highstate -l debug</pre>
+                              <p class="p">The minion first examines the <tt class="ph tt">top.sls</tt> file and determines that it is a part
+                                 of the group matched by <tt class="ph tt">*</tt> glob and that the <tt class="ph tt">webserver</tt> SLS should be applied.
+                              </p>
+                              
+                              <p class="p">It then examines the <tt class="ph tt">webserver.sls</tt> file and finds the <tt class="ph tt">apache</tt> state, which
+                                 installs the Apache package.
+                              </p>
+                              
+                              <p class="p">The minion should now have Apache installed, and the next step is to begin
+                                 learning how to write
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="states_pt1.html#states-tutorial-part-1-basic-usage">more complex states</a>.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

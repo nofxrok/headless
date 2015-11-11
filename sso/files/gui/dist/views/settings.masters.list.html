@@ -1,0 +1,50 @@
+<div class="col-xs-12 padding-zero col-height">    
+    <div class="main-content">
+        <div class="">
+           <div id="masters-list-settings" ng-show="mode==1">
+                <table class="table" ng-show="masters.length">
+                    <thead>
+                         <tr>
+                            <th data-field="select" id="select-col">
+                                <span class="ssIcons-icon_circle" ng-hide="selectedAll" ng-click="selectAll()"></span>
+                                <span class="ssIcons-icon_check" ng-show="selectedAll" ng-click="selectAll()"></span>
+                            </th>
+                            <th data-field="hostname">Host Name</th>
+                            <th data-field="edit" id="edit-col">Edit</th>
+                         </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="master in masters" ng-class="{active: checkedMasters[$index] === true }">
+                            <td data-title="'Select'" class="master-id-col">
+                                <span class="ssIcons-icon_circle" ng-hide="checkedMasters[$index]" ng-click="selectMaster($index, master.hostname)"></span>
+                                <span class="ssIcons-icon_check" ng-show="checkedMasters[$index]" ng-click="selectMaster($index, master.hostname)"></span>
+                            </td>
+                            <td data-title="'Host Name'">{{ master.hostname }}</td>
+                            <td data-title="'Edit'" class="master-id-col">
+                                <button class="btn row-button nav-btns" ui-sref="salt.dashboard.settings.masters.edit({ masterId: master.hostname })"
+                                bs-tooltip="'Edit'" data-trigger="hover" container="body" placement="right"><span class="glyphicon glyphicon-edit"></span></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table ng-hide="masters===undefined || masters.length" class="table master-list-table">
+                    <tr>
+                        <td>0 masters connected.</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="masters-grid" ng-show="mode==2" class="clearfix">
+                <ul class="nav">
+                    <li ng-repeat="master in masters" class="col-xs-2 master-grid-list" ng-class="{'active':selectedMaster==={{$index}}}" title="list">
+                        <a href="" ng-click="showMaster({{$index}})">
+                            <span class="glyphicon glyphicon-picture"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+ 
+        </div>
+    </div>
+</div>

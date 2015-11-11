@@ -1,0 +1,18 @@
+<div class="modal-header">
+    <h3 class="modal-title">Creating a folder in {{ parentInfo.name }}</h3>
+</div>
+<div class="modal-body">
+    <form name="createTargetFolder" id="create-target-folder-form" class="form-horizontal" role="form" ng-submit="addTargetFolderOk(targetFolder)" novalidate>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Folder Name</label>
+            <div class="col-xs-9" ng-class="{'has-error': createTargetFolder.targetname.$error.required}">
+                <input name="targetname" class="form-control" ng-model="targetFolder.folder_name" ng-pattern="/^[a-zA-Z0-9\.\- ]+$/" maxlength="65" ng-trim="false" required salt-form-focus>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary site-btn-form" ng-click="addTargetFolderOk(targetFolder)" ng-disabled="createTargetFolder.$invalid">Save</button>
+    <button class="btn btn-primary site-btn-form" ng-click="addTargetFolderCancel()">Cancel</button>
+</div>

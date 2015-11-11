@@ -1,0 +1,785 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.keystone</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.keystone">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-keystone">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-keystone">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.keystone</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-keystone__module-salt.states.keystone"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="management-of-keystone-users">
+                           <h2 class="title topictitle2">Management of Keystone users</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <dl class="dl field_list">
+                                    <dt class="dt dlterm">depends</dt>
+                                    
+                                    <dd class="dd">
+                                       <ul class="ul">
+                                          <li class="li">
+                                             <p class="p">keystoneclient Python module</p>
+                                             
+                                          </li>
+                                          
+                                       </ul>
+                                       
+                                    </dd>
+                                    
+                                    <dt class="dt dlterm">configuration</dt>
+                                    
+                                    <dd class="dd">
+                                       <p class="p">See 
+                                          		
+                                          			&nbsp;<a class="xref" href="../../modules/all/salt.modules.keystone.html#salt.modules.keystone">salt.modules.keystone</a> for setup instructions.
+                                       </p>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 <pre class="pre codeblock language-yaml">Keystone tenants:
+  keystone.tenant_present:
+    - names:
+      - admin
+      - demo
+      - service
+
+Keystone roles:
+  keystone.role_present:
+    - names:
+      - admin
+      - Member
+
+admin:
+  keystone.user_present:
+    - password: R00T_4CC3SS
+    - email: admin@domain.com
+    - roles:
+        admin:   # tenants
+          - admin  # roles
+        service:
+          - admin
+          - Member
+    - require:
+      - keystone: Keystone tenants
+      - keystone: Keystone roles
+
+nova:
+  keystone.user_present:
+    - password: '$up3rn0v4'
+    - email: nova@domain.com
+    - tenant: service
+    - roles:
+        service:
+          - admin
+    - require:
+      - keystone: Keystone tenants
+      - keystone: Keystone roles
+
+demo:
+  keystone.user_present:
+    - password: 'd3m0n$trati0n'
+    - email: demo@domain.com
+    - tenant: demo
+    - roles:
+        demo:
+          - Member
+    - require:
+      - keystone: Keystone tenants
+      - keystone: Keystone roles
+
+nova service:
+  keystone.service_present:
+    - name: nova
+    - service_type: compute
+    - description: OpenStack Compute Service</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.keystone.endpoint_absent">
+                              <h3 class="title topictitle3">endpoint_absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.keystone.endpoint_absent(
+								name,
+								profile=None,
+								**connection_args
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure that the endpoint for a service doesn't exist in Keystone catalog</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d385357e74" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d385357e76" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e74" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d385357e76" class="stentry propdesc">
+                                          <p class="p">The name of the service whose endpoints should not exist</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.keystone.endpoint_present">
+                              <h3 class="title topictitle3">endpoint_present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.keystone.endpoint_present(
+								name,
+								publicurl=None,
+								internalurl=None,
+								adminurl=None,
+								region='RegionOne',
+								profile=None,
+								**connection_args
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure the specified endpoints exists for service</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d385357e112" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d385357e114" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e112" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d385357e114" class="stentry propdesc">
+                                          <p class="p">The Service name</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e112" class="stentry propvalue">public url</td>
+                                       
+                                       <td valign="top" headers="d385357e114" class="stentry propdesc">
+                                          <p class="p">The public url of service endpoint</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e112" class="stentry propvalue">internal url</td>
+                                       
+                                       <td valign="top" headers="d385357e114" class="stentry propdesc">
+                                          <p class="p">The internal url of service endpoint</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e112" class="stentry propvalue">admin url</td>
+                                       
+                                       <td valign="top" headers="d385357e114" class="stentry propdesc">
+                                          <p class="p">The admin url of the service endpoint</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e112" class="stentry propvalue">region</td>
+                                       
+                                       <td valign="top" headers="d385357e114" class="stentry propdesc">
+                                          <p class="p">The region of the endpoint</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.keystone.role_absent">
+                              <h3 class="title topictitle3">role_absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.keystone.role_absent(
+								name,
+								profile=None,
+								**connection_args
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure that the keystone role is absent.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d385357e174" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d385357e176" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e174" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d385357e176" class="stentry propdesc">
+                                          <p class="p">The name of the role that should not exist</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.keystone.role_present">
+                              <h3 class="title topictitle3">role_present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.keystone.role_present(
+								name,
+								profile=None,
+								**connection_args
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">'
+                                       Ensures that the keystone role exists
+                                    </p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d385357e212" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d385357e214" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e212" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d385357e214" class="stentry propdesc">
+                                          <p class="p">The name of the role that should be present</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.keystone.service_absent">
+                              <h3 class="title topictitle3">service_absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.keystone.service_absent(
+								name,
+								profile=None,
+								**connection_args
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure that the service doesn't exist in Keystone catalog</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d385357e250" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d385357e252" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e250" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d385357e252" class="stentry propdesc">
+                                          <p class="p">The name of the service that should not exist</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.keystone.service_present">
+                              <h3 class="title topictitle3">service_present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.keystone.service_present(
+								name,
+								service_type,
+								description=None,
+								profile=None,
+								**connection_args
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure service present in Keystone catalog</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d385357e288" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d385357e290" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e288" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d385357e290" class="stentry propdesc">
+                                          <p class="p">The name of the service</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e288" class="stentry propvalue">service_type</td>
+                                       
+                                       <td valign="top" headers="d385357e290" class="stentry propdesc">
+                                          <p class="p">The type of Openstack Service</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e288" class="stentry propvalue">description (optional)</td>
+                                       
+                                       <td valign="top" headers="d385357e290" class="stentry propdesc">
+                                          <p class="p">Description of the service</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.keystone.tenant_absent">
+                              <h3 class="title topictitle3">tenant_absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.keystone.tenant_absent(
+								name,
+								profile=None,
+								**connection_args
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure that the keystone tenant is absent.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d385357e338" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d385357e340" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e338" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d385357e340" class="stentry propdesc">
+                                          <p class="p">The name of the tenant that should not exist</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.keystone.tenant_present">
+                              <h3 class="title topictitle3">tenant_present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.keystone.tenant_present(
+								name,
+								description=None,
+								enabled=True,
+								profile=None,
+								**connection_args
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensures that the keystone tenant exists</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d385357e376" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d385357e378" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e376" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d385357e378" class="stentry propdesc">
+                                          <p class="p">The name of the tenant to manage</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e376" class="stentry propvalue">description</td>
+                                       
+                                       <td valign="top" headers="d385357e378" class="stentry propdesc">
+                                          <p class="p">The description to use for this tenant</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e376" class="stentry propvalue">enabled</td>
+                                       
+                                       <td valign="top" headers="d385357e378" class="stentry propdesc">
+                                          <p class="p">Availability state for this tenant</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.keystone.user_absent">
+                              <h3 class="title topictitle3">user_absent</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.keystone.user_absent(
+								name,
+								profile=None,
+								**connection_args
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure that the keystone user is absent.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d385357e426" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d385357e428" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e426" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d385357e428" class="stentry propdesc">
+                                          <p class="p">The name of the user that should not exist</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.states.keystone.user_present">
+                              <h3 class="title topictitle3">user_present</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.keystone.user_present(
+								name,
+								password,
+								email,
+								tenant=None,
+								enabled=True,
+								roles=None,
+								profile=None,
+								**connection_args
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <p class="p">Ensure that the keystone user is present with the specified properties.</p>
+                                    
+                                 </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Arguments</h4>
+                                 </div>
+                                 
+                                 <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                    <tr class="sthead prophead">
+                                       
+                                       <th valign="bottom" align="left" id="d385357e465" class="stentry propvaluehd">Name</th>
+                                       
+                                       <th valign="bottom" align="left" id="d385357e467" class="stentry propdeschd">Description</th>
+                                       
+                                    </tr>
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e465" class="stentry propvalue">name</td>
+                                       
+                                       <td valign="top" headers="d385357e467" class="stentry propdesc">
+                                          <p class="p">The name of the user to manage</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e465" class="stentry propvalue">password</td>
+                                       
+                                       <td valign="top" headers="d385357e467" class="stentry propdesc">
+                                          <p class="p">The password to use for this user</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e465" class="stentry propvalue">email</td>
+                                       
+                                       <td valign="top" headers="d385357e467" class="stentry propdesc">
+                                          <p class="p">The email address for this user</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e465" class="stentry propvalue">tenant</td>
+                                       
+                                       <td valign="top" headers="d385357e467" class="stentry propdesc">
+                                          <p class="p">The tenant for this user</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e465" class="stentry propvalue">enabled</td>
+                                       
+                                       <td valign="top" headers="d385357e467" class="stentry propdesc">
+                                          <p class="p">Availability state for this user</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="strow property">
+                                       
+                                       <td valign="top" headers="d385357e465" class="stentry propvalue">roles</td>
+                                       
+                                       <td valign="top" headers="d385357e467" class="stentry propdesc">
+                                          <p class="p">The roles the user should have under tenants</p>
+                                          
+                                       </td>
+                                       
+                                    </tr>
+                                    
+                                 </table>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

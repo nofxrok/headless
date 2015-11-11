@@ -1,0 +1,77 @@
+<div class="col-xs-12 padding-zero col-height">
+    <div class="main-content">
+        <div class="">
+            <div id="users-list-settings" ng-show="mode==1">
+                <table class="table" ng-show="users.length">
+                    <thead>
+                         <tr>
+                            <th id="select-col">
+                                <span class="ssIcons-icon_circle" ng-hide="selectedAll" ng-click="selectAll()"></span>
+                                <span class="ssIcons-icon_check" ng-show="selectedAll" ng-click="selectAll()"></span>
+                            </th>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>First name</th>
+                            <th>Last name</th>
+                            <th>Email</th>
+                            <th>Permissions</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="user in users" ng-class="{active: checkedUsers[$index] === true }">
+                            <td data-title="'Select'">
+                                <span class="ssIcons-icon_circle" ng-show="user.username !== currentUser && user.type !== 'superuser' && !checkedUsers[$index]" ng-click="selectUser($index, user.id)"></span>
+                                <span class="ssIcons-icon_check" ng-show="(user.username !== currentUser || user.type !== 'superuser') && checkedUsers[$index]" ng-click="selectUser($index, user.id)"></span>
+                                <!-- <input type="checkbox" name="userGroup" ng-hide="user.username === currentUser || user.type === 'superuser'" ng-model="checkedUsers[$index]" ng-change="selectUser('{{ user.id }}')"></input> -->
+                                <span class="user-online" ng-show="user.username === currentUser" title="You are online" style="background: url(/images/online-icon.15130447.png) no-repeat 0 0; display: block; height: 20px; width: 20px;"></span>
+                                <span class="salt-superuser ssIcons-icon_saltstack salt-icon-2x" ng-show="user.type === 'superuser' && user.username !== currentUser" title="Superuser"></span>
+                            </td>
+                            <td>{{ user.username | displayDefault }}</td>
+                            <td>{{ user.type | displayDefault }}</td>
+                            <td>{{ user.first_name | displayDefault }}</td>
+                            <td>{{ user.last_name | displayDefault }}</td>
+                            <td>{{ user.email | displayDefault }}</td>
+                            <td>
+                                <ul class="list-unstyled" ng-if="user.type === 'superuser'">
+                                    <li ng-repeat="permission in user.permissions"
+                                        data-trigger="hover"
+                                        data-type="success"
+                                        container="body"
+                                        data-content="content"
+                                        data-template="views/dialogs/permissionsPopup.html"
+                                        data-placement="right"
+                                        bs-popover>
+                                        <a>{{ permission.hostname }}</a>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td class="master-id-col">
+                                <button id="edit-user-btn" class="btn row-button nav-btns" ui-sref="salt.dashboard.settings.users.edit" ng-click="showUser(user.id, 'edit')"
+                                bs-tooltip="'Edit'" data-trigger="hover" container="body" placement="right"><span class="glyphicon glyphicon-edit"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table  ng-hide="users===undefined || users.length" class="table master-list-table">
+                    <tr>
+                        <td>0 users present.</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="masters-grid" ng-show="mode==2" class="clearfix">
+                <ul class="nav">
+                    <li ng-repeat="master in masters" class="col-xs-2 master-grid-list" ng-class="{'active':selectedMaster==={{$index}}}" title="list">
+                        <a href="" ng-click="showMaster({{$index}})">
+                            <span class="glyphicon glyphicon-picture"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>

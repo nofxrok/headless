@@ -1,0 +1,396 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.grafana</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.grafana">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-grafana">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-grafana">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.grafana</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-grafana__module-salt.states.grafana"></span></p>
+                              
+                              <p class="p">Manage Grafana Dashboards</p>
+                              
+                              <p class="p">This module uses <tt class="ph tt">elasticsearch</tt>, which can be installed via package, or pip.
+                              </p>
+                              
+                              <p class="p">You can specify elasticsearch hosts directly to the module, or you can use an
+                                 elasticsearch profile via pillars:
+                              </p>
+                              <pre class="pre codeblock language-yaml">mygrafanaprofile:
+  hosts:
+    - es1.example.com:9200
+    - es2.example.com:9200
+  index: grafana-dash</pre>
+                              <pre class="pre codeblock language-yaml"># Basic usage (uses default pillar profile key 'grafana')
+Ensure myservice dashboard is managed:
+  grafana.dashboard_present:
+    - name: myservice
+    - dashboard_from_pillar: default
+    - rows_from_pillar:
+        - systemhealth
+        - requests
+
+# Passing hosts in
+Ensure myservice dashboard is managed:
+  grafana.dashboard_present:
+    - name: myservice
+    - dashboard_from_pillar: default
+    - rows:
+        - collapse: false
+          editable: true
+          height: 150px
+          title: System Health
+          panels:
+            - aliasColors: {}
+              id: 200000
+              annotate:
+                enable: false
+              bars: false
+              datasource: null
+              editable: true
+              error: false
+              fill: 7
+              grid:
+                leftMax: 100
+                leftMin: null
+                rightMax: null
+                rightMin: null
+                threshold1: 60
+                threshold1Color: rgb(216, 27, 27)
+                threshold2: null
+                threshold2Color: rgba(234, 112, 112, 0.22)
+              leftYAxisLabel: ''
+              legend:
+                avg: false
+                current: false
+                max: false
+                min: false
+                show: false
+                total: false
+                values: false
+              lines: true
+              linewidth: 1
+              nullPointMode: connected
+              percentage: false
+              pointradius: 5
+              points: false
+              renderer: flot
+              resolution: 100
+              scale: 1
+              seriesOverrides: []
+              span: 4
+              stack: false
+              steppedLine: false
+              targets:
+                - target: cloudwatch.aws.ec2.mysrv.cpuutilization.average
+              title: CPU (asg average)
+              tooltip:
+                query_as_alias: true
+                shared: false
+                value_type: cumulative
+              type: graph
+              x-axis: true
+              y-axis: true
+              y_formats:
+                - short
+                - short
+              zerofill: true
+    - rows_from_pillar:
+      - systemhealth
+      - requests
+    - profile:
+        hosts:
+          - es1.example.com:9200
+          - es2.example.com:9200
+        index: grafana-dash
+
+# Using a profile from pillars
+Ensure myservice dashboard is managed:
+  grafana.dashboard_present:
+    - name: myservice
+    - dashboard:
+        annotations:
+          enable: true
+          list: []
+        editable: true
+        hideAllLegends: false
+        hideControls: false
+        nav:
+          - collapse: false
+            enable: true
+            notice: false
+            now: true
+            refresh_intervals:
+              - 10s
+              - 30s
+              - 1m
+              - 5m
+              - 15m
+              - 30m
+              - 1h
+              - 2h
+              - 1d
+            status: Stable
+            time_options:
+              - 5m
+              - 15m
+              - 1h
+              - 2h
+              - 3h
+              - 4h
+              - 6h
+              - 12h
+              - 1d
+              - 2d
+              - 4d
+              - 7d
+              - 16d
+              - 30d
+            type: timepicker
+        originalTitle: dockerregistry
+        refresh: 1m
+        rows: []
+        sharedCrosshair: false
+        style: dark
+        tags: []
+        templating:
+          enable: true
+          list: []
+        time:
+          from: now-2h
+          to: now
+        timezone: browser
+    - rows_from_pillars:
+      - systemhealth
+      - requests
+    - profile: mygrafanaprofile</pre>
+                              <p class="p">The behavior of this module is to create dashboards if they do not exist, to
+                                 add rows if they do not exist in existing dashboards, and to update rows if
+                                 they exist in dashboards. The module will not manage rows that are not defined,
+                              </p>
+                              
+                              <blockquote class="lq">
+                                 <p class="p">allowing users to manage their own custom rows.</p>
+                                 
+                              </blockquote>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.states.grafana.dashboard_absent">
+                           <h2 class="title topictitle2">dashboard_absent</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.grafana.dashboard_absent(
+								name,
+								hosts=None,
+								profile='grafana'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Ensure the named grafana dashboard is deleted.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d374790e63" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d374790e65" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d374790e63" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d374790e65" class="stentry propdesc">
+                                       <p class="p">Name of the grafana dashboard.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d374790e63" class="stentry propvalue">profile</td>
+                                    
+                                    <td valign="top" headers="d374790e65" class="stentry propdesc">
+                                       <p class="p">A pillar key or dict that contains a list of hosts and an
+                                          elasticsearch index to use.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.grafana.dashboard_present">
+                           <h2 class="title topictitle2">dashboard_present</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.grafana.dashboard_present(
+								name,
+								dashboard=None,
+								dashboard_from_pillar=None,
+								rows=None,
+								rows_from_pillar=None,
+								profile='grafana'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Ensure the grafana dashboard exists and is managed.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d374790e107" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d374790e109" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d374790e107" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d374790e109" class="stentry propdesc">
+                                       <p class="p">Name of the grafana dashboard.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d374790e107" class="stentry propvalue">dashboard</td>
+                                    
+                                    <td valign="top" headers="d374790e109" class="stentry propdesc">
+                                       <p class="p">A dict that defines a dashboard that should be managed.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d374790e107" class="stentry propvalue">dashboard_from_pillar</td>
+                                    
+                                    <td valign="top" headers="d374790e109" class="stentry propdesc">
+                                       <p class="p">A pillar key that contains a grafana dashboard dict. Mutually exclusive
+                                          with dashboard.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d374790e107" class="stentry propvalue">rows</td>
+                                    
+                                    <td valign="top" headers="d374790e109" class="stentry propdesc">
+                                       <p class="p">A list of grafana rows.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d374790e107" class="stentry propvalue">rows_from_pillar</td>
+                                    
+                                    <td valign="top" headers="d374790e109" class="stentry propdesc">
+                                       <p class="p">A list of pillar keys that contain lists of grafana dashboard rows.
+                                          Rows defined in the pillars will be appended to the rows defined in the
+                                          state.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d374790e107" class="stentry propvalue">profile</td>
+                                    
+                                    <td valign="top" headers="d374790e109" class="stentry propdesc">
+                                       <p class="p">A pillar key or dict that contains a list of hosts and an
+                                          elasticsearch index to use.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

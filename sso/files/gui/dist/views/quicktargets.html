@@ -1,0 +1,345 @@
+<!-- <div class="col-md-9 col-sm-9 col-xs-9 center-container padding-zero col-height"> -->
+    <div class="main-content">
+        <div class="center-content">
+            <div class=" row page-header">
+                <div id="target-action" class="btn-group pull-left" dropdown is-open="isopen" ng-click="isopen = !isopen">
+                        <button id="target-action-btn" type="button" ng-click="getTargetGroups();" class="btn btn-primary settings-action-btn dropdown-toggle" bs-tooltip="'Target Action'" data-trigger="hover" container="body" placement="top" dropdown-toggle ng-disabled="!minions.length">
+                            <span class="icon-icon_target"></span> <span id="target-action-caret" class="caret"></span>
+                        </button>
+                        <!-- Target actions -->
+                        <ul id="target-action-dropdown" class="dropdown-menu" role="menu">
+                            <li class="action-btn-header">Target Group</li>
+                            <li class="divider" ng-show="getObjectLength(targetGroups)"></li>
+                                <div id="target-action-menu" ng-show="selectedMinions.length">
+                                    <ul class="nav">
+                                        <li ng-repeat="target in targetGroups" ng-click="$event.stopPropagation()">
+                                            <label class="target-action-checkbox"><input type="checkbox" ng-model="target.has_minion" ng-change="checkBoxStatus(targetGroups);" indeterminate></input><span class="label-span">{{target.target_name}}</span></label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            <li class="divider"></li>
+                            <li ng-show="activeApply && selectedMinions.length" class="text-left"><a href="" ng-click="sendTargetList()">Apply</a></li>
+                            <li ng-show="activeApply" class="divider" ng-show="getObjectLength(targetGroups)"></li>
+                            <li class="text-left"><a href="" ng-click="addMinionsToTarget('fromQt')">Create New Target</a></li>
+                            <li class="text-left"><a href="" ng-click="confirmDeleteQT()">Clear Quick Target</a></li>
+                            <li ng-show="selectedMinions.length" class="text-left"><a href="" ng-click="addSelectedMinionsToTarget('fromQt')" ng-disabled="selectedMinions.length === 0">Create New Target From Selected Minions</a></li>
+                        </ul>
+                    </div>
+                    <div id="job-action" class="btn-group pull-left" dropdown is-open="isopenjobs" ng-click="isopenjobs = !isopenjobs">
+                        <button id="job-action-btn" type="button" ng-click="getJobs();" class="btn btn-primary settings-action-btn dropdown-toggle" bs-tooltip="'Job Action'" data-trigger="hover" container="body" placement="top" dropdown-toggle ng-disabled="!selectedMinions.length">
+                            <span class="ssIcons-icon_burst"></span> <span id="job-action-caret" class="caret"></span>
+                        </button>
+                        <!-- Target actions -->
+                        <ul id="job-action-dropdown" class="dropdown-menu" role="menu">
+                            <li class="action-btn-header">Jobs</li>
+                            <li class="divider"></li>
+                            <li id="job-action-menu">
+                                <div>
+                                    <!-- Public TREE -->
+                                    <div  class="job-action-btn-tree"
+                                            data-angular-treeview="true"
+                                            data-tree-id="publicJobTreeActionBtn"
+                                            data-tree-model="jobPublicFolderStructure"
+                                            data-node-id="id"
+                                            data-node-label="name"
+                                            data-node-root="is_root"
+                                            data-node-children="children"
+                                            data-tree-type="all">
+                                    </div>
+                                    <!-- Private TREE -->
+                                    <div class="job-action-btn-tree"
+                                            data-angular-treeview="true"
+                                            data-tree-id="privateJobTreeActionBtn"
+                                            data-tree-model="jobPrivateFolderStructure"
+                                            data-node-id="id"
+                                            data-node-label="name"
+                                            data-node-root="is_root"
+                                            data-node-children="children"
+                                            data-tree-type="all">
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="divider"></li>
+                        </ul>
+                    </div>
+
+                    <div id="key-action" class="btn-group pull-left" dropdown is-open="isopenkey" ng-click="isopenkey = !isopenkey; keyAction=''">
+                        <button id="key-action-btn" type="button" class="btn btn-primary settings-action-btn dropdown-toggle" bs-tooltip="'Key Action'" data-trigger="hover" container="body" placement="top" dropdown-toggle ng-disabled="!selectedMinions.length">
+                            <span class="icon-icon_key"></span> <span id="key-action-caret" class="caret"></span>
+                        </button>
+                        <!-- Target actions -->
+                        <ul id="key-action-dropdown" class="dropdown-menu" role="menu">
+                            <li class="action-btn-header">Key</li>
+                            <li class="divider"></li>
+                                <div id="key-action-menu">
+                                    <ul class="nav">
+                                        <li ng-click="$event.stopPropagation()">
+                                            <label class="target-action-checkbox"><input name="keyaction" type="radio" ng-model="keyAction" value = "accept"></input><span class="label-span">Accept</span></label>
+                                            <label class="target-action-checkbox"><input name="keyaction" type="radio" ng-model="keyAction" value = "delete"></input><span class="label-span">Delete</span></label>
+                                            <label class="target-action-checkbox"><input name="keyaction" type="radio" ng-model="keyAction" value = "reject"></input><span class="label-span">Reject</span></label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            <li class="divider"></li>
+                            <li ng-hide="!keyAction" class="text-left"><a href="" ng-click="sendKeyAction()">Apply</a></li>
+
+
+                        </ul>
+                    </div>
+
+                    <!-- New Filter Menu -->
+		            <div id="filter-actions"  class="pull-right">
+		                <ul  ng-click="toggleFilterView()" class="nav nav-pills" ng-hide="filterView">
+		                    <li>
+		                        <a>
+		                            <span class="ssIcons-icon_filter"></span>
+		                        </a>
+		                    </li>
+		                </ul>
+		                <ul class="nav nav-pills" ng-show="filterView">
+		                    <li  class="active">
+		                        <a>
+		                            <span class="ssIcons-icon_filter"></span>
+		                            <span ng-show="currentlyDisplayedFilter === 'Text'">text</span>
+		                            <span ng-show="currentlyDisplayedFilter === 'Grains'">grain</span>
+                                    <span ng-show="currentlyDisplayedFilter === 'None'">none</span>
+		                        </a>
+		                    </li>
+		                    <li>
+		                        <a>
+		                            <span>text</span>
+		                            <span ng-click="toggleFiltersDisplay('Text');" ng-hide="currentlyDisplayedFilter === 'Text'" class="ssIcons-icon_circle"></span>
+		                            <span ng-click="clearFilter();" ng-show="currentlyDisplayedFilter === 'Text'" class="ssIcons-icon_check"></span>
+		                        </a>
+		                    </li>
+		                    <li>
+		                        <a>
+		                            <span>grain</span>
+		                            <span ng-click="toggleFiltersDisplay('Grains');" ng-hide="currentlyDisplayedFilter === 'Grains'" class="ssIcons-icon_circle"></span>
+		                            <span ng-click="clearFilter();" ng-show="currentlyDisplayedFilter === 'Grains'" class="ssIcons-icon_check"></span>
+		                        </a>
+		                    </li>
+		                    <li ng-click="toggleFilterView()"> <a>x</a>
+		                    </li>
+		                </ul>
+		            </div>
+		            <!-- End New Filter Menu -->
+        	</div>
+
+        	 <!-- Filter bar -->
+            <div id="salt-filter-bar" ng-show="filtersDisplayed" style="background-color:#DADEE0">
+                 <div id="filter-div" ng-show="showGrains" class="row">
+                    <div class="col-xs-12"  ng-show="grainFiltersList.length">
+                        <span class="pull-left">Saved:   </span>
+                        <div id="salt-filter-list" class="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="salt-filter-list-items" data-toggle="dropdown" aria-expanded="true" style="text-overflow: ellipsis; overflow: hidden;">
+                                {{ filterListLabel }}
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="salt-filter-list-items">
+                                <li ng-click="applyLiveGrainsFilter()" role="presentation" ng-repeat="filter in grainFiltersList" ng-model="aselectedFilter"><a role="menuitem" ng-click="sampleSelectedFilter(filter)">{{ filter.filter_name }}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xs-12" ng-hide="grainFiltersList.length">
+                        <span style="padding: 0 5px;">No filters saved</span>
+                    </div>
+                </div>
+                <div id="filter-div" ng-show="showText" class="row">
+                    <div class="col-xs-12" ng-show="textFiltersList.length">
+                        <span class="pull-left">Saved:   </span>
+                        <div id="salt-filter-list" class="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="salt-filter-list-items" data-toggle="dropdown" aria-expanded="true" style="text-overflow: ellipsis; overflow: hidden;">
+                                {{ filterListLabel }}
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="salt-filter-list-items">
+                                <li ng-click="applyLiveFilter()" role="presentation" ng-repeat="filter in textFiltersList" ng-model="aselectedFilter"><a role="menuitem" ng-click="sampleSelectedFilter(filter)">{{ filter.filter_name }}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xs-12" ng-hide="textFiltersList.length">
+                        <span style="padding: 0 5px;">No filters saved</span>
+                    </div>
+                </div>
+                <!--  Text -->
+                <div class="row" ng-show="showText" id="text-filters-select">
+                    <div class="col-xs-3" style="padding: 0 5px;">
+                        <select class="form-control" name="textFilterField" ng-model="textFilterCriteria.search_field" ng-change="setSelectedFilterLabel()" ng-options="searchField.label for searchField in searchFields" required>
+                            <option value="">Select an option</option>
+                        </select>
+                    </div>
+
+                    <div class="col-xs-3" style="padding: 0 5px;">
+                        <select class="form-control" name="textFilterCondition" ng-model="textFilterCriteria.match_params" ng-change="setSelectedFilterLabel()" ng-options="matchParam.label for matchParam in matchParams" required>
+                            <option value="">Select an option</option>
+                        </select>
+                    </div>
+
+                    <div class="col-xs-2" ng-class="{'has-error': textFilterForm.textFilterKeyword.$error.required}" style="padding: 0 5px;">
+                        <label id="filter-keyword-for" class="sr-only" for="filter-keyword">Keyword</label>
+                        <input type="text" name="textFilterKeyword" class="form-control" id="filter-keyword" placeholder="Keyword" ng-model="textFilterCriteria.search_text" required style="padding: 0 5px;">
+                    </div>
+
+                    <div class="col-xs-4" style="padding: 0 5px;">
+                        <button type="submit" class="btn btn-default" style="margin-right: 5px;" ng-click="applyLiveFilter()" ng-disabled="textFilterForm.$invalid">Apply</button>
+                        <button type="submit" class="btn btn-default" ng-click="saveTextFilterConfirm();" ng-disabled="textFilterForm.$invalid">Create</button>
+                    </div>
+                </div>
+
+                <!-- Grains -->
+                <div class="row" id="salt-filter-grains" ng-show="showGrains">
+		              <div id="filter-grains-keys" class="row">
+		                  <div class="col-xs-3">
+		                      <select class="form-control input-large" name="grainFilterForm.grainsKeyOne" ng-model="grainsKeySelectedOne" ng-change="avoidDuplicateSelection(1);" ng-options="grainsKey for grainsKey in grainsKeys" required>
+		                          <option value="">Select a grain</option>
+		                      </select>
+		                  </div>
+		                  <div class="col-xs-3">
+		                     <select class="form-control input-large" name="grainFilterForm.grainsKeyTwo" ng-model="grainsKeySelectedTwo" ng-change="avoidDuplicateSelection(2)" ng-options="grainsKey for grainsKey in grainsKeys" required>
+		                          <option value="">Select a grain</option>
+		                      </select>
+		                  </div>
+		                  <div class="col-xs-3">
+		                      <select class="form-control input-large" name="grainFilterForm.grainsKeyThree" ng-model="grainsKeySelectedThree" ng-change="avoidDuplicateSelection(3)" ng-options="grainsKey for grainsKey in grainsKeys" required>
+		                          <option value="">Select a grain</option>
+		                      </select>
+		                  </div>
+		                  <div class="col-xs-3">
+		                      <button type="submit" class="btn btn-default" ng-click="applyLiveGrainsFilter()" ng-disabled="!grainFilterFormValid">Apply</button>
+		                  </div>
+		              </div>
+                      <div id="filter-grains-values" class="row">
+                          <div class="col-xs-3">
+                              <select class="form-control" name="grainFilterForm.grainsValueOne" ng-model="grainsValueSelectedOne" ng-change="validateForm('One')" ng-options="grainsDatum for grainsDatum in grainsData[grainsKeySelectedOne]">
+                                  <option value="">Select a value</option>
+                              </select>
+                          </div>
+                           <div class="col-xs-3">
+                              <select class="form-control" name="grainFilterForm.grainsValueTwo" ng-model="grainsValueSelectedTwo" ng-change="validateForm('Two')" ng-options="grainsDatum for grainsDatum in grainsData[grainsKeySelectedTwo]">
+                                  <option value="">Select a value</option>
+                              </select>
+                          </div>
+                           <div class="col-xs-3">
+                              <select class="form-control" name="grainFilterForm.grainsValueThree" ng-model="grainsValueSelectedThree" ng-change="validateForm('Three')" ng-options="grainsDatum for grainsDatum in grainsData[grainsKeySelectedThree]">
+                                  <option value="">Select a value</option>
+                              </select>
+                          </div>
+                          <div class="col-xs-3">
+                              <button type="submit" class="btn btn-default" ng-click="saveGrainsFilterConfirm()" ng-disabled="!grainFilterFormValid">Create</button>
+                          </div>
+                      </div>
+                </div>
+            </div>
+            <!-- Filter bar -->
+
+
+
+        <div id="qt-minions-list" class="overflow-class" ng-show="mode==1" autoheightlist>
+            <span id="scroll-to-top"></span>
+            <table class="table" ng-show="minions.length">
+               <thead>
+                    <tr>
+                        <th id="select-col">
+                            <span class="ssIcons-icon_circle" ng-hide="selectedAll" ng-click="selectAll();"></span>
+                            <span class="ssIcons-icon_check" ng-show="selectedAll" ng-click="selectAll();"></span>
+                        </th>
+                        <th id="node-col" data-field="Node" class="hand-cursor" ng-click="$event.preventDefault(); setSortingParameter('minion__minion_id')">Name
+                            <i class="glyphicon glyphicon-sort" ng-hide="sortingBy === 'minion__minion_id-desc' || sortingBy === 'minion__minion_id-asc'"></i>
+                            <i class="glyphicon glyphicon-chevron-down" ng-show="sortingBy === 'minion__minion_id-desc'"></i>
+                            <i class="glyphicon glyphicon-chevron-up" ng-show="sortingBy === 'minion__minion_id-asc'"></i>
+                        </th>
+                        <th data-field="host" class="hand-cursor" ng-click="$event.preventDefault(); setSortingParameter('minion__hostname')">IP Address
+                            <i class="glyphicon glyphicon-sort" ng-hide="sortingBy === 'minion__hostname-desc' || sortingBy === 'minion__hostname-asc'"></i>
+                            <i class="glyphicon glyphicon-chevron-down" ng-show="sortingBy === 'minion__hostname-desc'"></i>
+                            <i class="glyphicon glyphicon-chevron-up" ng-show="sortingBy === 'minion__hostname-asc'"></i>
+                        </th>
+                        <th data-field="status" class="hand-cursor" ng-click="$event.preventDefault(); setSortingParameter('minion__is_minion_up')">Status
+                            <i class="glyphicon glyphicon-sort" ng-hide="sortingBy === 'minion__is_minion_up-desc' || sortingBy === 'minion__is_minion_up-asc'"></i>
+                            <i class="glyphicon glyphicon-chevron-down" ng-show="sortingBy === 'minion__is_minion_up-desc'"></i>
+                            <i class="glyphicon glyphicon-chevron-up" ng-show="sortingBy === 'minion__is_minion_up-asc'"></i>
+                        </th>
+                        <th data-field="minion-type" class="hand-cursor" >Minion Type</th>
+                        <th data-field="master" class="hand-cursor" ng-click="$event.preventDefault(); setSortingParameter('minion__master')">Master
+                            <i class="glyphicon glyphicon-sort" ng-hide="sortingBy === 'minion__master-desc' || sortingBy === 'minion__master-asc'"></i>
+                            <i class="glyphicon glyphicon-chevron-down" ng-show="sortingBy === 'minion__master-desc'"></i>
+                            <i class="glyphicon glyphicon-chevron-up" ng-show="sortingBy === 'minion__master-asc'"></i>
+                        </th>
+                        <th data-field="environment" class="hand-cursor" >Environment</th>
+                        <th data-field="last_job_run" class="hand-cursor" >Last Job Run</th>
+                        <th data-field="last_job_id" class="hand-cursor" >Last Job ID</th>
+                        <th data-field="os" class="hand-cursor" >OS</th>
+                        <th data-field="version" class="hand-cursor" >Version</th>
+                        <th data-field="key_status" class="hand-cursor" ng-click="$event.preventDefault(); setSortingParameter('minion__key_status')">Key Status
+                            <i class="glyphicon glyphicon-sort" ng-hide="sortingBy === 'minion__key_status-desc' || sortingBy === 'minion__key_status-asc'"></i>
+                            <i class="glyphicon glyphicon-chevron-down" ng-show="sortingBy === 'minion__key_status-desc'"></i>
+                            <i class="glyphicon glyphicon-chevron-up" ng-show="sortingBy === 'minion__key_status-asc'"></i>
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr ng-click="selectMinion($index, minion.id)" ng-repeat="minion in minions" ng-class="{active: checkedMinions[$index] === true }" class="hand-cursor">
+                        <td data-title="'Select'" ng-class="getEnvironment(minion.config.environment);">
+                             <span class="ssIcons-icon_circle" ng-hide="checkedMinions[$index]"></span>
+                             <span class="ssIcons-icon_check" ng-show="checkedMinions[$index]"></span>
+                        </td>
+                        <td class="master-id-col" >{{ minion.minion_id }}</td>
+                        <td ng-mouseover="showIPInterfaces(minion.config.ip_interfaces)" data-trigger="hover" data-type="success" container="body" data-content="content" data-template="views/dialogs/minionInterfacePopup.html" data-placement="right" bs-popover><a>{{ minion.hostname }}</a></td>
+                        <td>
+                            <span ng-show="minion.is_minion_up" class="icon-icon_check2"></span>
+                            <span ng-hide="minion.is_minion_up" class="icon-icon_x2"></span>
+                        </td>
+                        <td>Enterprise</td>
+                        <td>{{ minion.master }}</td>
+                        <td ng-mouseover="showEnvironment(minion.config.environment)"><a class="environment" data-trigger="hover" data-type="success" container="body" data-content="content" data-template="views/dialogs/minionEnvironmentPopup.html" data-placement="right" bs-popover>{{envString}}</a></td>
+                        <td>{{ minion.config.latest_job_exec_time | displayDefault }}</td>
+                        <td>{{ minion.config.latest_jid | displayDefault }}</td>
+                        <td>{{ minion.config.os }}</td>
+                        <td>{{ minion.config.saltversion }}</td>
+                        <td ng-switch on="{{ minion.key_status }}">
+                            <a ng-switch-when="0" ui-sref="salt.dashboard.resources.quicktargets.minions({ minionId: minion.id, view: 'list'})">Accepted</a>
+                            <a ng-switch-when="1" ui-sref="salt.dashboard.resources.quicktargets.minions({ minionId: minion.id, view: 'list'})">Pending</a>
+                            <a ng-switch-when="2" ui-sref="salt.dashboard.resources.quicktargets.minions({ minionId: minion.id, view: 'list'})">Rejected</a>
+                            <a ng-switch-when="3" ui-sref="salt.dashboard.resources.quicktargets.minions({ minionId: minion.id, view: 'list'})">Deleted</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div ng-hide="minions.length">
+                	<div ng-show="loading" class="alert alert-warning">Loading data...</div>
+                    <div ng-hide="filterView || loading" class="alert alert-warning">Add minions to quick target.</div>
+                    <div ng-show="filterView" class="alert alert-warning">No Result Found.</div>
+            </div>
+        </div>
+
+        <div id="qt-minion-grid" ng-show="mode==2" class="clearfix items-grid">
+            <ul class="nav" ng-show="minions.length">
+                <li><label>Select All <input type="checkbox" name="targetMinionGroup" ng-model="selectedAll" ng-change="selectAll();"></input></label></li>
+                <li ng-repeat="minion in minions" class="col-xs-2 master-grid-list" ui-sref-active="active" ui-sref="salt.dashboard.resources.quicktargets.minions({ minionId: minion.id , view: 'grid' })" title="{{ minion.hostname }}">
+                    <a href="" ng-click="showMinion('{{ minion.id }}')">
+                        <span class="glyphicon glyphicon-picture"></span>
+                        {{ minion.minion_id }}
+                    </a>
+                    <input type="checkbox" name="minionGroup" ng-click="$event.stopPropagation();" ng-model="checkedMinions[$index]" ng-change="selectMinion('{{  minion.id }}')" ></input>
+                    <!-- <button title="remove minion from quick target" class="btn row-button" ng-click="removeMinionFromQuickTarget(minion.id)">
+                        <span class="glyphicon glyphicon-remove-sign"></span>
+                    </button> -->
+
+                </li>
+            </ul>
+            <div ng-hide="minions.length">
+                	<div ng-show="loading" class="alert alert-warning">Loading data...</div>
+                    <div ng-hide="filterView || loading" class="alert alert-warning">Add minions to quick target.</div>
+                    <div ng-show="filterView" class="alert alert-warning">No Result Found.</div>
+            </div>
+        </div>
+
+        </div>
+        <footer></footer>
+    </div>
+<!-- </div> -->
+
+<!-- Commenting out until redesign
+<div  id="right-bar-container" class="col-md-3 col-sm-3 col-xs-3 col-height padding-zero right-container">
+    <ui-view class="col-height">
+</div>
+ -->

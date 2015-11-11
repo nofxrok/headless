@@ -1,0 +1,200 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Getting Started With Aliyun ECS</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Getting Started With Aliyun ECS">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/cloud-providers.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="getting-started-with-aliyun-ecs">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="getting-started-with-aliyun-ecs">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Getting Started With Aliyun ECS</h1>
+                        <div class="body conbody">
+                           <p class="p">The Aliyun ECS (Elastic Computer Service) is one of the most popular public
+                              cloud providers in China. This cloud provider can be used to manage aliyun
+                              instance using salt-cloud.
+                           </p>
+                           
+                           <p class="p"><a class="xref" href="http://www.aliyun.com/" target="_blank">http://www.aliyun.com/</a></p>
+                           
+                           <div class="section" id="getting-started-with-aliyun-ecs__dependencies">
+                              <h2 class="title sectiontitle">Dependencies</h2>
+                              <p class="p">This driver requires the Python <tt class="ph tt">requests</tt> library to be installed.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="getting-started-with-aliyun-ecs__configuration">
+                              <h2 class="title sectiontitle">Configuration</h2>
+                              <p class="p">Using Salt for Aliyun ECS requires aliyun access key id and key secret.
+                                 These can be found in the aliyun web interface, in the "User Center" section,
+                                 under "My Service" tab.
+                              </p>
+                              <pre class="pre codeblock language-yaml"># Note: This example is for /etc/salt/cloud.providers or any file in the
+# /etc/salt/cloud.providers.d/ directory.
+
+my-aliyun-config:
+  # aliyun Access Key ID
+  id: wDGEwGregedg3435gDgxd
+  # aliyun Access Key Secret
+  key: GDd45t43RDBTrkkkg43934t34qT43t4dgegerGEgg
+  location: cn-qingdao
+  provider: aliyun</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-aliyun-ecs__profiles">
+                              <h2 class="title sectiontitle">Profiles</h2>
+                           </div>
+                           
+                           <div class="section head3" id="getting-started-with-aliyun-ecs__cloud-profiles">
+                              <h2 class="title sectiontitle">Cloud Profiles</h2>
+                              <p class="p">Set up an initial profile at <tt class="ph tt">/etc/salt/cloud.profiles</tt> or in the
+                                 <tt class="ph tt">/etc/salt/cloud.profiles.d/</tt> directory:
+                              </p>
+                              <pre class="pre codeblock language-yaml">aliyun_centos:
+    provider: my-aliyun-config
+    size: ecs.t1.small
+    location: cn-qingdao
+    securitygroup: G1989096784427999
+    image: centos6u3_64_20G_aliaegis_20130816.vhd</pre>
+                              <p class="p">Sizes can be obtained using the <tt class="ph tt">--list-sizes</tt> option for the <tt class="ph tt">salt-cloud</tt>
+                                 command:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-cloud --list-sizes my-aliyun-config
+my-aliyun-config:
+    ----------
+    aliyun:
+        ----------
+        ecs.c1.large:
+            ----------
+            CpuCoreCount:
+                8
+            InstanceTypeId:
+                ecs.c1.large
+            MemorySize:
+                16.0
+
+...SNIP...</pre>
+                              <p class="p">Images can be obtained using the <tt class="ph tt">--list-images</tt> option for the <tt class="ph tt">salt-cloud</tt>
+                                 command:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-cloud --list-images my-aliyun-config
+my-aliyun-config:
+    ----------
+    aliyun:
+        ----------
+        centos5u8_64_20G_aliaegis_20131231.vhd:
+            ----------
+            Architecture:
+                x86_64
+            Description:
+
+            ImageId:
+                centos5u8_64_20G_aliaegis_20131231.vhd
+            ImageName:
+                CentOS 5.8 64位
+            ImageOwnerAlias:
+                system
+            ImageVersion:
+                1.0
+            OSName:
+                CentOS  5.8 64位
+            Platform:
+                CENTOS5
+            Size:
+                20
+            Visibility:
+                public
+...SNIP...</pre>
+                              <p class="p">Locations can be obtained using the <tt class="ph tt">--list-locations</tt> option for the <tt class="ph tt">salt-cloud</tt>
+                                 command:
+                              </p>
+                              <pre class="pre codeblock language-bash">my-aliyun-config:
+    ----------
+    aliyun:
+        ----------
+        cn-beijing:
+            ----------
+            LocalName:
+                北京
+            RegionId:
+                cn-beijing
+        cn-hangzhou:
+            ----------
+            LocalName:
+                杭州
+            RegionId:
+                cn-hangzhou
+        cn-hongkong:
+            ----------
+            LocalName:
+                香港
+            RegionId:
+                cn-hongkong
+        cn-qingdao:
+            ----------
+            LocalName:
+                青岛
+            RegionId:
+                cn-qingdao</pre>
+                              <p class="p">Security Group can be obtained using the <tt class="ph tt">-f list_securitygroup</tt> option
+                                 for the <tt class="ph tt">salt-cloud</tt> command:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-cloud --location=cn-qingdao -f list_securitygroup my-aliyun-config
+my-aliyun-config:
+    ----------
+    aliyun:
+        ----------
+        G1989096784427999:
+            ----------
+            Description:
+                G1989096784427999
+            SecurityGroupId:
+                G1989096784427999</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Aliyun ECS REST API documentation is available from <a class="xref" href="http://help.aliyun.com/list/11113464.html?spm=5176.7224429.1997282881.55.J9XhVL" target="_blank">Aliyun ECS API</a>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

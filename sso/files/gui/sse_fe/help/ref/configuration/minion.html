@@ -1,0 +1,943 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Configuring the Salt Minion</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Configuring the Salt Minion">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="configuration-salt-minion">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="configuration-salt-minion">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Configuring the Salt Minion</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="configuration-salt-minion__configuring-the-salt-minion"></span></p>
+                              
+                              <p class="p">The Salt system is amazingly simple and easy to configure. The two components
+                                 of the Salt system each have a respective configuration file. The
+                                 salt-master is configured via the master configuration file, and the
+                                 salt-minion is configured via the minion configuration file.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="examples.html#configuration-file-examples__configuration-examples-minion">example minion configuration file</a></p>
+                                 
+                              </aside>
+                              
+                              <p class="p">The Salt Minion configuration is very simple. Typically, the only value that
+                                 needs to be set is the master value so the minion knows where to locate its master.
+                              </p>
+                              
+                              <p class="p">By default, the salt-minion configuration will be in <tt class="ph tt">/etc/salt/minion</tt>.
+                                 A notable exception is FreeBSD, where the configuration will be in
+                                 <tt class="ph tt">/usr/local/etc/salt/minion</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-minion__minion-primary-configuration">
+                              <h2 class="title sectiontitle">Minion Primary Configuration</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-minion__master">
+                              <h2 class="title sectiontitle">master</h2>
+                              <p class="p">Default: <tt class="ph tt">salt</tt></p>
+                              
+                              <p class="p">The hostname or ipv4 of the master.</p>
+                              
+                              <p class="p">Default: <tt class="ph tt">salt</tt></p>
+                              <pre class="pre codeblock language-yaml">master: salt</pre>
+                              <p class="p">The option can can also be set to a list of masters, enabling
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/tutorials/multimaster.html#multi-master-tutorial">multi-master</a> mode.
+                              </p>
+                              <pre class="pre codeblock language-yaml">master:
+  - address1
+  - address2</pre>
+                              <p class="p"><span class="keyword versionmodified">Changed in version 2014.7.0: </span>The master can be dynamically configured. The <a class="xref" href="minion.html#configuration-salt-minion__master">master</a> value
+                                 can be set to an module function which will be executed and will assume
+                                 that the returning value is the ip or hostname of the desired master. If a
+                                 function is being specified, then the <a class="xref" href="minion.html#configuration-salt-minion__master_type">master_type</a> option
+                                 must be set to <tt class="ph tt">func</tt>, to tell the minion that the value is a function to
+                                 be run and not a fully-qualified domain name.
+                              </p>
+                              <pre class="pre codeblock language-yaml">master: module.function
+master_type: func</pre>
+                              <p class="p">In addition, instead of using multi-master mode, the minion can be
+                                 configured to use the list of master addresses as a failover list, trying
+                                 the first address, then the second, etc. until the minion successfully
+                                 connects. To enable this behavior, set <a class="xref" href="minion.html#configuration-salt-minion__master_type">master_type</a> to
+                                 <tt class="ph tt">failover</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">master:
+  - address1
+  - address2
+master_type: failover</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__master_type">
+                              <h2 class="title sectiontitle">master_type</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">str</tt></p>
+                              
+                              <p class="p">The type of the <a class="xref" href="minion.html#configuration-salt-minion__master">master</a> variable. Can be either <tt class="ph tt">func</tt> or
+                                 <tt class="ph tt">failover</tt>.
+                              </p>
+                              
+                              <p class="p">If the master needs to be dynamically assigned by executing a function instead
+                                 of reading in the static master value, set this to <tt class="ph tt">func</tt>. This can be used
+                                 to manage the minion's master setting from an execution module. By simply
+                                 changing the algorithm in the module to return a new master ip/fqdn, restart
+                                 the minion and it will connect to the new master.
+                              </p>
+                              <pre class="pre codeblock language-yaml">master_type: func</pre>
+                              <p class="p">If this option is set to <tt class="ph tt">failover</tt>, <a class="xref" href="minion.html#configuration-salt-minion__master">master</a> must be a list of
+                                 master addresses. The minion will then try each master in the order specified
+                                 in the list until it successfully connects.
+                              </p>
+                              <pre class="pre codeblock language-yaml">master_type: failover</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__master-shuffle">
+                              <h2 class="title sectiontitle">master_shuffle</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">If <a class="xref" href="minion.html#configuration-salt-minion__master">master</a> is a list of addresses, shuffle them before trying to
+                                 connect to distribute the minions over all available masters. This uses
+                                 Python's <a class="xref" href="http://docs.python.org/2/library/random.html#random.shuffle" target="_blank">random.shuffle</a> method.
+                              </p>
+                              <pre class="pre codeblock language-yaml">master_shuffle: True</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__master_port">
+                              <h2 class="title sectiontitle">master_port</h2>
+                              <p class="p">Default: <tt class="ph tt">4506</tt></p>
+                              
+                              <p class="p">The port of the master ret server, this needs to coincide with the ret_port
+                                 option on the Salt master.
+                              </p>
+                              <pre class="pre codeblock language-yaml">master_port: 4506</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__user">
+                              <h2 class="title sectiontitle">user</h2>
+                              <p class="p">Default: <tt class="ph tt">root</tt></p>
+                              
+                              <p class="p">The user to run the Salt processes</p>
+                              <pre class="pre codeblock language-yaml">user: root</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__pidfile">
+                              <h2 class="title sectiontitle">pidfile</h2>
+                              <p class="p">Default: <tt class="ph tt">/var/run/salt-minion.pid</tt></p>
+                              
+                              <p class="p">The location of the daemon's process ID file</p>
+                              <pre class="pre codeblock language-yaml">pidfile: /var/run/salt-minion.pid</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__root_dir">
+                              <h2 class="title sectiontitle">root_dir</h2>
+                              <p class="p">Default: <tt class="ph tt">/</tt></p>
+                              
+                              <p class="p">This directory is prepended to the following options: <a class="xref" href="minion.html#configuration-salt-minion__pki_dir">pki_dir</a>,
+                                 <a class="xref" href="minion.html#configuration-salt-minion__cachedir">cachedir</a>, <a class="xref" href="minion.html#configuration-salt-minion__log_file">log_file</a>, <a class="xref" href="minion.html#configuration-salt-minion__sock_dir">sock_dir</a>, and
+                                 <a class="xref" href="minion.html#configuration-salt-minion__pidfile">pidfile</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">root_dir: /</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__pki_dir">
+                              <h2 class="title sectiontitle">pki_dir</h2>
+                              <p class="p">Default: <tt class="ph tt">/etc/salt/pki</tt></p>
+                              
+                              <p class="p">The directory used to store the minion's public and private keys.</p>
+                              <pre class="pre codeblock language-yaml">pki_dir: /etc/salt/pki</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__id">
+                              <h2 class="title sectiontitle">id</h2>
+                              <p class="p">Default: the system's hostname</p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="../../topics/tutorials/walkthrough.html#saltstack-walk-through__minion-id-generation">Salt Walkthrough</a></p>
+                                 
+                                 <p class="p">The <strong class="ph b">Setting up a Salt Minion</strong> section contains detailed
+                                    information on how the hostname is determined.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Explicitly declare the id for this minion to use. Since Salt uses detached ids
+                                 it is possible to run multiple minions on the same machine but with different
+                                 ids.
+                              </p>
+                              <pre class="pre codeblock language-yaml">id: foo.bar.com</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__append_domain">
+                              <h2 class="title sectiontitle">append_domain</h2>
+                              <p class="p">Default: <tt class="ph tt">None</tt></p>
+                              
+                              <p class="p">Append a domain to a hostname in the event that it does not exist. This is
+                                 useful for systems where <tt class="ph tt">socket.getfqdn()</tt> does not actually result in a
+                                 FQDN (for instance, Solaris).
+                              </p>
+                              <pre class="pre codeblock language-yaml">append_domain: foo.org</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__cachedir">
+                              <h2 class="title sectiontitle">cachedir</h2>
+                              <p class="p">Default: <tt class="ph tt">/var/cache/salt</tt></p>
+                              
+                              <p class="p">The location for minion cache data.</p>
+                              <pre class="pre codeblock language-yaml">cachedir: /var/cache/salt</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__verify_env">
+                              <h2 class="title sectiontitle">verify_env</h2>
+                              <p class="p">Default: <tt class="ph tt">True</tt></p>
+                              
+                              <p class="p">Verify and set permissions on configuration directories at startup.</p>
+                              <pre class="pre codeblock language-yaml">verify_env: True</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">When marked as True the verify_env option requires WRITE access to the
+                                    configuration directory (/etc/salt/). In certain situations such as
+                                    mounting /etc/salt/ as read-only for templating this will create a
+                                    stack trace when state.highstate is called.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-minion__cache_jobs">
+                              <h2 class="title sectiontitle">cache_jobs</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">The minion can locally cache the return data from jobs sent to it, this can be
+                                 a good way to keep track of the minion side of the jobs the minion has
+                                 executed. By default this feature is disabled, to enable set cache_jobs to
+                                 <tt class="ph tt">True</tt>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">cache_jobs: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__sock_dir">
+                              <h2 class="title sectiontitle">sock_dir</h2>
+                              <p class="p">Default: <tt class="ph tt">/var/run/salt/minion</tt></p>
+                              
+                              <p class="p">The directory where Unix sockets will be kept.</p>
+                              <pre class="pre codeblock language-yaml">sock_dir: /var/run/salt/minion</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__backup_mode">
+                              <h2 class="title sectiontitle">backup_mode</h2>
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">Backup files replaced by file.managed and file.recurse under cachedir.</p>
+                              <pre class="pre codeblock language-yaml">backup_mode: minion</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__acceptance_wait_time">
+                              <h2 class="title sectiontitle">acceptance_wait_time</h2>
+                              <p class="p">Default: <tt class="ph tt">10</tt></p>
+                              
+                              <p class="p">The number of seconds to wait until attempting to re-authenticate with the
+                                 master.
+                              </p>
+                              <pre class="pre codeblock language-yaml">acceptance_wait_time: 10</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__random_reauth_delay">
+                              <h2 class="title sectiontitle">random_reauth_delay</h2>
+                              <p class="p">When the master key changes, the minion will try to re-auth itself to
+                                 receive the new master key. In larger environments this can cause a syn-flood
+                                 on the master because all minions try to re-auth immediately. To prevent this
+                                 and have a minion wait for a random amount of time, use this optional
+                                 parameter. The wait-time will be a random number of seconds between
+                                 0 and the defined value.
+                              </p>
+                              <pre class="pre codeblock language-yaml">random_reauth_delay: 60</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__acceptance_wait_time_max">
+                              <h2 class="title sectiontitle">acceptance_wait_time_max</h2>
+                              <p class="p">Default: <tt class="ph tt">None</tt></p>
+                              
+                              <p class="p">The maximum number of seconds to wait until attempting to re-authenticate
+                                 with the master. If set, the wait will increase by acceptance_wait_time
+                                 seconds each iteration.
+                              </p>
+                              <pre class="pre codeblock language-yaml">acceptance_wait_time_max: None</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__recon_default">
+                              <h2 class="title sectiontitle">recon_default</h2>
+                              <p class="p">Default: <tt class="ph tt">1000</tt></p>
+                              
+                              <p class="p">The interval in milliseconds that the socket should wait before trying to
+                                 reconnect to the master (1000ms = 1 second).
+                              </p>
+                              <pre class="pre codeblock language-yaml">recon_default: 1000</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__recon_max">
+                              <h2 class="title sectiontitle">recon_max</h2>
+                              <p class="p">Default: <tt class="ph tt">10000</tt></p>
+                              
+                              <p class="p">The maximum time a socket should wait. Each interval the time to wait is calculated
+                                 by doubling the previous time. If recon_max is reached, it starts again at
+                                 the recon_default.
+                              </p>
+                              
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm">Short example:</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">reconnect 1: the socket will wait 'recon_default' milliseconds</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">reconnect 2: 'recon_default' * 2</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">reconnect 3: ('recon_default' * 2) * 2</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">reconnect 4: value from previous interval * 2</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">reconnect 5: value from previous interval * 2</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">reconnect x: if value &gt;= recon_max, it starts again with recon_default</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              <pre class="pre codeblock language-yaml">recon_max: 10000</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__recon_randomize">
+                              <h2 class="title sectiontitle">recon_randomize</h2>
+                              <p class="p">Default: <tt class="ph tt">True</tt></p>
+                              
+                              <p class="p">Generate a random wait time on minion start. The wait time will be a random value
+                                 between recon_default and recon_default and recon_max. Having all minions reconnect
+                                 with the same recon_default and recon_max value kind of defeats the purpose of being
+                                 able to change these settings. If all minions have the same values and the setup is
+                                 quite large (several thousand minions), they will still flood the master. The desired
+                                 behavior is to have time-frame within all minions try to reconnect.
+                              </p>
+                              <pre class="pre codeblock language-yaml">recon_randomize: True</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__dns_check">
+                              <h2 class="title sectiontitle">dns_check</h2>
+                              <p class="p">Default: <tt class="ph tt">True</tt></p>
+                              
+                              <p class="p">When healing, a dns_check is run. This is to make sure that the originally
+                                 resolved dns has not changed. If this is something that does not happen in your
+                                 environment, set this value to <tt class="ph tt">False</tt>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">dns_check: True</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__cache_sreqs">
+                              <h2 class="title sectiontitle">cache_sreqs</h2>
+                              <p class="p">Default: <tt class="ph tt">True</tt></p>
+                              
+                              <p class="p">The connection to the master ret_port is kept open. When set to False, the minion
+                                 creates a new connection for every return to the master.
+                                 environment, set this value to <tt class="ph tt">False</tt>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">cache_sreqs: True</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__ipc_mode">
+                              <h2 class="title sectiontitle">ipc_mode</h2>
+                              <p class="p">Default: <tt class="ph tt">ipc</tt></p>
+                              
+                              <p class="p">Windows platforms lack POSIX IPC and must rely on slower TCP based inter-
+                                 process communications. Set ipc_mode to <tt class="ph tt">tcp</tt> on such systems.
+                              </p>
+                              <pre class="pre codeblock language-yaml">ipc_mode: ipc</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__tcp_pub_port">
+                              <h2 class="title sectiontitle">tcp_pub_port</h2>
+                              <p class="p">Default: <tt class="ph tt">4510</tt></p>
+                              
+                              <p class="p">Publish port used when <a class="xref" href="minion.html#configuration-salt-minion__ipc_mode">ipc_mode</a> is set to <tt class="ph tt">tcp</tt>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">tcp_pub_port: 4510</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__tcp_pull_port">
+                              <h2 class="title sectiontitle">tcp_pull_port</h2>
+                              <p class="p">Default: <tt class="ph tt">4511</tt></p>
+                              
+                              <p class="p">Pull port used when <a class="xref" href="minion.html#configuration-salt-minion__ipc_mode">ipc_mode</a> is set to <tt class="ph tt">tcp</tt>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">tcp_pull_port: 4511</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__minion-module-management">
+                              <h2 class="title sectiontitle">Minion Module Management</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-minion__disable_modules">
+                              <h2 class="title sectiontitle">disable_modules</h2>
+                              <p class="p">Default: <tt class="ph tt">[]</tt> (all modules are enabled by default)
+                              </p>
+                              
+                              <p class="p">The event may occur in which the administrator desires that a minion should not
+                                 be able to execute a certain module. The sys module is built into the minion
+                                 and cannot be disabled.
+                              </p>
+                              
+                              <p class="p">This setting can also tune the minion, as all modules are loaded into ram
+                                 disabling modules will lover the minion's ram footprint.
+                              </p>
+                              <pre class="pre codeblock language-yaml">disable_modules:
+  - test
+  - solr</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__disable_returners">
+                              <h2 class="title sectiontitle">disable_returners</h2>
+                              <p class="p">Default: <tt class="ph tt">[]</tt> (all returners are enabled by default)
+                              </p>
+                              
+                              <p class="p">If certain returners should be disabled, this is the place</p>
+                              <pre class="pre codeblock language-yaml">disable_returners:
+  - mongo_return</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__module_dirs">
+                              <h2 class="title sectiontitle">module_dirs</h2>
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">A list of extra directories to search for Salt modules</p>
+                              <pre class="pre codeblock language-yaml">module_dirs:
+  - /var/lib/salt/modules</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__returner_dirs">
+                              <h2 class="title sectiontitle">returner_dirs</h2>
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">A list of extra directories to search for Salt returners</p>
+                              <pre class="pre codeblock language-yaml">returners_dirs:
+  - /var/lib/salt/returners</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__states_dirs">
+                              <h2 class="title sectiontitle">states_dirs</h2>
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">A list of extra directories to search for Salt states</p>
+                              <pre class="pre codeblock language-yaml">states_dirs:
+  - /var/lib/salt/states</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__grains_dirs">
+                              <h2 class="title sectiontitle">grains_dirs</h2>
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">A list of extra directories to search for Salt grains</p>
+                              <pre class="pre codeblock language-yaml">grains_dirs:
+  - /var/lib/salt/grains</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__render_dirs">
+                              <h2 class="title sectiontitle">render_dirs</h2>
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">A list of extra directories to search for Salt renderers</p>
+                              <pre class="pre codeblock language-yaml">render_dirs:
+  - /var/lib/salt/renderers</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__cython_enable">
+                              <h2 class="title sectiontitle">cython_enable</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">Set this value to true to enable auto-loading and compiling of <tt class="ph tt">.pyx</tt> modules,
+                                 This setting requires that <tt class="ph tt">gcc</tt> and <tt class="ph tt">cython</tt> are installed on the minion
+                              </p>
+                              <pre class="pre codeblock language-yaml">cython_enable: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__providers">
+                              <h2 class="title sectiontitle">providers</h2>
+                              <p class="p">Default: (empty)</p>
+                              
+                              <p class="p">A module provider can be statically overwritten or extended for the minion via
+                                 the <tt class="ph tt">providers</tt> option. This can be done 
+                                 		
+                                 			&nbsp;<a class="xref" href="../states/providers.html#state-providers">on an individual basis in an
+                                    SLS file</a>, or globally here in the minion config, like
+                                 below.
+                              </p>
+                              <pre class="pre codeblock language-yaml">providers:
+  service: systemd</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__state-management-settings">
+                              <h2 class="title sectiontitle">State Management Settings</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-minion__renderer">
+                              <h2 class="title sectiontitle">renderer</h2>
+                              <p class="p">Default: <tt class="ph tt">yaml_jinja</tt></p>
+                              
+                              <p class="p">The default renderer used for local state executions</p>
+                              <pre class="pre codeblock language-yaml">renderer: yaml_jinja</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__state_verbose">
+                              <h2 class="title sectiontitle">state_verbose</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">state_verbose allows for the data returned from the minion to be more
+                                 verbose. Normally only states that fail or states that have changes are
+                                 returned, but setting state_verbose to <tt class="ph tt">True</tt> will return all states that
+                                 were checked
+                              </p>
+                              <pre class="pre codeblock language-yaml">state_verbose: True</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__state_output">
+                              <h2 class="title sectiontitle">state_output</h2>
+                              <p class="p">Default: <tt class="ph tt">full</tt></p>
+                              
+                              <p class="p">The state_output setting changes if the output is the full multi line
+                                 output for each changed state if set to 'full', but if set to 'terse'
+                                 the output will be shortened to a single line.
+                              </p>
+                              <pre class="pre codeblock language-yaml">state_output: full</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__autoload_dynamic_modules">
+                              <h2 class="title sectiontitle">autoload_dynamic_modules</h2>
+                              <p class="p">Default: <tt class="ph tt">True</tt></p>
+                              
+                              <p class="p">autoload_dynamic_modules Turns on automatic loading of modules found in the
+                                 environments on the master. This is turned on by default, to turn of
+                                 auto-loading modules when states run set this value to <tt class="ph tt">False</tt></p>
+                              <pre class="pre codeblock language-yaml">autoload_dynamic_modules: True</pre>
+                              <p class="p">Default: <tt class="ph tt">True</tt></p>
+                              
+                              <p class="p">clean_dynamic_modules keeps the dynamic modules on the minion in sync with
+                                 the dynamic modules on the master, this means that if a dynamic module is
+                                 not on the master it will be deleted from the minion. By default this is
+                                 enabled and can be disabled by changing this value to <tt class="ph tt">False</tt></p>
+                              <pre class="pre codeblock language-yaml">clean_dynamic_modules: True</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__environment">
+                              <h2 class="title sectiontitle">environment</h2>
+                              <p class="p">Default: <tt class="ph tt">None</tt></p>
+                              
+                              <p class="p">Normally the minion is not isolated to any single environment on the master
+                                 when running states, but the environment can be isolated on the minion side
+                                 by statically setting it. Remember that the recommended way to manage
+                                 environments is to isolate via the top file.
+                              </p>
+                              <pre class="pre codeblock language-yaml">environment: None</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__file-directory-settings">
+                              <h2 class="title sectiontitle">File Directory Settings</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-minion__file_client">
+                              <h2 class="title sectiontitle">file_client</h2>
+                              <p class="p">Default: <tt class="ph tt">remote</tt></p>
+                              
+                              <p class="p">The client defaults to looking on the master server for files, but can be
+                                 directed to look on the minion by setting this parameter to <tt class="ph tt">local</tt>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">file_client: remote</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__use_master_when_local">
+                              <h2 class="title sectiontitle">use_master_when_local</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">When using a local <a class="xref" href="minion.html#configuration-salt-minion__file_client">file_client</a>, this parameter is used to allow
+                                 the client to connect to a master for remote execution.
+                              </p>
+                              <pre class="pre codeblock language-yaml">use_master_when_local: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__file_roots">
+                              <h2 class="title sectiontitle">file_roots</h2>
+                              <p class="p">Default:</p>
+                              <pre class="pre codeblock language-yaml">base:
+  - /srv/salt</pre>
+                              <p class="p">When using a local <a class="xref" href="minion.html#configuration-salt-minion__file_client">file_client</a>, this parameter is used to setup
+                                 the fileserver's environments. This parameter operates identically to the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="master.html#configuration-salt-master__file_roots">master config parameter</a> of the same name.
+                              </p>
+                              <pre class="pre codeblock language-yaml">file_roots:
+  base:
+    - /srv/salt
+  dev:
+    - /srv/salt/dev/services
+    - /srv/salt/dev/states
+  prod:
+    - /srv/salt/prod/services
+    - /srv/salt/prod/states</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__hash_type">
+                              <h2 class="title sectiontitle">hash_type</h2>
+                              <p class="p">Default: <tt class="ph tt">md5</tt></p>
+                              
+                              <p class="p">The hash_type is the hash to use when discovering the hash of a file on the
+                                 local fileserver. The default is md5, but sha1, sha224, sha256, sha384, and
+                                 sha512 are also supported.
+                              </p>
+                              <pre class="pre codeblock language-yaml">hash_type: md5</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__pillar_roots">
+                              <h2 class="title sectiontitle">pillar_roots</h2>
+                              <p class="p">Default:</p>
+                              <pre class="pre codeblock language-yaml">base:
+  - /srv/pillar</pre>
+                              <p class="p">When using a local <a class="xref" href="minion.html#configuration-salt-minion__file_client">file_client</a>, this parameter is used to setup
+                                 the pillar environments.
+                              </p>
+                              <pre class="pre codeblock language-yaml">pillar_roots:
+  base:
+    - /srv/pillar
+  dev:
+    - /srv/pillar/dev
+  prod:
+    - /srv/pillar/prod</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__security-settings">
+                              <h2 class="title sectiontitle">Security Settings</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-minion__open_mode">
+                              <h2 class="title sectiontitle">open_mode</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">Open mode can be used to clean out the PKI key received from the Salt master,
+                                 turn on open mode, restart the minion, then turn off open mode and restart the
+                                 minion to clean the keys.
+                              </p>
+                              <pre class="pre codeblock language-yaml">open_mode: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__verify_master_pubkey_sign">
+                              <h2 class="title sectiontitle">verify_master_pubkey_sign</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">Enables verification of the master-public-signature returned by the master in
+                                 auth-replies. Please see the tutorial on how to configure this properly
+                                 <a class="xref" href="http://docs.saltstack.com/en/latest/topics/tutorials/multimaster_pki.html" target="_blank">Multimaster-PKI with Failover Tutorial</a></p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              <pre class="pre codeblock language-yaml">verify_master_pubkey_sign: True</pre>
+                              <p class="p">If this is set to <tt class="ph tt">True</tt>, 
+                                 		
+                                 			&nbsp;<a class="xref" href="master.html#configuration-salt-master__master_sign_pubkey">master_sign_pubkey</a> must be also set
+                                 to <tt class="ph tt">True</tt> in the master configuration file.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-minion__master_sign_key_name">
+                              <h2 class="title sectiontitle">master_sign_key_name</h2>
+                              <p class="p">Default: <tt class="ph tt">master_sign</tt></p>
+                              
+                              <p class="p">The filename without the <em class="ph i">.pub</em> suffix of the public key that should be used
+                                 for verifying the signature from the master. The file must be located in the
+                                 minion's pki directory.
+                              </p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              <pre class="pre codeblock language-yaml">master_sign_key_name: &lt;filename_without_suffix&gt;</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__always_verify_signature">
+                              <h2 class="title sectiontitle">always_verify_signature</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">If <a class="xref" href="minion.html#configuration-salt-minion__verify_master_pubkey_sign">verify_master_pubkey_sign</a> is enabled, the signature is only verified,
+                                 if the public-key of the master changes. If the signature should always be verified,
+                                 this can be set to <tt class="ph tt">True</tt>.
+                              </p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              <pre class="pre codeblock language-yaml">always_verify_signature: True</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__thread-settings">
+                              <h2 class="title sectiontitle">Thread Settings</h2>
+                              <p class="p">Default: <tt class="ph tt">True</tt></p>
+                              
+                              <p class="p">Disable multiprocessing support by default when a minion receives a
+                                 publication a new process is spawned and the command is executed therein.
+                              </p>
+                              <pre class="pre codeblock language-yaml">multiprocessing: True</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__minion-logging-settings">
+                              <h2 class="title sectiontitle">Minion Logging Settings</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-minion__log_file">
+                              <h2 class="title sectiontitle">log_file</h2>
+                              <p class="p">Default: <tt class="ph tt">/var/log/salt/minion</tt></p>
+                              
+                              <p class="p">The minion log can be sent to a regular file, local path name, or network
+                                 location.  See also 
+                                 		
+                                 			&nbsp;<a class="xref" href="logging/index.html#logging__log_file">log_file</a>.
+                              </p>
+                              
+                              <p class="p">Examples:</p>
+                              <pre class="pre codeblock language-yaml">log_file: /var/log/salt/minion</pre>
+                              <pre class="pre codeblock language-yaml">log_file: file:///dev/log</pre>
+                              <pre class="pre codeblock language-yaml">log_file: udp://loghost:10514</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__log_level">
+                              <h2 class="title sectiontitle">log_level</h2>
+                              <p class="p">Default: <tt class="ph tt">warning</tt></p>
+                              
+                              <p class="p">The level of messages to send to the console. See also 
+                                 		
+                                 			&nbsp;<a class="xref" href="logging/index.html#logging__log_level">log_level</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_level: warning</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__log_level_logfile">
+                              <h2 class="title sectiontitle">log_level_logfile</h2>
+                              <p class="p">Default: <tt class="ph tt">warning</tt></p>
+                              
+                              <p class="p">The level of messages to send to the log file. See also
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="logging/index.html#logging__log_level_logfile">log_level_logfile</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_level_logfile: warning</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__log_datefmt">
+                              <h2 class="title sectiontitle">log_datefmt</h2>
+                              <p class="p">Default: <tt class="ph tt">%H:%M:%S</tt></p>
+                              
+                              <p class="p">The date and time format used in console log messages. See also
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="logging/index.html#logging__log_datefmt">log_datefmt</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_datefmt: '%H:%M:%S'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__log_datefmt_logfile">
+                              <h2 class="title sectiontitle">log_datefmt_logfile</h2>
+                              <p class="p">Default: <tt class="ph tt">%Y-%m-%d %H:%M:%S</tt></p>
+                              
+                              <p class="p">The date and time format used in log file messages. See also
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="logging/index.html#logging__log_datefmt_logfile">log_datefmt_logfile</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_datefmt_logfile: '%Y-%m-%d %H:%M:%S'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__log_fmt_console">
+                              <h2 class="title sectiontitle">log_fmt_console</h2>
+                              <p class="p">Default: <tt class="ph tt">[%(levelname)-8s] %(message)s</tt></p>
+                              
+                              <p class="p">The format of the console logging messages. See also
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="logging/index.html#logging__log_fmt_console">log_fmt_console</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_fmt_console: '[%(levelname)-8s] %(message)s'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__log_fmt_logfile">
+                              <h2 class="title sectiontitle">log_fmt_logfile</h2>
+                              <p class="p">Default: <tt class="ph tt">%(asctime)s,%(msecs)03.0f [%(name)-17s][%(levelname)-8s] %(message)s</tt></p>
+                              
+                              <p class="p">The format of the log file logging messages. See also
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="logging/index.html#logging__log_fmt_logfile">log_fmt_logfile</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_fmt_logfile: '%(asctime)s,%(msecs)03.0f [%(name)-17s][%(levelname)-8s] %(message)s'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__log_granular_levels">
+                              <h2 class="title sectiontitle">log_granular_levels</h2>
+                              <p class="p">Default: <tt class="ph tt">{}</tt></p>
+                              
+                              <p class="p">This can be used to control logging levels more specifically. See also
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="logging/index.html#logging__log_granular_levels">log_granular_levels</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-minion__failhard">
+                              <h2 class="title sectiontitle">failhard</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">Set the global failhard flag, this informs all states to stop running states
+                                 at the moment a single state fails
+                              </p>
+                              <pre class="pre codeblock language-yaml">failhard: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__include-configuration">
+                              <h2 class="title sectiontitle">Include Configuration</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-minion__include">
+                              <h2 class="title sectiontitle">default_include</h2>
+                              <p class="p">Default: <tt class="ph tt">minion.d/*.conf</tt></p>
+                              
+                              <p class="p">The minion can include configuration from other files. Per default the
+                                 minion will automatically include all config files from <span class="keyword title_reference">minion.d/*.conf</span>
+                                 where minion.d is relative to the directory of the minion configuration
+                                 file.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-minion__include">
+                              <h2 class="title sectiontitle">include</h2>
+                              <p class="p">Default: <tt class="ph tt">not defined</tt></p>
+                              
+                              <p class="p">The minion can include configuration from other files. To enable this,
+                                 pass a list of paths to this option. The paths can be either relative or
+                                 absolute; if relative, they are considered to be relative to the directory
+                                 the main minion configuration file lives in. Paths can make use of
+                                 shell-style globbing. If no files are matched by a path passed to this
+                                 option then the minion will log a warning message.
+                              </p>
+                              <pre class="pre codeblock language-yaml"># Include files from a minion.d directory in the same
+# directory as the minion config file
+include: minion.d/*.conf
+
+# Include a single extra file into the configuration
+include: /etc/roles/webserver
+
+# Include several files and the minion.d directory
+include:
+  - extra_config
+  - minion.d/*
+  - /etc/roles/webserver</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__frozen-build-update-settings">
+                              <h2 class="title sectiontitle">Frozen Build Update Settings</h2>
+                              <p class="p">These options control how 
+                                 		
+                                 			&nbsp;<a class="xref" href="../modules/all/salt.modules.saltutil.html#salt.modules.saltutil.update">salt.modules.saltutil.update()</a> works with esky
+                                 frozen apps. For more information look at <a class="xref" href="https://github.com/cloudmatrix/esky/" target="_blank">https://github.com/cloudmatrix/esky/</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-minion__update_url">
+                              <h2 class="title sectiontitle">update_url</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt> (Update feature is disabled)
+                              </p>
+                              
+                              <p class="p">The url to use when looking for application updates. Esky depends on directory
+                                 listings to search for new versions. A webserver running on your Master is a
+                                 good starting point for most setups.
+                              </p>
+                              <pre class="pre codeblock language-yaml">update_url: 'http://salt.example.com/minion-updates'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-minion__update_restart_services">
+                              <h2 class="title sectiontitle">update_restart_services</h2>
+                              <p class="p">Default: <tt class="ph tt">[]</tt> (service restarting on update is disabled)
+                              </p>
+                              
+                              <p class="p">A list of services to restart when the minion software is updated. This would
+                                 typically just be a list containing the minion's service name, but you may
+                                 have other services that need to go with it.
+                              </p>
+                              <pre class="pre codeblock language-yaml">update_restart_services: ['salt-minion']</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

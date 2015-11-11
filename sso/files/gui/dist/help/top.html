@@ -1,0 +1,210 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>SaltStack Top File - QuickStart Guide</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="SaltStack Enterprise Help Center">
+      
+      <meta name="abstract" content="">
+      
+      <meta name="description" content="">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="concept_z5t_tpb_gq">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/bootstrap/css/bootstrap.min.css">
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/bootstrap/css/fonts.css">
+
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/bootstrap/css/prism.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/bootstrap/css/webhelp2.css">
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/bootstrap/css/progress.css">
+      <script type="text/javascript" src="themes/bootstrap/js/jquery-1.11.0.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/jquery-ui-1.9.1.custom.min.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/bootbox.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/jquery.slimscroll.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/jquery.tocify.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/prism.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/webhelp-qs.js"></script>
+      </head>
+   <body>
+      <header class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+         <div class="container">
+            <div class="navbar-header"><button id="menu-toggle" class="navbar-toggle" type="button"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="#"><div class="ss-logo"></div></a></div>
+            <div class="collapse navbar-collapse"></div>
+         </div>
+      </header>
+      <div class="jumbotron active_texture">
+          <div class="container">
+              <h1><!--<i class="glyphicon glyphicon-question-sign"></i>-->Up & Running with SaltStack</h1>
+              <h3>quick start guide</h3>
+          </div>
+      </div>
+      <div id="wrapper">
+
+
+              <div class="container-fluid">
+                  <div class="row">
+                      <div class="col-lg-12">
+                          <ol class="progtrckr" data-progtrckr-steps="8">
+                              <!--<li class="progtrckr-done"><a href="overview.html">Overview</a></li>-->
+                              <li class="progtrckr-done"><a href="qs.html">Demo Environment</a></li>
+                              <li class="progtrckr-done"><a href="install.html">Install</a></li>
+                              <li class="progtrckr-done"><a href="remotex.html">Execute Commands</a></li>
+                              <li class="progtrckr-done">Define Configurations</li>
+                              <li class="progtrckr-todo"><a href="formulas.html">Create Formulas</a></li>
+                              <li class="progtrckr-todo"><a href="targeting.html">Target Systems</a></li>
+                              <li class="progtrckr-todo"><a href="states.html">Apply States</a></li>
+                              <li class="progtrckr-todo"><a href="next.html">Next Steps</a></li>
+                          </ol>
+                      </div>
+                      </div>
+
+                <!--<div class="row">
+                    <div class="col-lg-12"></div>
+                </div>-->
+<div class="row">
+
+</div>
+
+
+              <div class="row">
+                  <div class="col-lg-1"></div>
+                  <div class="col-lg-10">
+
+
+                          <h1 class="title topictitle1">Define System Configurations</h1>
+                          <div class="body conbody">
+                              <p class="shortdesc"></p>
+
+                              <div class="section gs-overview" id="concept_ivf_bcn_vp__section_EF69791A73AB411AA070F467095A5130">
+                                  <p class="p gs-overview-sub"><span class="ph">You'll learn how to:</span></p>
+
+                                  <ul class="ul" id="concept_ivf_bcn_vp__ul_qjt_rhn_tp">
+                                      <li class="li" id="concept_ivf_bcn_vp__li_B7E78094456C4DC19C4B6133FC46D104">Create a top file to match systems with unique configurations
+                                      </li>
+
+
+
+                                  </ul>
+
+                                  <p class="p gs-overview-sub gs-time"><span class="ph">Estimated time: 15
+                                    			 minutes</span></p>
+
+                                  <p class="p gs-overview-sub gs-difficulty-2"><span class="ph">Difficulty</span>:
+
+                                  </p>
+
+                              </div>
+
+
+                              <div class="section gs-mainbody" id="concept_ivf_bcn_vp__section_D6F77362DCE342D9B67DE9E631A365C6">
+                                  <div class="section gs-terms gs-sidebar" id="concept_ivf_bcn_vp__section_043E1272A3E94500934501DFABE4DCF9">
+                                      <h4>Configurations</h4>
+                                      <p>Create a list of your configurations, and note the packages and files that make up that configuration.</p>
+
+                                      <img class="imgcenter" src="images/planning1.png"/>
+
+<p>These configurations are 'translated' to YAML and added to the top file to define your different systems.</p>
+                                      <h4 class="sidebar">YAML?</h4>
+                                      <p>Salt uses a simple format, called YAML, to describe configurations. This is what you need to know:</p>
+                                      <ul>
+                                          <li>YAML uses a fixed indentation scheme to represent relationships between data layers. Salt requires that the indentation for each level consists of exactly two spaces. Do not use tabs.</li>
+
+                                          <li>A dash represents an item in a list.</li>
+
+                                          <li>Key value pairs are represented by <i>key</i>:<i>value</i></li>
+                                          <!--<li>Any line that contains a newline will not be parsed by YAML.</li>-->
+                                      </ul>
+
+                                      <h4 class="sidebar">Environments</h4>
+
+                                      <p>See the 'base:' line at the root of top file? That line specifies the salt environment where the formula is located. We won't get into environments in this guide, but soon you'll want to define a few environments where you can set up different types of systems depending on where they are deployed. For example, 'apache' in a dev environment will likely need a different network configuration than in a production environment. Learn more in the <a href="http://docs.saltstack.com/en/latest/ref/states/top.html#environments" target="_blank">docs</a>. </p>
+
+                                  </div>
+<p>Remote execution is a big time saver, but it has some shortcomings. Most tasks you perform are a combination of many commands, tests, and operations, each with their own nuances and points-of-failure. Often an attempt is made to combine all of these steps in a master shell script, but these quickly get unwieldy and introduce their own headaches.</p>
+
+    <p>Instead, SaltStack configuration management starts with the finished product. You describe exactly what the finished configuration looks like, and Salt makes it happen.</p>
+
+                                  <p>So forget about commands and scripts for a while, and think about what what <i>your</i> configurations look like. Consider the different types of systems you set up, and what is common and unique about each. Each system can receive multiple configurations, so start with the most general configurations and work your way down to the specifics.</p>
+
+
+                                  <p>After you have a few configurations defined, you are ready to describe those configurations in the Salt top file.</p>
+                                  <h4>Introducing the Top File</h4>
+
+                                  <p>The top file is used to describe your different system configurations, and specifies a set of tasks that Salt should apply to achieve that configuration.</p> <p>To avoid confusion at this point, understand that the top file describes <i>where</i> and <i>what</i>, but not <i>how</i>. The <i>how</i> is described in a different file, called a  Salt formula, that we’ll explain in the next section. For now just trust that ‘apache’ means that apache is installed, configured, and serving up your web pages.</p>
+
+                                  <h4>Create your own top file</h4>
+
+
+                                  <p>You are now ready to update the /etc/salt/top.sls file on your master with a representation of each of your configurations. Configurations are described using YAML, and are simple to create and read.</p>
+
+                                  <p>The following example shows how a set of abstract configurations might be translated to YAML and represented in a top file:</p>
+
+
+
+                                 <!-- <div class="section gs-terms gs-sidebar" id="concept_ivf_bcn_vp__section_043E1272A3E94500934501DFABE4DCF9">
+
+                              </div>-->
+
+                                  <img class="imgcenter" src="images/planning.png"/>
+
+
+
+                                  <p>Don't worry if you don't understand everything in this file yet. After you learn about Salt formulas in the next section, the purpose of the top file becomes much more clear. </p>
+
+                                  <p>For now, create a simple /etc/salt/top.sls file that defines one or two system types, and one or two packages to install:</p>
+<pre class="pre codeblock language-yaml">
+base:
+  '*':
+    - vim
+  'web':
+    - apache
+</pre>
+
+                                  <a href="formulas.html"><button id="next-button" type="button" class="btn btn-primary">
+                                      Next <span class="glyphicon glyphicon-chevron-right"></span></button></a>
+                                  <div class="footer"></div>
+                              </div>
+
+                              <!--<div class="section gs-scenario" id="concept_ivf_bcn_vp__section_5191FFF18E494D33AA46064EF96D0F57">
+                                  <h2 class="title sectiontitle">Scenario</h2>
+                                  <p class="p"></p>
+                                  <ul>
+                                      <li>Salt Master server</li>
+                                      <li>Web server</li>
+                                      <li>Database server</li>
+                                  </ul>
+
+
+                              </div>-->
+
+                          </div>
+
+
+
+
+                  </div>
+                  <div class="col-lg-1"></div>
+
+
+              </div>
+              <div class="row">
+                  <div class="col-lg-12">
+
+                  </div>
+              </div>
+
+                  </div>
+              </div>
+
+   </body>
+</html>

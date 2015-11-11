@@ -1,0 +1,142 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Ubuntu Installation</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Ubuntu Installation">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="ubuntu-installation">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="ubuntu-installation">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Ubuntu Installation</h1>
+                        <div class="body conbody">
+                           <div class="section" id="ubuntu-installation__add-repository">
+                              <h2 class="title sectiontitle">Add repository</h2>
+                              <p class="p">The latest packages for Ubuntu are published in the saltstack PPA. If you have
+                                 the <tt class="ph tt">add-apt-repository</tt> utility, you can add the repository and import the
+                                 key in one step:
+                              </p>
+                              <pre class="pre codeblock language-bash">sudo add-apt-repository ppa:saltstack/salt</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">add-apt-repository: command not found?</strong><p class="p">The <tt class="ph tt">add-apt-repository</tt> command is not always present on Ubuntu systems.
+                                    This can be fixed by installing <span class="keyword title_reference">python-software-properties</span>:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">sudo apt-get install python-software-properties</pre>
+                                 <p class="p">The following may be required as well:</p>
+                                 <pre class="pre codeblock language-bash">sudo apt-get install software-properties-common</pre>
+                                 <p class="p">Note that since Ubuntu 12.10 (Raring Ringtail), <tt class="ph tt">add-apt-repository</tt> is
+                                    found in the <span class="keyword title_reference">software-properties-common</span> package, and is part of the base
+                                    install. Thus, <tt class="ph tt">add-apt-repository</tt> should be able to be used
+                                    out-of-the-box to add the PPA.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Alternately, manually add the repository and import the PPA key with these
+                                 commands:
+                              </p>
+                              <pre class="pre codeblock language-bash">echo deb http://ppa.launchpad.net/saltstack/salt/ubuntu `lsb_release -sc` main | sudo tee /etc/apt/sources.list.d/saltstack.list
+wget -q -O- "http://keyserver.ubuntu.com:11371/pks/lookup?op=get&amp;search=0x4759FA960E27C0A6" | sudo apt-key add -</pre>
+                              <p class="p">After adding the repository, update the package management database:</p>
+                              <pre class="pre codeblock language-bash">sudo apt-get update</pre>
+                              </div>
+                           
+                           <div class="section" id="ubuntu-installation__install-packages">
+                              <h2 class="title sectiontitle">Install packages</h2>
+                              <p class="p">Install the Salt master, minion, or syndic from the repository with the apt-get
+                                 command. These examples each install one daemon, but more than one package name
+                                 may be given at a time:
+                              </p>
+                              <pre class="pre codeblock language-bash">sudo apt-get install salt-master</pre>
+                              <pre class="pre codeblock language-bash">sudo apt-get install salt-minion</pre>
+                              <pre class="pre codeblock language-bash">sudo apt-get install salt-syndic</pre>
+                              </div>
+                           
+                           <div class="section" id="ubuntu-installation__ubuntu-config">
+                              <h2 class="title sectiontitle">ZeroMQ 4</h2>
+                              <p class="p">We recommend using ZeroMQ 4 where available. ZeroMQ 4 is already available for
+                                 Ubuntu 14.04 and Ubuntu 14.10 and nothing additional needs to be done. However,
+                                 the <strong class="ph b">chris-lea/zeromq</strong> PPA can be used to provide ZeroMQ 4 on Ubuntu 12.04 LTS.
+                                 Adding this PPA can be done with a 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/all/salt.states.pkgrepo.html#salt.states.pkgrepo.managed">pkgrepo.managed</a>
+                                 state.
+                              </p>
+                              <pre class="pre codeblock language-yaml">zeromq-ppa:
+  pkgrepo.managed:
+    - ppa: chris-lea/zeromq</pre>
+                              <p class="p">The following states can be used to upgrade ZeroMQ and pyzmq, and then restart
+                                 the minion:
+                              </p>
+                              <pre class="pre codeblock language-yaml">update_zmq:
+  pkg.latest:
+    - pkgs:
+      - zeromq
+      - python-zmq
+    - order: last
+  cmd.wait:
+    - name: |
+        echo service salt-minion restart | at now + 1 minute
+    - watch:
+      - pkg: update_zmq</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">This example assumes that atd is installed and running, see <a class="xref" href="http://docs.saltstack.com/en/latest/faq.html#what-is-the-best-way-to-restart-a-salt-daemon-using-salt" target="_blank">here</a> for a more
+                                    detailed explanation.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">If this repo is added <em class="ph i">before</em> Salt is installed, then installing either
+                                 <tt class="ph tt">salt-master</tt> or <tt class="ph tt">salt-minion</tt> will automatically pull in ZeroMQ 4.0.4, and
+                                 additional states to upgrade ZeroMQ and pyzmq are unnecessary.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="ubuntu-installation__post-installation-tasks">
+                              <h2 class="title sectiontitle">Post-installation tasks</h2>
+                              <p class="p">Now go to the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/index.html#configuring-salt">Configuring Salt</a> page.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

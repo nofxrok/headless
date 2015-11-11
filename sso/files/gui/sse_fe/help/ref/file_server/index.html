@@ -1,0 +1,277 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Salt File Server</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Salt File Server">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/administration.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="backends.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="dynamic-modules.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="file_roots.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../topics/tutorials/gitfs.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../topics/tutorials/minionfs.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="file-server">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="file-server">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Salt File Server</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="file-server__salt-file-server"></span></p>
+                              
+                              <p class="p">Salt comes with a simple file server suitable for distributing files to the
+                                 Salt minions. The file server is a stateless ZeroMQ server that is built into
+                                 the Salt master.
+                              </p>
+                              
+                              <p class="p">The main intent of the Salt file server is to present files for use in the
+                                 Salt state system. With this said, the Salt file server can be used for any
+                                 general file transfer from the master to the minions.
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="backends.html#file-server-backends">File Server Backends</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="backends.html#file-server-backends__enabling-a-fileserver-backend">Enabling a Fileserver Backend</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="backends.html#file-server-backends__using-multiple-backends">Using Multiple Backends</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="backends.html#file-server-backends__environments">Environments</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="dynamic-modules.html#sync">Dynamic Module Distribution</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="dynamic-modules.html#sync__sync-via-states">Sync Via States</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="dynamic-modules.html#sync__sync-via-the-saltutil-module">Sync Via the saltutil Module</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    		
+                                    			&nbsp;<a class="xref" href="file_roots.html#file-server-configuration">File Server Configuration</a><ul class="ul">
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="file_roots.html#file-server-configuration__environments">Environments</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="file_roots.html#file-server-configuration__directory-overlay">Directory Overlay</a></li>
+                                       
+                                       <li class="li">
+                                          		
+                                          			&nbsp;<a class="xref" href="file_roots.html#file-server-configuration__local-file-server">Local File Server</a></li>
+                                       
+                                    </ul>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="file-server__the-cp-module">
+                              <h2 class="title sectiontitle">The cp Module</h2>
+                              <p class="p">The cp module is the home of minion side file server operations. The cp module
+                                 is used by the Salt state system, salt-cp, and can be used to distribute files
+                                 presented by the Salt file server.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="file-server__environments">
+                              <h2 class="title sectiontitle">Environments</h2>
+                              <p class="p">Since the file server is made to work with the Salt state system, it supports
+                                 environments. The environments are defined in the master config file and
+                                 when referencing an environment the file specified will be based on the root
+                                 directory of the environment.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="file-server__get-file">
+                              <h2 class="title sectiontitle">get_file</h2>
+                              <p class="p">The cp.get_file function can be used on the minion to download a file from
+                                 the master, the syntax looks like this:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt '*' cp.get_file salt://vimrc /etc/vimrc</pre>
+                              <p class="p">This will instruct all Salt minions to download the vimrc file and copy it
+                                 to /etc/vimrc
+                              </p>
+                              
+                              <p class="p">Template rendering can be enabled on both the source and destination file names
+                                 like so:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt '*' cp.get_file "salt://{{grains.os}}/vimrc" /etc/vimrc template=jinja</pre>
+                              <p class="p">This example would instruct all Salt minions to download the vimrc from a
+                                 directory with the same name as their OS grain and copy it to /etc/vimrc
+                              </p>
+                              
+                              <p class="p">For larger files, the cp.get_file module also supports gzip compression.
+                                 Because gzip is CPU-intensive, this should only be used in
+                                 scenarios where the compression ratio is very high (e.g. pretty-printed JSON
+                                 or YAML files).
+                              </p>
+                              
+                              <p class="p">To use compression, use the <tt class="ph tt">gzip</tt> named argument. Valid values are integers
+                                 from 1 to 9, where 1 is the lightest compression and 9 the heaviest. In other
+                                 words, 1 uses the least CPU on the master (and minion), while 9 uses the most.
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt '*' cp.get_file salt://vimrc /etc/vimrc gzip=5</pre>
+                              <p class="p">Finally, note that by default cp.get_file does <em class="ph i">not</em> create new destination
+                                 directories if they do not exist.  To change this, use the <tt class="ph tt">makedirs</tt>
+                                 argument:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt '*' cp.get_file salt://vimrc /etc/vim/vimrc makedirs=True</pre>
+                              <p class="p">In this example, /etc/vim/ would be created if it didn't already exist.</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="file-server__get-dir">
+                              <h2 class="title sectiontitle">get_dir</h2>
+                              <p class="p">The cp.get_dir function can be used on the minion to download an entire
+                                 directory from the master.  The syntax is very similar to get_file:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt '*' cp.get_dir salt://etc/apache2 /etc</pre>
+                              <p class="p">cp.get_dir supports template rendering and gzip compression arguments just like
+                                 get_file:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt '*' cp.get_dir salt://etc/{{pillar.webserver}} /etc gzip=5 template=jinja</pre>
+                              </div>
+                           
+                           <div class="section" id="file-server__file-server-client-api">
+                              <h2 class="title sectiontitle">File Server Client API</h2>
+                              <p class="p">A client API is available which allows for modules and applications to be
+                                 written which make use of the Salt file server.
+                              </p>
+                              
+                              <p class="p">The file server uses the same authentication and encryption used by the rest
+                                 of the Salt system for network communication.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="file-server__fileclient-class">
+                              <h2 class="title sectiontitle">FileClient Class</h2>
+                              <p class="p">The FileClient class is used to set up the communication from the minion to
+                                 the master. When creating a FileClient object the minion configuration needs
+                                 to be passed in. When using the FileClient from within a minion module the
+                                 built in <tt class="ph tt">__opts__</tt> data can be passed:
+                              </p>
+                              <pre class="pre codeblock language-python">import salt.minion
+
+def get_file(path, dest, env='base'):
+    '''
+    Used to get a single file from the Salt master
+
+    CLI Example:
+    salt '*' cp.get_file salt://vimrc /etc/vimrc
+    '''
+    # Create the FileClient object
+    client = salt.minion.FileClient(__opts__)
+    # Call get_file
+    return client.get_file(path, dest, False, env)</pre>
+                              <p class="p">Using the FileClient class outside of a minion module where the <tt class="ph tt">__opts__</tt>
+                                 data is not available, it needs to be generated:
+                              </p>
+                              <pre class="pre codeblock language-python">import salt.minion
+import salt.config
+
+def get_file(path, dest, env='base'):
+    '''
+    Used to get a single file from the Salt master
+    '''
+    # Get the configuration data
+    opts = salt.config.minion_config('/etc/salt/minion')
+    # Create the FileClient object
+    client = salt.minion.FileClient(opts)
+    # Call get_file
+    return client.get_file(path, dest, False, env)</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links">
+                           
+                           <ul class="ullinks">
+                              
+                              <li class="link ulchildlink"><strong><a href="backends.html">File Server Backends</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="dynamic-modules.html">Dynamic Module Distribution</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="file_roots.html">File Server Configuration</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="../../topics/tutorials/gitfs.html">Git Fileserver Backend Walkthrough</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="../../topics/tutorials/minionfs.html">MinionFS Backend Walkthrough</a></strong><br>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                        </div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

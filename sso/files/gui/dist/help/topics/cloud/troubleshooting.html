@@ -1,0 +1,237 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Troubleshooting Salt Cloud</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Troubleshooting Salt Cloud">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="troubleshooting-salt-cloud">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="troubleshooting-salt-cloud">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Troubleshooting Salt Cloud</h1>
+                        <div class="body conbody">
+                           <p class="p">This page describes various steps for troubleshooting problems that may arise
+                              while using Salt Cloud.
+                           </p>
+                           
+                           <div class="section" id="troubleshooting-salt-cloud__virtual-machines-are-created-but-do-not-respond">
+                              <h2 class="title sectiontitle">Virtual Machines Are Created, But Do Not Respond</h2>
+                              <p class="p">Are TCP ports 4505 and 4506 open on the master? This is easy to overlook on new
+                                 masters. Information on how to open firewall ports on various platforms can be
+                                 found 
+                                 		
+                                 			&nbsp;<a class="xref" href="../tutorials/firewall.html#opening-the-firewall-up-for-salt">here</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="troubleshooting-salt-cloud__generic-troubleshooting-steps">
+                              <h2 class="title sectiontitle">Generic Troubleshooting Steps</h2>
+                              <p class="p">This section describes a set of instructions that are useful to a large number
+                                 of situations, and are likely to solve most issues that arise.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">Version Compatibility</strong><p class="p">One of the most common issues that Salt Cloud users run into is import
+                                    errors. These are often caused by version compatibility issues with Salt.
+                                 </p>
+                                 
+                                 <p class="p">Salt 0.16.x works with Salt Cloud 0.8.9 or greater.</p>
+                                 
+                                 <p class="p">Salt 0.17.x requires Salt Cloud 0.8.11.</p>
+                                 
+                                 <p class="p">Releases after 0.17.x (0.18 or greater) should not encounter issues as Salt
+                                    Cloud has been merged into Salt itself.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="troubleshooting-salt-cloud__debug-mode">
+                              <h2 class="title sectiontitle">Debug Mode</h2>
+                              <p class="p">Frequently, running Salt Cloud in debug mode will reveal information about a
+                                 deployment which would otherwise not be obvious:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-cloud -p myprofile myinstance -l debug</pre>
+                              <p class="p">Keep in mind that a number of messages will appear that look at first like
+                                 errors, but are in fact intended to give developers factual information to
+                                 assist in debugging. A number of messages that appear will be for cloud
+                                 providers that you do not have configured; in these cases, the message usually
+                                 is intended to confirm that they are not configured.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="troubleshooting-salt-cloud__salt-bootstrap">
+                              <h2 class="title sectiontitle">Salt Bootstrap</h2>
+                              <p class="p">By default, Salt Cloud uses the Salt Bootstrap script to provision instances:</p>
+                              
+                              <p class="p">This script is packaged with Salt Cloud, but may be updated without updating
+                                 the Salt package:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-cloud -u</pre>
+                              </div>
+                           
+                           <div class="section head3" id="troubleshooting-salt-cloud__the-bootstrap-log">
+                              <h2 class="title sectiontitle">The Bootstrap Log</h2>
+                              <p class="p">If the default deploy script was used, there should be a file in the <tt class="ph tt">/tmp/</tt>
+                                 directory called <tt class="ph tt">bootstrap-salt.log</tt>. This file contains the full output from
+                                 the deployment, including any errors that may have occurred.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="troubleshooting-salt-cloud__keeping-temp-files">
+                              <h2 class="title sectiontitle">Keeping Temp Files</h2>
+                              <p class="p">Salt Cloud uploads minion-specific files to instances once they are available
+                                 via SSH, and then executes a deploy script to put them into the correct place
+                                 and install Salt. The <tt class="ph tt">--keep-tmp</tt> option will instruct Salt Cloud not to
+                                 remove those files when finished with them, so that the user may inspect them
+                                 for problems:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-cloud -p myprofile myinstance --keep-tmp</pre>
+                              <p class="p">By default, Salt Cloud will create a directory on the target instance called
+                                 <tt class="ph tt">/tmp/.saltcloud/</tt>. This directory should be owned by the user that is to
+                                 execute the deploy script, and should have permissions of <tt class="ph tt">0700</tt>.
+                              </p>
+                              
+                              <p class="p">Most cloud providers are configured to use <tt class="ph tt">root</tt> as the default initial user
+                                 for deployment, and as such, this directory and all files in it should be owned
+                                 by the <tt class="ph tt">root</tt> user.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">/tmp/.saltcloud/</tt> directory should the following files:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">A <tt class="ph tt">deploy.sh</tt> script. This script should have permissions of <tt class="ph tt">0755</tt>.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">A <tt class="ph tt">.pem</tt> and <tt class="ph tt">.pub</tt> key named after the minion. The <tt class="ph tt">.pem</tt> file should
+                                       have permissions of <tt class="ph tt">0600</tt>. Ensure that the <tt class="ph tt">.pem</tt> and <tt class="ph tt">.pub</tt> files have
+                                       been properly copied to the <tt class="ph tt">/etc/salt/pki/minion/</tt> directory.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">A file called <tt class="ph tt">minion</tt>. This file should have been copied to the
+                                       <tt class="ph tt">/etc/salt/</tt> directory.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Optionally, a file called <tt class="ph tt">grains</tt>. This file, if present, should have been
+                                       copied to the <tt class="ph tt">/etc/salt/</tt> directory.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="troubleshooting-salt-cloud__unprivileged-primary-users">
+                              <h2 class="title sectiontitle">Unprivileged Primary Users</h2>
+                              <p class="p">Some providers, most notably EC2, are configured with a different primary user.
+                                 Some common examples are <tt class="ph tt">ec2-user</tt>, <tt class="ph tt">ubuntu</tt>, <tt class="ph tt">fedora</tt>, and <tt class="ph tt">bitnami</tt>.
+                                 In these cases, the <tt class="ph tt">/tmp/.saltcloud/</tt> directory and all files in it should
+                                 be owned by this user.
+                              </p>
+                              
+                              <p class="p">Some providers, such as EC2, are configured to not require these users to
+                                 provide a password when using the <tt class="ph tt">sudo</tt> command. Because it is more secure
+                                 to require <tt class="ph tt">sudo</tt> users to provide a password, other providers are configured
+                                 that way.
+                              </p>
+                              
+                              <p class="p">If this instance is required to provide a password, it needs to be configured
+                                 in Salt Cloud. A password for sudo to use may be added to either the provider
+                                 configuration or the profile configuration:
+                              </p>
+                              <pre class="pre codeblock language-yaml">sudo_password: mypassword</pre>
+                              </div>
+                           
+                           <div class="section head3" id="troubleshooting-salt-cloud__tmp-is-mounted-as-noexec">
+                              <h2 class="title sectiontitle">/tmp/ is Mounted as noexec</h2>
+                              <p class="p">It is more secure to mount the <tt class="ph tt">/tmp/</tt> directory with a <tt class="ph tt">noexec</tt> option.
+                                 This is uncommon on most cloud providers, but very common in private
+                                 environments. To see if the <tt class="ph tt">/tmp/</tt> directory is mounted this way, run the
+                                 following command:
+                              </p>
+                              <pre class="pre codeblock language-bash">mount | grep tmp</pre>
+                              <p class="p">The if the output of this command includes a line that looks like this, then
+                                 the <tt class="ph tt">/tmp/</tt> directory is mounted as <tt class="ph tt">noexec</tt>:
+                              </p>
+                              <pre class="pre codeblock language-bash">tmpfs on /tmp type tmpfs (rw,noexec)</pre>
+                              <p class="p">If this is the case, then the <tt class="ph tt">deploy_command</tt> will need to be changed
+                                 in order to run the deploy script through the <tt class="ph tt">sh</tt> command, rather than trying
+                                 to execute it directly. This may be specified in either the provider or the
+                                 profile config:
+                              </p>
+                              <pre class="pre codeblock language-yaml">deploy_command: sh /tmp/.saltcloud/deploy.sh</pre>
+                              <p class="p">Please note that by default, Salt Cloud will place its files in a directory
+                                 called <tt class="ph tt">/tmp/.saltcloud/</tt>. This may be also be changed in the provider or
+                                 profile configuration:
+                              </p>
+                              <pre class="pre codeblock language-yaml">tmp_dir: /tmp/.saltcloud/</pre>
+                              <p class="p">If this directory is changed, then the <tt class="ph tt">deploy_command</tt> need to be changed
+                                 in order to reflect the <tt class="ph tt">tmp_dir</tt> configuration.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="troubleshooting-salt-cloud__executing-the-deploy-script-manually">
+                              <h2 class="title sectiontitle">Executing the Deploy Script Manually</h2>
+                              <p class="p">If all of the files needed for deployment were successfully uploaded to the
+                                 correct locations, and contain the correct permissions and ownerships, the
+                                 deploy script may be executed manually in order to check for other issues:
+                              </p>
+                              <pre class="pre codeblock language-bash">cd /tmp/.saltcloud/
+./deploy.sh</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

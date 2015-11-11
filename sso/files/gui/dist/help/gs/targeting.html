@@ -1,0 +1,209 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>SaltStack Targets - QuickStart Guide</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="SaltStack Enterprise Help Center">
+      
+      <meta name="abstract" content="">
+      
+      <meta name="description" content="">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="concept_z5t_tpb_gq">
+
+       <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/gui/css/core.min.css">
+       <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/gui/css/getstarted.min.css">
+
+       <script type="text/javascript" src="../themes/gui/js/webhelp.min.js"></script>
+
+
+       <!--Modals-->
+       <script type="text/javascript" src="../themes/gui/js/bootstrap.min.js"></script>
+       <script type="text/javascript" src="../themes/gui/js/bootbox.min.js"></script>
+       <script type="text/javascript">
+
+           $( document ).ready(function() {
+
+               $("#globbing").on("click", function() {
+
+                   bootbox.dialog({
+                       title: "Globbing?",
+                       message: 'Globbing lets you match one or more Minion IDs using a wildcard character. Asterisk (<samp class="ph codeph">*</samp>) matches one or more characters, and question mark (<samp class="ph codeph">?</samp>) matches a single character. This is useful if your Minion IDs are configured according to function, for example, web1, web2, db1, db2, and so on.',
+                       buttons: {
+                           success: {
+                               label: "Easy!"
+                           }
+                       }
+                   });
+               });
+           });
+       </script>
+   </head>
+   <body>
+   <a id="ss-logo-jumbotron" href="/help/ent/gui.html"></a>
+      <div class="jumbotron active_texture">
+          <div class="container">
+              <h1><!--<i class="glyphicon glyphicon-question-sign"></i>-->SaltStack Fundamentals</h1>
+              <h3>Get Started Guide</h3>
+          </div>
+      </div>
+      <div id="wrapper" class="intro">
+
+
+              <div class="container-fluid">
+                  <div class="row">
+                      <div class="col-lg-12">
+                          <ol class="progtrckr" data-progtrckr-steps="7">
+                              <!--<li class="progtrckr-done"><a href="overview.html">Overview</a></li>-->
+                              <li class="progtrckr-done"><a href="index.html">Demo Environment</a></li>
+                              <li class="progtrckr-done"><a href="install.html">Install SaltStack</a></li>
+                              <li class="progtrckr-done"><a href="remotex.html">Execute Commands</a></li>
+                              <li class="progtrckr-done">Target Systems</li>
+                              <li class="progtrckr-todo"><a href="formulas.html">Create a Salt Formula</a></li>
+                              <li class="progtrckr-todo"><a href="top.html">Apply and Target Formulas</a></li>
+
+                              <li class="progtrckr-todo"><a href="next.html">Next Steps</a></li>
+                          </ol>
+                      </div>
+                      </div>
+
+                <!--<div class="row">
+                    <div class="col-lg-12"></div>
+                </div>-->
+<div class="row">
+
+</div>
+
+
+              <div class="row">
+                  <div class="col-lg-1"></div>
+                  <div class="col-lg-10">
+
+
+                          <h1 class="title topictitle1">Targeting</h1>
+                          <div class="body conbody">
+                              <p class="shortdesc"></p>
+
+                              <div class="section gs-overview" id="concept_ivf_bcn_vp__section_EF69791A73AB411AA070F467095A5130">
+                                  <p class="p gs-overview-sub"><span class="ph">You'll learn how to:</span></p>
+
+                                  <ul class="ul" id="concept_ivf_bcn_vp__ul_qjt_rhn_tp">
+                                      <li class="li" id="concept_ivf_bcn_vp__li_B7E78094456C4DC19C4B6133FC46D104">Define a target to select one or more systems.
+                                      </li>
+
+                                      <li class="li" id="concept_ivf_bcn_vp__li_FB2FDC1241D542D6AE9BF6349D7E374F">Use system data to define a target.
+
+                                      </li>
+                                      <li>Use custom, user-defined data to define a target.</li>
+
+                                  </ul>
+
+                                  <p class="p gs-overview-sub gs-time"><span class="ph">Estimated time: 10
+                                    			 minutes</span>&nbsp;<i class="glyphicon glyphicon-time"></i></p>
+
+                                  <p class="p gs-overview-sub gs-difficulty-2"><span class="ph">Difficulty</span>:
+                                      &nbsp;<i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star-empty"></i><i class="glyphicon glyphicon-star-empty"></i><i class="glyphicon glyphicon-star-empty"></i>
+                                  </p>
+
+                              </div>
+
+
+                              <div class="section gs-mainbody" id="concept_ivf_bcn_vp__section_D6F77362DCE342D9B67DE9E631A365C6">
+
+                                <p>Targeting is how you select Salt Minions when running commands, applying configurations, and when doing almost anything else in SaltStack that involves a Salt Minion.</p>
+
+                                  <p>The simplest way to target is using the Minion ID. This value can be set to anything you want in the <samp class="ph codeph">minion</samp> config file, and can be specified using the <samp class="ph codeph">-i</samp> option in the bootstrap script.</p>
+
+                                  <pre class="pre codeblock language-bash">salt 'minion1' disk.usage</pre>
+                                    <h4>Globbing</h4>
+
+                                  <p><a id="globbing" href="#">Globbing</a> on the Minion ID is supported by simply including a wildcard in the target:</p>
+
+                                  <pre class="pre codeblock language-bash">salt 'minion*' disk.usage</pre>
+
+
+                                  <div class="section gs-terms gs-sidebar">
+                                      <h4 class="sidebar">Grains</h4>
+
+                                      <p>Grains are static information SaltStack collects about the underlying managed system. SaltStack collects grains for the operating system, domain name, IP address, kernel, OS type, memory, and many other system properties.</p><p>You can add your own grains to a Salt Minion by placing them in the <samp class="ph codeph">/etc/salt/grains</samp> file on the Salt Master, or in the <samp class="ph codeph">minion</samp> configuration file under the <samp class="ph codeph">grains</samp> section. For example, many users add a custom grain called <samp class="ph codeph">role</samp> to each Salt Minion to describe the function of the system.</p>
+
+                                      <p>You can use the <samp class="ph codeph">grains.ls</samp> command to list all of the grains on a Salt Minion:</p>
+
+                                      <img class="imgcenter" width="100%" src="images/vagrant-grains.png">
+
+                                      <p>Note that grain names are lowercase. </p>
+                                  </div>
+
+
+
+
+
+
+
+                                  <h2>So Many Ways to Target</h2>
+
+                                  <p>In an ideal world, each system in your environment has a structured name that tells you everything you need to know about the hardware, OS, and system role. While we wait for that world, SaltStack provides a powerful targeting system to help you find and filter systems based on static and custom data.</p>
+
+                                  <p class="p">Targets can be based on Salt Minion system information using the Grains system:</p>
+                                  <pre class="pre codeblock language-bash">salt -G 'os:Ubuntu' test.ping</pre>
+                                  <p class="p">Targets can be filtered by regular expression:</p>
+                                  <pre class="pre codeblock language-bash">salt -E 'minion[0-9]' test.ping</pre>
+                                  <p class="p">Targets can be explicitly specified in a list:</p>
+                                  <pre class="pre codeblock language-bash">salt -L 'minion1,minion2' test.ping</pre>
+                                  <p class="p">Or Multiple target types can be combined in one command:</p>
+                                  <pre class="pre codeblock language-bash">salt -C 'G@os:Ubuntu and minion* or S@192.168.50.*' test.ping</pre>
+
+                                  <p>Don't worry too much about these targeting methods just yet. Just be confident that the targeting mechanism has enough flexibility to find the systems that you want to manage.</p>
+
+
+                                  <h4 class="title sectiontitle">Got it, What's Next?</h4>
+
+                                  <p>Hopefully you've got a good understanding of how execution modules are used from the command line, and how to filter Salt Minions using targets. The next step is to define re-usable configuration templates, called Formulas, so we can make more awesomeness happen at once.</p>
+
+
+                                  <a href="formulas.html"><button id="next-button" type="button" class="btn btn-primary">
+                                      Next <span class="glyphicon glyphicon-chevron-right"></span></button></a>
+                                  <div class="footer"></div>
+                              </div>
+
+                              <!--<div class="section gs-scenario" id="concept_ivf_bcn_vp__section_5191FFF18E494D33AA46064EF96D0F57">
+                                  <h2 class="title sectiontitle">Scenario</h2>
+                                  <p class="p"></p>
+                                  <ul>
+                                      <li>Salt Master server</li>
+                                      <li>Web server</li>
+                                      <li>Database server</li>
+                                  </ul>
+
+
+                              </div>-->
+
+                          </div>
+
+
+
+
+                  </div>
+                  <div class="col-lg-1"></div>
+
+
+              </div>
+              <div class="row">
+                  <div class="col-lg-12">
+
+                  </div>
+              </div>
+
+                  </div>
+              </div>
+
+   </body>
+</html>

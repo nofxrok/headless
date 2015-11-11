@@ -1,0 +1,184 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>MinionFS Backend Walkthrough</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="MinionFS Backend Walkthrough">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ref/file_server/index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="tutorial-minionfs">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="tutorial-minionfs">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">MinionFS Backend Walkthrough</h1>
+                        <div class="body conbody">
+                           <p class="p ids"><span class="ph" id="tutorial-minionfs__minionfs-backend-walkthrough"></span></p>
+                           
+                           <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                           
+                           <p class="p">Sometimes, you might need to propagate files that are generated on a minion.
+                              Salt already has a feature to send files from a minion to the master:
+                           </p>
+                           <pre class="pre codeblock language-bash">salt 'minion-id' cp.push /path/to/the/file</pre>
+                           <p class="p">This command will store the file, including its full path, under
+                              
+                              		
+                              			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__cachedir">cachedir</a><tt class="ph tt">/master/minions/minion-id/files</tt>. With the default
+                              
+                              		
+                              			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__cachedir">cachedir</a> the example file above would be stored as
+                              <span class="keyword title_reference">/var/cache/salt/master/minions/minion-id/files/path/to/the/file</span>.
+                           </p>
+                           
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">This walkthrough assumes basic knowledge of Salt and 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.cp.html#salt.modules.cp.push">cp.push</a>. To get up to speed, check out the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="walkthrough.html#saltstack-walk-through">walkthrough</a>.
+                              </p>
+                              
+                           </aside>
+                           
+                           <p class="p">Since it is not a good idea to expose the whole 
+                              		
+                              			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__cachedir">cachedir</a>, MinionFS
+                              should be used to send these files to other minions.
+                           </p>
+                           
+                           <div class="section" id="tutorial-minionfs__simple-configuration">
+                              <h2 class="title sectiontitle">Simple Configuration</h2>
+                              <p class="p">To use the minionfs backend only two configuration changes are required on the
+                                 master. The 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__fileserver_backend">fileserver_backend</a> option needs to contain a value of
+                                 <tt class="ph tt">minion</tt> and 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__file_recv">file_recv</a> needs to be set to true:
+                              </p>
+                              <pre class="pre codeblock language-yaml">fileserver_backend:
+  - roots
+  - minion
+
+file_recv: True</pre>
+                              <p class="p">These changes require a restart of the master, then new requests for the
+                                 <tt class="ph tt">salt://minion-id/</tt> protocol will send files that are pushed by <tt class="ph tt">cp.push</tt>
+                                 from <tt class="ph tt">minion-id</tt> to the master.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">All of the files that are pushed to the master are going to be available to
+                                    all of the minions. If this is not what you want, please remove <tt class="ph tt">minion</tt>
+                                    from 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__fileserver_backend">fileserver_backend</a> in the master config file.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Having directories with the same name as your minions in the root
+                                    that can be accessed like <tt class="ph tt">salt://minion-id/</tt> might cause confusion.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="tutorial-minionfs__commandline-example">
+                              <h2 class="title sectiontitle">Commandline Example</h2>
+                              <p class="p">Lets assume that we are going to generate SSH keys on a minion called
+                                 <tt class="ph tt">minion-source</tt> and put the public part in <tt class="ph tt">~/.ssh/authorized_keys</tt> of root
+                                 user of a minion called <tt class="ph tt">minion-destination</tt>.
+                              </p>
+                              
+                              <p class="p">First, lets make sure that <tt class="ph tt">/root/.ssh</tt> exists and has the right permissions:
+                              </p>
+                              <pre class="pre codeblock language-bash">[root@salt-master file]# salt '*' file.mkdir dir_path=/root/.ssh user=root group=root mode=700
+minion-source:
+    None
+minion-destination:
+    None</pre>
+                              <p class="p">We create an RSA key pair without a passphrase <span class="keyword footnote_reference">*</span>:
+                              </p>
+                              <pre class="pre codeblock language-bash">[root@salt-master file]# salt 'minion-source' cmd.run 'ssh-keygen -N "" -f /root/.ssh/id_rsa'
+minion-source:
+    Generating public/private rsa key pair.
+    Your identification has been saved in /root/.ssh/id_rsa.
+    Your public key has been saved in /root/.ssh/id_rsa.pub.
+    The key fingerprint is:
+    9b:cd:1c:b9:c2:93:8e:ad:a3:52:a0:8b:0a:cc:d4:9b root@minion-source
+    The key's randomart image is:
+    +--[ RSA 2048]----+
+    |                 |
+    |                 |
+    |                 |
+    |  o        .     |
+    | o o    S o      |
+    |=   +  . B o     |
+    |o+ E    B =      |
+    |+ .   .+ o       |
+    |o  ...ooo        |
+    +-----------------+</pre>
+                              <p class="p">and we send the public part to the master to be available to all minions:</p>
+                              <pre class="pre codeblock language-bash">[root@salt-master file]# salt 'minion-source' cp.push /root/.ssh/id_rsa.pub
+minion-source:
+    True</pre>
+                              <p class="p">now it can be seen by everyone:</p>
+                              <pre class="pre codeblock language-bash">[root@salt-master file]# salt 'minion-destination' cp.list_master_dirs
+minion-destination:
+    - .
+    - etc
+    - minion-source/root
+    - minion-source/root/.ssh</pre>
+                              <p class="p">Lets copy that as the only authorized key to <tt class="ph tt">minion-destination</tt>:
+                              </p>
+                              <pre class="pre codeblock language-bash">[root@salt-master file]# salt 'minion-destination' cp.get_file salt://minion-source/root/.ssh/id_rsa.pub /root/.ssh/authorized_keys
+minion-destination:
+    /root/.ssh/authorized_keys</pre>
+                              <p class="p">Or we can use a more elegant and salty way to add an SSH key:</p>
+                              <pre class="pre codeblock language-bash">[root@salt-master file]# salt 'minion-destination' ssh.set_auth_key_from_file user=root source=salt://minion-source/root/.ssh/id_rsa.pub
+minion-destination:
+    new</pre>
+                              *<p class="p">Yes, that was the actual key on my server, but the server is already destroyed.</p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

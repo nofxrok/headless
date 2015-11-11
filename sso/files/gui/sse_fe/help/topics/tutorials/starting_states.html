@@ -1,0 +1,609 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>How Do I Use Salt States?</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="How Do I Use Salt States?">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/configuration-management.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="how-do-i-use-salt-states">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="how-do-i-use-salt-states">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">How Do I Use Salt States?</h1>
+                        <div class="body conbody">
+                           <p class="p">Simplicity, Simplicity, Simplicity</p>
+                           
+                           <p class="p">Many of the most powerful and useful engineering solutions are founded on
+                              simple principles. Salt States strive to do just that: K.I.S.S. (Keep It
+                              Stupidly Simple)
+                           </p>
+                           
+                           <p class="p">The core of the Salt State system is the SLS, or <strong class="ph b">S</strong>a<strong class="ph b">L</strong>t
+                              <strong class="ph b">S</strong>tate file. The SLS is a representation of the state in which
+                              a system should be in, and is set up to contain this data in a simple format.
+                              This is often called configuration management.
+                           </p>
+                           
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">This is just the beginning of using states, make sure to read up on pillar
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="pillar.html#pillar-walkthrough">Pillar</a> next.
+                              </p>
+                              
+                           </aside>
+                           
+                           <div class="section" id="how-do-i-use-salt-states__it-is-all-just-data">
+                              <h2 class="title sectiontitle">It is All Just Data</h2>
+                              <p class="p">Before delving into the particulars, it will help to understand that the SLS
+                                 file is just a data structure under the hood. While understanding that the SLS
+                                 is just a data structure isn't critical for understanding and making use of
+                                 Salt States, it should help bolster knowledge of where the real power is.
+                              </p>
+                              
+                              <p class="p">SLS files are therefore, in reality, just <a class="xref" href="http://docs.python.org/2/library/stdtypes.html#typesmapping" target="_blank">dictionaries</a>, <a class="xref" href="http://docs.python.org/2/library/stdtypes.html#typesseq" target="_blank">lists</a>, <a class="xref" href="http://docs.python.org/2/library/stdtypes.html#typesseq" target="_blank">strings</a>, and <a class="xref" href="http://docs.python.org/2/library/stdtypes.html#typesnumeric" target="_blank">numbers</a>.
+                                 By using this approach Salt can be much more flexible. As one writes more state
+                                 files, it becomes clearer exactly what is being written. The result is a system
+                                 that is easy to understand, yet grows with the needs of the admin or developer.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="how-do-i-use-salt-states__the-top-file">
+                              <h2 class="title sectiontitle">The Top File</h2>
+                              <p class="p">The example SLS files in the below sections can be assigned to hosts using a
+                                 file called <strong class="ph b">top.sls</strong>. This file is described in-depth 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/top.html#states-top">here</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="how-do-i-use-salt-states__default-data-yaml">
+                              <h2 class="title sectiontitle">Default Data - YAML</h2>
+                              <p class="p">By default Salt represents the SLS data in what is one of the simplest
+                                 serialization formats available - <a class="xref" href="http://yaml.org/spec/1.1/" target="_blank">YAML</a>.
+                              </p>
+                              
+                              <p class="p">A typical SLS file will often look like this in YAML:</p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">These demos use some generic service and package names, different
+                                    distributions often use different names for packages and services. For
+                                    instance <span class="keyword title_reference">apache</span> should be replaced with <span class="keyword title_reference">httpd</span> on a Red Hat system.
+                                    Salt uses the name of the init script, systemd name, upstart name etc.
+                                    based on what the underlying service management for the platform. To
+                                    get a list of the available service names on a platform execute the
+                                    service.get_all salt function.
+                                 </p>
+                                 
+                                 <p class="p">Information on how to make states work with multiple distributions
+                                    is later in the tutorial.
+                                 </p>
+                                 
+                              </aside>
+                              <pre class="pre codeblock language-yaml">apache:
+  pkg.installed: []
+  service.running:
+    - require:
+      - pkg: apache</pre>
+                              <p class="p">This SLS data will ensure that the package named apache is installed, and
+                                 that the apache service is running. The components can be explained in a
+                                 simple way.
+                              </p>
+                              
+                              <p class="p">The first line is the ID for a set of data, and it is called the ID
+                                 Declaration. This ID sets the name of the thing that needs to be manipulated.
+                              </p>
+                              
+                              <p class="p">The second and third lines contain the state module function to be run, in the
+                                 format <tt class="ph tt">&lt;state_module&gt;.&lt;function&gt;</tt>. The <tt class="ph tt">pkg.installed</tt> state module
+                                 function ensures that a software package is installed via the system's native
+                                 package manager. The <tt class="ph tt">service.running</tt> state module function ensures that a
+                                 given system daemon is running.
+                              </p>
+                              
+                              <p class="p">Finally, on line five, is the word <tt class="ph tt">require</tt>. This is called a Requisite
+                                 Statement, and it makes sure that the Apache service is only started after
+                                 a successful installation of the apache package.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="how-do-i-use-salt-states__adding-configs-and-users">
+                              <h2 class="title sectiontitle">Adding Configs and Users</h2>
+                              <p class="p">When setting up a service like an Apache web server, many more components may
+                                 need to be added. The Apache configuration file will most likely be managed,
+                                 and a user and group may need to be set up.
+                              </p>
+                              <pre class="pre codeblock language-yaml">apache:
+  pkg.installed: []
+  service.running:
+    - watch:
+      - pkg: apache
+      - file: /etc/httpd/conf/httpd.conf
+      - user: apache
+  user.present:
+    - uid: 87
+    - gid: 87
+    - home: /var/www/html
+    - shell: /bin/nologin
+    - require:
+      - group: apache
+  group.present:
+    - gid: 87
+    - require:
+      - pkg: apache
+
+/etc/httpd/conf/httpd.conf:
+  file.managed:
+    - source: salt://apache/httpd.conf
+    - user: root
+    - group: root
+    - mode: 644</pre>
+                              <p class="p">This SLS data greatly extends the first example, and includes a config file,
+                                 a user, a group and new requisite statement: <tt class="ph tt">watch</tt>.
+                              </p>
+                              
+                              <p class="p">Adding more states is easy, since the new user and group states are under
+                                 the Apache ID, the user and group will be the Apache user and group. The
+                                 <tt class="ph tt">require</tt> statements will make sure that the user will only be made after
+                                 the group, and that the group will be made only after the Apache package is
+                                 installed.
+                              </p>
+                              
+                              <p class="p">Next, the <tt class="ph tt">require</tt> statement under service was changed to watch, and is
+                                 now watching 3 states instead of just one. The watch statement does the same
+                                 thing as require, making sure that the other states run before running the
+                                 state with a watch, but it adds an extra component. The <tt class="ph tt">watch</tt> statement
+                                 will run the state's watcher function for any changes to the watched states.
+                                 So if the package was updated, the config file changed, or the user
+                                 uid modified, then the service state's watcher will be run. The service
+                                 state's watcher just restarts the service, so in this case, a change in the
+                                 config file will also trigger a restart of the respective service.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="how-do-i-use-salt-states__moving-beyond-a-single-sls">
+                              <h2 class="title sectiontitle">Moving Beyond a Single SLS</h2>
+                              <p class="p">When setting up Salt States in a scalable manner, more than one SLS will need
+                                 to be used. The above examples were in a single SLS file, but two or more
+                                 SLS files can be combined to build out a State Tree. The above example also
+                                 references a file with a strange source - <tt class="ph tt">salt://apache/httpd.conf</tt>. That
+                                 file will need to be available as well.
+                              </p>
+                              
+                              <p class="p">The SLS files are laid out in a directory structure on the Salt master; an
+                                 SLS is just a file and files to download are just files.
+                              </p>
+                              
+                              <p class="p">The Apache example would be laid out in the root of the Salt file server like
+                                 this:
+                              </p>
+                              <pre class="pre codeblock language-text">apache/init.sls
+apache/httpd.conf</pre>
+                              <p class="p">So the httpd.conf is just a file in the apache directory, and is referenced
+                                 directly.
+                              </p>
+                              
+                              <p class="p">But when using more than one single SLS file, more components can be added to
+                                 the toolkit. Consider this SSH example:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">ssh/init.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">openssh-client:
+  pkg.installed
+
+/etc/ssh/ssh_config:
+  file.managed:
+    - user: root
+    - group: root
+    - mode: 644
+    - source: salt://ssh/ssh_config
+    - require:
+      - pkg: openssh-client</pre>
+                              <p class="p"><tt class="ph tt">ssh/server.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">include:
+  - ssh
+
+openssh-server:
+  pkg.installed
+
+sshd:
+  service.running:
+    - require:
+      - pkg: openssh-client
+      - pkg: openssh-server
+      - file: /etc/ssh/banner
+      - file: /etc/ssh/sshd_config
+
+/etc/ssh/sshd_config:
+  file.managed:
+    - user: root
+    - group: root
+    - mode: 644
+    - source: salt://ssh/sshd_config
+    - require:
+      - pkg: openssh-server
+
+/etc/ssh/banner:
+  file:
+    - managed
+    - user: root
+    - group: root
+    - mode: 644
+    - source: salt://ssh/banner
+    - require:
+      - pkg: openssh-server</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Notice that we use two similar ways of denoting that a file
+                                    is managed by Salt. In the <span class="keyword title_reference">/etc/ssh/sshd_config</span> state section above,
+                                    we use the <span class="keyword title_reference">file.managed</span> state declaration whereas with the
+                                    <span class="keyword title_reference">/etc/ssh/banner</span> state section, we use the <span class="keyword title_reference">file</span> state declaration
+                                    and add a <span class="keyword title_reference">managed</span> attribute to that state declaration. Both ways
+                                    produce an identical result; the first way -- using <span class="keyword title_reference">file.managed</span> --
+                                    is merely a shortcut.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Now our State Tree looks like this:</p>
+                              <pre class="pre codeblock language-text">apache/init.sls
+apache/httpd.conf
+ssh/init.sls
+ssh/server.sls
+ssh/banner
+ssh/ssh_config
+ssh/sshd_config</pre>
+                              <p class="p">This example now introduces the <tt class="ph tt">include</tt> statement. The include statement
+                                 includes another SLS file so that components found in it can be required,
+                                 watched or as will soon be demonstrated - extended.
+                              </p>
+                              
+                              <p class="p">The include statement allows for states to be cross linked. When an SLS
+                                 has an include statement it is literally extended to include the contents of
+                                 the included SLS files.
+                              </p>
+                              
+                              <p class="p">Note that some of the SLS files are called init.sls, while others are not. More
+                                 info on what this means can be found in the 
+                                 		
+                                 			&nbsp;<a class="xref" href="states_pt1.html#states-tutorial-part-1-basic-usage__sls-file-namespace">States Tutorial</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="how-do-i-use-salt-states__extending-included-sls-data">
+                              <h2 class="title sectiontitle">Extending Included SLS Data</h2>
+                              <p class="p">Sometimes SLS data needs to be extended. Perhaps the apache service needs to
+                                 watch additional resources, or under certain circumstances a different file
+                                 needs to be placed.
+                              </p>
+                              
+                              <p class="p">In these examples, the first will add a custom banner to ssh and the second will
+                                 add more watchers to apache to include mod_python.
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">ssh/custom-server.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">include:
+  - ssh.server
+
+extend:
+  /etc/ssh/banner:
+    file:
+      - source: salt://ssh/custom-banner</pre>
+                              <p class="p"><tt class="ph tt">python/mod_python.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">include:
+  - apache
+
+extend:
+  apache:
+    service:
+      - watch:
+        - pkg: mod_python
+
+mod_python:
+  pkg.installed</pre>
+                              <p class="p">The <tt class="ph tt">custom-server.sls</tt> file uses the extend statement to overwrite where the
+                                 banner is being downloaded from, and therefore changing what file is being used
+                                 to configure the banner.
+                              </p>
+                              
+                              <p class="p">In the new mod_python SLS the mod_python package is added, but more importantly
+                                 the apache service was extended to also watch the mod_python package.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">Using extend with require or watch</strong><p class="p">The <tt class="ph tt">extend</tt> statement works differently for <tt class="ph tt">require</tt> or <tt class="ph tt">watch</tt>.
+                                    It appends to, rather than replacing the requisite component.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="how-do-i-use-salt-states__understanding-the-render-system">
+                              <h2 class="title sectiontitle">Understanding the Render System</h2>
+                              <p class="p">Since SLS data is simply that (data), it does not need to be represented
+                                 with YAML. Salt defaults to YAML because it is very straightforward and easy
+                                 to learn and use. But the SLS files can be rendered from almost any imaginable
+                                 medium, so long as a renderer module is provided.
+                              </p>
+                              
+                              <p class="p">The default rendering system is the <tt class="ph tt">yaml_jinja</tt> renderer. The
+                                 <tt class="ph tt">yaml_jinja</tt> renderer will first pass the template through the <a class="xref" href="http://jinja.pocoo.org/" target="_blank">Jinja2</a>
+                                 templating system, and then through the YAML parser. The benefit here is that
+                                 full programming constructs are available when creating SLS files.
+                              </p>
+                              
+                              <p class="p">Other renderers available are <tt class="ph tt">yaml_mako</tt> and <tt class="ph tt">yaml_wempy</tt> which each use
+                                 the <a class="xref" href="http://www.makotemplates.org/" target="_blank">Mako</a> or <a class="xref" href="https://fossil.secution.com/u/gcw/wempy/doc/tip/README.wiki" target="_blank">Wempy</a> templating system respectively rather than the jinja
+                                 templating system, and more notably, the pure Python or <tt class="ph tt">py</tt>, <tt class="ph tt">pydsl</tt> &amp;
+                                 <tt class="ph tt">pyobjects</tt> renderers.
+                                 The <tt class="ph tt">py</tt> renderer allows for SLS files to be written in pure Python,
+                                 allowing for the utmost level of flexibility and power when preparing SLS
+                                 data; while the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/renderers/all/salt.renderers.pydsl.html#salt-renderers-pydsl">pydsl</a> renderer
+                                 provides a flexible, domain-specific language for authoring SLS data in Python;
+                                 and the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/renderers/all/salt.renderers.pyobjects.html#salt-renderers-pyobjects">pyobjects</a> renderer
+                                 gives you a <a class="xref" href="http://legacy.python.org/dev/peps/pep-0008/" target="_blank">"Pythonic"</a> interface to building state data.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The templating engines described above aren't just available in SLS files.
+                                    They can also be used in 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/states/all/salt.states.file.html#salt.states.file.managed">file.managed</a>
+                                    states, making file management much more dynamic and flexible. Some
+                                    examples for using templates in managed files can be found in the
+                                    documentation for the 
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/states/all/salt.states.file.html#salt-states-file">file states</a>, as well as the <a class="xref" href="starting_states.html#how-do-i-use-salt-states__jinja-example-moosefs">MooseFS
+                                       example</a> below.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="how-do-i-use-salt-states__getting-to-know-the-default-yaml-jinja">
+                              <h2 class="title sectiontitle">Getting to Know the Default - yaml_jinja</h2>
+                              <p class="p">The default renderer - <tt class="ph tt">yaml_jinja</tt>, allows for use of the jinja
+                                 templating system. A guide to the Jinja templating system can be found here:
+                                 <a class="xref" href="http://jinja.pocoo.org/docs" target="_blank">http://jinja.pocoo.org/docs</a></p>
+                              
+                              <p class="p">When working with renderers a few very useful bits of data are passed in. In
+                                 the case of templating engine based renderers, three critical components are
+                                 available, <tt class="ph tt">salt</tt>, <tt class="ph tt">grains</tt>, and <tt class="ph tt">pillar</tt>. The <tt class="ph tt">salt</tt> object allows for
+                                 any Salt function to be called from within the template, and <tt class="ph tt">grains</tt> allows
+                                 for the Grains to be accessed from within the template. A few examples:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">apache/init.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">apache:
+  pkg.installed:
+    {% if grains['os'] == 'RedHat'%}
+    - name: httpd
+    {% endif %}
+  service.running:
+    {% if grains['os'] == 'RedHat'%}
+    - name: httpd
+    {% endif %}
+    - watch:
+      - pkg: apache
+      - file: /etc/httpd/conf/httpd.conf
+      - user: apache
+  user.present:
+    - uid: 87
+    - gid: 87
+    - home: /var/www/html
+    - shell: /bin/nologin
+    - require:
+      - group: apache
+  group.present:
+    - gid: 87
+    - require:
+      - pkg: apache
+
+/etc/httpd/conf/httpd.conf:
+  file.managed:
+    - source: salt://apache/httpd.conf
+    - user: root
+    - group: root
+    - mode: 644</pre>
+                              <p class="p">This example is simple. If the <tt class="ph tt">os</tt> grain states that the operating system is
+                                 Red Hat, then the name of the Apache package and service needs to be httpd.
+                              </p>
+                              
+                              <p class="p">A more aggressive way to use Jinja can be found here, in a module to set up
+                                 a MooseFS distributed filesystem chunkserver:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">moosefs/chunk.sls:</tt></p>
+                              <pre class="pre codeblock language-yaml">include:
+  - moosefs
+
+{% for mnt in salt['cmd.run']('ls /dev/data/moose*').split() %}
+/mnt/moose{{ mnt[-1] }}:
+  mount.mounted:
+    - device: {{ mnt }}
+    - fstype: xfs
+    - mkmnt: True
+  file.directory:
+    - user: mfs
+    - group: mfs
+    - require:
+      - user: mfs
+      - group: mfs
+{% endfor %}
+
+/etc/mfshdd.cfg:
+  file.managed:
+    - source: salt://moosefs/mfshdd.cfg
+    - user: root
+    - group: root
+    - mode: 644
+    - template: jinja
+    - require:
+      - pkg: mfs-chunkserver
+
+/etc/mfschunkserver.cfg:
+  file.managed:
+    - source: salt://moosefs/mfschunkserver.cfg
+    - user: root
+    - group: root
+    - mode: 644
+    - template: jinja
+    - require:
+      - pkg: mfs-chunkserver
+
+mfs-chunkserver:
+  pkg.installed: []
+mfschunkserver:
+  service.running:
+    - require:
+{% for mnt in salt['cmd.run']('ls /dev/data/moose*') %}
+      - mount: /mnt/moose{{ mnt[-1] }}
+      - file: /mnt/moose{{ mnt[-1] }}
+{% endfor %}
+      - file: /etc/mfschunkserver.cfg
+      - file: /etc/mfshdd.cfg
+      - file: /var/lib/mfs</pre>
+                              <p class="p">This example shows much more of the available power of Jinja.
+                                 Multiple for loops are used to dynamically detect available hard drives
+                                 and set them up to be mounted, and the <tt class="ph tt">salt</tt> object is used multiple
+                                 times to call shell commands to gather data.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="how-do-i-use-salt-states__introducing-the-python-pydsl-and-the-pyobjects-renderers">
+                              <h2 class="title sectiontitle">Introducing the Python, PyDSL, and the Pyobjects Renderers</h2>
+                              <p class="p">Sometimes the chosen default renderer might not have enough logical power to
+                                 accomplish the needed task. When this happens, the Python renderer can be
+                                 used. Normally a YAML renderer should be used for the majority of SLS files,
+                                 but an SLS file set to use another renderer can be easily added to the tree.
+                              </p>
+                              
+                              <p class="p">This example shows a very basic Python SLS file:</p>
+                              
+                              <p class="p"><tt class="ph tt">python/django.sls:</tt></p>
+                              <pre class="pre codeblock language-python">#!py
+
+def run():
+    '''
+    Install the django package
+    '''
+    return {'include': ['python'],
+            'django': {'pkg': ['installed']}}</pre>
+                              <p class="p">This is a very simple example; the first line has an SLS shebang that
+                                 tells Salt to not use the default renderer, but to use the <tt class="ph tt">py</tt> renderer.
+                                 Then the run function is defined, the return value from the run function
+                                 must be a Salt friendly data structure, or better known as a Salt
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/highstate.html#states-highstate">HighState data structure</a>.
+                              </p>
+                              
+                              <p class="p">Alternatively, using the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/renderers/all/salt.renderers.pydsl.html#salt-renderers-pydsl">pydsl</a>
+                                 renderer, the above example can be written more succinctly as:
+                              </p>
+                              <pre class="pre codeblock language-python">#!pydsl
+
+include('python', delayed=True)
+state('django').pkg.installed()</pre>
+                              <p class="p">The 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/renderers/all/salt.renderers.pyobjects.html#salt-renderers-pyobjects">pyobjects</a> renderer
+                                 provides an <a class="xref" href="http://legacy.python.org/dev/peps/pep-0008/" target="_blank">"Pythonic"</a> object based approach for building the state data.
+                                 The above example could be written as:
+                              </p>
+                              <pre class="pre codeblock language-python">#!pyobjects
+
+include('python')
+Pkg.installed("django")</pre>
+                              <p class="p">This Python examples would look like this if they were written in YAML:</p>
+                              <pre class="pre codeblock language-yaml">include:
+  - python
+
+django:
+  pkg.installed</pre>
+                              <p class="p">This example clearly illustrates that; one, using the YAML renderer by default
+                                 is a wise decision and two, unbridled power can be obtained where needed by
+                                 using a pure Python SLS.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="how-do-i-use-salt-states__running-and-debugging-salt-states">
+                              <h2 class="title sectiontitle">Running and debugging salt states.</h2>
+                              <p class="p">Once the rules in an SLS are ready, they should be tested to ensure they
+                                 work properly. To invoke these rules, simply execute
+                                 <tt class="ph tt">salt '*' state.highstate</tt> on the command line. If you get back only
+                                 hostnames with a <tt class="ph tt">:</tt> after, but no return, chances are there is a problem with
+                                 one or more of the sls files. On the minion, use the <tt class="ph tt">salt-call</tt> command:
+                                 <tt class="ph tt">salt-call state.highstate -l debug</tt> to examine the output for errors.
+                                 This should help troubleshoot the issue. The minions can also be started in
+                                 the foreground in debug mode: <tt class="ph tt">salt-minion -l debug</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="how-do-i-use-salt-states__next-reading">
+                              <h2 class="title sectiontitle">Next Reading</h2>
+                              <p class="p">With an understanding of states, the next recommendation is to become familiar
+                                 with Salt's pillar interface:
+                              </p>
+                              
+                              <blockquote class="lq">
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="pillar.html#pillar-walkthrough">Pillar Walkthrough</a></p>
+                                 
+                              </blockquote>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

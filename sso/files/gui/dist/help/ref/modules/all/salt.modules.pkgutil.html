@@ -1,0 +1,486 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.pkgutil</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.pkgutil">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-pkgutil">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-pkgutil">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.pkgutil</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-pkgutil__module-salt.modules.pkgutil"></span></p>
+                              
+                              <p class="p">Pkgutil support for Solaris</p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.pkgutil.install">
+                           <h2 class="title topictitle2">install</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pkgutil.install(
+								name=None,
+								refresh=False,
+								version=None,
+								pkgs=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Install packages using the pkgutil tool.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.install &lt;package_name&gt;
+salt '*' pkg.install SMClgcc346</pre>
+                                 <p class="p">Multiple Package Installation Options:</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d204529e53" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d204529e55" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d204529e53" class="stentry propvalue">pkgs</td>
+                                    
+                                    <td valign="top" headers="d204529e55" class="stentry propdesc">
+                                       <p class="p">A list of packages to install from OpenCSW. Must be passed as a python
+                                          list.
+                                       </p>
+                                       
+                                       <p class="p">CLI Example:</p>
+                                       <pre class="pre codeblock language-bash">salt '*' pkg.install pkgs='["foo", "bar"]'
+salt '*' pkg.install pkgs='["foo", {"bar": "1.2.3"}]'</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Returns a dict containing the new package names and versions:</p>
+                                 <pre class="pre codeblock language-">{'&lt;package&gt;': {'old': '&lt;old-version&gt;',
+               'new': '&lt;new-version&gt;'}}</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.pkgutil.latest_version">
+                           <h2 class="title topictitle2">latest_version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pkgutil.latest_version(
+								*names,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the latest version of the named package available for upgrade or
+                                    installation. If more than one package name is specified, a dict of
+                                    name/version pairs is returned.
+                                 </p>
+                                 
+                                 <p class="p">If the latest version of a given package is already installed, an empty
+                                    string will be returned for that package.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkgutil.latest_version CSWpython
+salt '*' pkgutil.latest_version &lt;package1&gt; &lt;package2&gt; &lt;package3&gt; ...</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.pkgutil.list_pkgs">
+                           <h2 class="title topictitle2">list_pkgs</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pkgutil.list_pkgs(
+								versions_as_list=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List the packages currently installed as a dict:</p>
+                                 <pre class="pre codeblock language-">{'&lt;package_name&gt;': '&lt;version&gt;'}</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.list_pkgs
+salt '*' pkg.list_pkgs versions_as_list=True</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.pkgutil.list_upgrades">
+                           <h2 class="title topictitle2">list_upgrades</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pkgutil.list_upgrades(
+								refresh=True
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List all available package upgrades on this system</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkgutil.list_upgrades</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.pkgutil.purge">
+                           <h2 class="title topictitle2">purge</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pkgutil.purge(
+								name=None,
+								pkgs=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Package purges are not supported, this function is identical to
+                                    <tt class="ph tt">remove()</tt>.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d204529e196" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d204529e198" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d204529e196" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d204529e198" class="stentry propdesc">
+                                       <p class="p">The name of the package to be deleted.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <p class="p">Multiple Package Options:</p>
+                                 
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d204529e211" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d204529e213" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d204529e211" class="stentry propvalue">pkgs</td>
+                                    
+                                    <td valign="top" headers="d204529e213" class="stentry propdesc">
+                                       <p class="p">A list of packages to delete. Must be passed as a python list. The
+                                          <tt class="ph tt">name</tt> parameter will be ignored if this option is passed.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 0.16.0.</span></p>
+                                 
+                                 <p class="p">Returns a dict containing the changes.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.purge &lt;package name&gt;
+salt '*' pkg.purge &lt;package1&gt;,&lt;package2&gt;,&lt;package3&gt;
+salt '*' pkg.purge pkgs='["foo", "bar"]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.pkgutil.refresh_db">
+                           <h2 class="title topictitle2">refresh_db</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pkgutil.refresh_db( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Updates the pkgutil repo database (pkgutil -U)</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkgutil.refresh_db</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.pkgutil.remove">
+                           <h2 class="title topictitle2">remove</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pkgutil.remove(
+								name=None,
+								pkgs=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Remove a package and all its dependencies which are not in use by other
+                                    packages.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d204529e293" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d204529e295" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d204529e293" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d204529e295" class="stentry propdesc">
+                                       <p class="p">The name of the package to be deleted.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <p class="p">Multiple Package Options:</p>
+                                 
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d204529e308" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d204529e310" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d204529e308" class="stentry propvalue">pkgs</td>
+                                    
+                                    <td valign="top" headers="d204529e310" class="stentry propdesc">
+                                       <p class="p">A list of packages to delete. Must be passed as a python list. The
+                                          <tt class="ph tt">name</tt> parameter will be ignored if this option is passed.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 0.16.0.</span></p>
+                                 
+                                 <p class="p">Returns a dict containing the changes.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.remove &lt;package name&gt;
+salt '*' pkg.remove &lt;package1&gt;,&lt;package2&gt;,&lt;package3&gt;
+salt '*' pkg.remove pkgs='["foo", "bar"]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.pkgutil.upgrade">
+                           <h2 class="title topictitle2">upgrade</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pkgutil.upgrade(
+								refresh=True
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Upgrade all of the packages to the latest available version.</p>
+                                 
+                                 <p class="p">Returns a dict containing the changes:</p>
+                                 <pre class="pre codeblock language-">{'&lt;package&gt;': {'old': '&lt;old-version&gt;',
+               'new': '&lt;new-version&gt;'}}</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkgutil.upgrade</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.pkgutil.upgrade_available">
+                           <h2 class="title topictitle2">upgrade_available</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pkgutil.upgrade_available(
+								name
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check if there is an upgrade available for a certain package</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkgutil.upgrade_available CSWpython</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.pkgutil.version">
+                           <h2 class="title topictitle2">version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.pkgutil.version(
+								*names,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Returns a version if the package is installed, else returns an empty string</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkgutil.version CSWpython</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

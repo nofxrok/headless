@@ -1,0 +1,149 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Getting Started with VEXXHOST</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Getting Started with VEXXHOST">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/cloud-providers.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="getting-started-with-vexxhost">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="getting-started-with-vexxhost">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Getting Started with VEXXHOST</h1>
+                        <div class="body conbody">
+                           <p class="p"><a class="xref" href="http://vexxhost.com" target="_blank">VEXXHOST</a> is an cloud computing provider which provides
+                              <a class="xref" href="http://vexxhost.com/cloud-computing" target="_blank">Canadian cloud computing</a> services
+                              which are based in Monteral and uses the libcloud OpenStack driver.  VEXXHOST
+                              currently runs the Havana release of OpenStack.  When provisioning new
+                              instances, they automatically get a public IP and private IP address.
+                              Therefore, you do not need to assign a floating IP to access your instance
+                              once it's booted.
+                           </p>
+                           
+                           <div class="section" id="getting-started-with-vexxhost__cloud-provider-configuration">
+                              <h2 class="title sectiontitle">Cloud Provider Configuration</h2>
+                              <p class="p">To use the <span class="keyword title_reference">openstack</span> driver for the VEXXHOST public cloud, you will need to
+                                 set up the cloud provider configuration file as in the example below:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/etc/salt/cloud.providers.d/vexxhost.conf</tt>:
+                                 In order to use the VEXXHOST public cloud, you will need to setup a cloud
+                                 provider configuration file as in the example below which uses the OpenStack
+                                 driver.
+                              </p>
+                              <pre class="pre codeblock language-yaml">vexxhost:
+  # Set the location of the salt-master
+  #
+  minion:
+    master: saltmaster.example.com
+
+  # Configure VEXXHOST using the OpenStack plugin
+  #
+  identity_url: http://auth.api.thenebulacloud.com:5000/v2.0/tokens
+  compute_name: nova
+
+  # Set the compute region:
+  #
+  compute_region: na-yul-nhs1
+
+  # Configure VEXXHOST authentication credentials
+  #
+  user: your-tenant-id
+  password: your-api-key
+  tenant: your-tenant-name
+
+  # keys to allow connection to the instance launched
+  #
+  ssh_key_name: yourkey
+  ssh_key_file: /path/to/key/yourkey.priv
+
+  provider: openstack</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-vexxhost__authentication">
+                              <h2 class="title sectiontitle">Authentication</h2>
+                              <p class="p">All of the authentication fields that you need can be found by logging into
+                                 your VEXXHOST customer center.  Once you've logged in, you will need to click
+                                 on "CloudConsole" and then click on "API Credentials".
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="getting-started-with-vexxhost__cloud-profile-configuration">
+                              <h2 class="title sectiontitle">Cloud Profile Configuration</h2>
+                              <p class="p">In order to get the correct image UUID and the instance type to use in the
+                                 cloud profile, you can run the following command respectively:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-cloud --list-images=vexxhost-config
+# salt-cloud --list-sizes=vexxhost-config</pre>
+                              <p class="p">Once you have that, you can go ahead and create a new cloud profile.  This
+                                 profile will build an Ubuntu 12.04 LTS <span class="keyword title_reference">nb.2G</span> instance.
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/etc/salt/cloud.profiles.d/vh_ubuntu1204_2G.conf</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">vh_ubuntu1204_2G:
+    provider: vexxhost
+    image: 4051139f-750d-4d72-8ef0-074f2ccc7e5a
+    size: nb.2G</pre>
+                              </div>
+                           
+                           <div class="section" id="getting-started-with-vexxhost__provision-an-instance">
+                              <h2 class="title sectiontitle">Provision an instance</h2>
+                              <p class="p">To create an instance based on the sample profile that we created above, you
+                                 can run the following <span class="keyword title_reference">salt-cloud</span> command.
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt-cloud -p vh_ubuntu1204_2G vh_instance1</pre>
+                              <p class="p">Typically, instances are provisioned in under 30 seconds on the VEXXHOST public
+                                 cloud.  After the instance provisions, it will be set up a minion and then
+                                 return all the instance information once it's complete.
+                              </p>
+                              
+                              <p class="p">Once the instance has been setup, you can test connectivity to it by running
+                                 the following command:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt vh_instance1 test.ping</pre>
+                              <p class="p">You can now continue to provision new instances and they will all automatically
+                                 be set up as minions of the master you've defined in the configuration file.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

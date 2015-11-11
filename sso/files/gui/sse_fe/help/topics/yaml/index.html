@@ -1,0 +1,137 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Understanding YAML</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Understanding YAML">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/configuration-management.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="understanding-yaml">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="understanding-yaml">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Understanding YAML</h1>
+                        <div class="body conbody">
+                           <p class="p">The default renderer for SLS files is the YAML renderer. YAML is a
+                              markup language with many powerful features. However, Salt uses
+                              a small subset of YAML that maps over very commonly used data structures,
+                              like lists and dictionaries. It is the job of the YAML renderer to take
+                              the YAML data structure and compile it into a Python data structure for
+                              use by Salt.
+                           </p>
+                           
+                           <p class="p">Though YAML syntax may seem daunting and terse at first, there are only
+                              three very simple rules to remember when writing YAML for SLS files.
+                           </p>
+                           
+                           <div class="section" id="understanding-yaml__rule-one-indentation">
+                              <h2 class="title sectiontitle">Rule One: Indentation</h2>
+                              <p class="p">YAML uses a fixed indentation scheme to represent relationships between
+                                 data layers. Salt requires that the indentation for each level consists
+                                 of exactly two spaces. Do not use tabs.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="understanding-yaml__rule-two-colons">
+                              <h2 class="title sectiontitle">Rule Two: Colons</h2>
+                              <p class="p">Python dictionaries are, of course, simply key-value pairs. Users from other
+                                 languages may recognize this data type as hashes or associative arrays.
+                              </p>
+                              
+                              <p class="p">Dictionary keys are represented in YAML as strings terminated by a trailing
+                                 colon. Values are represented by either a string following the colon,
+                                 separated by a space:
+                              </p>
+                              <pre class="pre codeblock language-yaml">my_key: my_value</pre>
+                              <p class="p">In Python, the above maps to:</p>
+                              <pre class="pre codeblock language-python">{'my_key': 'my_value'}</pre>
+                              <p class="p">Alternatively, a value can be associated with a key through indentation.</p>
+                              <pre class="pre codeblock language-yaml">my_key:
+  my_value</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The above syntax is valid YAML but is uncommon in SLS files because most often,
+                                    the value for a key is not singular but instead is a <em class="ph i">list</em> of values.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">In Python, the above maps to:</p>
+                              <pre class="pre codeblock language-python">{'my_key': 'my_value'}</pre>
+                              <p class="p">Dictionaries can be nested:</p>
+                              <pre class="pre codeblock language-yaml">first_level_dict_key:
+  second_level_dict_key: value_in_second_level_dict</pre>
+                              <p class="p">And in Python:</p>
+                              <pre class="pre codeblock language-python">{
+    'first_level_dict_key': {
+        'second_level_dict_key': 'value_in_second_level_dict'
+    }
+}</pre>
+                              </div>
+                           
+                           <div class="section" id="understanding-yaml__rule-three-dashes">
+                              <h2 class="title sectiontitle">Rule Three: Dashes</h2>
+                              <p class="p">To represent lists of items, a single dash followed by a space is used. Multiple
+                                 items are a part of the same list as a function of their having the same level of
+                                 indentation.
+                              </p>
+                              <pre class="pre codeblock language-yaml">- list_value_one
+- list_value_two
+- list_value_three</pre>
+                              <p class="p">Lists can be the value of a key-value pair. This is quite common in Salt:</p>
+                              <pre class="pre codeblock language-yaml">my_dictionary:
+  - list_value_one
+  - list_value_two
+  - list_value_three</pre>
+                              <p class="p">In Python, the above maps to:</p>
+                              <pre class="pre codeblock language-python">{'my_dictionary': ['list_value_one', 'list_value_two', 'list_value_three']}</pre>
+                              </div>
+                           
+                           <div class="section" id="understanding-yaml__learning-more">
+                              <h2 class="title sectiontitle">Learning More</h2>
+                              <p class="p">One easy way to learn more about how YAML gets rendered into Python data structures
+                                 is
+                                 to use an online YAML parser to see the Python output.
+                              </p>
+                              
+                              <p class="p">One excellent choice for experimenting with YAML parsing is: <a class="xref" href="http://yaml-online-parser.appspot.com/" target="_blank">http://yaml-online-parser.appspot.com/</a></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Understanding State Compiler Ordering</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Understanding State Compiler Ordering">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="understanding-state-compiler-ordering">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="understanding-state-compiler-ordering">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Understanding State Compiler Ordering</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">This tutorial is an intermediate level tutorial. Some basic understanding
+                                    of the state system and writing Salt Formulas is assumed.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Salt's state system is built to deliver all of the power of configuration
+                                 management systems without sacrificing simplicity. This tutorial is made to
+                                 help users understand in detail just how the order is defined for state
+                                 executions in Salt.
+                              </p>
+                              
+                              <p class="p">This tutorial is written to represent the behavior of Salt as of version
+                                 0.17.0.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="understanding-state-compiler-ordering__compiler-basics">
+                              <h2 class="title sectiontitle">Compiler Basics</h2>
+                              <p class="p">To understand ordering in depth some very basic knowledge about the state
+                                 compiler is very helpful. No need to worry though, this is very high level!
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="understanding-state-compiler-ordering__high-data-and-low-data">
+                              <h2 class="title sectiontitle">High Data and Low Data</h2>
+                              <p class="p">When defining Salt Formulas in YAML the data that is being represented is
+                                 referred to by the compiler as High Data. When the data is initially
+                                 loaded into the compiler it is a single large python dictionary, this
+                                 dictionary can be viewed raw by running:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' state.show_highstate</pre>
+                              <p class="p">This "High Data" structure is then compiled down to "Low Data". The Low
+                                 Data is what is matched up to create individual executions in Salt's
+                                 configuration management system. The
+                                 low data is an ordered list of single state calls to execute. Once the
+                                 low data is compiled the evaluation order can be seen.
+                              </p>
+                              
+                              <p class="p">The low data can be viewed by running:</p>
+                              <pre class="pre codeblock language-bash">salt '*' state.show_lowstate</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The state execution module contains MANY functions for evaluating the
+                                    state system and is well worth a read! These routines can be very useful
+                                    when debugging states or to help deepen one's understanding of Salt's
+                                    state system.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">As an example, a state written thusly:</p>
+                              <pre class="pre codeblock language-yaml">apache:
+  pkg.installed:
+    - name: httpd
+  service.running:
+    - name: httpd
+    - watch:
+      - file: apache_conf
+      - pkg: apache
+
+apache_conf:
+  file.managed:
+    - name: /etc/httpd/conf.d/httpd.conf
+    - source: salt://apache/httpd.conf</pre>
+                              <p class="p">Will have High Data which looks like this represented in json:</p>
+                              <pre class="pre codeblock language-javascript">{
+    "apache": {
+        "pkg": [
+            {
+                "name": "httpd"
+            },
+            "installed",
+            {
+                "order": 10000
+            }
+        ],
+        "service": [
+            {
+                "name": "httpd"
+            },
+            {
+                "watch": [
+                    {
+                        "file": "apache_conf"
+                    },
+                    {
+                        "pkg": "apache"
+                    }
+                ]
+            },
+            "running",
+            {
+                "order": 10001
+            }
+        ],
+        "__sls__": "blah",
+        "__env__": "base"
+    },
+    "apache_conf": {
+        "file": [
+            {
+                "name": "/etc/httpd/conf.d/httpd.conf"
+            },
+            {
+                "source": "salt://apache/httpd.conf"
+            },
+            "managed",
+            {
+                "order": 10002
+            }
+        ],
+        "__sls__": "blah",
+        "__env__": "base"
+    }
+}</pre>
+                              <p class="p">The subsequent Low Data will look like this:</p>
+                              <pre class="pre codeblock language-javascript">[
+    {
+        "name": "httpd",
+        "state": "pkg",
+        "__id__": "apache",
+        "fun": "installed",
+        "__env__": "base",
+        "__sls__": "blah",
+        "order": 10000
+    },
+    {
+        "name": "httpd",
+        "watch": [
+            {
+                "file": "apache_conf"
+            },
+            {
+                "pkg": "apache"
+            }
+        ],
+        "state": "service",
+        "__id__": "apache",
+        "fun": "running",
+        "__env__": "base",
+        "__sls__": "blah",
+        "order": 10001
+    },
+    {
+        "name": "/etc/httpd/conf.d/httpd.conf",
+        "source": "salt://apache/httpd.conf",
+        "state": "file",
+        "__id__": "apache_conf",
+        "fun": "managed",
+        "__env__": "base",
+        "__sls__": "blah",
+        "order": 10002
+    }
+]</pre>
+                              <p class="p">This tutorial discusses the Low Data evaluation and the state runtime.</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="understanding-state-compiler-ordering__ordering-layers">
+                              <h2 class="title sectiontitle">Ordering Layers</h2>
+                              <p class="p">Salt defines 2 order interfaces which are evaluated in the state runtime and
+                                 defines these orders in a number of passes.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="understanding-state-compiler-ordering__definition-order">
+                              <h2 class="title sectiontitle">Definition Order</h2>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The Definition Order system can be disabled by turning the option
+                                    <span class="keyword title_reference">state_auto_order</span> to <span class="keyword title_reference">False</span> in the master configuration file.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">The top level of ordering is the <span class="keyword title_reference">Definition Order</span>. The <span class="keyword title_reference">Definition Order</span>
+                                 is the order in which states are defined in salt formulas. This is very
+                                 straightforward on basic states which do not contain <tt class="ph tt">include</tt> statements
+                                 or a <tt class="ph tt">top</tt> file, as the states are just ordered from the top of the file,
+                                 but the include system starts to bring in some simple rules for how the
+                                 <span class="keyword title_reference">Definition Order</span> is defined.
+                              </p>
+                              
+                              <p class="p">Looking back at the "Low Data" and "High Data" shown above, the order key has
+                                 been transparently added to the data to enable the <span class="keyword title_reference">Definition Order</span>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="understanding-state-compiler-ordering__the-include-statement">
+                              <h2 class="title sectiontitle">The Include Statement</h2>
+                              <p class="p">Basically, if there is an include statement in a formula, then the formulas
+                                 which are included will be run BEFORE the contents of the formula which
+                                 is including them. Also, the include statement is a list, so they will be
+                                 loaded in the order in which they are included.
+                              </p>
+                              
+                              <p class="p">In the following case:</p>
+                              
+                              <p class="p"><tt class="ph tt">foo.sls</tt></p>
+                              <pre class="pre codeblock language-yaml">include:
+  - bar
+  - baz</pre>
+                              <p class="p"><tt class="ph tt">bar.sls</tt></p>
+                              <pre class="pre codeblock language-yaml">include:
+  - quo</pre>
+                              <p class="p"><tt class="ph tt">baz.sls</tt></p>
+                              <pre class="pre codeblock language-yaml">include:
+  - qux</pre>
+                              <p class="p">In the above case if <span class="keyword title_reference">state.sls foo</span> were called then the formulas will be
+                                 loaded in the following order:
+                              </p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">quo</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">bar</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">qux</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">baz</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">foo</p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                           </div>
+                           
+                           <div class="section" id="understanding-state-compiler-ordering__the-order-flag">
+                              <h2 class="title sectiontitle">The order Flag</h2>
+                              <p class="p">The <span class="keyword title_reference">Definition Order</span> happens transparently in the background, but the
+                                 ordering can be explicitly overridden using the <span class="keyword title_reference">order</span> flag in states:
+                              </p>
+                              <pre class="pre codeblock language-yaml">apache:
+  pkg.installed:
+    - name: httpd
+    - order: 1</pre>
+                              <p class="p">This order flag will over ride the definition order, this makes it very
+                                 simple to create states that are always executed first, last or in specific
+                                 stages, a great example is defining a number of package repositories that
+                                 need to be set up before anything else, or final checks that need to be
+                                 run at the end of a state run by using <span class="keyword title_reference">order: last</span> or <span class="keyword title_reference">order: -1</span>.
+                              </p>
+                              
+                              <p class="p">When the order flag is explicitly set the <span class="keyword title_reference">Definition Order</span> system will omit
+                                 setting an order for that state and directly use the order flag defined.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="understanding-state-compiler-ordering__lexicographical-fall-back">
+                              <h2 class="title sectiontitle">Lexicographical Fall-back</h2>
+                              <p class="p">Salt states were written to ALWAYS execute in the same order. Before the
+                                 introduction of <span class="keyword title_reference">Definition Order</span> in version 0.17.0 everything was ordered
+                                 lexicographically according to the name of the state, then function then id.
+                              </p>
+                              
+                              <p class="p">This is the way Salt has always ensured that states always run in the same
+                                 order regardless of where they are deployed, the addition of the
+                                 <span class="keyword title_reference">Definition Order</span> method mealy makes this finite ordering easier to follow.
+                              </p>
+                              
+                              <p class="p">The lexicographical ordering is still applied but it only has any effect when
+                                 two order statements collide. This means that if multiple states are assigned
+                                 the same order number that they will fall back to lexicographical ordering
+                                 to ensure that every execution still happens in a finite order.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">If running with <span class="keyword title_reference">state_auto_order: False</span> the <span class="keyword title_reference">order</span> key is not
+                                    set automatically, since the Lexicographical order can be derived
+                                    from other keys.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="understanding-state-compiler-ordering__requisite-ordering">
+                              <h2 class="title sectiontitle">Requisite Ordering</h2>
+                              <p class="p">Salt states are fully declarative, in that they are written to declare the
+                                 state in which a system should be. This means that components can require that
+                                 other components have been set up successfully. Unlike the other ordering
+                                 systems, the <span class="keyword title_reference">Requisite</span> system in Salt is evaluated at runtime.
+                              </p>
+                              
+                              <p class="p">The requisite system is also built to ensure that the ordering of execution
+                                 never changes, but is always the same for a given set of states. This is
+                                 accomplished by using a runtime that processes states in a completely
+                                 predictable order instead of using an event loop based system like other
+                                 declarative configuration management systems.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="understanding-state-compiler-ordering__runtime-requisite-evaluation">
+                              <h2 class="title sectiontitle">Runtime Requisite Evaluation</h2>
+                              <p class="p">The requisite system is evaluated as the components are found, and the
+                                 requisites are always evaluated in the same order. This explanation will
+                                 be followed by an example, as the raw explanation may be a little dizzying
+                                 at first as it creates a linear dependency evaluation sequence.
+                              </p>
+                              
+                              <p class="p">The "Low Data" is an ordered list or dictionaries, the state runtime evaluates
+                                 each dictionary in the order in which they are arranged in the list. When
+                                 evaluating a single dictionary it is checked for requisites, requisites are
+                                 evaluated in order, <span class="keyword title_reference">require</span> then <span class="keyword title_reference">watch</span> then <span class="keyword title_reference">prereq</span>.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">If using requisite in statements like require_in and watch_in these will
+                                    be compiled down to require and watch statements before runtime evaluation.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Each requisite contains an ordered list of requisites, these requisites are
+                                 looked up in the list of dictionaries and then executed. Once all requisites
+                                 have been evaluated and executed then the requiring state can safely be run
+                                 (or not run if requisites have not been met).
+                              </p>
+                              
+                              <p class="p">This means that the requisites are always evaluated in the same order, again
+                                 ensuring one of the core design principals of Salt's State system to ensure
+                                 that execution is always finite is intact.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="understanding-state-compiler-ordering__simple-runtime-evaluation-example">
+                              <h2 class="title sectiontitle">Simple Runtime Evaluation Example</h2>
+                              <p class="p">Given the above "Low Data" the states will be evaluated in the following order:</p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">The pkg.installed is executed ensuring that the apache package is
+                                       installed, it contains no requisites and is therefore the first defined
+                                       state to execute.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">The service.running state is evaluated but NOT executed, a watch requisite
+                                       is found, therefore they are read in order, the runtime first checks for
+                                       the file, sees that it has not been executed and calls for the file state
+                                       to be evaluated.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">The file state is evaluated AND executed, since it, like the pkg state does
+                                       not contain any requisites.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">The evaluation of the service state continues, it next checks the pkg
+                                       requisite and sees that it is met, with all requisites met the service
+                                       state is now executed.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                           </div>
+                           
+                           <div class="section" id="understanding-state-compiler-ordering__best-practice">
+                              <h2 class="title sectiontitle">Best Practice</h2>
+                              <p class="p">The best practice in Salt is to choose a method and stick with it, official
+                                 states are written using requisites for all associations since requisites
+                                 create clean, traceable dependency trails and make for the most portable
+                                 formulas. To accomplish something similar to how classical imperative
+                                 systems function all requisites can be omitted and the <tt class="ph tt">failhard</tt> option
+                                 then set to <span class="keyword title_reference">True</span> in the master configuration, this will stop all state runs at
+                                 the first instance of a failure.
+                              </p>
+                              
+                              <p class="p">In the end, using requisites creates very tight and fine grained states,
+                                 not using requisites makes full sequence runs and while slightly easier
+                                 to write, and gives much less control over the executions.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

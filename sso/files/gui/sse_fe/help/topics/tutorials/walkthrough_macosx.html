@@ -1,0 +1,533 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>The MacOS X (Maverick) Developer Step By Step Guide To Salt Installation</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="The MacOS X (Maverick) Developer Step By Step Guide To Salt Installation">
+      
+      <meta name="DC.Relation" scheme="URI" content="../installation/osx.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">The MacOS X (Maverick) Developer Step By Step Guide To Salt Installation</h1>
+                        <div class="body conbody">
+                           <p class="p">This document provides a step-by-step guide to installing a Salt cluster
+                              consisting of  one master, and one minion running on a local VM hosted on Mac OS X.
+                           </p>
+                           
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">This guide is aimed at developers who wish to run Salt in a virtual machine.
+                                 The official (Linux) walkthrough can be found
+                                 <a class="xref" href="http://docs.saltstack.com/topics/tutorials/walkthrough.html" target="_blank">here</a>.
+                              </p>
+                              
+                           </aside>
+                           
+                           <p class="p"><a class="xref" href="http://docs.saltstack.com/topics/installation/osx.html" target="_blank">official documentation</a></p>
+                           
+                           <p class="p">Because Salt has a lot of dependencies that are not built in Mac OS X, we will
+                              use Homebrew to install Salt. Homebrew is a package manager for Mac, it's
+                              great, use it (for this tutorial at least!). Some people spend a lot of time
+                              installing libs by hand to better understand dependencies, and then realize how
+                              useful a package manager is once they're configuring a brand new machine and
+                              have to do it all over again. It also lets you <em class="ph i">uninstall</em> things easily.
+                           </p>
+                           
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">Brew is a Ruby program (Ruby is installed by default with your Mac). Brew
+                                 downloads, compiles, and links software. The linking phase is when compiled
+                                 software is deployed on your machine. It may conflict with manually
+                                 installed software, especially in the /usr/local directory. It's ok,
+                                 remove the manually installed version then refresh the link by typing
+                                 <tt class="ph tt">brew link 'packageName'</tt>. Brew has a <tt class="ph tt">brew doctor</tt> command that can
+                                 help you troubleshoot. It's a great command, use it often. Brew requires
+                                 xcode command line tools. When you run brew the first time it asks you to
+                                 install them if they're not already on your system. Brew installs
+                                 software in /usr/local/bin (system bins are in /usr/bin). In order to use
+                                 those bins you need your $PATH to search there first. Brew tells you if
+                                 your $PATH needs to be fixed.
+                              </p>
+                              
+                           </aside>
+                           
+                           <aside class="fastpath "><span class="glyphicon glyphicon-road"></span><span class="title">Fastpath:</span> 
+                              <p class="p">Use the keyboard shortcut <tt class="ph tt">cmd + shift + period</tt> in the "open" Mac OS X
+                                 dialog box to display hidden files and folders, such as .profile.
+                              </p>
+                              
+                           </aside>
+                           
+                           <p class="p">The Salt minion is going to run on a Virtual Machine. There are a lot of
+                              software options that let you run virtual machines on a mac, But for this
+                              tutorial we're going to use VirtualBox. In addition to virtualBox, we will use
+                              Vagrant, which allows you to create the base VM configuration.
+                           </p>
+                           
+                           <p class="p">Vagrant lets you build ready to use VM images, starting from an OS image and
+                              customizing it using "provisioners". In our case, we'll use it to:
+                           </p>
+                           
+                           <ul class="ul">
+                              <li class="li">
+                                 <p class="p">Download the base Ubuntu image</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">Install salt on that Ubuntu image (Salt is going to be the "provisioner"
+                                    for the VM).
+                                 </p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">Launch the VM</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">SSH into the VM to debug</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">Stop the VM once you're done.</p>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                           <p class="p">In this step we'll use the Salt master to instruct our minion to install
+                              Nginx.
+                           </p>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__the-5-cent-salt-intro">
+                              <h2 class="title sectiontitle">The 5 Cent Salt Intro</h2>
+                              <p class="p">Since you're here you've probably already heard about Salt, so you already
+                                 know Salt lets you configure and run commands on hordes of servers easily.
+                                 Here's a brief overview of a Salt cluster:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Salt works by having a "master" server sending commands to one or multiple
+                                       "minion" servers <span class="keyword footnote_reference">1</span>. The master server is the "command center". It is
+                                       going to be the place where you store your configuration files, aka: "which
+                                       server is the db, which is the web server, and what libraries and software
+                                       they should have installed". The minions receive orders from the master.
+                                       Minions are the servers actually performing work for your business.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Salt has two types of configuration files:</p>
+                                    
+                                    <p class="p">1. the "salt communication channels" or "meta"  or "config" configuration
+                                       files (not official names): one for the master (usually is /etc/salt/master
+                                       , <strong class="ph b">on the master server</strong>), and one for minions (default is
+                                       /etc/salt/minion or /etc/salt/minion.conf, <strong class="ph b">on the minion servers</strong>). Those
+                                       files are used to determine things like the Salt Master IP, port, Salt
+                                       folder locations, etc.. If these are configured incorrectly, your minions
+                                       will probably be unable to receive orders from the master, or the master
+                                       will not know which software a given minion should install.
+                                    </p>
+                                    
+                                    <p class="p">2. the "business" or "service" configuration files (once again, not an
+                                       official name): these are configuration files, ending with ".sls" extension,
+                                       that describe which software should run on which server, along with
+                                       particular configuration properties for the software that is being
+                                       installed. These files should be created in the /srv/salt folder by default,
+                                       but their location can be changed using ... /etc/salt/master configuration file!
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">This tutorial contains a third important configuration file, not to
+                                    be confused with the previous two: the virtual machine provisioning
+                                    configuration file. This in itself is not specifically tied to Salt, but
+                                    it also contains some Salt configuration. More on that in step 3. Also
+                                    note that all configuration files are YAML files. So indentation matters.
+                                 </p>
+                                 
+                              </aside>
+                              1
+                              <p class="p">Salt also works with "masterless" configuration where a minion is
+                                 autonomous (in which case salt can be seen as a local configuration tool),
+                                 or in "multiple master" configuration. See the documentation for more on
+                                 that.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__before-digging-in-the-architecture-of-the-salt-cluster">
+                              <h2 class="title sectiontitle">Before Digging In, The Architecture Of The Salt Cluster</h2>
+                           </div>
+                           
+                           <div class="section head3" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__salt-master">
+                              <h2 class="title sectiontitle">Salt Master</h2>
+                              <p class="p">The "Salt master" server is going to be the Mac OS machine, directly. Commands
+                                 will be run from a terminal app, so Salt will need to be installed on the Mac.
+                                 This is going to be more convenient for toying around with configuration files.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__salt-minion">
+                              <h2 class="title sectiontitle">Salt Minion</h2>
+                              <p class="p">We'll only have one "Salt minion" server. It is going to be running on a
+                                 Virtual Machine running on the Mac, using VirtualBox. It will run an Ubuntu
+                                 distribution.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__install-homebrew">
+                              <h2 class="title sectiontitle">Install Homebrew</h2>
+                              <p class="p">Install Homebrew here <a class="xref" href="http://brew.sh/" target="_blank">http://brew.sh/</a>
+                                 Or just type
+                              </p>
+                              <pre class="pre codeblock language-bash">ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"</pre>
+                              <p class="p">Now type the following commands in your terminal (you may want to type <tt class="ph tt">brew
+                                    doctor</tt> after each to make sure everything's fine):
+                              </p>
+                              <pre class="pre codeblock language-bash">brew install python
+brew install swig
+brew install zmq</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">zmq is ZeroMQ. It's a fantastic library used for server to server network
+                                    communication and is at the core of Salt efficiency.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__install-salt">
+                              <h2 class="title sectiontitle">Install Salt</h2>
+                              <p class="p">You should now have everything ready to launch this command:</p>
+                              <pre class="pre codeblock language-bash">pip install salt</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">There should be no need for <tt class="ph tt">sudo pip install salt</tt>. Brew installed
+                                    Python for your user, so you should have all the access. In case you
+                                    would like to check, type <tt class="ph tt">which python</tt> to ensure that it's
+                                    /usr/local/bin/python, and <tt class="ph tt">which pip</tt> which should be
+                                    /usr/local/bin/pip.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Now type <tt class="ph tt">python</tt> in a terminal then, <tt class="ph tt">import salt</tt>. There should be no
+                                 errors. Now exit the Python terminal using <tt class="ph tt">exit()</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__create-the-master-configuration">
+                              <h2 class="title sectiontitle">Create The Master Configuration</h2>
+                              <p class="p">If the default /etc/salt/master configuration file was not created,
+                                 copy-paste it from here:
+                                 <a class="xref" href="http://docs.saltstack.com/ref/configuration/examples.html#configuration-examples-master" target="_blank">http://docs.saltstack.com/ref/configuration/examples.html#configuration-examples-master</a></p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p"><tt class="ph tt">/etc/salt/master</tt> is a file, not a folder.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Salt Master configuration changes. The Salt master needs a few customization
+                                 to be able to run on Mac OS X:
+                              </p>
+                              <pre class="pre codeblock language-bash">sudo launchctl limit maxfiles 4096 8192</pre>
+                              <p class="p">In the /etc/salt/master file, change max_open_files to 8192 (or just add the
+                                 line: <tt class="ph tt">max_open_files: 8192</tt> (no quote) if it doesn't already exists).
+                              </p>
+                              
+                              <p class="p">You should now be able to launch the Salt master:</p>
+                              <pre class="pre codeblock language-bash">sudo salt-master --log-level=all</pre>
+                              <p class="p">There should be no errors when running the above command.</p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">This command is supposed to be a daemon, but for toying around, we'll keep
+                                    it running on a terminal to monitor the activity.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Now that the master is set, let's configure a minion on a VM.</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__install-virtualbox">
+                              <h2 class="title sectiontitle">Install VirtualBox</h2>
+                              <p class="p">Go get it here: <a class="xref" href="https://www.virtualBox.org/wiki/Downloads" target="_blank">https://www.virtualBox.org/wiki/Downloads</a> (click on VirtualBox
+                                 for OS X hosts =&gt; x86/amd64)
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__install-vagrant">
+                              <h2 class="title sectiontitle">Install Vagrant</h2>
+                              <p class="p">Go get it here: <a class="xref" href="http://downloads.vagrantup.com/" target="_blank">http://downloads.vagrantup.com/</a> and choose the latest version
+                                 (1.3.5 at time of writing), then the .dmg file. Double-click to install it.
+                                 Make sure the <tt class="ph tt">vagrant</tt> command is found when run in the terminal. Type
+                                 <tt class="ph tt">vagrant</tt>. It should display a list of commands.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__create-the-minion-vm-folder">
+                              <h2 class="title sectiontitle">Create The Minion VM Folder</h2>
+                              <p class="p">Create a folder in which you will store your minion's VM. In this tutorial,
+                                 it's going to be a minion folder in the $home directory.
+                              </p>
+                              <pre class="pre codeblock language-bash">cd $home
+mkdir minion</pre>
+                              </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__initialize-vagrant">
+                              <h2 class="title sectiontitle">Initialize Vagrant</h2>
+                              <p class="p">From the minion folder, type</p>
+                              <pre class="pre codeblock language-bash">vagrant init</pre>
+                              <p class="p">This command creates a default Vagrantfile configuration file. This
+                                 configuration file will be used to pass configuration parameters to the Salt
+                                 provisioner in Step 3.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__import-precise64-ubuntu-box">
+                              <h2 class="title sectiontitle">Import Precise64 Ubuntu Box</h2><pre class="pre codeblock language-bash">vagrant box add precise64 http://files.vagrantup.com/precise64.box</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">This box is added at the global Vagrant level. You only need to do it
+                                    once as each VM will use this same file.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__modify-the-vagrantfile">
+                              <h2 class="title sectiontitle">Modify the Vagrantfile</h2>
+                              <p class="p">Modify ./minion/Vagrantfile to use th precise64 box. Change the <tt class="ph tt">config.vm.box</tt>
+                                 line to:
+                              </p>
+                              <pre class="pre codeblock language-yaml">config.vm.box = "precise64"</pre>
+                              <p class="p">Uncomment the line creating a host-only IP. This is the ip of your minion
+                                 (you can change it to something else if that IP is already in use):
+                              </p>
+                              <pre class="pre codeblock language-yaml">config.vm.network :private_network, ip: "192.168.33.10"</pre>
+                              <p class="p">At this point you should have a VM that can run, although there won't be much
+                                 in it. Let's check that.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__checking-the-vm">
+                              <h2 class="title sectiontitle">Checking The VM</h2>
+                              <p class="p">From the $home/minion folder type:</p>
+                              <pre class="pre codeblock language-bash">vagrant up</pre>
+                              <p class="p">A log showing the VM booting should be present. Once it's done you'll be back
+                                 to the terminal:
+                              </p>
+                              <pre class="pre codeblock language-bash">ping 192.168.33.10</pre>
+                              <p class="p">The VM should respond to your ping request.</p>
+                              
+                              <p class="p">Now log into the VM in ssh using Vagrant again:</p>
+                              <pre class="pre codeblock language-bash">vagrant ssh</pre>
+                              <p class="p">You should see the shell prompt change to something similar to
+                                 <tt class="ph tt">vagrant@precise64:~$</tt> meaning you're inside the VM. From there, enter the
+                                 following:
+                              </p>
+                              <pre class="pre codeblock language-bash">ping 10.0.2.2</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">That ip is the ip of your VM host (the Mac OS X OS). The number is a
+                                    VirtualBox default and is displayed in the log after the Vagrant ssh
+                                    command. We'll use that IP to tell the minion where the Salt master is.
+                                    Once you're done, end the ssh session by typing <tt class="ph tt">exit</tt>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">It's now time to connect the VM to the salt master</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__creating-the-minion-configuration-file">
+                              <h2 class="title sectiontitle">Creating The Minion Configuration File</h2>
+                              <p class="p">Create the <tt class="ph tt">/etc/salt/minion</tt> file. In that file, put the
+                                 following lines, giving the ID for this minion, and the IP of the master:
+                              </p>
+                              <pre class="pre codeblock language-yaml">master: 10.0.2.2
+id: 'minion1'
+file_client: remote</pre>
+                              <p class="p">Minions authenticate with the master using keys. Keys are generated
+                                 automatically if you don't provide one and can accept them later on. However,
+                                 this requires accepting the minion key every time the minion is destroyed or
+                                 created (which could be quite often). A better way is to create those keys in
+                                 advance, feed them to the minion, and authorize them once.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__preseed-minion-keys">
+                              <h2 class="title sectiontitle">Preseed minion keys</h2>
+                              <p class="p">From the minion folder on your Mac run:</p>
+                              <pre class="pre codeblock language-bash">sudo salt-key --gen-keys=minion1</pre>
+                              <p class="p">This should create two files: minion1.pem, and minion1.pub.
+                                 Since those files have been created using sudo, but will be used by vagrant,
+                                 you need to change ownership:
+                              </p>
+                              <pre class="pre codeblock language-bash">sudo chown youruser:yourgroup minion1.pem
+sudo chown youruser:yourgroup minion1.pub</pre>
+                              <p class="p">Then copy the .pub file into the list of accepted minions:</p>
+                              <pre class="pre codeblock language-bash">sudo cp minion1.pub /etc/salt/pki/master/minions/minion1</pre>
+                              </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__modify-vagrantfile-to-use-salt-provisioner">
+                              <h2 class="title sectiontitle">Modify Vagrantfile to Use Salt Provisioner</h2>
+                              <p class="p">Let's now modify the Vagrantfile used to provision the Salt VM. Add the
+                                 following section in the Vagrantfile (note: it should be at the same
+                                 indentation level as the other properties):
+                              </p>
+                              <pre class="pre codeblock language-yaml"># salt-vagrant config
+config.vm.provision :salt do |salt|
+    salt.run_highstate = true
+    salt.minion_config = "/etc/salt/minion"
+    salt.minion_key = "./minion1.pem"
+    salt.minion_pub = "./minion1.pub"
+end</pre>
+                              <p class="p">Now destroy the vm and recreate it from the /minion folder:</p>
+                              <pre class="pre codeblock language-bash">vagrant destroy
+vagrant up</pre>
+                              <p class="p">If everything is fine you should see the following message:</p>
+                              <pre class="pre codeblock language-bash">"Bootstrapping Salt... (this may take a while)
+Salt successfully configured and installed!"</pre>
+                              </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__checking-master-minion-communication">
+                              <h2 class="title sectiontitle">Checking Master-Minion Communication</h2>
+                              <p class="p">To make sure the master and minion are talking to each other, enter the
+                                 following:
+                              </p>
+                              <pre class="pre codeblock language-bash">sudo salt '*' test.ping</pre>
+                              <p class="p">You should see your minion answering the ping. It's now time to do some
+                                 configuration.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__checking-the-system-s-original-state">
+                              <h2 class="title sectiontitle">Checking the system's original state</h2>
+                              <p class="p">First, make sure that an HTTP server is not installed on our minion.
+                                 When opening a browser directed at <tt class="ph tt">http://192.168.33.10/</tt> You should get an
+                                 error saying the site cannot be reached.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__initialize-the-top-sls-file">
+                              <h2 class="title sectiontitle">Initialize the top.sls file</h2>
+                              <p class="p">System configuration is done in the /srv/salt/top.sls file (and
+                                 subfiles/folders), and then applied by running the <tt class="ph tt">state.highstate</tt>
+                                 command to have the Salt master give orders so minions will update their
+                                 instructions and run the associated commands.
+                              </p>
+                              
+                              <p class="p">First Create an empty file on your Salt master (Mac OS X machine):</p>
+                              <pre class="pre codeblock language-bash">touch /srv/salt/top.sls</pre>
+                              <p class="p">When the file is empty, or if no configuration is found for our minion
+                                 an error is reported:
+                              </p>
+                              <pre class="pre codeblock language-bash">sudo salt 'minion1' state.highstate</pre>
+                              <p class="p">Should return an error stating:
+                                 "No Top file or external nodes data matches found".
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__create-the-nginx-configuration">
+                              <h2 class="title sectiontitle">Create The Nginx Configuration</h2>
+                              <p class="p">Now is finally the time to enter the real meat of our server's configuration.
+                                 For this tutorial our minion will be treated as a web server that needs to
+                                 have Nginx installed.
+                              </p>
+                              
+                              <p class="p">Insert the following lines into the <tt class="ph tt">/srv/salt/top.sls</tt> file (which should
+                                 current be empty).
+                              </p>
+                              <pre class="pre codeblock language-yaml">base:
+  'minion1':
+    - bin.nginx</pre>
+                              <p class="p">Now create a <tt class="ph tt">/srv/salt/bin/nginx.sls</tt> file containing the following:
+                              </p>
+                              <pre class="pre codeblock language-yaml">nginx:
+  pkg.installed:
+    - name: nginx
+  service.running:
+    - enable: True
+    - reload: True</pre>
+                              </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__check-minion-state">
+                              <h2 class="title sectiontitle">Check Minion State</h2>
+                              <p class="p">Finally run the state.highstate command again:</p>
+                              <pre class="pre codeblock language-bash">sudo salt 'minion1' state.highstate</pre>
+                              <p class="p">You should see a log showing that the Nginx package has been installed
+                                 and the service configured. To prove it, open your browser and navigate to
+                                 <a class="xref" href="http://192.168.33.10/" target="_blank">http://192.168.33.10/</a>, you should see the standard Nginx welcome page.
+                              </p>
+                              
+                              <p class="p">Congratulations!</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="the-macos-x-maverick-developer-step-by-step-guide-to-salt-installation__where-to-go-from-here">
+                              <h2 class="title sectiontitle">Where To Go From Here</h2>
+                              <p class="p">A full description of configuration management within Salt (sls files among
+                                 other things) is available here:
+                                 <a class="xref" href="http://docs.saltstack.com/index.html#configuration-management" target="_blank">http://docs.saltstack.com/index.html#configuration-management</a></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

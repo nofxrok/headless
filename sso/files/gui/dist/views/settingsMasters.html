@@ -1,0 +1,50 @@
+<div class=" row page-header">
+    <h4 class="col-md-4 col-sm-4 col-xs-4">Masters</h4>
+    <div id="master-btns" class="col-md-8 col-sm-8 col-xs-8 ">
+            <button title="remove" class="btn btn-primary master-edit-btn pull-right"
+                ng-click="deleteMasters()"><span class="glyphicon glyphicon-remove-sign"></span>
+            </button>
+            <button title="edit" class="btn btn-primary master-edit-btn pull-right"
+                ng-click="openAddMasterModal()"><span class="glyphicon glyphicon-edit"></span>
+            </button>
+            <button title="add" class="btn btn-primary master-edit-btn pull-right"
+                ng-click="openAddMasterModal()"><span class="glyphicon glyphicon-plus-sign"></span>
+            </button>
+    </div>
+</div>
+
+<div class="main-content">
+    <div ng-show="mode==1">
+        <table ng-show="masters.length" class="table master-list-table">
+            <thead>
+                <tr>
+                    <th>Select</th><th>ID</th><th>Hostname</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="master in masters">
+                    <td class="master-id-col">
+                        <input type="checkbox" name="masterGroup" ng-model="checkedMasters[$index]" ng-change="selectMaster('{{  master.hostname }}')"></input>
+                    </td>
+                    <td class="master-id-col">{{$index + 1}}</td>
+                    <td>{{ master.hostname }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table ng-hide="masters.length" class="table master-list-table">
+            <tr>
+                <td>0 masters connected.</td>
+            </tr>
+        </table>
+    </div>
+
+   <div id="masters-grid" ng-show="mode==2" class="clearfix">
+        <ul class="nav">
+            <li ng-repeat="master in masters" class="col-md-2 col-sm-2 col-xs-2 master-grid-list" ng-class="{'active':selectedMaster==={{$index}}}" title="list">
+                <a href="" ng-click="showMaster({{$index}})">
+                    <span class="glyphicon glyphicon-picture"></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

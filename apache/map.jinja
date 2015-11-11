@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 {% import_yaml "apache/osfingermap.yaml" as osfingermap %}
+=======
+# This file is a jinja file which is rendered whenever init.sls is referenced.  
+# This file sets the variables for each OS as each OS has different serice names
+# I.E. if the OS = Debian set the apache.server variable to apache2
+
+>>>>>>> 38c404a66e6628dfa78c7427ff3ff324ac15afeb
 
 {% set apache = salt['grains.filter_by']({
     'Debian': {
@@ -16,7 +23,11 @@
         'default_site': 'default',
         'default_site_ssl': 'default-ssl',
         'logdir': '/var/log/apache2',
+<<<<<<< HEAD
         'wwwdir': '/srv',
+=======
+	'wwwdir': '/var/www',
+>>>>>>> 38c404a66e6628dfa78c7427ff3ff324ac15afeb
         'use_require': False,
     },
     'RedHat': {
@@ -90,7 +101,11 @@
         'default_site_ssl': 'default-ssl.conf',
         'use_require': True,
     },
+<<<<<<< HEAD
 }, grain='oscodename', merge=salt['grains.filter_by'](
     osfingermap
 , grain='osfinger', merge=salt['pillar.get']('apache:lookup')))) %}
 
+=======
+}, grain='oscodename', merge=salt['pillar.get']('apache:lookup'))) %}
+>>>>>>> 38c404a66e6628dfa78c7427ff3ff324ac15afeb

@@ -1,0 +1,220 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.win_servermanager</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.win_servermanager">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-win-servermanager">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-win-servermanager">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.win_servermanager</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-win-servermanager__module-salt.states.win_servermanager"></span></p>
+                              
+                              <p class="p">Manage Windows features via the ServerManager powershell module</p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.states.win_servermanager.installed">
+                           <h2 class="title topictitle2">installed</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.win_servermanager.installed(
+								name,
+								recurse=False,
+								force=False
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Install the windows feature</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d430231e47" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d430231e49" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d430231e47" class="stentry propvalue">name:</td>
+                                    
+                                    <td valign="top" headers="d430231e49" class="stentry propdesc">
+                                       <p class="p">short name of the feature (the right column in win_servermanager.list_available)</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d430231e47" class="stentry propvalue">recurse:</td>
+                                    
+                                    <td valign="top" headers="d430231e49" class="stentry propdesc">
+                                       <p class="p">install all sub-features as well</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d430231e47" class="stentry propvalue">force:</td>
+                                    
+                                    <td valign="top" headers="d430231e49" class="stentry propdesc">
+                                       <p class="p">if the feature is installed but on of its sub-features are not installed set this
+                                          to True to force
+                                          the installation of the sub-features
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Note:
+                                    Some features require reboot after un/installation. If so, until the server is restarted
+                                    other features can not be installed!
+                                 </p>
+                                 
+                                 <p class="p">Example:</p>
+                                 
+                                 <p class="p">Run <tt class="ph tt">salt MinionName win_servermanager.list_available</tt> to get a list of available roles and features. Use
+                                    the name in the right column. Do not use the role or feature names mentioned in the
+                                    PKGMGR documentation. In
+                                    this example for IIS-WebServerRole the name to be used is Web-Server.
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">ISWebserverRole:
+  win_servermanager.installed:
+    - force: True
+    - recurse: True
+    - name: Web-Server</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.win_servermanager.removed">
+                           <h2 class="title topictitle2">removed</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.win_servermanager.removed(
+								name
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Remove the windows feature
+                                    name:
+                                 </p>
+                                 
+                                 <blockquote class="lq">
+                                    <p class="p">short name of the feature (the right column in win_servermanager.list_available)</p>
+                                    
+                                 </blockquote>
+                                 
+                                 <p class="p">Note:
+                                    Some features require a reboot after uninstallation. If so the feature will not be
+                                    completly uninstalled until
+                                    the server is restarted.
+                                    Example:
+                                    Run <tt class="ph tt">salt MinionName win_servermanager.list_installed</tt> to get a list of all features installed. Use the top
+                                    name listed for each feature, not the indented one. Do not use the role or feature
+                                    names mentioned in the
+                                    PKGMGR documentation.
+                                    .. code-block:: yaml
+                                 </p>
+                                 
+                                 <blockquote class="lq">
+                                    <dl class="dl definition_list">
+                                       <dt class="dt dlterm">ISWebserverRole:</dt>
+                                       
+                                       <dd class="dd">
+                                          <dl class="dl definition_list">
+                                             <dt class="dt dlterm">win_servermanager.removed:</dt>
+                                             
+                                             <dd class="dd">
+                                                <ul class="ul">
+                                                   <li class="li">
+                                                      <p class="p">name: Web-Server</p>
+                                                      
+                                                   </li>
+                                                   
+                                                </ul>
+                                                
+                                             </dd>
+                                             
+                                          </dl>
+                                          
+                                       </dd>
+                                       
+                                    </dl>
+                                    
+                                 </blockquote>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

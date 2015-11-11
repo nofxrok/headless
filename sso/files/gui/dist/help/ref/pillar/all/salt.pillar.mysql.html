@@ -1,0 +1,513 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.pillar.mysql</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.pillar.mysql">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../pillar-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-pillar-mysql">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-pillar-mysql">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.pillar.mysql</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-pillar-mysql__module-salt.pillar.mysql"></span></p>
+                              
+                              <p class="p">Retrieve Pillar data by doing a MySQL query</p>
+                              
+                              <p class="p">MariaDB provides Python support through the MySQL Python package.
+                                 Therefore, you may use this module with both MySQL or MariaDB.
+                              </p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">maturity</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">new</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">python-mysqldb</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">platform</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">all</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="theory-of-mysql-ext-pillar">
+                           <h2 class="title topictitle2">Theory of mysql ext_pillar</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">Ok, here's the theory for how this works...</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">If there's a keyword arg of mysql_query, that'll go first.</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">Then any non-keyword args are processed in order.</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">Finally, remaining keywords are processed.</p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">We do this so that it's backward compatible with older configs.
+                                    Keyword arguments are sorted before being appended, so that they're predictable,
+                                    but they will always be applied last so overall it's moot.
+                                 </p>
+                                 
+                                 <p class="p">For each of those items we process, it depends on the object type:</p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">Strings are executed as is and the pillar depth is determined by the number
+                                          of fields returned.
+                                       </p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">A list has the first entry used as the query, the second as the pillar depth.</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">A mapping uses the keys "query" and "depth" as the tuple</p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">You can retrieve as many fields as you like, how they get used depends on the
+                                    exact settings.
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="configuring-the-mysql-ext-pillar">
+                           <h2 class="title topictitle2">Configuring the mysql ext_pillar</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">First an example of how legacy queries were specified.</p>
+                                 <pre class="pre codeblock language-yaml">ext_pillar:
+  - mysql:
+      mysql_query: "SELECT pillar,value FROM pillars WHERE minion_id = %s"</pre>
+                                 <p class="p">Alternatively, a list of queries can be passed in</p>
+                                 <pre class="pre codeblock language-yaml">ext_pillar:
+  - mysql:
+      - "SELECT pillar,value FROM pillars WHERE minion_id = %s"
+      - "SELECT pillar,value FROM more_pillars WHERE minion_id = %s"</pre>
+                                 <p class="p">Or you can pass in a mapping</p>
+                                 <pre class="pre codeblock language-yaml">ext_pillar:
+  - mysql:
+      main: "SELECT pillar,value FROM pillars WHERE minion_id = %s"
+      extras: "SELECT pillar,value FROM more_pillars WHERE minion_id = %s"</pre>
+                                 <p class="p">The query can be provided as a string as we have just shown, but they can be
+                                    provided as lists
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">ext_pillar:
+  - mysql:
+      - "SELECT pillar,value FROM pillars WHERE minion_id = %s"
+        2</pre>
+                                 <p class="p">Or as a mapping</p>
+                                 <pre class="pre codeblock language-yaml">ext_pillar:
+  - mysql:
+      - query: "SELECT pillar,value FROM pillars WHERE minion_id = %s"
+        depth: 2</pre>
+                                 <p class="p">The depth defines how the dicts are constructed.
+                                    Essentially if you query for fields a,b,c,d for each row you'll get:
+                                 </p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">With depth 1: {a: {"b": b, "c": c, "d": d}}</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">With depth 2: {a: {b: {"c": c, "d": d}}}</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">With depth 3: {a: {b: {c: d}}}</p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">Depth greater than 3 wouldn't be different from 3 itself.
+                                    Depth of 0 translates to the largest depth needed, so 3 in this case.
+                                    (max depth == key count - 1)
+                                 </p>
+                                 
+                                 <p class="p">The legacy compatibility translates to depth 1.</p>
+                                 
+                                 <p class="p">Then they are merged in a similar way to plain pillar data, in the order
+                                    returned by MySQL.
+                                 </p>
+                                 
+                                 <p class="p">Thus subsequent results overwrite previous ones when they collide.</p>
+                                 
+                                 <p class="p">The ignore_null option can be used to change the overwrite behavior so that
+                                    only non-NULL values in subsequent results will overwrite.  This can be used
+                                    to selectively overwrite default values.
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">ext_pillar:
+  - mysql:
+      - query: "SELECT pillar,value FROM pillars WHERE minion_id = 'default' and minion_id != %s"
+        depth: 2
+      - query: "SELECT pillar,value FROM pillars WHERE minion_id = %s"
+        depth: 2
+        ignore_null: True</pre>
+                                 <p class="p">If you specify <span class="keyword title_reference">as_list: True</span> in the mapping expression it will convert
+                                    collisions to lists.
+                                 </p>
+                                 
+                                 <p class="p">If you specify <span class="keyword title_reference">with_lists: '...'</span> in the mapping expression it will
+                                    convert the specified depths to list.  The string provided is a sequence
+                                    numbers that are comma separated.  The string '1,3' will result in:
+                                 </p>
+                                 <pre class="pre codeblock language-">a,b,c,d,e,1  # field 1 same, field 3 differs
+a,b,c,f,g,2  # ^^^^
+a,z,h,y,j,3  # field 1 same, field 3 same
+a,z,h,y,k,4  # ^^^^
+  ^   ^</pre>
+                                 <p class="p">These columns define list grouping</p>
+                                 <pre class="pre codeblock language-python">{a: [
+      {c: [
+          {e: 1},
+          {g: 2}
+          ]
+      },
+      {h: [
+          {j: 3, k: 4 }
+          ]
+      }
+]}</pre>
+                                 <p class="p">The range for with_lists is 1 to number_of_fields, inclusive.
+                                    Numbers outside this range are ignored.
+                                 </p>
+                                 
+                                 <p class="p">Finally, if you pass the queries in via a mapping, the key will be the
+                                    first level name where as passing them in as a list will place them in the
+                                    root.  This isolates the query results into their own subtrees.
+                                    This may be a help or hindrance to your aims and can be used as such.
+                                 </p>
+                                 
+                                 <p class="p">You can basically use any SELECT query that gets you the information, you
+                                    could even do joins or subqueries in case your minion_id is stored elsewhere.
+                                    It is capable of handling single rows or multiple rows per minion.
+                                 </p>
+                                 
+                                 <p class="p">MySQL configuration of the MySQL returner is being used (mysql.db, mysql.user,
+                                    mysql.pass, mysql.port, mysql.host)
+                                 </p>
+                                 
+                                 <p class="p">Required python modules: MySQLdb</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="more-complete-example">
+                           <h2 class="title topictitle2">More complete example</h2>
+                           <div class="body refbody">
+                              <div class="section"><pre class="pre codeblock language-yaml">mysql:
+  user: 'salt'
+  pass: 'super_secret_password'
+  db: 'salt_db'
+
+ext_pillar:
+  - mysql:
+      fromdb:
+        query: 'SELECT col1,col2,col3,col4,col5,col6,col7
+                  FROM some_random_table
+                 WHERE minion_pattern LIKE %s'
+        depth: 5
+        as_list: True
+        with_lists: [1,3]</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.pillar.mysql.ext_pillar">
+                              <h3 class="title topictitle3">ext_pillar</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.pillar.mysql.ext_pillar(
+								minion_id,
+								pillar,
+								*args,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Execute queries, merge and return as a dict</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.pillar.mysql.merger">
+                           <h2 class="title topictitle2">merger Class</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.pillar.mysql.merger</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">This class receives and processes the database rows in a database agnostic way.</p>
+                                 
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties" id="salt.pillar.mysql.merger__properties_cmz_gy1_pr">
+                                 <tr>
+                                    
+                                    <th id="d319483e209-value" valign="bottom" align="left">Value</th>
+                                    
+                                    <th id="d319483e209-desc" valign="bottom" align="left">Description</th>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d319483e209-value" class="stentry propvalue">merger.as_list</td>
+                                    
+                                    <td valign="top" headers="d319483e209-desc" class="stentry propdesc">&nbsp;</td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d319483e209-value" class="stentry propvalue">merger.depth</td>
+                                    
+                                    <td valign="top" headers="d319483e209-desc" class="stentry propdesc">&nbsp;</td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d319483e209-value" class="stentry propvalue">merger.field_names</td>
+                                    
+                                    <td valign="top" headers="d319483e209-desc" class="stentry propdesc">&nbsp;</td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d319483e209-value" class="stentry propvalue">merger.focus</td>
+                                    
+                                    <td valign="top" headers="d319483e209-desc" class="stentry propdesc">&nbsp;</td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d319483e209-value" class="stentry propvalue">merger.ignore_null</td>
+                                    
+                                    <td valign="top" headers="d319483e209-desc" class="stentry propdesc">&nbsp;</td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d319483e209-value" class="stentry propvalue">merger.num_fields</td>
+                                    
+                                    <td valign="top" headers="d319483e209-desc" class="stentry propdesc">&nbsp;</td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d319483e209-value" class="stentry propvalue">merger.result</td>
+                                    
+                                    <td valign="top" headers="d319483e209-desc" class="stentry propdesc">&nbsp;</td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d319483e209-value" class="stentry propvalue">merger.with_lists</td>
+                                    
+                                    <td valign="top" headers="d319483e209-desc" class="stentry propdesc">&nbsp;</td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.pillar.mysql.merger.enter_root">
+                              <h3 class="title topictitle3">merger.enter_root Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">enter_root(
+								root
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Set self.focus for kwarg queries</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.pillar.mysql.merger.extract_queries">
+                              <h3 class="title topictitle3">merger.extract_queries Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">extract_queries(
+								args,
+								kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">This function normalizes the config block into a set of queries we
+                                       can use.  The return is a list of consistently laid out dicts.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.pillar.mysql.merger.process_fields">
+                              <h3 class="title topictitle3">merger.process_fields Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">process_fields(
+								field_names,
+								depth
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">The primary purpose of this function is to store the sql field list
+                                       and the depth to which we process.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.pillar.mysql.merger.process_results">
+                              <h3 class="title topictitle3">merger.process_results Method</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">process_results(
+								rows
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">This function takes a list of database results and iterates over,
+                                       merging them into a dict form.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

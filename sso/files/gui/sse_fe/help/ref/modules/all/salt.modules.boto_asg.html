@@ -1,0 +1,471 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.boto_asg</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.boto_asg">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-boto-asg">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-boto-asg">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.boto_asg</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-boto-asg__module-salt.modules.boto_asg"></span></p>
+                              
+                              <p class="p">Connection module for Amazon Autoscale Groups</p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">configuration</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">This module accepts explicit autoscale credentials but can also
+                                       utilize IAM roles assigned to the instance trough Instance Profiles.
+                                       Dynamic credentials are then automatically obtained from AWS API and no
+                                       further configuration is necessary. More Information available at:
+                                    </p>
+                                    <pre class="pre codeblock language-">http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html</pre>
+                                    <p class="p">If IAM roles are not used you need to specify them either in a pillar or
+                                       in the minion's config file:
+                                    </p>
+                                    <pre class="pre codeblock language-">asg.keyid: GKTADJGHEIQSXMKKRBJ08H
+asg.key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs</pre>
+                                    <p class="p">A region may also be specified in the configuration:</p>
+                                    <pre class="pre codeblock language-">asg.region: us-east-1</pre>
+                                    <p class="p">If a region is not specified, the default is us-east-1.</p>
+                                    
+                                    <p class="p">It's also possible to specify key, keyid and region via a profile, either
+                                       as a passed in dict, or as a string to pull from pillars or minion config:
+                                    </p>
+                                    
+                                    <blockquote class="lq">
+                                       <dl class="dl definition_list">
+                                          <dt class="dt dlterm">myprofile:</dt>
+                                          
+                                          <dd class="dd">
+                                             <p class="p">keyid: GKTADJGHEIQSXMKKRBJ08H
+                                                key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs
+                                                region: us-east-1
+                                             </p>
+                                             
+                                          </dd>
+                                          
+                                       </dl>
+                                       
+                                    </blockquote>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">boto</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.boto_asg.create">
+                           <h2 class="title topictitle2">create</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_asg.create(
+								name,
+								launch_config_name,
+								availability_zones,
+								min_size,
+								max_size,
+								desired_capacity=None,
+								load_balancers=None,
+								default_cooldown=None,
+								health_check_type=None,
+								health_check_period=None,
+								placement_group=None,
+								vpc_zone_identifier=None,
+								tags=None,
+								termination_policies=None,
+								suspended_processes=None,
+								scaling_policies=None,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Create an autoscale group.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_asg.create myasg mylc '["us-east-1a", "us-east-1e"]' 1 10 load_balancers='["myelb", "myelb2"]' tags='[{"key": "Name", value="myasg", "propagate_at_launch": True}]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_asg.create_launch_configuration">
+                           <h2 class="title topictitle2">create_launch_configuration</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_asg.create_launch_configuration(
+								name,
+								image_id,
+								key_name=None,
+								security_groups=None,
+								user_data=None,
+								instance_type='m1.small',
+								kernel_id=None,
+								ramdisk_id=None,
+								block_device_mappings=None,
+								instance_monitoring=False,
+								spot_price=None,
+								instance_profile_name=None,
+								ebs_optimized=False,
+								associate_public_ip_address=None,
+								volume_type=None,
+								delete_on_termination=True,
+								iops=None,
+								use_block_device_types=False,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Create a launch configuration.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_asg.create_launch_configuration mylc image_id=ami-0b9c9f62 key_name='mykey' security_groups='["mygroup"]' instance_type='c3.2xlarge'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_asg.delete">
+                           <h2 class="title topictitle2">delete</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_asg.delete(
+								name,
+								force=False,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Delete an autoscale group.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_asg.delete myasg region=us-east-1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_asg.delete_launch_configuration">
+                           <h2 class="title topictitle2">delete_launch_configuration</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_asg.delete_launch_configuration(
+								name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Delete a launch configuration.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_asg.delete_launch_configuration mylc</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_asg.exists">
+                           <h2 class="title topictitle2">exists</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_asg.exists(
+								name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check to see if an autoscale group exists.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_asg.exists myasg region=us-east-1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_asg.get_cloud_init_mime">
+                           <h2 class="title topictitle2">get_cloud_init_mime</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_asg.get_cloud_init_mime(
+								cloud_init
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Get a mime multipart encoded string from a cloud-init dict. Currently
+                                    supports scripts and cloud-config.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt myminion boto.get_cloud_init_mime &lt;cloud init&gt;</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_asg.get_config">
+                           <h2 class="title topictitle2">get_config</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_asg.get_config(
+								name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Get the configuration for an autoscale group.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_asg.get_config myasg region=us-east-1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_asg.get_instances">
+                           <h2 class="title topictitle2">get_instances</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_asg.get_instances(
+								name,
+								lifecycle_state='InService',
+								health_status='Healthy',
+								attribute='private_ip_address',
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">return attribute of all instances in the named autoscale group.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt-call boto_asg.get_instances my_autoscale_group_name</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_asg.get_scaling_policy_arn">
+                           <h2 class="title topictitle2">get_scaling_policy_arn</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_asg.get_scaling_policy_arn(
+								as_group,
+								scaling_policy_name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the arn for a scaling policy in a specific autoscale group or None
+                                    if not found. Mainly used as a helper method for boto_cloudwatch_alarm, for
+                                    linking alarms to scaling policies.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-">salt '*' boto_asg.get_scaling_policy_arn mygroup mypolicy</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_asg.launch_configuration_exists">
+                           <h2 class="title topictitle2">launch_configuration_exists</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_asg.launch_configuration_exists(
+								name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check for a launch configuration's existence.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_asg.launch_configuration_exists mylc</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_asg.update">
+                           <h2 class="title topictitle2">update</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_asg.update(
+								name,
+								launch_config_name,
+								availability_zones,
+								min_size,
+								max_size,
+								desired_capacity=None,
+								load_balancers=None,
+								default_cooldown=None,
+								health_check_type=None,
+								health_check_period=None,
+								placement_group=None,
+								vpc_zone_identifier=None,
+								tags=None,
+								termination_policies=None,
+								suspended_processes=None,
+								scaling_policies=None,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Update an autoscale group.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_asg.update myasg mylc '["us-east-1a", "us-east-1e"]' 1 10 load_balancers='["myelb", "myelb2"]' tags='[{"key": "Name", value="myasg", "propagate_at_launch": True}]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

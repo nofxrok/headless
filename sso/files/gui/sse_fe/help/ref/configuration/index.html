@@ -1,0 +1,306 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Configuring Salt</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Configuring Salt">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/administration.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="master.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="minion.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="nonroot.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="configuring-salt">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="configuring-salt">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Configuring Salt</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p">Salt configuration is very simple. The default configuration for the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../glossary.html#glossary__term-master">master</a> will work for most installations and the only requirement for
+                                 setting up a 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../glossary.html#glossary__term-minion">minion</a> is to set the location of the master in the minion
+                                 configuration file.
+                              </p>
+                              
+                              <p class="p">The configuration files will be installed to <tt class="ph tt">/etc/salt</tt> and are named
+                                 after the respective components, <tt class="ph tt">/etc/salt/master</tt>, and
+                                 <tt class="ph tt">/etc/salt/minion</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuring-salt__master-configuration">
+                              <h2 class="title sectiontitle">Master Configuration</h2>
+                              <p class="p">By default the Salt master listens on ports 4505 and 4506 on all
+                                 interfaces (0.0.0.0). To bind Salt to a specific IP, redefine the
+                                 "interface" directive in the master configuration file, typically
+                                 <tt class="ph tt">/etc/salt/master</tt>, as follows:
+                              </p>
+                              <pre class="pre codeblock language-diff">- #interface: 0.0.0.0
++ interface: 10.0.0.1</pre>
+                              <p class="p">After updating the configuration file, restart the Salt master.
+                                 See the 
+                                 		
+                                 			&nbsp;<a class="xref" href="master.html#configuration-salt-master">master configuration reference</a>
+                                 for more details about other configurable options.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuring-salt__minion-configuration">
+                              <h2 class="title sectiontitle">Minion Configuration</h2>
+                              <p class="p">Although there are many Salt Minion configuration options, configuring
+                                 a Salt Minion is very simple. By default a Salt Minion will
+                                 try to connect to the DNS name "salt"; if the Minion is able to
+                                 resolve that name correctly, no configuration is needed.
+                              </p>
+                              
+                              <p class="p">If the DNS name "salt" does not resolve to point to the correct
+                                 location of the Master, redefine the "master" directive in the minion
+                                 configuration file, typically <tt class="ph tt">/etc/salt/minion</tt>, as follows:
+                              </p>
+                              <pre class="pre codeblock language-diff">- #master: salt
++ master: 10.0.0.1</pre>
+                              <p class="p">After updating the configuration file, restart the Salt minion.
+                                 See the 
+                                 		
+                                 			&nbsp;<a class="xref" href="minion.html#configuration-salt-minion">minion configuration reference</a>
+                                 for more details about other configurable options.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuring-salt__running-salt">
+                              <h2 class="title sectiontitle">Running Salt</h2>
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">Start the master in the foreground (to daemonize the process, pass the
+                                       
+                                       		
+                                       			&nbsp;<a class="xref" href="../cli/salt-master.html#salt-master__cmdoption-salt-master-d">-d flag</a>):
+                                    </p>
+                                    <pre class="pre codeblock language-bash">salt-master</pre>
+                                    </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Start the minion in the foreground (to daemonize the process, pass the
+                                       
+                                       		
+                                       			&nbsp;<a class="xref" href="../cli/salt-minion.html#salt-minion__cmdoption-salt-minion-d">-d flag</a>):
+                                    </p>
+                                    <pre class="pre codeblock language-bash">salt-minion</pre>
+                                    </li>
+                                 
+                              </ol>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">Having trouble?</strong><p class="p">The simplest way to troubleshoot Salt is to run the master and minion in
+                                    the foreground with 
+                                    		
+                                    			&nbsp;<a class="xref" href="../cli/salt-master.html#salt-master__cmdoption-salt-master-l">log level</a> set to <tt class="ph tt">debug</tt>:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt-master --log-level=debug</pre>
+                                 <p class="p">For information on salt's logging system please see the 
+                                    		
+                                    			&nbsp;<a class="xref" href="logging/index.html#logging">logging
+                                       document</a>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">Run as an unprivileged (non-root) user</strong><p class="p">To run Salt as another user, set the 
+                                    		
+                                    			&nbsp;<a class="xref" href="master.html#configuration-salt-master__user">user</a> parameter in the
+                                    master config file.
+                                 </p>
+                                 
+                                 <p class="p">Additionally, ownership, and permissions need to be set such that the
+                                    desired user can read from and write to the following directories (and
+                                    their subdirectories, where applicable):
+                                 </p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p">/etc/salt</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">/var/cache/salt</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">/var/log/salt</p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p">/var/run/salt</p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">More information about running salt as a non-privileged user can be found
+                                    
+                                    		
+                                    			&nbsp;<a class="xref" href="nonroot.html#running-the-salt-master-minion-as-an-unprivileged-user">here</a>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">There is also a full 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/troubleshooting/index.html#troubleshooting">troubleshooting guide</a>
+                                 available.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuring-salt__key-management">
+                              <h2 class="title sectiontitle">Key Management</h2>
+                              <p class="p">Salt uses AES encryption for all communication between the Master and
+                                 the Minion. This ensures that the commands sent to the Minions cannot
+                                 be tampered with, and that communication between Master and Minion is
+                                 authenticated through trusted, accepted keys.
+                              </p>
+                              
+                              <p class="p">Before commands can be sent to a Minion, its key must be accepted on
+                                 the Master. Run the <tt class="ph tt">salt-key</tt> command to list the keys known to
+                                 the Salt Master:
+                              </p>
+                              <pre class="pre codeblock language-bash">[root@master ~]# salt-key -L
+Unaccepted Keys:
+alpha
+bravo
+charlie
+delta
+Accepted Keys:</pre>
+                              <p class="p">This example shows that the Salt Master is aware of four Minions, but none of
+                                 the keys has been accepted. To accept the keys and allow the Minions to be
+                                 controlled by the Master, again use the <tt class="ph tt">salt-key</tt> command:
+                              </p>
+                              <pre class="pre codeblock language-bash">[root@master ~]# salt-key -A
+[root@master ~]# salt-key -L
+Unaccepted Keys:
+Accepted Keys:
+alpha
+bravo
+charlie
+delta</pre>
+                              <p class="p">The <tt class="ph tt">salt-key</tt> command allows for signing keys individually or in bulk. The
+                                 example above, using <tt class="ph tt">-A</tt> bulk-accepts all pending keys. To accept keys
+                                 individually use the lowercase of the same option, <tt class="ph tt">-a keyname</tt>.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="../cli/salt-key.html#salt-key">salt-key manpage</a></p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuring-salt__sending-commands">
+                              <h2 class="title sectiontitle">Sending Commands</h2>
+                              <p class="p">Communication between the Master and a Minion may be verified by running
+                                 the <tt class="ph tt">test.ping</tt> command:
+                              </p>
+                              <pre class="pre codeblock language-bash">[root@master ~]# salt alpha test.ping
+alpha:
+    True</pre>
+                              <p class="p">Communication between the Master and all Minions may be tested in a
+                                 similar way:
+                              </p>
+                              <pre class="pre codeblock language-bash">[root@master ~]# salt '*' test.ping
+alpha:
+    True
+bravo:
+    True
+charlie:
+    True
+delta:
+    True</pre>
+                              <p class="p">Each of the Minions should send a <tt class="ph tt">True</tt> response as shown above.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuring-salt__what-s-next">
+                              <h2 class="title sectiontitle">What's Next?</h2>
+                              <p class="p">Understanding 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/targeting/index.html#targeting">targeting</a> is important. From there,
+                                 depending on the way you wish to use Salt, you should also proceed to learn
+                                 about 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/tutorials/starting_states.html#how-do-i-use-salt-states">States</a> and 
+                                 		
+                                 			&nbsp;<a class="xref" href="../modules/index.html#execution-modules">Execution Modules</a>.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links">
+                           
+                           <ul class="ullinks">
+                              
+                              <li class="link ulchildlink"><strong><a href="master.html">Configuring the Salt Master</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="minion.html">Configuring the Salt Minion</a></strong><br>
+                                 
+                              </li>
+                              
+                              <li class="link ulchildlink"><strong><a href="nonroot.html">Running the Salt Master/Minion as an Unprivileged User</a></strong><br>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                        </div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

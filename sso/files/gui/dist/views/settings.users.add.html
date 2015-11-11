@@ -1,0 +1,78 @@
+<div class="views-forms">
+<div class="modal-header">
+    <h3 class="modal-title">Add User</h3>
+</div>
+<div class="modal-body">
+    <form name="addUserForm" id="add-master-form" class="form-horizontal" role="form" ng-submit="addUser(user)" novalidate>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">First Name</label>
+            <div class="col-xs-8" ng-class="{'has-error': addUserForm.firstname.$error.required}">
+                <input name="firstname" class="form-control" ng-pattern="/^[a-zA-Z0-9]+$/" ng-model="user.first_name" required salt-form-focus ng-click="addUserForm.firstname.$touched = false"/>
+                <div class="validation-error" ng-show="addUserForm.firstname.$touched && !addUserForm.firstname.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="addUserForm.firstname.$viewValue && !addUserForm.firstname.$valid">First name invalid</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Last Name</label>
+            <div class="col-xs-8" ng-class="{'has-error': addUserForm.lastname.$error.required}">
+                <input name="lastname" class="form-control" ng-pattern="/^[a-zA-Z0-9]+$/" ng-model="user.last_name" required ng-click="addUserForm.lastname.$touched = false"/>
+                <div class="validation-error" ng-show="addUserForm.lastname.$touched && !addUserForm.lastname.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="addUserForm.lastname.$viewValue && !addUserForm.lastname.$valid">Last name invalid</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Email</label>
+            <div class="col-xs-8" ng-class="{'has-error': addUserForm.email.$error.required}">
+                <input name="email" type="email" class="form-control" ng-model="user.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" required ng-click="addUserForm.email.$touched = false"/>
+                <div class="validation-error" ng-show="addUserForm.email.$touched && !addUserForm.email.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="addUserForm.email.$viewValue && !addUserForm.email.$valid">Email invalid</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-3 control-label">User Role</label>
+            <div class="col-xs-8" ng-class="{'has-error': addUserForm.userrole.$error.required}">
+                <!-- <select name="userrole" class="form-control" ng-model="user.type" required ng-click="addUserForm.userrole.$touched = false">
+                    <option value="superuser">superuser</option>
+                    <option value="admin">admin</option>
+                    <option value="user">user</option>
+                </select> -->
+                <!-- <div class="validation-error" ng-show="addUserForm.userrole.$touched && !addUserForm.userrole.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="addUserForm.userrole.$viewValue && !addUserForm.userrole.$valid">Please select a Role</div> -->
+                
+                <input type="text" class="form-control" ng-readonly="true" value="Superuser"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">User Name</label>
+            <div class="col-xs-8" ng-class="{'has-error': addUserForm.username.$error.required}">
+                <input name="username" class="form-control" ng-pattern="/^[a-zA-Z0-9]+$/"  ng-model="user.username" required ng-click="addUserForm.username.$touched = false"/>
+                <div class="validation-error" ng-show="addUserForm.username.$touched && !addUserForm.username.$viewValue">Required field</div>
+                <div class="validation-error" ng-show="addUserForm.username.$viewValue && !addUserForm.username.$valid">User name invalid</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-3 control-label">
+                Password</label>
+            <div class="col-xs-8" ng-class="{'has-error': addUserForm.password.$error.required}">
+                <input name="password" type="password" class="form-control" id="inputPassword3" ng-model="user.password" required ng-click="addUserForm.password.$touched = false"/>
+                <div class="validation-error" ng-show="addUserForm.password.$touched && !addUserForm.password.$viewValue">Required field</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword4" class="col-sm-3 control-label">Confirm
+                Password</label>
+            <div class="col-xs-8" ng-class="{'has-error': addUserForm.confirmpassword.$error.required}">
+                <input name="confirmpassword" type="password" class="form-control" id="inputPassword4" ng-model="user.confirm_password" required ng-click="addUserForm.confirmpassword.$touched = false"/>
+                <div class="validation-error" ng-show="addUserForm.confirmpassword.$touched && !addUserForm.confirmpassword.$viewValue">Required field</div>
+            </div>
+        </div>
+        <span class="form-notice" style="color: #FF6666; font-style: italic; font-size: 11px;">(All fields are required)</span>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary site-btn-form" ng-click="addUser(user)" ng-disabled="addUserForm.$invalid">Add</button>
+    <button class="btn btn-warning site-btn-form" ui-sref="salt.dashboard.settings.users.list" ui-sref-opts="{reload: true}">Cancel</button>
+</div>
+</div>

@@ -1,0 +1,139 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Storing Data in Other Databases</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Storing Data in Other Databases">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/administration.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="sdb">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="sdb">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Storing Data in Other Databases</h1>
+                        <div class="body conbody">
+                           <p class="p ids"><span class="ph" id="sdb__storing-data-in-other-databases"></span></p>
+                           
+                           <p class="p">The SDB interface is designed to store and retrieve data that, unlike pillars
+                              and grains, is not necessarily minion-specific. The initial design goal was to
+                              allow passwords to be stored in a secure database, such as one managed by the
+                              keyring package, rather than as plain-text files. However, as a generic database
+                              interface, it could conceptually be used for a number of other purposes.
+                           </p>
+                           
+                           <p class="p">SDB was added to Salt in version 2014.7.0. SDB is currently experimental, and
+                              should probably not be used in production.
+                           </p>
+                           
+                           <div class="section" id="sdb__sdb-configuration">
+                              <h2 class="title sectiontitle">SDB Configuration</h2>
+                              <p class="p">In order to use the SDB interface, a configuration profile must be set up in
+                                 either the master or minion configuration file. The configuration stanza
+                                 includes the name/ID that the profile will be referred to as, a <tt class="ph tt">driver</tt>
+                                 setting, and any other arguments that are necessary for the SDB module that will
+                                 be used. For instance, a profile called <tt class="ph tt">mykeyring</tt>, which uses the
+                                 <tt class="ph tt">system</tt> service in the <tt class="ph tt">keyring</tt> module would look like:
+                              </p>
+                              <pre class="pre codeblock language-yaml">mykeyring:
+  driver: keyring
+  service: system</pre>
+                              <p class="p">It is recommended to keep the name of the profile simple, as it is used in the
+                                 SDB URI as well.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="sdb__sdb-uris">
+                              <h2 class="title sectiontitle">SDB URIs</h2>
+                              <p class="p">SDB is designed to make small database queries (hence the name, SDB) using a
+                                 compact URL. This allows users to reference a database value quickly inside
+                                 a number of Salt configuration areas, without a lot of overhead. The basic
+                                 format of an SDB URI is:
+                              </p>
+                              <pre class="pre codeblock language-yaml">sdb://&lt;profile&gt;/&lt;args&gt;</pre>
+                              <p class="p">The profile refers to the configuration profile defined in either the master or
+                                 the minion configuration file. The args are specific to the module referred to
+                                 in the profile, but will typically only need to refer to the key of a
+                                 key/value pair inside the database. This is because the profile itself should
+                                 define as many other parameters as possible.
+                              </p>
+                              
+                              <p class="p">For example, a profile might be set up to reference credentials for a specific
+                                 OpenStack account. The profile might look like:
+                              </p>
+                              <pre class="pre codeblock language-yaml">kevinopenstack:
+  driver: keyring
+  service: salt.cloud.openstack.kevin</pre>
+                              <p class="p">And the URI used to reference the password might look like:</p>
+                              <pre class="pre codeblock language-yaml">sdb://kevinopenstack/password</pre>
+                              </div>
+                           
+                           <div class="section" id="sdb__writing-sdb-modules">
+                              <h2 class="title sectiontitle">Writing SDB Modules</h2>
+                              <p class="p">There is currently one function that MUST exist in any SDB module (<tt class="ph tt">get()</tt>)
+                                 and one that MAY exist (<tt class="ph tt">set_()</tt>). If using a (<tt class="ph tt">set_()</tt>) function, a
+                                 <tt class="ph tt">__func_alias__</tt> dictionary MUST be declared in the module as well:
+                              </p>
+                              <pre class="pre codeblock language-python">__func_alias__ = {
+    'set_': 'set',
+}</pre>
+                              <p class="p">This is because <tt class="ph tt">set</tt> is a Python built-in, and therefore functions should not
+                                 be created which are called <tt class="ph tt">set()</tt>. The <tt class="ph tt">__func_alias__</tt> functionality is
+                                 provided via Salt's loader interfaces, and allows legally-named functions to be
+                                 referred to using names that would otherwise be unwise to use.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">get()</tt> function is required, as it will be called via functions in other
+                                 areas of the code which make use of the <tt class="ph tt">sdb://</tt> URI. For example, the
+                                 <tt class="ph tt">config.get</tt> function in the <tt class="ph tt">config</tt> execution module uses this function.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">set_()</tt> function may be provided, but is not required, as some sources
+                                 may be read-only, or may be otherwise unwise to access via a URI (for instance,
+                                 because of SQL injection attacks).
+                              </p>
+                              
+                              <p class="p">A simple example of an SDB module is <tt class="ph tt">salt/sdb/keyring_db.py</tt>, as it provides
+                                 basic examples of most, if not all, of the types of functionality that are
+                                 available not only for SDB modules, but for Salt modules in general.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

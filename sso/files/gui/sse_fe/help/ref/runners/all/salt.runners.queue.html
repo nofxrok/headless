@@ -1,0 +1,280 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.runners.queue</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.runners.queue">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../runners.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-runners-queue">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-runners-queue">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.runners.queue</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-runners-queue__module-salt.runners.queue"></span></p>
+                              
+                              <p class="p">General management and processing of queues.</p>
+                              
+                              <p class="p">This runner facilitates interacting with various queue backends such as the
+                                 included sqlite3 queue or the planned AWS SQS and Redis queues
+                              </p>
+                              
+                              <p class="p">The queue functions such as <span class="keyword title_reference">insert</span>, <span class="keyword title_reference">delete</span>, and <span class="keyword title_reference">pop</span> can be used for
+                                 typical management of the queue.
+                              </p>
+                              
+                              <p class="p">The <span class="keyword title_reference">process_queue</span> function pops the requested number of items from the queue
+                                 and creates a Salt Event that can then be processed by a Reactor. The
+                                 <span class="keyword title_reference">process_queue</span> function can be called manually, or can be configured to run on
+                                 a schedule with the Salt Scheduler or regular system cron. It is also possible
+                                 to use the peer system to allow a minion to call the runner.
+                              </p>
+                              
+                              <p class="p">This runner, as well as the Queues system, is not api stable at this time.</p>
+                              
+                              <p class="p">There are many things that could potentially be done with queues within Salt.
+                                 For the time being the focus will be on queueing infrastructure actions on
+                                 specific minions. The queues generally will be populated with minion IDs.  When
+                                 the <span class="keyword title_reference">process_queue</span> runner function is called events are created on the Salt
+                                 Event bus that indicate the queue and a list of one or more minion IDs. The
+                                 reactor is set up to match on event tags for a specific queue and then take
+                                 infrastructure actions on those minion IDs. These actions might be to delete
+                                 the minion's key from the master, use salt-cloud to destroy the vm, or some
+                                 other custom action.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.runners.queue.delete">
+                           <h2 class="title topictitle2">delete</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.queue.delete(
+								queue,
+								items,
+								backend='sqlite'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Delete an item or items from a queue</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt-run queue.delete myqueue myitem
+salt-run queue.delete myqueue myitem backend=sqlite
+salt-run queue.delete myqueue "['item1', 'item2', 'item3']"</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.runners.queue.insert">
+                           <h2 class="title topictitle2">insert</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.queue.insert(
+								queue,
+								items,
+								backend='sqlite'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Add an item or items to a queue</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt-run queue.insert myqueue myitem
+salt-run queue.insert myqueue "['item1', 'item2', 'item3']"
+salt-run queue.insert myqueue myitem backend=sqlite
+salt-run queue.insert myqueue "['item1', 'item2', 'item3']" backend=sqlite</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.runners.queue.list_items">
+                           <h2 class="title topictitle2">list_items</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.queue.list_items(
+								queue,
+								backend='sqlite'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List contents of a queue</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt-run queue.list_items myqueue
+salt-run queue.list_items myqueue backend=sqlite</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.runners.queue.list_length">
+                           <h2 class="title topictitle2">list_length</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.queue.list_length(
+								queue,
+								backend='sqlite'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Provide the number of items in a queue</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt-run queue.list_length myqueue
+salt-run queue.list_length myqueue backend=sqlite</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.runners.queue.list_queues">
+                           <h2 class="title topictitle2">list_queues</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.queue.list_queues(
+								backend='sqlite'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of Salt Queues on the backend</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt-run queue.list_queues
+salt-run queue.list_queues backend=sqlite</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.runners.queue.pop">
+                           <h2 class="title topictitle2">pop</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.queue.pop(
+								queue,
+								quantity=1,
+								backend='sqlite'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Pop one or more or all items from a queue</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt-run queue.pop myqueue
+salt-run queue.pop myqueue 6
+salt-run queue.pop myqueue all
+salt-run queue.pop myqueue 6 backend=sqlite
+salt-run queue.pop myqueue all backend=sqlite</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.runners.queue.process_queue">
+                           <h2 class="title topictitle2">process_queue</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.runners.queue.process_queue(
+								queue,
+								quantity=1,
+								backend='sqlite'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Pop items off a queue and create an event on the Salt event bus to be
+                                    processed by a Reactor.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt-run queue.process_queue myqueue
+salt-run queue.process_queue myqueue 6
+salt-run queue.process_queue myqueue all backend=sqlite</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.alternatives</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.alternatives">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-alternatives">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-alternatives">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.alternatives</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-alternatives__module-salt.states.alternatives"></span></p>
+                              
+                              <p class="p">Configuration of the alternatives system</p>
+                              
+                              <p class="p">Control the alternatives system</p>
+                              <pre class="pre codeblock language-yaml">{% set my_hadoop_conf = '/opt/hadoop/conf' %}
+
+{{ my_hadoop_conf }}:
+  file.directory
+
+hadoop-0.20-conf:
+  alternatives.install:
+    - name: hadoop-0.20-conf
+    - link: /etc/hadoop-0.20/conf
+    - path: {{ my_hadoop_conf }}
+    - priority: 30
+    - require:
+      - file: {{ my_hadoop_conf }}
+
+hadoop-0.20-conf:
+  alternatives.remove:
+      - name: hadoop-0.20-conf
+      - path: {{ my_hadoop_conf }}</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.states.alternatives.auto">
+                           <h2 class="title topictitle2">auto</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.alternatives.auto(
+								name
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                                 
+                                 <p class="p">Instruct alternatives to use the highest priority
+                                    path for &lt;name&gt;
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d352973e54" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d352973e56" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d352973e54" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d352973e56" class="stentry propdesc">
+                                       <p class="p">is the master name for this link group
+                                          (e.g. pager)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.alternatives.install">
+                           <h2 class="title topictitle2">install</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.alternatives.install(
+								name,
+								link,
+								path,
+								priority
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Install new alternative for defined &lt;name&gt;</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d352973e92" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d352973e94" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d352973e92" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d352973e94" class="stentry propdesc">
+                                       <p class="p">is the master name for this link group
+                                          (e.g. pager)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d352973e92" class="stentry propvalue">link</td>
+                                    
+                                    <td valign="top" headers="d352973e94" class="stentry propdesc">
+                                       <p class="p">is the symlink pointing to /etc/alternatives/&lt;name&gt;.
+                                          (e.g. /usr/bin/pager)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d352973e92" class="stentry propvalue">path</td>
+                                    
+                                    <td valign="top" headers="d352973e94" class="stentry propdesc">
+                                       <p class="p">is the location of the new alternative target.
+                                          NB: This file / directory must already exist.
+                                          (e.g. /usr/bin/less)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d352973e92" class="stentry propvalue">priority</td>
+                                    
+                                    <td valign="top" headers="d352973e94" class="stentry propdesc">
+                                       <p class="p">is an integer; options with higher numbers have higher priority in
+                                          automatic mode.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.alternatives.remove">
+                           <h2 class="title topictitle2">remove</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.alternatives.remove(
+								name,
+								path
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Removes installed alternative for defined &lt;name&gt; and &lt;path&gt;
+                                    or fallback to default alternative, if some defined before.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d352973e148" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d352973e150" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d352973e148" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d352973e150" class="stentry propdesc">
+                                       <p class="p">is the master name for this link group
+                                          (e.g. pager)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d352973e148" class="stentry propvalue">path</td>
+                                    
+                                    <td valign="top" headers="d352973e150" class="stentry propdesc">
+                                       <p class="p">is the location of one of the alternative target files.
+                                          (e.g. /usr/bin/less)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.states.alternatives.set_">
+                           <h2 class="title topictitle2">set_</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.alternatives.set_(
+								name,
+								path
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                                 
+                                 <p class="p">Sets alternative for &lt;name&gt; to &lt;path&gt;, if &lt;path&gt; is defined
+                                    as an alternative for &lt;name&gt;.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d352973e195" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d352973e197" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d352973e195" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d352973e197" class="stentry propdesc">
+                                       <p class="p">is the master name for this link group
+                                          (e.g. pager)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d352973e195" class="stentry propvalue">path</td>
+                                    
+                                    <td valign="top" headers="d352973e197" class="stentry propdesc">
+                                       <p class="p">is the location of one of the alternative target files.
+                                          (e.g. /usr/bin/less)
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.boto_dynamodb</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.boto_dynamodb">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-boto-dynamodb">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-boto-dynamodb">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.boto_dynamodb</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-boto-dynamodb__module-salt.modules.boto_dynamodb"></span></p>
+                              
+                              <p class="p">Connection module for Amazon DynamoDB</p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2015.2.</span></p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">configuration</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">This module accepts explicit DynamoDB credentials but can also
+                                       utilize IAM roles assigned to the instance trough Instance Profiles.
+                                       Dynamic credentials are then automatically obtained from AWS API and no
+                                       further configuration is necessary. More Information available at:
+                                    </p>
+                                    <pre class="pre codeblock language-">http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html</pre>
+                                    <p class="p">If IAM roles are not used you need to specify them either in a pillar or
+                                       in the minion's config file:
+                                    </p>
+                                    <pre class="pre codeblock language-">keyid: GKTADJGHEIQSXMKKRBJ08H
+key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs</pre>
+                                    <p class="p">A region may also be specified in the configuration:</p>
+                                    <pre class="pre codeblock language-">region: us-east-1</pre>
+                                    <p class="p">If a region is not specified, the default is us-east-1.</p>
+                                    
+                                    <p class="p">It's also possible to specify key, keyid and region via a profile, either
+                                       as a passed in dict, or as a string to pull from pillars or minion config:
+                                    </p>
+                                    
+                                    <blockquote class="lq">
+                                       <dl class="dl definition_list">
+                                          <dt class="dt dlterm">myprofile:</dt>
+                                          
+                                          <dd class="dd">
+                                             <p class="p">keyid: GKTADJGHEIQSXMKKRBJ08H
+                                                key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs
+                                                region: us-east-1
+                                             </p>
+                                             
+                                          </dd>
+                                          
+                                       </dl>
+                                       
+                                    </blockquote>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">boto</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.boto_dynamodb.create_table">
+                           <h2 class="title topictitle2">create_table</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_dynamodb.create_table(
+								table_name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None,
+								read_capacity_units=None,
+								write_capacity_units=None,
+								hash_key=None,
+								hash_key_data_type=None,
+								range_key=None,
+								range_key_data_type=None,
+								local_indexes=None,
+								global_indexes=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Creates a DynamoDB table.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_dynamodb.create_table table_name /
+region=us-east-1 /
+hash_key=id /
+hash_key_data_type=N /
+range_key=created_at /
+range_key_data_type=N /
+read_capacity_units=1 /
+write_capacity_units=1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_dynamodb.delete">
+                           <h2 class="title topictitle2">delete</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_dynamodb.delete(
+								table_name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Delete a DynamoDB table.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_dynamodb.delete table_name region=us-east-1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.boto_dynamodb.exists">
+                           <h2 class="title topictitle2">exists</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.boto_dynamodb.exists(
+								table_name,
+								region=None,
+								key=None,
+								keyid=None,
+								profile=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check to see if a table exists.</p>
+                                 
+                                 <p class="p">CLI example:</p>
+                                 <pre class="pre codeblock language-">salt myminion boto_dynamodb.exists table_name region=us-east-1</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

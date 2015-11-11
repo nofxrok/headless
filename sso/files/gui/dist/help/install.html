@@ -1,0 +1,263 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>SaltStack Installation - QuickStart Guide</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="SaltStack Enterprise Help Center">
+      
+      <meta name="abstract" content="">
+      
+      <meta name="description" content="">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="concept_z5t_tpb_gq">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/bootstrap/css/bootstrap.min.css">
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/bootstrap/css/fonts.css">
+
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/bootstrap/css/prism.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/bootstrap/css/webhelp2.css">
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/bootstrap/css/progress.css">
+      <script type="text/javascript" src="themes/bootstrap/js/jquery-1.11.0.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/jquery-ui-1.9.1.custom.min.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/bootbox.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/jquery.slimscroll.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/jquery.tocify.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/prism.js"></script>
+      <script type="text/javascript" src="themes/bootstrap/js/webhelp-qs.js"></script>
+       <link href="http://vjs.zencdn.net/4.11/video-js.css" rel="stylesheet">
+       <script src="http://vjs.zencdn.net/4.11/video.js"></script>
+      </head>
+   <body>
+      <header class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+         <div class="container">
+            <div class="navbar-header"><button id="menu-toggle" class="navbar-toggle" type="button"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="#"><div class="ss-logo"></div></a></div>
+            <div class="collapse navbar-collapse"></div>
+         </div>
+      </header>
+      <div class="jumbotron active_texture">
+          <div class="container">
+              <h1><!--<i class="glyphicon glyphicon-question-sign"></i>-->Up & Running with SaltStack</h1>
+              <h3>quick start guide</h3>
+          </div>
+      </div>
+      <div id="wrapper">
+
+
+              <div class="container-fluid">
+                  <div class="row">
+                      <div class="col-lg-12">
+                          <ol class="progtrckr" data-progtrckr-steps="8">
+                              <!--<li class="progtrckr-done"><a href="overview.html">Overview</a></li>-->
+                              <li class="progtrckr-done"><a href="qs.html">Demo Environment</a></li>
+                              <li class="progtrckr-done">Install</li>
+                              <li class="progtrckr-todo"><a href="remotex.html">Execute Commands</a></li>
+                              <li class="progtrckr-todo"><a href="top.html">Define Configurations</a></li>
+                              <li class="progtrckr-todo"><a href="formulas.html">Create Formulas</a></li>
+                              <li class="progtrckr-todo"><a href="targeting.html">Target Systems</a></li>
+                              <li class="progtrckr-todo"><a href="states.html">Apply States</a></li>
+                              <li class="progtrckr-todo"><a href="next.html">Next Steps</a></li>
+                          </ol>
+                      </div>
+                      </div>
+
+                <!--<div class="row">
+                    <div class="col-lg-12"></div>
+                </div>-->
+<div class="row">
+
+</div>
+
+
+              <div class="row">
+                  <div class="col-lg-1"></div>
+                  <div class="col-lg-10">
+
+
+                          <h1 class="title topictitle1">Install SaltStack</h1>
+                          <div class="body conbody">
+                              <p class="shortdesc"></p>
+
+                              <div class="section gs-overview" id="concept_ivf_bcn_vp__section_EF69791A73AB411AA070F467095A5130">
+
+
+
+                                  <p class="p gs-overview-sub"><span class="ph">You'll learn how to:</span></p>
+
+                                  <ul class="ul" id="concept_ivf_bcn_vp__ul_qjt_rhn_tp">
+                                      <li class="li" id="concept_ivf_bcn_vp__li_B7E78094456C4DC19C4B6133FC46D104">Install SaltStack
+                                      </li>
+
+                                      <li class="li" id="concept_ivf_bcn_vp__li_FB2FDC1241D542D6AE9BF6349D7E374F">View and accept connections from managed systems
+
+                                      </li>
+
+                                      <li class="li">Send a test command to all managed systems</li>
+
+                                  </ul>
+
+                                  <p class="p gs-overview-sub gs-time"><span class="ph">Estimated time: 10
+                                    			 minutes</span></p>
+
+                                  <p class="p gs-overview-sub gs-difficulty-1"><span class="ph">Difficulty</span>:
+
+                                  </p>
+
+                              </div>
+
+
+                              <div class="section gs-mainbody" id="concept_ivf_bcn_vp__section_D6F77362DCE342D9B67DE9E631A365C6">
+                                  <p>To install SaltStack, you’ll need a detailed network diagram with your complete DNS mappings, an enterprise database server, and yeah, you don’t need any of that stuff. All you need is a way to install packages on your systems, and about 10 minutes.</p>
+
+                                  <p>You can install SaltStack from a package manager, pip, directly from source, or using a bootstrap script. We’ll assume that you already have a favorite installation method, given that you’ve been <span class="iceburn">using it daily to install and update packages manually.  <!--<img class="hidden" src="images/emot-iceburn.gif"/>&nbsp;--><img class="hidden" src="images/smile.gif"/></span></p>
+
+                                  <p>You can get the details on your favorite method in the <a href="http://docs.saltstack.com/en/latest/topics/installation/index.html" target="_blank">docs</a>, but the simplest way is to use the bootstrap script. This script installs SaltStack with a couple of commands on most operating systems.</p>
+
+
+
+
+
+                                      <div class="section gs-terms gs-sidebar" id="concept_ivf_bcn_vp__section_043E1272A3E94500934501DFABE4DCF9">
+
+                                          <div class="video-player">
+                                              <a id="install-video" href="#"><img class="imgcenter" width="75%" src="images/install-video.png"/>
+                                              </a>
+
+                                          </div>
+                                          <h4 class="title sectiontitle">Terms</h4>
+
+                                          <p><b>Master</b>: the central management system.</p>
+                                          <p><b>Minion</b>: a managed system.</p>
+
+                                          <h4 class="title sectiontitle">Architecture 101</h4>
+                                          <img src="images/arch2.png"/>
+
+
+
+                                      </div>
+                                      <h4>On the master</h4>
+                                      <p>Run this command on the system that you want to use as the central management point.</p>
+<pre class="pre codeblock language-bash">curl -L https://bootstrap.saltstack.com -o install_salt.sh
+sudo sh install_salt.sh -M</pre>
+
+
+                                      <h4>On each minion</h4>
+
+                                      <p>Run this command on each system that you want to manage using Salt.</p>
+<pre class="pre codeblock language-bash">curl -L https://bootstrap.saltstack.com -o install_salt.sh
+sudo sh install_salt.sh</pre>
+
+
+
+                                      <h4>'salt' hostname</h4>
+                                      <p>Minions must be able to contact the master using the 'salt' hostname. If you don't have DNS in your environment, or
+                                          if the master hostname is something other than 'salt', you can add the IP address of your master server to the minion configuration file.
+
+                                          <span class="moreinfo"><a id="hostname" href="#">huh?</a></span></p>
+
+
+                                      <pre class="pre codeblock language-bash">sudo sh -c "echo 'xxx.xxx.xxx.xxx salt' >> /etc/minion"</pre>
+
+                                      <p>Remember to replace xxx.xxx.xxx.xxx with something useful.</p>
+
+
+                                      <!--<pre class="pre codeblock language-bash">service salt-minion status</pre>-->
+
+
+
+
+
+                                      <h2>Accept Connections</h2>
+
+                                      <p>Each connection between the Salt master and minion is managed and secured using cryptographic keys. After installation, each minion sends its public key to the master, where it eagerly waits to be accepted.</p>
+
+                                      <h4>View all keys</h4>
+
+                                      <p>On the master, you can quickly view all minion connections and view whether the connection is accepted, rejected, or pending.</p>
+
+                                      <pre class="pre codeblock language-bash">salt-key --list-all</pre>
+
+                                      <h4>Accept a specific key</h4>
+
+                                      <p>Before a minion can connect, you must accept its key.</p>
+                                      <pre class="pre codeblock language-bash">salt-key --accept=&lt;key&gt;</pre>
+
+                                      <h4>Accept all keys</h4>
+
+                                      <pre class="pre codeblock language-bash">salt-key --accept-all</pre>
+
+                                      <!--<p>You really shouldn't accept any keys without verify, except for right now so we can get this demo done in under 10 minutes.
+  -->
+
+                                      <!--<p>Keys should be verified! The secure thing to do before accepting a key is to run salt-key -f minion-id to print the fingerprint of the minion's public key. This fingerprint can then be compared against the fingerprint generated on the minion.
+
+                                          On the master:
+
+                                          On the minion:
+
+                                          If they match, approve the key with salt-key -a foo.domain.com.</p>-->
+                                      <h2>Send a Command</h2>
+
+                                      <p>After you have accepted each key, send a command from your master to verify that your minions are listening:</p>
+
+                                      <pre class="pre codeblock language-bash">salt '*' test.ping</pre>
+
+                                      <p>If you don't see all of your minions respond, well that is what happens when you set things up manually. You probably typed something wrong, didn't accept some keys, or forgot to add a space somewhere (#soml). After your minions are all responding, continue to the next section to put Salt to work.</p>
+
+
+
+
+
+
+
+
+
+                                  <a href="remotex.html"><button id="next-button" type="button" class="btn btn-primary">
+                                      Next <span class="glyphicon glyphicon-chevron-right"></span></button></a>
+                                  <div class="footer"></div>
+                              </div>
+
+
+
+                              <!--<div class="section gs-scenario" id="concept_ivf_bcn_vp__section_5191FFF18E494D33AA46064EF96D0F57">
+                                  <h2 class="title sectiontitle">Scenario</h2>
+                                  <p class="p"></p>
+                                  <ul>
+                                      <li>Salt Master server</li>
+                                      <li>Web server</li>
+                                      <li>Database server</li>
+                                  </ul>
+
+
+                              </div>-->
+
+                          </div>
+
+
+
+
+                  </div>
+                  <div class="col-lg-1"></div>
+
+
+              </div>
+              <div class="row">
+                  <div class="col-lg-12">
+
+                  </div>
+              </div>
+
+                  </div>
+              </div>
+
+   </body>
+</html>

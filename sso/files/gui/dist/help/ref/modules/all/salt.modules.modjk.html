@@ -1,0 +1,589 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.modjk</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.modjk">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-modjk">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-modjk">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.modjk</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-modjk__module-salt.modules.modjk"></span></p>
+                              
+                              <p class="p">Control Modjk via the Apache Tomcat "Status" worker
+                                 (<a class="xref" href="http://tomcat.apache.org/connectors-doc/reference/status.html" target="_blank">http://tomcat.apache.org/connectors-doc/reference/status.html</a>)
+                              </p>
+                              
+                              <p class="p">Below is an example of the configuration needed for this module. This
+                                 configuration data can be placed either in 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../../topics/targeting/grains.html#targeting-grains">grains</a> or 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../../topics/pillar/index.html#pillar">pillar</a>.
+                              </p>
+                              
+                              <p class="p">If using grains, this can be accomplished 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../../topics/targeting/grains.html#targeting-grains__static-custom-grains">statically</a> or via a 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../../topics/targeting/grains.html#targeting-grains__writing-grains">grain module</a>.
+                              </p>
+                              
+                              <p class="p">If using pillar, the yaml configuration can be placed directly into a pillar
+                                 SLS file, making this both the easier and more dynamic method of configuring
+                                 this module.
+                              </p>
+                              <pre class="pre codeblock language-yaml">modjk:
+  default:
+    url: http://localhost/jkstatus
+    user: modjk
+    pass: secret
+    realm: authentication realm for digest passwords
+    timeout: 5
+  otherVhost:
+    url: http://otherVhost/jkstatus
+    user: modjk
+    pass: secret2
+    realm: authentication realm2 for digest passwords
+    timeout: 600</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.modjk.bulk_activate">
+                           <h2 class="title topictitle2">bulk_activate</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.bulk_activate(
+								workers,
+								lbn,
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Activate all the given workers in the specific load balancer</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.bulk_activate node1,node2,node3 loadbalancer1
+salt '*' modjk.bulk_activate node1,node2,node3 loadbalancer1 other-profile
+
+salt '*' modjk.bulk_activate ["node1","node2","node3"] loadbalancer1
+salt '*' modjk.bulk_activate ["node1","node2","node3"] loadbalancer1 other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.modjk.bulk_disable">
+                           <h2 class="title topictitle2">bulk_disable</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.bulk_disable(
+								workers,
+								lbn,
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Disable all the given workers in the specific load balancer</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.bulk_disable node1,node2,node3 loadbalancer1
+salt '*' modjk.bulk_disable node1,node2,node3 loadbalancer1 other-profile
+
+salt '*' modjk.bulk_disable ["node1","node2","node3"] loadbalancer1
+salt '*' modjk.bulk_disable ["node1","node2","node3"] loadbalancer1 other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.modjk.bulk_recover">
+                           <h2 class="title topictitle2">bulk_recover</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.bulk_recover(
+								workers,
+								lbn,
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Recover all the given workers in the specific load balancer</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.bulk_recover node1,node2,node3 loadbalancer1
+salt '*' modjk.bulk_recover node1,node2,node3 loadbalancer1 other-profile
+
+salt '*' modjk.bulk_recover ["node1","node2","node3"] loadbalancer1
+salt '*' modjk.bulk_recover ["node1","node2","node3"] loadbalancer1 other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.modjk.bulk_stop">
+                           <h2 class="title topictitle2">bulk_stop</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.bulk_stop(
+								workers,
+								lbn,
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Stop all the given workers in the specific load balancer</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.bulk_stop node1,node2,node3 loadbalancer1
+salt '*' modjk.bulk_stop node1,node2,node3 loadbalancer1 other-profile
+
+salt '*' modjk.bulk_stop ["node1","node2","node3"] loadbalancer1
+salt '*' modjk.bulk_stop ["node1","node2","node3"] loadbalancer1 other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.modjk.dump_config">
+                           <h2 class="title topictitle2">dump_config</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.dump_config(
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Dump the original configuration that was loaded from disk</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.dump_config
+salt '*' modjk.dump_config other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.modjk.get_running">
+                           <h2 class="title topictitle2">get_running</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.get_running(
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Get the current running config (not from disk)</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.get_running
+salt '*' modjk.get_running other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.modjk.lb_edit">
+                           <h2 class="title topictitle2">lb_edit</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.lb_edit(
+								lbn,
+								settings,
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Edit the loadbalancer settings</p>
+                                 
+                                 <p class="p">Note: <a class="xref" href="http://tomcat.apache.org/connectors-doc/reference/status.html" target="_blank">http://tomcat.apache.org/connectors-doc/reference/status.html</a>
+                                    Data Parameters for the standard Update Action
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.lb_edit loadbalancer1 "{'vlr': 1, 'vlt': 60}"
+salt '*' modjk.lb_edit loadbalancer1 "{'vlr': 1, 'vlt': 60}" other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.modjk.list_configured_members">
+                           <h2 class="title topictitle2">list_configured_members</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.list_configured_members(
+								lbn,
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of member workers from the configuration files</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.list_configured_members loadbalancer1
+salt '*' modjk.list_configured_members loadbalancer1 other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.modjk.recover_all">
+                           <h2 class="title topictitle2">recover_all</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.recover_all(
+								lbn,
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Set the all the workers in lbn to recover and activate them if they are not</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.recover_all loadbalancer1
+salt '*' modjk.recover_all loadbalancer1 other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.modjk.reset_stats">
+                           <h2 class="title topictitle2">reset_stats</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.reset_stats(
+								lbn,
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Reset all runtime statistics for the load balancer</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.reset_stats loadbalancer1
+salt '*' modjk.reset_stats loadbalancer1 other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.modjk.version">
+                           <h2 class="title topictitle2">version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.version(
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the modjk version</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.version
+salt '*' modjk.version other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.modjk.worker_activate">
+                           <h2 class="title topictitle2">worker_activate</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.worker_activate(
+								worker,
+								lbn,
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Set the worker to activate state in the lbn load balancer</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.worker_activate node1 loadbalancer1
+salt '*' modjk.worker_activate node1 loadbalancer1 other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.modjk.worker_disable">
+                           <h2 class="title topictitle2">worker_disable</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.worker_disable(
+								worker,
+								lbn,
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Set the worker to disable state in the lbn load balancer</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.worker_disable node1 loadbalancer1
+salt '*' modjk.worker_disable node1 loadbalancer1 other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.modjk.worker_edit">
+                           <h2 class="title topictitle2">worker_edit</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.worker_edit(
+								worker,
+								lbn,
+								settings,
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Edit the worker settings</p>
+                                 
+                                 <p class="p">Note: <a class="xref" href="http://tomcat.apache.org/connectors-doc/reference/status.html" target="_blank">http://tomcat.apache.org/connectors-doc/reference/status.html</a>
+                                    Data Parameters for the standard Update Action
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.worker_edit node1 loadbalancer1 "{'vwf': 500, 'vwd': 60}"
+salt '*' modjk.worker_edit node1 loadbalancer1 "{'vwf': 500, 'vwd': 60}" other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.modjk.worker_recover">
+                           <h2 class="title topictitle2">worker_recover</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.worker_recover(
+								worker,
+								lbn,
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Set the worker to recover
+                                    this module will fail if it is in OK state
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.worker_recover node1 loadbalancer1
+salt '*' modjk.worker_recover node1 loadbalancer1 other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.modjk.worker_status">
+                           <h2 class="title topictitle2">worker_status</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.worker_status(
+								worker,
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the state of the worker</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.worker_status node1
+salt '*' modjk.worker_status node1 other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.modjk.worker_stop">
+                           <h2 class="title topictitle2">worker_stop</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.worker_stop(
+								worker,
+								lbn,
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Set the worker to stopped state in the lbn load balancer</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.worker_activate node1 loadbalancer1
+salt '*' modjk.worker_activate node1 loadbalancer1 other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.modjk.workers">
+                           <h2 class="title topictitle2">workers</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.modjk.workers(
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of member workers and their status</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' modjk.workers
+salt '*' modjk.workers other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

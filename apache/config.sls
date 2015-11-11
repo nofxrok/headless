@@ -13,6 +13,19 @@ include:
     - watch_in:
       - service: apache
 
+<<<<<<< HEAD
+=======
+{{ apache.wwwdir }}//html/index.html:
+  file.managed:
+    - template: jinja
+    - source:
+      - salt://apache/files/{{ salt['grains.get']('os_family') }}/index.html
+    - require:
+      - pkg: apache
+    - watch_in:
+      - service: apache
+
+>>>>>>> 38c404a66e6628dfa78c7427ff3ff324ac15afeb
 {{ apache.vhostdir }}:
   file.directory:
     - require:

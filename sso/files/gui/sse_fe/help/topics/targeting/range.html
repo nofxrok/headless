@@ -1,0 +1,118 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>SECO Range</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="SECO Range">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="targeting-range">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="targeting-range">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">SECO Range</h1>
+                        <div class="body conbody">
+                           <p class="p ids"><span class="ph" id="targeting-range__seco-range"></span></p>
+                           
+                           <p class="p">SECO range is a cluster-based metadata store developed and maintained by Yahoo!</p>
+                           
+                           <p class="p">The Range project is hosted here:</p>
+                           
+                           <p class="p"><a class="xref" href="https://github.com/ytoolshed/range" target="_blank">https://github.com/ytoolshed/range</a></p>
+                           
+                           <p class="p">Learn more about range here:</p>
+                           
+                           <p class="p"><a class="xref" href="https://github.com/ytoolshed/range/wiki/" target="_blank">https://github.com/ytoolshed/range/wiki/</a></p>
+                           
+                           <div class="section" id="targeting-range__prerequisites">
+                              <h2 class="title sectiontitle">Prerequisites</h2>
+                              <p class="p">To utilize range support in Salt, a range server is required. Setting up a
+                                 range server is outside the scope of this document. Apache modules are included
+                                 in the range distribution.
+                              </p>
+                              
+                              <p class="p">With a working range server, cluster files must be defined. These files are
+                                 written in YAML and define hosts contained inside a cluster. Full documentation
+                                 on writing YAML range files is here:
+                              </p>
+                              
+                              <p class="p"><a class="xref" href="https://github.com/ytoolshed/range/wiki/%22yamlfile%22-module-file-spec" target="_blank">https://github.com/ytoolshed/range/wiki/%22yamlfile%22-module-file-spec</a></p>
+                              
+                              <p class="p">Additionally, the Python seco range libraries must be installed on the salt
+                                 master. One can verify that they have been installed correctly via the
+                                 following command:
+                              </p>
+                              <pre class="pre codeblock language-bash">python -c 'import seco.range'</pre>
+                              <p class="p">If no errors are returned, range is installed successfully on the salt master.</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="targeting-range__preparing-salt">
+                              <h2 class="title sectiontitle">Preparing Salt</h2>
+                              <p class="p">Range support must be enabled on the salt master by setting the hostname and
+                                 port of the range server inside the master configuration file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">range_server: my.range.server.com:80</pre>
+                              <p class="p">Following this, the master must be restarted for the change to have an effect.</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="targeting-range__targeting-with-range">
+                              <h2 class="title sectiontitle">Targeting with Range</h2>
+                              <p class="p">Once a cluster has been defined, it can be targeted with a salt command by
+                                 using the <tt class="ph tt">-R</tt> or <tt class="ph tt">--range</tt> flags.
+                              </p>
+                              
+                              <p class="p">For example, given the following range YAML file being served from a range
+                                 server:
+                              </p>
+                              <pre class="pre codeblock language-bash">$ cat /etc/range/test.yaml
+CLUSTER: host1..100.test.com
+APPS:
+  - frontend
+  - backend
+  - mysql</pre>
+                              <p class="p">One might target host1 through host100 in the test.com domain with Salt as follows:</p>
+                              <pre class="pre codeblock language-bash">salt --range %test:CLUSTER test.ping</pre>
+                              <p class="p">The following salt command would target three hosts: <tt class="ph tt">frontend</tt>, <tt class="ph tt">backend</tt>, and <tt class="ph tt">mysql</tt>:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt --range %test:APPS test.ping</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

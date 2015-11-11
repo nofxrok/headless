@@ -1,0 +1,278 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.nagios</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.nagios">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-nagios">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-nagios">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.nagios</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-nagios__module-salt.modules.nagios"></span></p>
+                              
+                              <p class="p">Run nagios plugins/checks from salt and get the return as data.</p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.nagios.list_plugins">
+                           <h2 class="title topictitle2">list_plugins</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nagios.list_plugins( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List all the nagios plugins</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nagios.list_plugins</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nagios.retcode">
+                           <h2 class="title topictitle2">retcode</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nagios.retcode(
+								plugin,
+								args='',
+								key_name=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Run one nagios plugin and return retcode of the execution</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nagios.run check_apt
+salt '*' nagios.run check_icmp '8.8.8.8'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nagios.retcode_pillar">
+                           <h2 class="title topictitle2">retcode_pillar</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nagios.retcode_pillar(
+								pillar_name
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Run one or more nagios plugins from pillar data and get the result of cmd.retcode
+                                    The pillar have to be in this format:
+                                 </p>
+                                 <pre class="pre codeblock language-">------
+webserver:
+    Ping_google:
+        - check_icmp: 8.8.8.8
+        - check_icmp: google.com
+    Load:
+        - check_load: -w 0.8 -c 1
+    APT:
+        - check_apt
+-------</pre>
+                                 <p class="p">webserver is the role to check, the next keys are the group and the items
+                                    the check with the arguments if needed
+                                 </p>
+                                 
+                                 <p class="p">You must to group different checks(one o more) and always it will return
+                                    the highest value of all the checks
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nagios.retcode webserver</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nagios.run">
+                           <h2 class="title topictitle2">run</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nagios.run(
+								plugin,
+								args=''
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Run nagios plugin and return all the data execution with cmd.run</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nagios.run_all">
+                           <h2 class="title topictitle2">run_all</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nagios.run_all(
+								plugin,
+								args=''
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Run nagios plugin and return all the data execution with cmd.run_all</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nagios.run_all_pillar">
+                           <h2 class="title topictitle2">run_all_pillar</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nagios.run_all_pillar(
+								pillar_name
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Run one or more nagios plugins from pillar data and get the result of cmd.run_all
+                                    The pillar have to be in this format:
+                                 </p>
+                                 <pre class="pre codeblock language-">------
+webserver:
+    Ping_google:
+        - check_icmp: 8.8.8.8
+        - check_icmp: google.com
+    Load:
+        - check_load: -w 0.8 -c 1
+    APT:
+        - check_apt
+-------</pre>
+                                 <p class="p">webserver is the role to check, the next keys are the group and the items
+                                    the check with the arguments if needed
+                                 </p>
+                                 
+                                 <p class="p">You have to group different checks in a group</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nagios.run webserver</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.nagios.run_pillar">
+                           <h2 class="title topictitle2">run_pillar</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.nagios.run_pillar(
+								pillar_name
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Run one or more nagios plugins from pillar data and get the result of cmd.run
+                                    The pillar have to be in this format:
+                                 </p>
+                                 <pre class="pre codeblock language-">------
+webserver:
+    Ping_google:
+        - check_icmp: 8.8.8.8
+        - check_icmp: google.com
+    Load:
+        - check_load: -w 0.8 -c 1
+    APT:
+        - check_apt
+-------</pre>
+                                 <p class="p">webserver is the role to check, the next keys are the group and the items
+                                    the check with the arguments if needed
+                                 </p>
+                                 
+                                 <p class="p">You have to group different checks in a group</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' nagios.run webserver</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Storing Static Data in the Pillar</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Storing Static Data in the Pillar">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/fundamentals.html">
+      
+      <meta name="DC.Relation" scheme="URI" content="../tutorials/pillar.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="pillar">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="pillar">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Storing Static Data in the Pillar</h1>
+                        <div class="body conbody">
+                           <p class="p ids"><span class="ph" id="pillar__storing-static-data-in-the-pillar"></span></p>
+                           
+                           <p class="p">Pillar is an interface for Salt designed to offer global values that can be
+                              distributed to all minions. Pillar data is managed in a similar way as
+                              the Salt State Tree.
+                           </p>
+                           
+                           <p class="p">Pillar was added to Salt in version 0.9.8</p>
+                           
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">Storing sensitive data</p>
+                              
+                              <p class="p">Unlike state tree, pillar data is only available for the targeted
+                                 minion specified by the matcher type.  This makes it useful for
+                                 storing sensitive data specific to a particular minion.
+                              </p>
+                              
+                           </aside>
+                           
+                           <div class="section" id="pillar__declaring-the-master-pillar">
+                              <h2 class="title sectiontitle">Declaring the Master Pillar</h2>
+                              <p class="p">The Salt Master server maintains a pillar_roots setup that matches the
+                                 structure of the file_roots used in the Salt file server. Like the
+                                 Salt file server the <tt class="ph tt">pillar_roots</tt> option in the master config is based
+                                 on environments mapping to directories. The pillar data is then mapped to
+                                 minions based on matchers in a top file which is laid out in the same way
+                                 as the state top file. Salt pillars can use the same matcher types as the
+                                 standard top file.
+                              </p>
+                              
+                              <p class="p">The configuration for the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__pillar_roots">pillar_roots</a> in the master config file
+                                 is identical in behavior and function as 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__file_roots">file_roots</a>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">pillar_roots:
+  base:
+    - /srv/pillar</pre>
+                              <p class="p">This example configuration declares that the base environment will be located
+                                 in the <tt class="ph tt">/srv/pillar</tt> directory. It must not be in a subdirectory of the
+                                 state tree.
+                              </p>
+                              
+                              <p class="p">The top file used matches the name of the top file used for States,
+                                 and has the same structure:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/pillar/top.sls</tt></p>
+                              <pre class="pre codeblock language-yaml">base:
+  '*':
+    - packages</pre>
+                              <p class="p">In the above top file, it is declared that in the <tt class="ph tt">base</tt> environment, the
+                                 glob matching all minions will have the pillar data found in the <tt class="ph tt">packages</tt>
+                                 pillar available to it. Assuming the <tt class="ph tt">pillar_roots</tt> value of <tt class="ph tt">/srv/pillar</tt>
+                                 taken from above, the <tt class="ph tt">packages</tt> pillar would be located at
+                                 <tt class="ph tt">/srv/pillar/packages.sls</tt>.
+                              </p>
+                              
+                              <p class="p">Another example shows how to use other standard top matching types
+                                 to deliver specific salt pillar data to minions with different properties.
+                              </p>
+                              
+                              <p class="p">Here is an example using the <tt class="ph tt">grains</tt> matcher to target pillars to minions
+                                 by their <tt class="ph tt">os</tt> grain:
+                              </p>
+                              <pre class="pre codeblock language-yaml">dev:
+  'os:Debian':
+    - match: grain
+    - servers</pre>
+                              <p class="p"><tt class="ph tt">/srv/pillar/packages.sls</tt></p>
+                              <pre class="pre codeblock language-yaml">{% if grains['os'] == 'RedHat' %}
+apache: httpd
+git: git
+{% elif grains['os'] == 'Debian' %}
+apache: apache2
+git: git-core
+{% endif %}
+
+company: Foo Industries</pre>
+                              <p class="p">The above pillar sets two key/value pairs. If a minion is running RedHat, then
+                                 the <tt class="ph tt">apache</tt> key is set to <tt class="ph tt">httpd</tt> and the <tt class="ph tt">git</tt> key is set to the value
+                                 of <tt class="ph tt">git</tt>. If the minion is running Debian, those values are changed to
+                                 <tt class="ph tt">apache2</tt> and <tt class="ph tt">git-core</tt> respctively. All minions that have this pillar
+                                 targeting to them via a top file will have the key of <tt class="ph tt">company</tt> with a value
+                                 of <tt class="ph tt">Foo Industries</tt>.
+                              </p>
+                              
+                              <p class="p">Consequently this data can be used from within modules, renderers, State SLS
+                                 files, and more via the shared pillar <a class="xref" href="http://docs.python.org/2/library/stdtypes.html#typesmapping" target="_blank">dict</a>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">apache:
+  pkg.installed:
+    - name: {{ pillar['apache'] }}</pre>
+                              <pre class="pre codeblock language-yaml">git:
+  pkg.installed:
+    - name: {{ pillar['git'] }}</pre>
+                              <p class="p">Finally, the above states can utilize the values provided to them via Pillar.
+                                 All pillar values targeted to a minion are available via the 'pillar'
+                                 dictionary. As seen in the above example, Jinja substitution can then be
+                                 utilized to access the keys and values in the Pillar dictionary.
+                              </p>
+                              
+                              <p class="p">Note that you cannot just list key/value-information in <tt class="ph tt">top.sls</tt>. Instead,
+                                 target a minion to a pillar file and then list the keys and values in the
+                                 pillar. Here is an example top file that illustrates this point:
+                              </p>
+                              <pre class="pre codeblock language-yaml">base:
+  '*':
+     - common_pillar</pre>
+                              <p class="p">And the actual pillar file at '/srv/pillar/common_pillar.sls':</p>
+                              <pre class="pre codeblock language-yaml">foo: bar
+boo: baz</pre>
+                              </div>
+                           
+                           <div class="section" id="pillar__pillar-namespace-flattened">
+                              <h2 class="title sectiontitle">Pillar namespace flattened</h2>
+                              <p class="p">The separate pillar files all share the same namespace. Given a <tt class="ph tt">top.sls</tt> of:
+                              </p>
+                              <pre class="pre codeblock language-yaml">base:
+  '*':
+    - packages
+    - services</pre>
+                              <p class="p">a <tt class="ph tt">packages.sls</tt> file of:
+                              </p>
+                              <pre class="pre codeblock language-yaml">bind: bind9</pre>
+                              <p class="p">and a <tt class="ph tt">services.sls</tt> file of:
+                              </p>
+                              <pre class="pre codeblock language-yaml">bind: named</pre>
+                              <p class="p">Then a request for the <tt class="ph tt">bind</tt> pillar will only return <tt class="ph tt">named</tt>; the
+                                 <tt class="ph tt">bind9</tt> value is not available. It is better to structure your pillar files
+                                 with more hierarchy. For example your <tt class="ph tt">package.sls</tt> file could look like:
+                              </p>
+                              <pre class="pre codeblock language-yaml">packages:
+  bind: bind9</pre>
+                              </div>
+                           
+                           <div class="section" id="pillar__pillar-namespace-merges">
+                              <h2 class="title sectiontitle">Pillar Namespace Merges</h2>
+                              <p class="p">With some care, the pillar namespace can merge content from multiple pillar
+                                 files under a single key, so long as conflicts are avoided as described above.
+                              </p>
+                              
+                              <p class="p">For example, if the above example were modified as follows, the values are
+                                 merged below a single key:
+                              </p>
+                              <pre class="pre codeblock language-yaml">base:
+  '*':
+    - packages
+    - services</pre>
+                              <p class="p">And a <tt class="ph tt">packages.sls</tt> file like:
+                              </p>
+                              <pre class="pre codeblock language-yaml">bind:
+  package-name: bind9
+  version: 9.9.5</pre>
+                              <p class="p">And a <tt class="ph tt">services.sls</tt> file like:
+                              </p>
+                              <pre class="pre codeblock language-yaml">bind:
+  port: 53
+  listen-on: any</pre>
+                              <p class="p">The resulting pillar will be as follows:</p>
+                              <pre class="pre codeblock language-bash">$ salt-call pillar.get bind
+local:
+    ----------
+    listen-on:
+        any
+    package-name:
+        bind9
+    port:
+        53
+    version:
+        9.9.5</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Remember: conflicting keys will be overwritten in a non-deterministic manner!</p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="pillar__including-other-pillars">
+                              <h2 class="title sectiontitle">Including Other Pillars</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 0.16.0.</span></p>
+                              
+                              <p class="p">Pillar SLS files may include other pillar files, similar to State files. Two
+                                 syntaxes are available for this purpose. The simple form simply includes the
+                                 additional pillar as if it were part of the same file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">include:
+  - users</pre>
+                              <p class="p">The full include form allows two additional options -- passing default values
+                                 to the templating engine for the included pillar file as well as an optional
+                                 key under which to nest the results of the included pillar:
+                              </p>
+                              <pre class="pre codeblock language-yaml">include:
+  - users:
+      defaults:
+          sudo: ['bob', 'paul']
+      key: users</pre>
+                              <p class="p">With this form, the included file (users.sls) will be nested within the 'users'
+                                 key of the compiled pillar. Additionally, the 'sudo' value will be available
+                                 as a template variable to users.sls.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="pillar__viewing-minion-pillar">
+                              <h2 class="title sectiontitle">Viewing Minion Pillar</h2>
+                              <p class="p">Once the pillar is set up the data can be viewed on the minion via the
+                                 <tt class="ph tt">pillar</tt> module, the pillar module comes with functions,
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.pillar.html#salt.modules.pillar.items">pillar.items</a> and 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.pillar.html#salt.modules.pillar.raw">pillar.raw</a>.  
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.pillar.html#salt.modules.pillar.items">pillar.items</a>
+                                 will return a freshly reloaded pillar and 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.pillar.html#salt.modules.pillar.raw">pillar.raw</a> will return the current pillar without a refresh:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' pillar.items</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Prior to version 0.16.2, this function is named <tt class="ph tt">pillar.data</tt>. This
+                                    function name is still supported for backwards compatibility.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="pillar__pillar-get-function">
+                              <h2 class="title sectiontitle">Pillar "get" Function</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 0.14.0.</span></p>
+                              
+                              <p class="p">The 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.pillar.html#salt.modules.pillar.get">pillar.get</a> function works much in the same
+                                 way as the <tt class="ph tt">get</tt> method in a python dict, but with an enhancement: nested
+                                 dict components can be extracted using a <span class="keyword title_reference">:</span> delimiter.
+                              </p>
+                              
+                              <p class="p">If a structure like this is in pillar:</p>
+                              <pre class="pre codeblock language-yaml">foo:
+  bar:
+    baz: qux</pre>
+                              <p class="p">Extracting it from the raw pillar in an sls formula or file template is done
+                                 this way:
+                              </p>
+                              <pre class="pre codeblock language-python jinja">{{ pillar['foo']['bar']['baz'] }}</pre>
+                              <p class="p">Now, with the new 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.pillar.html#salt.modules.pillar.get">pillar.get</a> function the data
+                                 can be safely gathered and a default can be set, allowing the template to fall
+                                 back if the value is not available:
+                              </p>
+                              <pre class="pre codeblock language-python jinja">{{ salt['pillar.get']('foo:bar:baz', 'qux') }}</pre>
+                              <p class="p">This makes handling nested structures much easier.</p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p"><tt class="ph tt">pillar.get()</tt> vs <tt class="ph tt">salt['pillar.get']()</tt></p>
+                                 
+                                 <p class="p">It should be noted that within templating, the <tt class="ph tt">pillar</tt> variable is just
+                                    a dictionary.  This means that calling <tt class="ph tt">pillar.get()</tt> inside of a
+                                    template will just use the default dictionary <tt class="ph tt">.get()</tt> function which
+                                    does not include the extra <tt class="ph tt">:</tt> delimiter functionality.  It must be
+                                    called using the above syntax (<tt class="ph tt">salt['pillar.get']('foo:bar:baz',
+                                       'qux')</tt>) to get the salt function, instead of the default dictionary
+                                    behavior.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="pillar__refreshing-pillar-data">
+                              <h2 class="title sectiontitle">Refreshing Pillar Data</h2>
+                              <p class="p">When pillar data is changed on the master the minions need to refresh the data
+                                 locally. This is done with the <tt class="ph tt">saltutil.refresh_pillar</tt> function.
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' saltutil.refresh_pillar</pre>
+                              <p class="p">This function triggers the minion to asynchronously refresh the pillar and will
+                                 always return <tt class="ph tt">None</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="pillar__targeting-pillar">
+                              <h2 class="title sectiontitle">Targeting with Pillar</h2>
+                              <p class="p">Pillar data can be used when targeting minions. This allows for ultimate
+                                 control and flexibility when targeting minions.
+                              </p>
+                              <pre class="pre codeblock language-bash">salt -I 'somekey:specialvalue' test.ping</pre>
+                              <p class="p">Like with 
+                                 		
+                                 			&nbsp;<a class="xref" href="../targeting/grains.html#targeting-grains">Grains</a>, it is possible to use globbing
+                                 as well as match nested values in Pillar, by adding colons for each level that
+                                 is being traversed. The below example would match minions with a pillar named
+                                 <tt class="ph tt">foo</tt>, which is a dict containing a key <tt class="ph tt">bar</tt>, with a value beginning with
+                                 <tt class="ph tt">baz</tt>:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt -I 'foo:bar:baz*' test.ping</pre>
+                              </div>
+                           
+                           <div class="section" id="pillar__set-pillar-data-at-the-command-line">
+                              <h2 class="title sectiontitle">Set Pillar Data at the Command Line</h2>
+                              <p class="p">Pillar data can be set at the command line like the following example:</p>
+                              <pre class="pre codeblock language-bash">salt '*' state.highstate pillar='{"cheese": "spam"}'</pre>
+                              <p class="p">This will create a dict with a key of 'cheese' and a value of 'spam'. A list
+                                 can be created like this:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' state.highstate pillar='["cheese", "milk", "bread"]'</pre>
+                              </div>
+                           
+                           <div class="section" id="pillar__master-config-in-pillar">
+                              <h2 class="title sectiontitle">Master Config In Pillar</h2>
+                              <p class="p">For convenience the data stored in the master configuration file is made
+                                 available in all minion's pillars. This makes global configuration of services
+                                 and systems very easy but may not be desired if sensitive data is stored in the
+                                 master configuration.
+                              </p>
+                              
+                              <p class="p">To disable the master config from being added to the pillar set <tt class="ph tt">pillar_opts</tt>
+                                 to <tt class="ph tt">False</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">pillar_opts: False</pre>
+                              </div>
+                           
+                           <div class="section" id="pillar__master-provided-pillar-error">
+                              <h2 class="title sectiontitle">Master Provided Pillar Error</h2>
+                              <p class="p">By default if there is an error rendering a pillar, the detailed error is
+                                 hidden and replaced with:
+                              </p>
+                              <pre class="pre codeblock language-bash">Rendering SLS 'my.sls' failed. Please see master log for details.</pre>
+                              <p class="p">The error is protected because it's possible to contain templating data
+                                 which would give that minion information it shouldn't know, like a password!
+                              </p>
+                              
+                              <p class="p">To have the master provide the detailed error that could potentially carry
+                                 protected data set <tt class="ph tt">pillar_safe_render_error</tt> to <tt class="ph tt">False</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">pillar_safe_render_error: True</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links">
+                           
+                           <ul class="ullinks">
+                              
+                              <li class="link ulchildlink"><strong><a href="../tutorials/pillar.html">Pillar Walkthrough</a></strong><br>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                        </div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

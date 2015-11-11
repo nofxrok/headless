@@ -1,0 +1,867 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.cloud.clouds.nova</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.cloud.clouds.nova">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../cloud-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-cloud-clouds-nova">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-cloud-clouds-nova">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.cloud.clouds.nova</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-cloud-clouds-nova__module-salt.cloud.clouds.nova"></span></p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="openstack-nova-cloud-module">
+                           <h2 class="title topictitle2">OpenStack Nova Cloud Module</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <p class="p">PLEASE NOTE: This module is currently in early development, and considered to
+                                    be experimental and unstable. It is not recommended for production use. Unless
+                                    you are actively developing code in this module, you should use the OpenStack
+                                    module instead.
+                                 </p>
+                                 
+                                 <p class="p">OpenStack is an open source project that is in use by a number a cloud
+                                    providers, each of which have their own ways of using it.
+                                 </p>
+                                 
+                                 <p class="p">The OpenStack Nova module for Salt Cloud was bootstrapped from the OpenStack
+                                    module for Salt Cloud, which uses a libcloud-based connection. The Nova module
+                                    is designed to use the nova and glance modules already built into Salt.
+                                 </p>
+                                 
+                                 <p class="p">These modules use the Python novaclient and glanceclient libraries,
+                                    respectively. In order to use this module, the proper salt configuration must
+                                    also be in place.  This can be specified in the master config, the minion
+                                    config, a set of grains or a set of pillars.
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">my_openstack_profile:
+  keystone.user: admin
+  keystone.password: verybadpass
+  keystone.tenant: admin
+  keystone.auth_url: 'http://127.0.0.1:5000/v2.0/'</pre>
+                                 <p class="p">Note that there is currently a dependency upon netaddr. This can be installed
+                                    on Debian-based systems by means of the python-netaddr package.
+                                 </p>
+                                 
+                                 <p class="p">This module currently requires the latest develop branch of Salt to be
+                                    installed.
+                                 </p>
+                                 
+                                 <p class="p">This module has been tested to work with HP Cloud and Rackspace. See the
+                                    documentation for specific options for either of these providers. These
+                                    examples could be set up in the cloud configuration at
+                                    <tt class="ph tt">/etc/salt/cloud.providers</tt> or
+                                    <tt class="ph tt">/etc/salt/cloud.providers.d/openstack.conf</tt>:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">my-openstack-config:
+  # The ID of the minion that will execute the salt nova functions
+  auth_minion: myminion
+  # The name of the configuration profile to use on said minion
+  config_profile: my_openstack_profile
+
+  ssh_key_name: mykey
+
+  provider: nova
+  userdata_file: /tmp/userdata.txt</pre>
+                                 <p class="p">For local installations that only use private IP address ranges, the
+                                    following option may be useful. Using the old syntax:
+                                 </p>
+                                 
+                                 <p class="p">Note: For api use, you will need an auth plugin.  The base novaclient does not
+                                    support apikeys, but some providers such as rackspace have extended keystone to
+                                    accept them
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">my-openstack-config:
+  # Ignore IP addresses on this network for bootstrap
+  ignore_cidr: 192.168.50.0/24
+
+my-nova:
+  identity_url: 'https://identity.api.rackspacecloud.com/v2.0/'
+  compute_region: IAD
+  user: myusername
+  password: mypassword
+  tenant: &lt;userid&gt;
+  provider: nova
+
+my-api:
+  identity_url: 'https://identity.api.rackspacecloud.com/v2.0/'
+  compute_region: IAD
+  user: myusername
+  api_key: &lt;api_key&gt;
+  os_auth_plugin: rackspace
+  tenant: &lt;userid&gt;
+  provider: nova
+  networks:
+    - net-id: 47a38ff2-fe21-4800-8604-42bd1848e743
+    - net-id: 00000000-0000-0000-0000-000000000000
+    - net-id: 11111111-1111-1111-1111-111111111111</pre>
+                                 <p class="p">Note: You must include the default net-ids when setting networks or the server
+                                    will be created without the rest of the interfaces
+                                 </p>
+                                 
+                                 <p class="p">Note: For rackconnect v3, rackconnectv3 needs to be specified with the
+                                    rackconnect v3 cloud network as it's variable
+                                 </p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.avail_images">
+                              <h3 class="title topictitle3">avail_images</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.avail_images( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a dict of all available VM images on the cloud provider.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.avail_locations">
+                              <h3 class="title topictitle3">avail_locations</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.avail_locations(
+								conn=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a list of locations</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.avail_sizes">
+                              <h3 class="title topictitle3">avail_sizes</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.avail_sizes( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a dict of all available VM sizes on the cloud provider.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.create">
+                              <h3 class="title topictitle3">create</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.create(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create a single VM from a data dict</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.destroy">
+                              <h3 class="title topictitle3">destroy</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.destroy(
+								name,
+								conn=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Delete a single VM</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.get_configured_provider">
+                              <h3 class="title topictitle3">get_configured_provider</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.get_configured_provider( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the first configured instance.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.get_conn">
+                              <h3 class="title topictitle3">get_conn</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.get_conn( )</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a conn object for the passed VM data</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.get_image">
+                              <h3 class="title topictitle3">get_image</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.get_image(
+								conn,
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the image object to use</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.get_salt_interface">
+                              <h3 class="title topictitle3">get_salt_interface</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.get_salt_interface(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the salt_interface type to connect to. Either 'public_ips' (default)
+                                       or 'private_ips'.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.get_size">
+                              <h3 class="title topictitle3">get_size</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.get_size(
+								conn,
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the VM's size object</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.ignore_cidr">
+                              <h3 class="title topictitle3">ignore_cidr</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.ignore_cidr(
+								vm_,
+								ip
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return True if we are to ignore the specified IP. Compatible with IPv4.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.list_nodes">
+                              <h3 class="title topictitle3">list_nodes</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.list_nodes(
+								call=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a list of the VMs that in this location</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.list_nodes_full">
+                              <h3 class="title topictitle3">list_nodes_full</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.list_nodes_full(
+								call=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a list of the VMs that in this location</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.list_nodes_select">
+                              <h3 class="title topictitle3">list_nodes_select</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.list_nodes_select(
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return a list of the VMs that are on the provider, with select fields</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.managedcloud">
+                              <h3 class="title topictitle3">managedcloud</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.managedcloud(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Determine if we should wait for the managed cloud automation before
+                                       running. Either 'False' (default) or 'True'.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.network_create">
+                              <h3 class="title topictitle3">network_create</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.network_create(
+								name,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create private networks</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.network_list">
+                              <h3 class="title topictitle3">network_list</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.network_list(
+								call=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">List private networks</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.preferred_ip">
+                              <h3 class="title topictitle3">preferred_ip</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.preferred_ip(
+								vm_,
+								ips
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the preferred Internet protocol. Either 'ipv4' (default) or 'ipv6'.</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.rackconnect">
+                              <h3 class="title topictitle3">rackconnect</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.rackconnect(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Determine if we should wait for rackconnect automation before running.
+                                       Either 'False' (default) or 'True'.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.reboot">
+                              <h3 class="title topictitle3">reboot</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.reboot(
+								name,
+								conn=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Reboot a single VM</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.request_instance">
+                              <h3 class="title topictitle3">request_instance</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.request_instance(
+								vm_=None,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Put together all of the information necessary to request an instance
+                                       through Novaclient and then fire off the request the instance.
+                                    </p>
+                                    
+                                    <p class="p">Returns data about the instance</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.script">
+                              <h3 class="title topictitle3">script</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.script(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the script deployment object</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.show_instance">
+                              <h3 class="title topictitle3">show_instance</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.show_instance(
+								name,
+								call=None
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Show the details from the provider concerning an instance</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.ssh_interface">
+                              <h3 class="title topictitle3">ssh_interface</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.ssh_interface(
+								vm_
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Return the ssh_interface type to connect to. Either 'public_ips' (default)
+                                       or 'private_ips'.
+                                    </p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.virtual_interface_create">
+                              <h3 class="title topictitle3">virtual_interface_create</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.virtual_interface_create(
+								name,
+								net_name,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create private networks</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.virtual_interface_list">
+                              <h3 class="title topictitle3">virtual_interface_list</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.virtual_interface_list(
+								name,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create private networks</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.volume_attach">
+                              <h3 class="title topictitle3">volume_attach</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.volume_attach(
+								name,
+								server_name,
+								device='/dev/xvdb',
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Attach block volume</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.volume_create">
+                              <h3 class="title topictitle3">volume_create</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.volume_create(
+								name,
+								size=100,
+								snapshot=None,
+								voltype=None,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Create block storage device</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.volume_delete">
+                              <h3 class="title topictitle3">volume_delete</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.volume_delete(
+								name,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Delete block storage device</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.volume_detach">
+                              <h3 class="title topictitle3">volume_detach</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.volume_detach(
+								name,
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">Detach block volume</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                           <div class="topic reference nested2" id="salt.cloud.clouds.nova.volume_list">
+                              <h3 class="title topictitle3">volume_list</h3>
+                              <div class="body refbody">
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Syntax</h4>
+                                 </div>
+                                 
+                                 <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.cloud.clouds.nova.volume_list(
+								**kwargs
+								)</pre>
+                                    </div>
+                                 
+                                 <div class="section">
+                                    <h4 class="title sectiontitle">Details</h4>
+                                    <p class="p">List block devices</p>
+                                    
+                                 </div>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

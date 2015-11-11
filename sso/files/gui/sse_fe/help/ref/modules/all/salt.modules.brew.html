@@ -1,0 +1,483 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.brew</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.brew">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-brew">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-brew">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.brew</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-brew__module-salt.modules.brew"></span></p>
+                              
+                              <p class="p">Homebrew for Mac OS X</p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.brew.install">
+                           <h2 class="title topictitle2">install</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.brew.install(
+								name=None,
+								pkgs=None,
+								taps=None,
+								options=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Install the passed package(s) with <tt class="ph tt">brew install</tt></p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d68812e49" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d68812e51" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d68812e49" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d68812e51" class="stentry propdesc">
+                                       <p class="p">The name of the formula to be installed. Note that this parameter is
+                                          ignored if "pkgs" is passed.
+                                       </p>
+                                       
+                                       <p class="p">CLI Example:</p>
+                                       <pre class="pre codeblock language-bash">salt '*' pkg.install &lt;package name&gt;</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d68812e49" class="stentry propvalue">taps</td>
+                                    
+                                    <td valign="top" headers="d68812e51" class="stentry propdesc">
+                                       <p class="p">Unofficial Github repos to use when updating and installing formulas.</p>
+                                       
+                                       <p class="p">CLI Example:</p>
+                                       <pre class="pre codeblock language-bash">salt '*' pkg.install &lt;package name&gt; tap='&lt;tap&gt;'
+salt '*' pkg.install zlib taps='homebrew/dupes'
+salt '*' pkg.install php54 taps='["josegonzalez/php", "homebrew/dupes"]'</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d68812e49" class="stentry propvalue">options</td>
+                                    
+                                    <td valign="top" headers="d68812e51" class="stentry propdesc">
+                                       <p class="p">Options to pass to brew. Only applies to initial install. Due to how brew
+                                          works, modifying chosen options requires a full uninstall followed by a
+                                          fresh install. Note that if "pkgs" is used, all options will be passed
+                                          to all packages. Unrecognized options for a package will be silently
+                                          ignored by brew.
+                                       </p>
+                                       
+                                       <p class="p">CLI Example:</p>
+                                       <pre class="pre codeblock language-bash">salt '*' pkg.install &lt;package name&gt; tap='&lt;tap&gt;'
+salt '*' pkg.install php54 taps='["josegonzalez/php", "homebrew/dupes"]' options='["--with-fpm"]'</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <p class="p">Multiple Package Installation Options:</p>
+                                 
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d68812e88" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d68812e90" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d68812e88" class="stentry propvalue">pkgs</td>
+                                    
+                                    <td valign="top" headers="d68812e90" class="stentry propdesc">
+                                       <p class="p">A list of formulas to install. Must be passed as a python list.</p>
+                                       
+                                       <p class="p">CLI Example:</p>
+                                       <pre class="pre codeblock language-bash">salt '*' pkg.install pkgs='["foo","bar"]'</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Returns a dict containing the new package names and versions:</p>
+                                 <pre class="pre codeblock language-">{'&lt;package&gt;': {'old': '&lt;old-version&gt;',
+               'new': '&lt;new-version&gt;'}}</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.install 'package package package'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.brew.latest_version">
+                           <h2 class="title topictitle2">latest_version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.brew.latest_version(
+								*names,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the latest version of the named package available for upgrade or
+                                    installation
+                                 </p>
+                                 
+                                 <p class="p">Note that this currently not fully implemented but needs to return
+                                    something to avoid a traceback when calling pkg.latest.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.latest_version &lt;package name&gt;
+salt '*' pkg.latest_version &lt;package1&gt; &lt;package2&gt; &lt;package3&gt;</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.brew.list_pkgs">
+                           <h2 class="title topictitle2">list_pkgs</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.brew.list_pkgs(
+								versions_as_list=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List the packages currently installed in a dict:</p>
+                                 <pre class="pre codeblock language-">{'&lt;package_name&gt;': '&lt;version&gt;'}</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.list_pkgs</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.brew.list_upgrades">
+                           <h2 class="title topictitle2">list_upgrades</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.brew.list_upgrades(
+								refresh=True
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check whether or not an upgrade is available for all packages</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.list_upgrades</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.brew.refresh_db">
+                           <h2 class="title topictitle2">refresh_db</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.brew.refresh_db( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Update the homebrew package repository.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.refresh_db</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.brew.remove">
+                           <h2 class="title topictitle2">remove</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.brew.remove(
+								name=None,
+								pkgs=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Removes packages with <tt class="ph tt">brew uninstall</tt>.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d68812e264" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d68812e266" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d68812e264" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d68812e266" class="stentry propdesc">
+                                       <p class="p">The name of the package to be deleted.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <p class="p">Multiple Package Options:</p>
+                                 
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d68812e279" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d68812e281" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d68812e279" class="stentry propvalue">pkgs</td>
+                                    
+                                    <td valign="top" headers="d68812e281" class="stentry propdesc">
+                                       <p class="p">A list of packages to delete. Must be passed as a python list. The
+                                          <tt class="ph tt">name</tt> parameter will be ignored if this option is passed.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 0.16.0.</span></p>
+                                 
+                                 <p class="p">Returns a dict containing the changes.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.remove &lt;package name&gt;
+salt '*' pkg.remove &lt;package1&gt;,&lt;package2&gt;,&lt;package3&gt;
+salt '*' pkg.remove pkgs='["foo", "bar"]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.brew.upgrade">
+                           <h2 class="title topictitle2">upgrade</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.brew.upgrade(
+								refresh=True
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Upgrade outdated, unpinned brews.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d68812e332" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d68812e334" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d68812e332" class="stentry propvalue">refresh</td>
+                                    
+                                    <td valign="top" headers="d68812e334" class="stentry propdesc">
+                                       <p class="p">Fetch the newest version of Homebrew and all formulae from GitHub before installing.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a dict containing the new package names and versions:</p>
+                                 <pre class="pre codeblock language-">{'&lt;package&gt;': {'old': '&lt;old-version&gt;',
+               'new': '&lt;new-version&gt;'}}</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.upgrade</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.brew.upgrade_available">
+                           <h2 class="title topictitle2">upgrade_available</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.brew.upgrade_available(
+								pkg
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check whether or not an upgrade is available for a given package</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.upgrade_available &lt;package name&gt;</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.brew.version">
+                           <h2 class="title topictitle2">version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.brew.version(
+								*names,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Returns a string representing the package version or an empty string if not
+                                    installed. If more than one package name is specified, a dict of
+                                    name/version pairs is returned.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.version &lt;package name&gt;
+salt '*' pkg.version &lt;package1&gt; &lt;package2&gt; &lt;package3&gt;</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

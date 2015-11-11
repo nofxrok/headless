@@ -1,0 +1,409 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.apache</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.apache">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-apache">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-apache">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.apache</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-apache__module-salt.modules.apache"></span></p>
+                              
+                              <p class="p">Support for Apache</p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The functions in here are generic functions designed to work with
+                                    all implementations of Apache. Debian-specific functions have been moved into
+                                    deb_apache.py, but will still load under the <tt class="ph tt">apache</tt> namespace when a
+                                    Debian-based system is detected.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.apache.config">
+                           <h2 class="title topictitle2">config</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.apache.config(
+								name,
+								config,
+								edit=True
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Create VirtualHost configuration files</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d50809e53" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d50809e55" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d50809e53" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d50809e55" class="stentry propdesc">
+                                       <p class="p">File for the virtual host</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d50809e53" class="stentry propvalue">config</td>
+                                    
+                                    <td valign="top" headers="d50809e55" class="stentry propdesc">
+                                       <p class="p">VirtualHost configurations</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p">This function is not meant to be used from the command line.
+                                       Config is meant to be an ordered dict of all of the apache configs.
+                                    </p>
+                                    
+                                 </aside>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' apache.config /etc/httpd/conf.d/ports.conf config="[{'Listen': '22'}]"</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.apache.directives">
+                           <h2 class="title topictitle2">directives</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.apache.directives( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return list of directives together with expected arguments
+                                    and places where the directive is valid (<tt class="ph tt">apachectl -L</tt>)
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' apache.directives</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.apache.fullversion">
+                           <h2 class="title topictitle2">fullversion</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.apache.fullversion( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return server version (<tt class="ph tt">apachectl -V</tt>)
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' apache.fullversion</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.apache.modules">
+                           <h2 class="title topictitle2">modules</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.apache.modules( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return list of static and shared modules (<tt class="ph tt">apachectl -M</tt>)
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' apache.modules</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.apache.server_status">
+                           <h2 class="title topictitle2">server_status</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.apache.server_status(
+								profile='default'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Get Information from the Apache server-status handler</p>
+                                 
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p">The server-status handler is disabled by default.
+                                       In order for this function to work it needs to be enabled.
+                                       See <a class="xref" href="http://httpd.apache.org/docs/2.2/mod/mod_status.html" target="_blank">http://httpd.apache.org/docs/2.2/mod/mod_status.html</a></p>
+                                    
+                                 </aside>
+                                 
+                                 <p class="p">The following configuration needs to exists in pillar/grains.
+                                    Each entry nested in <tt class="ph tt">apache.server-status</tt> is a profile of a vhost/server.
+                                    This would give support for multiple apache servers/vhosts.
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">apache.server-status:
+  default:
+    url: http://localhost/server-status
+    user: someuser
+    pass: password
+    realm: 'authentication realm for digest passwords'
+    timeout: 5</pre>
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' apache.server_status
+salt '*' apache.server_status other-profile</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.apache.servermods">
+                           <h2 class="title topictitle2">servermods</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.apache.servermods( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return list of modules compiled into the server (<tt class="ph tt">apachectl -l</tt>)
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' apache.servermods</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.apache.signal">
+                           <h2 class="title topictitle2">signal</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.apache.signal(
+								signal=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Signals httpd to start, restart, or stop.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' apache.signal restart</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.apache.useradd">
+                           <h2 class="title topictitle2">useradd</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.apache.useradd(
+								pwfile,
+								user,
+								password,
+								opts=''
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Add HTTP user using the <tt class="ph tt">htpasswd</tt> command. If the <tt class="ph tt">htpasswd</tt> file does not
+                                    exist, it will be created. Valid options that can be passed are:
+                                 </p>
+                                 <pre class="pre codeblock language-text">n  Don't update file; display results on stdout.
+m  Force MD5 encryption of the password (default).
+d  Force CRYPT encryption of the password.
+p  Do not encrypt the password (plaintext).
+s  Force SHA encryption of the password.</pre>
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' apache.useradd /etc/httpd/htpasswd larry badpassword
+salt '*' apache.useradd /etc/httpd/htpasswd larry badpass opts=ns</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.apache.userdel">
+                           <h2 class="title topictitle2">userdel</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.apache.userdel(
+								pwfile,
+								user
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Delete HTTP user from the specified <tt class="ph tt">htpasswd</tt> file.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' apache.userdel /etc/httpd/htpasswd larry</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.apache.version">
+                           <h2 class="title topictitle2">version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.apache.version( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return server version (<tt class="ph tt">apachectl -v</tt>)
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' apache.version</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.apache.vhosts">
+                           <h2 class="title topictitle2">vhosts</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.apache.vhosts( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Show the settings as parsed from the config file (currently
+                                    only shows the virtualhost settings) (<tt class="ph tt">apachectl -S</tt>).
+                                    Because each additional virtual host adds to the execution
+                                    time, this command may require a long timeout be specified
+                                    by using <tt class="ph tt">-t 10</tt>.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt -t 10 '*' apache.vhosts</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

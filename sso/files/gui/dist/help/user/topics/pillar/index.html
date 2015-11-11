@@ -1,0 +1,502 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Storing Static Data in the Pillar</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Storing Static Data in the Pillar">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../../enterprise/user-guide.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="storing-static-data-in-the-pillar">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/bootstrap.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/fonts.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/prism.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/lightbox.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/webhelp.css">
+      <script type="text/javascript" src="../../../themes/bootstrap/js/jquery-1.11.0.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/jquery-ui-1.9.1.custom.min.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/jquery.slimscroll.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/jquery.tocify.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/prism.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/lightbox.min.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/webhelp.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <div id="sidebar-wrapper"><a class="ss-logo" href="/help/home.html"></a><div id="search-form" class="inner-addon left-addon"><i class="glyphicon glyphicon-search"></i><input type="text" class="form-control"></div>
+            <div id="guide-links">
+               <div class="well">
+                  <ul class="nav nav-pills nav-stacked">
+                     <li><a href="/help/gs/index.html"><span class="glyphicon glyphicon glyphicon-th-list"></span> Get Started</a></li>
+                     <li><a href="/help/home.html"><span class="glyphicon glyphicon-home"></span>  Home</a></li>
+                     <li><a href="/help/enterprise/user-guide.html"><span class="glyphicon glyphicon-user"></span> User Guide</a></li>
+                  </ul>
+               </div>
+               <p id="guide-title">Enterprise Help</p>
+            </div>
+            <div class="sidebar-nav">
+               <ul id="gen-links">
+                  <li class=" collapsible  collapsed"><a href="../../../enterprise/use-cases.html">Use Cases</a><ul>
+                        <li class=" no-child "><a href="../../../enterprise/continuous-deployment.html">Continuous Deployment</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/app-stacks.html">Application Stacks</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../../enterprise/cloud.html">Cloud Management</a><ul>
+                              <li class=" no-child "><a href="../../../enterprise/orchestrate.html">Orchestration</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../../enterprise/security-bp.html">Security Best Practices</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/components.html">SaltStack Components</a></li>
+                     </ul>
+                  </li>
+                  <li class=" collapsible  collapsed"><a href="../../../enterprise/deployment.html">Deployment</a><ul>
+                        <li class=" no-child "><a href="../../../enterprise/t_ops_prepare.html">Preparing the SaltStack Ops System</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/t_master_prepare.html">Preparing Masters for SaltStack Ops Integration</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/requirements.html">System Requirements</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/faq.html">Frequently Asked Questions</a></li>
+                     </ul>
+                  </li>
+                  <li class=" no-child "><a href="../../../enterprise/masters.html">View Masters</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/minions.html">View Minions</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/jobs.html">Jobs</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/targets.html">Targets</a></li>
+                  <li class=" collapsible  collapsed"><a href="../../../enterprise/management.html">Admin Management</a><ul>
+                        <li class=" no-child "><a href="../../../enterprise/cfg-masters.html">Manage Masters</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/jobs-all.html">Manage Jobs</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/cfg-users.html">User Accounts</a></li>
+                     </ul>
+                  </li>
+                  <li class=" no-child "><a href="../../../enterprise/web-console-overview.html">Console Overview</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/reports.html">View Reports</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/architecture.html">Architecture Reference</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/glossary.html">Glossary</a></li>
+                  <li class=" collapsible  active"><a href="../../../enterprise/user-guide.html">SaltStack User Guide</a><ul>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/installation/index.html">Installation</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/installation/debian.html">Debian Installation</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/freebsd.html">FreeBSD</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/gentoo.html">Gentoo</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/solaris.html">Solaris</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/ubuntu.html">Ubuntu Installation</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/windows.html">Windows</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/tutorials/index.html">Tutorials</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/standalone_minion.html">Standalone Minion</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/cron.html">Using cron with Salt</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/states_pt1.html">States tutorial, part 1 - Basic Usage</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/states_pt2.html">States tutorial, part 2 - More Complex States, Requisites</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/states_pt4.html">States tutorial, part 4</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/minionfs.html">MinionFS Backend Walkthrough</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/multimaster_pki.html">Multi-Master-PKI Tutorial With Failover</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/writing_tests.html">Writing Salt Tests</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/halite.html">Installing and Configuring Halite</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/targeting/index.html">Targeting Minions</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/globbing.html">Matching the minion id</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/grains.html">Grains</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/ipcidr.html">Subnet/IP Address Matching</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/compound.html">Compound matchers</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/nodegroups.html">Node groups</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/batch.html">Batch Size</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/range.html">SECO Range</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child  active">
+                           <div id="toc"></div>
+                        </li>
+                        <li class=" no-child "><a href="../../../user/topics/reactor/index.html">Reactor System</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/eauth/index.html">External Authentication System</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/eauth/access_control.html">Access Control System</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/event/index.html">Salt Event System</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/event/master_events.html">Salt Master Events</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../../user/topics/topology/syndic.html">Salt Syndic</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/topology/proxyminion/index.html">Proxy Minion</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/windows/windows-specific-behavior.html">Windows-specific Behaviour</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/cloud/index.html">Salt Cloud</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/basic.html">Salt Cloud basic usage</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/profiles.html">VM Profiles</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/map.html">Cloud Map File</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/action.html">Cloud Actions</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/function.html">Cloud Functions</a></li>
+                              <li class=" collapsible  collapsed"><a href="../../../user/topics/cloud/provider-specifics.html">Cloud Provider Specifics</a><ul>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/parallels.html">Getting Started With Parallels</a></li>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/proxmox.html">Getting Started With Proxmox</a></li>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/lxc.html">Getting Started With LXC</a></li>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/hpcloud.html">Getting Started With HP Cloud</a></li>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/vexxhost.html">Getting Started with VEXXHOST</a></li>
+                                 </ul>
+                              </li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/deploy.html">OS Support for Cloud VMs</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/features.html">Feature Matrix</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/windows.html">Spinning up Windows Minions</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/netapi/index.html">netapi modules</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/netapi/writing.html">Writing netapi modules</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/virt/index.html">Salt Virt</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/virt/disk.html">Virtual Machine Disk Profiles</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/virt/nic.html">Virtual Machine Network Profiles</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../../user/topics/yaml/index.html">Understanding YAML</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/master_tops/index.html">Master Tops System</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/best_practices.html">Salt Best Practices</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/troubleshooting/index.html">Troubleshooting</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/troubleshooting/minion.html">Troubleshooting the Salt Minion</a></li>
+                           </ul>
+                        </li>
+                     </ul>
+                  </li>
+               </ul>
+            </div>
+         </div>
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="storing-static-data-in-the-pillar">
+                        
+                        <h1 class="title topictitle1">Storing Static Data in the Pillar</h1>
+                        <div class="body conbody">
+                           <p class="p">Pillar is an interface for Salt designed to offer global values that can be
+                              distributed to all minions. Pillar data is managed in a similar way as
+                              the Salt State Tree.
+                           </p>
+                           
+                           <p class="p">Pillar was added to Salt in version 0.9.8</p>
+                           
+                           <aside class="note "><span class="title">Note:</span> 
+                              <p class="p">Storing sensitive data</p>
+                              
+                              <p class="p">Unlike state tree, pillar data is only available for the targeted
+                                 minion specified by the matcher type.  This makes it useful for
+                                 storing sensitive data specific to a particular minion.
+                              </p>
+                              
+                           </aside>
+                           
+                           <div class="section" id="storing-static-data-in-the-pillar__declaring-the-master-pillar">
+                              <h2 class="title sectiontitle">Declaring the Master Pillar</h2>
+                              <p class="p">The Salt Master server maintains a pillar_roots setup that matches the
+                                 structure of the file_roots used in the Salt file server. Like the
+                                 Salt file server the <tt class="ph tt">pillar_roots</tt> option in the master config is based
+                                 on environments mapping to directories. The pillar data is then mapped to
+                                 minions based on matchers in a top file which is laid out in the same way
+                                 as the state top file. Salt pillars can use the same matcher types as the
+                                 standard top file.
+                              </p>
+                              
+                              <p class="p">The configuration for the <a class="xref" href="unresolvable-reference.html#configuring-the-salt-master__std:conf_master-pillar_roots">pillar_roots</a> in the master config file
+                                 is identical in behavior and function as <a class="xref" href="unresolvable-reference.html#configuring-the-salt-master__std:conf_master-file_roots">file_roots</a>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">pillar_roots:
+  base:
+    - /srv/pillar</pre>
+                              <p class="p">This example configuration declares that the base environment will be located
+                                 in the <tt class="ph tt">/srv/pillar</tt> directory. It must not be in a subdirectory of the
+                                 state tree.
+                              </p>
+                              
+                              <p class="p">The top file used matches the name of the top file used for States,
+                                 and has the same structure:
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">/srv/pillar/top.sls</tt></p>
+                              <pre class="pre codeblock language-yaml">base:
+  '*':
+    - packages</pre>
+                              <p class="p">In the above top file, it is declared that in the <tt class="ph tt">base</tt> environment, the
+                                 glob matching all minions will have the pillar data found in the <tt class="ph tt">packages</tt>
+                                 pillar available to it. Assuming the <tt class="ph tt">pillar_roots</tt> value of <tt class="ph tt">/srv/pillar</tt>
+                                 taken from above, the <tt class="ph tt">packages</tt> pillar would be located at
+                                 <tt class="ph tt">/srv/pillar/packages.sls</tt>.
+                              </p>
+                              
+                              <p class="p">Another example shows how to use other standard top matching types
+                                 to deliver specific salt pillar data to minions with different properties.
+                              </p>
+                              
+                              <p class="p">Here is an example using the <tt class="ph tt">grains</tt> matcher to target pillars to minions
+                                 by their <tt class="ph tt">os</tt> grain:
+                              </p>
+                              <pre class="pre codeblock language-yaml">dev:
+  'os:Debian':
+    - match: grain
+    - servers</pre>
+                              <p class="p"><tt class="ph tt">/srv/pillar/packages.sls</tt></p>
+                              <pre class="pre codeblock language-yaml">{% if grains['os'] == 'RedHat' %}
+apache: httpd
+git: git
+{% elif grains['os'] == 'Debian' %}
+apache: apache2
+git: git-core
+{% endif %}
+
+company: Foo Industries</pre>
+                              <p class="p">The above pillar sets two key/value pairs. If a minion is running RedHat, then
+                                 the <tt class="ph tt">apache</tt> key is set to <tt class="ph tt">httpd</tt> and the <tt class="ph tt">git</tt> key is set to the value
+                                 of <tt class="ph tt">git</tt>. If the minion is running Debian, those values are changed to
+                                 <tt class="ph tt">apache2</tt> and <tt class="ph tt">git-core</tt> respctively. All minions that have this pillar
+                                 targeting to them via a top file will have the key of <tt class="ph tt">company</tt> with a value
+                                 of <tt class="ph tt">Foo Industries</tt>.
+                              </p>
+                              
+                              <p class="p">Consequently this data can be used from within modules, renderers, State SLS
+                                 files, and more via the shared pillar <a class="xref" href="http://docs.python.org/2/library/stdtypes.html#typesmapping" target="_blank">dict</a>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">apache:
+  pkg.installed:
+    - name: {{ pillar['apache'] }}</pre>
+                              <pre class="pre codeblock language-yaml">git:
+  pkg.installed:
+    - name: {{ pillar['git'] }}</pre>
+                              <p class="p">Finally, the above states can utilize the values provided to them via Pillar.
+                                 All pillar values targeted to a minion are available via the 'pillar'
+                                 dictionary. As seen in the above example, Jinja substitution can then be
+                                 utilized to access the keys and values in the Pillar dictionary.
+                              </p>
+                              
+                              <p class="p">Note that you cannot just list key/value-information in <tt class="ph tt">top.sls</tt>. Instead,
+                                 target a minion to a pillar file and then list the keys and values in the
+                                 pillar. Here is an example top file that illustrates this point:
+                              </p>
+                              <pre class="pre codeblock language-yaml">base:
+  '*':
+     - common_pillar</pre>
+                              <p class="p">And the actual pillar file at '/srv/pillar/common_pillar.sls':</p>
+                              <pre class="pre codeblock language-yaml">foo: bar
+boo: baz</pre>
+                              </div>
+                           
+                           <div class="section" id="storing-static-data-in-the-pillar__pillar-namespace-flattened">
+                              <h2 class="title sectiontitle">Pillar namespace flattened</h2>
+                              <p class="p">The separate pillar files all share the same namespace. Given a <tt class="ph tt">top.sls</tt> of:
+                              </p>
+                              <pre class="pre codeblock language-yaml">base:
+  '*':
+    - packages
+    - services</pre>
+                              <p class="p">a <tt class="ph tt">packages.sls</tt> file of:
+                              </p>
+                              <pre class="pre codeblock language-yaml">bind: bind9</pre>
+                              <p class="p">and a <tt class="ph tt">services.sls</tt> file of:
+                              </p>
+                              <pre class="pre codeblock language-yaml">bind: named</pre>
+                              <p class="p">Then a request for the <tt class="ph tt">bind</tt> pillar will only return <tt class="ph tt">named</tt>; the
+                                 <tt class="ph tt">bind9</tt> value is not available. It is better to structure your pillar files
+                                 with more hierarchy. For example your <tt class="ph tt">package.sls</tt> file could look like:
+                              </p>
+                              <pre class="pre codeblock language-yaml">packages:
+  bind: bind9</pre>
+                              </div>
+                           
+                           <div class="section" id="storing-static-data-in-the-pillar__pillar-namespace-merges">
+                              <h2 class="title sectiontitle">Pillar Namespace Merges</h2>
+                              <p class="p">With some care, the pillar namespace can merge content from multiple pillar
+                                 files under a single key, so long as conflicts are avoided as described above.
+                              </p>
+                              
+                              <p class="p">For example, if the above example were modified as follows, the values are
+                                 merged below a single key:
+                              </p>
+                              <pre class="pre codeblock language-yaml">base:
+  '*':
+    - packages
+    - services</pre>
+                              <p class="p">And a <tt class="ph tt">packages.sls</tt> file like:
+                              </p>
+                              <pre class="pre codeblock language-yaml">bind:
+  package-name: bind9
+  version: 9.9.5</pre>
+                              <p class="p">And a <tt class="ph tt">services.sls</tt> file like:
+                              </p>
+                              <pre class="pre codeblock language-yaml">bind:
+  port: 53
+  listen-on: any</pre>
+                              <p class="p">The resulting pillar will be as follows:</p>
+                              <pre class="pre codeblock language-bash">$ salt-call pillar.get bind
+local:
+    ----------
+    listen-on:
+        any
+    package-name:
+        bind9
+    port:
+        53
+    version:
+        9.9.5</pre>
+                              <aside class="note "><span class="title">Note:</span> 
+                                 <p class="p">Remember: conflicting keys will be overwritten in a non-deterministic manner!</p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="storing-static-data-in-the-pillar__including-other-pillars">
+                              <h2 class="title sectiontitle">Including Other Pillars</h2>
+                              <p class="p"><span class="keyword inline">New in version 0.16.0.</span></p>
+                              
+                              <p class="p">Pillar SLS files may include other pillar files, similar to State files. Two
+                                 syntaxes are available for this purpose. The simple form simply includes the
+                                 additional pillar as if it were part of the same file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">include:
+  - users</pre>
+                              <p class="p">The full include form allows two additional options -- passing default values
+                                 to the templating engine for the included pillar file as well as an optional
+                                 key under which to nest the results of the included pillar:
+                              </p>
+                              <pre class="pre codeblock language-yaml">include:
+  - users:
+      defaults:
+          sudo: ['bob', 'paul']
+      key: users</pre>
+                              <p class="p">With this form, the included file (users.sls) will be nested within the 'users'
+                                 key of the compiled pillar. Additionally, the 'sudo' value will be available
+                                 as a template variable to users.sls.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="storing-static-data-in-the-pillar__viewing-minion-pillar">
+                              <h2 class="title sectiontitle">Viewing Minion Pillar</h2>
+                              <p class="p">Once the pillar is set up the data can be viewed on the minion via the
+                                 <tt class="ph tt">pillar</tt> module, the pillar module comes with functions,
+                                 <a class="xref" href="unresolvable-reference.html#module-salt.modules.pillar__salt.modules.pillar.items">pillar.items</a> and <a class="xref" href="unresolvable-reference.html#module-salt.modules.pillar__salt.modules.pillar.raw">pillar.raw</a>.  <a class="xref" href="unresolvable-reference.html#module-salt.modules.pillar__salt.modules.pillar.items">pillar.items</a>
+                                 will return a freshly reloaded pillar and <a class="xref" href="unresolvable-reference.html#module-salt.modules.pillar__salt.modules.pillar.raw">pillar.raw</a> will return the current pillar without a refresh:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' pillar.items</pre>
+                              <aside class="note "><span class="title">Note:</span> 
+                                 <p class="p">Prior to version 0.16.2, this function is named <tt class="ph tt">pillar.data</tt>. This
+                                    function name is still supported for backwards compatibility.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="storing-static-data-in-the-pillar__pillar-get-function">
+                              <h2 class="title sectiontitle">Pillar "get" Function</h2>
+                              <p class="p"><span class="keyword inline">New in version 0.14.0.</span></p>
+                              
+                              <p class="p">The <a class="xref" href="unresolvable-reference.html#module-salt.modules.pillar__salt.modules.pillar.get">pillar.get</a> function works much in the same
+                                 way as the <tt class="ph tt">get</tt> method in a python dict, but with an enhancement: nested
+                                 dict components can be extracted using a <a class="xref title_reference" href="index.html">:</a> delimiter.
+                              </p>
+                              
+                              <p class="p">If a structure like this is in pillar:</p>
+                              <pre class="pre codeblock language-yaml">foo:
+  bar:
+    baz: qux</pre>
+                              <p class="p">Extracting it from the raw pillar in an sls formula or file template is done
+                                 this way:
+                              </p>
+                              <pre class="pre codeblock language-jinja">{{ pillar['foo']['bar']['baz'] }}</pre>
+                              <p class="p">Now, with the new <a class="xref" href="unresolvable-reference.html#module-salt.modules.pillar__salt.modules.pillar.get">pillar.get</a> function the data
+                                 can be safely gathered and a default can be set, allowing the template to fall
+                                 back if the value is not available:
+                              </p>
+                              <pre class="pre codeblock language-jinja">{{ salt['pillar.get']('foo:bar:baz', 'qux') }}</pre>
+                              <p class="p">This makes handling nested structures much easier.</p>
+                              
+                              <aside class="note "><span class="title">Note:</span> 
+                                 <p class="p"><tt class="ph tt">pillar.get()</tt> vs <tt class="ph tt">salt['pillar.get']()</tt></p>
+                                 
+                                 <p class="p">It should be noted that within templating, the <tt class="ph tt">pillar</tt> variable is just
+                                    a dictionary.  This means that calling <tt class="ph tt">pillar.get()</tt> inside of a
+                                    template will just use the default dictionary <tt class="ph tt">.get()</tt> function which
+                                    does not include the extra <tt class="ph tt">:</tt> delimiter functionality.  It must be
+                                    called using the above syntax (<tt class="ph tt">salt['pillar.get']('foo:bar:baz',
+                                       'qux')</tt>) to get the salt function, instead of the default dictionary
+                                    behavior.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="storing-static-data-in-the-pillar__refreshing-pillar-data">
+                              <h2 class="title sectiontitle">Refreshing Pillar Data</h2>
+                              <p class="p">When pillar data is changed on the master the minions need to refresh the data
+                                 locally. This is done with the <tt class="ph tt">saltutil.refresh_pillar</tt> function.
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' saltutil.refresh_pillar</pre>
+                              <p class="p">This function triggers the minion to asynchronously refresh the pillar and will
+                                 always return <tt class="ph tt">None</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="storing-static-data-in-the-pillar__targeting-with-pillar">
+                              <h2 class="title sectiontitle">Targeting with Pillar</h2>
+                              <p class="p">Pillar data can be used when targeting minions. This allows for ultimate
+                                 control and flexibility when targeting minions.
+                              </p>
+                              <pre class="pre codeblock language-bash">salt -I 'somekey:specialvalue' test.ping</pre>
+                              <p class="p">Like with <a class="xref" href="unresolvable-reference.html#__">Grains</a>, it is possible to use globbing
+                                 as well as match nested values in Pillar, by adding colons for each level that
+                                 is being traversed. The below example would match minions with a pillar named
+                                 <tt class="ph tt">foo</tt>, which is a dict containing a key <tt class="ph tt">bar</tt>, with a value beginning with
+                                 <tt class="ph tt">baz</tt>:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt -I 'foo:bar:baz*' test.ping</pre>
+                              </div>
+                           
+                           <div class="section" id="storing-static-data-in-the-pillar__set-pillar-data-at-the-command-line">
+                              <h2 class="title sectiontitle">Set Pillar Data at the Command Line</h2>
+                              <p class="p">Pillar data can be set at the command line like the following example:</p>
+                              <pre class="pre codeblock language-bash">salt '*' state.highstate pillar='{"cheese": "spam"}'</pre>
+                              <p class="p">This will create a dict with a key of 'cheese' and a value of 'spam'. A list
+                                 can be created like this:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' state.highstate pillar='["cheese", "milk", "bread"]'</pre>
+                              </div>
+                           
+                           <div class="section" id="storing-static-data-in-the-pillar__master-config-in-pillar">
+                              <h2 class="title sectiontitle">Master Config In Pillar</h2>
+                              <p class="p">For convenience the data stored in the master configuration file is made
+                                 available in all minion's pillars. This makes global configuration of services
+                                 and systems very easy but may not be desired if sensitive data is stored in the
+                                 master configuration.
+                              </p>
+                              
+                              <p class="p">To disable the master config from being added to the pillar set <tt class="ph tt">pillar_opts</tt>
+                                 to <tt class="ph tt">False</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">pillar_opts: False</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+                        <p class="text-muted pull-right"><small>Copyright © 2015 SaltStack.</small></p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

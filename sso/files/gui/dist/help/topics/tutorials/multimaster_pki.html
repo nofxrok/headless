@@ -1,0 +1,396 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Multi-Master-PKI Tutorial With Failover</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Multi-Master-PKI Tutorial With Failover">
+      
+      <meta name="DC.Relation" scheme="URI" content="../installation/architecture.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="multi-master-pki-tutorial-with-failover">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="multi-master-pki-tutorial-with-failover">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Multi-Master-PKI Tutorial With Failover</h1>
+                        <div class="body conbody">
+                           <p class="p">This tutorial will explain, how to run a salt-environment where a single
+                              minion can have multiple masters and fail-over between them if its current
+                              master fails.
+                           </p>
+                           
+                           <p class="p">The individual steps are</p>
+                           
+                           <ul class="ul">
+                              <li class="li">
+                                 <p class="p">setup the master(s) to sign its auth-replies</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">setup minion(s) to verify master-public-keys</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">enable multiple masters on minion(s)</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">enable master-check on  minion(s)</p>
+                                 
+                                 <blockquote class="lq">
+                                    <p class="p">Please note, that it is advised to have good knowledge of the salt-
+                                       authentication and communication-process to understand this tutorial.
+                                       All of the settings described here, go on top of the default
+                                       authentication/communication process.
+                                    </p>
+                                    
+                                 </blockquote>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                           <div class="section" id="multi-master-pki-tutorial-with-failover__motivation">
+                              <h2 class="title sectiontitle">Motivation</h2>
+                              <p class="p">The default behaviour of a salt-minion is to connect to a master and accept
+                                 the masters public key. With each publication, the master sends his public-key
+                                 for the minion to check and if this public-key ever changes, the minion
+                                 complains and exits. Practically this means, that there can only be a single
+                                 master at any given time.
+                              </p>
+                              
+                              <p class="p">Would it not be much nicer, if the minion could have any number of masters
+                                 (1:n) and jump to the next master if its current master died because of a
+                                 network or hardware failure?
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">There is also a MultiMaster-Tutorial with a different approach and topology
+                                    than this one, that might also suite your needs or might even be better suited
+                                    <a class="xref" href="http://docs.saltstack.com/en/latest/topics/tutorials/multimaster.html" target="_blank">Multi-Master Tutorial</a></p>
+                                 
+                              </aside>
+                              
+                              <p class="p">It is also desirable, to add some sort of authenticity-check to the very first
+                                 public key a minion receives from a master. Currently a minions takes the
+                                 first masters public key for granted.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="multi-master-pki-tutorial-with-failover__the-goal">
+                              <h2 class="title sectiontitle">The Goal</h2>
+                              <p class="p">Setup the master to sign the public key it sends to the minions and enable the
+                                 minions to verify this signature for authenticity.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="multi-master-pki-tutorial-with-failover__prepping-the-master-to-sign-its-public-key">
+                              <h2 class="title sectiontitle">Prepping the master to sign its public key</h2>
+                              <p class="p">For signing to work, both master and minion must have the signing and/or
+                                 verification settings enabled. If the master signs the public key but the
+                                 minion does not verify it, the minion will complain and exit. The same
+                                 happens, when the master does not sign but the minion tries to verify.
+                              </p>
+                              
+                              <p class="p">The easiest way to have the master sign its public key is to set</p>
+                              <pre class="pre codeblock language-yaml">master_sign_pubkey: True</pre>
+                              <p class="p">After restarting the salt-master service, the master will automatically
+                                 generate a new key-pair
+                              </p>
+                              <pre class="pre codeblock language-yaml">master_sign.pem
+master_sign.pub</pre>
+                              <p class="p">A custom name can be set for the signing key-pair by setting</p>
+                              <pre class="pre codeblock language-yaml">master_sign_key_name: &lt;name_without_suffix&gt;</pre>
+                              <p class="p">The master will then generate that key-pair upon restart and use it for
+                                 creating the public keys signature attached to the auth-reply.
+                              </p>
+                              
+                              <p class="p">The computation is done for every auth-request of a minion. If many minions
+                                 auth very often, it is advised to use conf_master:<span class="keyword title_reference">master_pubkey_signature</span>
+                                 and conf_master:<span class="keyword title_reference">master_use_pubkey_signature</span> settings described below.
+                              </p>
+                              
+                              <p class="p">If multiple masters are in use and should sign their auth-replies, the signing
+                                 key-pair master_sign.* has to be copied to each master. Otherwise a minion
+                                 will fail to verify the masters public when connecting to a different master
+                                 than it did initially. That is because the public keys signature was created
+                                 with a different signing key-pair.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="multi-master-pki-tutorial-with-failover__prepping-the-minion-to-verify-received-public-keys">
+                              <h2 class="title sectiontitle">Prepping the minion to verify received public keys</h2>
+                              <p class="p">The minion must have the public key (and only that one!) available to be
+                                 able to verify a signature it receives. That public key (defaults to
+                                 master_sign.pub) must be copied from the master to the minions pki-directory.
+                              </p>
+                              <pre class="pre codeblock language-bash">/etc/salt/pki/minion/master_sign.pub
+
+DO NOT COPY THE master_sign.pem FILE. IT MUST STAY ON THE MASTER AND
+ONLY THERE!</pre>
+                              <p class="p">When that is done, enable the signature checking in the minions configuration</p>
+                              <pre class="pre codeblock language-yaml">verify_master_pubkey_sign: True</pre>
+                              <p class="p">and restart the minion. For the first try, the minion should be run in manual
+                                 debug mode.
+                              </p>
+                              <pre class="pre codeblock language-bash">$ salt-minion -l debug</pre>
+                              <p class="p">Upon connecting to the master, the following lines should appear on the output:</p>
+                              <pre class="pre codeblock language-bash">[DEBUG   ] Attempting to authenticate with the Salt Master at 172.16.0.10
+[DEBUG   ] Loaded minion key: /etc/salt/pki/minion/minion.pem
+[DEBUG   ] salt.crypt.verify_signature: Loading public key
+[DEBUG   ] salt.crypt.verify_signature: Verifying signature
+[DEBUG   ] Successfully verified signature of master public key with verification public key master_sign.pub
+[INFO    ] Received signed and verified master pubkey from master 172.16.0.10
+[DEBUG   ] Decrypting the current master AES key</pre>
+                              <p class="p">If the signature verification fails, something went wrong and it will look
+                                 like this
+                              </p>
+                              <pre class="pre codeblock language-bash">[DEBUG   ] Attempting to authenticate with the Salt Master at 172.16.0.10
+[DEBUG   ] Loaded minion key: /etc/salt/pki/minion/minion.pem
+[DEBUG   ] salt.crypt.verify_signature: Loading public key
+[DEBUG   ] salt.crypt.verify_signature: Verifying signature
+[DEBUG   ] Failed to verify signature of public key
+[CRITICAL] The Salt Master server's public key did not authenticate!</pre>
+                              <p class="p">In a case like this, it should be checked, that the verification pubkey
+                                 (master_sign.pub) on the minion is the same as the one on the master.
+                              </p>
+                              
+                              <p class="p">Once the verification is successful, the minion can be started in daemon mode
+                                 again.
+                              </p>
+                              
+                              <p class="p">For the paranoid among us, its also possible to verify the public whenever it
+                                 is received from the master. That is, for every single auth-attempt which can be
+                                 quite frequent. For example just the start of the minion will force the signature
+                                 to be checked 6 times for various things like auth, mine, highstate, etc.
+                              </p>
+                              
+                              <p class="p">If that is desired, enable the setting</p>
+                              <pre class="pre codeblock language-yaml">always_verify_signature: True</pre>
+                              </div>
+                           
+                           <div class="section" id="multi-master-pki-tutorial-with-failover__multiple-masters-for-a-minion">
+                              <h2 class="title sectiontitle">Multiple Masters For A Minion</h2>
+                              <p class="p">Configuring multiple masters on a minion is done by specifying two settings:</p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">a list of masters addresses</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">what type of master is defined</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              <pre class="pre codeblock language-yaml">master:
+    - 172.16.0.10
+    - 172.16.0.11
+    - 172.16.0.12</pre>
+                              <pre class="pre codeblock language-yaml">master_type: failover</pre>
+                              <p class="p">This tells the minion that all the master above are available for it to
+                                 connect to. When started with this configuration, it will try the master
+                                 in the order they are defined. To randomize that order, set
+                              </p>
+                              <pre class="pre codeblock language-yaml">master_shuffle: True</pre>
+                              <p class="p">The master-list will then be shuffled before the first connection attempt.</p>
+                              
+                              <p class="p">The first master that accepts the minion, is used by the minion. If the
+                                 master does not yet know the minion, that counts as accepted and the minion
+                                 stays on that master.
+                              </p>
+                              
+                              <p class="p">For the minion to be able to detect if its still connected to its current
+                                 master enable the check for it
+                              </p>
+                              <pre class="pre codeblock language-yaml">master_alive_interval: &lt;seconds&gt;</pre>
+                              <p class="p">If the loss of the connection is detected, the minion will temporarily
+                                 remove the failed master from the list and try one of the other masters
+                                 defined (again shuffled if that is enabled).
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="multi-master-pki-tutorial-with-failover__testing-the-setup">
+                              <h2 class="title sectiontitle">Testing the setup</h2>
+                              <p class="p">At least two running masters are needed to test the failover setup.</p>
+                              
+                              <p class="p">Both masters should be running and the minion should be running on the command
+                                 line in debug mode
+                              </p>
+                              <pre class="pre codeblock language-bash">$ salt-minion -l debug</pre>
+                              <p class="p">The minion will connect to the first master from its master list</p>
+                              <pre class="pre codeblock language-bash">[DEBUG   ] Attempting to authenticate with the Salt Master at 172.16.0.10
+[DEBUG   ] Loaded minion key: /etc/salt/pki/minion/minion.pem
+[DEBUG   ] salt.crypt.verify_signature: Loading public key
+[DEBUG   ] salt.crypt.verify_signature: Verifying signature
+[DEBUG   ] Successfully verified signature of master public key with verification public key master_sign.pub
+[INFO    ] Received signed and verified master pubkey from master 172.16.0.10
+[DEBUG   ] Decrypting the current master AES key</pre>
+                              <p class="p">A test.ping on the master the minion is currently connected to should be run to
+                                 test connectivity.
+                              </p>
+                              
+                              <p class="p">If successful, that master should be turned off. A firewall-rule denying the
+                                 minions packets will also do the trick.
+                              </p>
+                              
+                              <p class="p">Depending on the configured conf_minion:<span class="keyword title_reference">master_alive_interval</span>, the minion
+                                 will notice the loss of the connection and log it to its logfile.
+                              </p>
+                              <pre class="pre codeblock language-bash">[INFO    ] Connection to master 172.16.0.10 lost
+[INFO    ] Trying to tune in to next master from master-list</pre>
+                              <p class="p">The minion will then remove the current master from the list and try connecting
+                                 to the next master
+                              </p>
+                              <pre class="pre codeblock language-bash">[INFO    ] Removing possibly failed master 172.16.0.10 from list of masters
+[WARNING ] Master ip address changed from 172.16.0.10 to 172.16.0.11
+[DEBUG   ] Attempting to authenticate with the Salt Master at 172.16.0.11</pre>
+                              <p class="p">If everything is configured correctly, the new masters public key will be
+                                 verified successfully
+                              </p>
+                              <pre class="pre codeblock language-bash">[DEBUG   ] Loaded minion key: /etc/salt/pki/minion/minion.pem
+[DEBUG   ] salt.crypt.verify_signature: Loading public key
+[DEBUG   ] salt.crypt.verify_signature: Verifying signature
+[DEBUG   ] Successfully verified signature of master public key with verification public key master_sign.pub</pre>
+                              <p class="p">the authentication with the new master is successful</p>
+                              <pre class="pre codeblock language-bash">[INFO    ] Received signed and verified master pubkey from master 172.16.0.11
+[DEBUG   ] Decrypting the current master AES key
+[DEBUG   ] Loaded minion key: /etc/salt/pki/minion/minion.pem
+[INFO    ] Authentication with master successful!</pre>
+                              <p class="p">and the minion can be pinged again from its new master.</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="multi-master-pki-tutorial-with-failover__performance-tuning">
+                              <h2 class="title sectiontitle">Performance Tuning</h2>
+                              <p class="p">With the setup described above, the master computes a signature for every
+                                 auth-request of a minion. With many minions and many auth-requests, that
+                                 can chew up quite a bit of CPU-Power.
+                              </p>
+                              
+                              <p class="p">To avoid that, the master can use a pre-created signature of its public-key.
+                                 The signature is saved as a base64 encoded string which the master reads
+                                 once when starting and attaches only that string to auth-replies.
+                              </p>
+                              
+                              <p class="p">DO ME HERE
+                                 Enabling this also gives paranoid users the possibility, to have the signing
+                                 key-pair on a different system than the actual salt-master and create the public
+                                 keys signature there. Probably on a system with more restrictive firewall rules,
+                                 without internet access, less users, etc.
+                              </p>
+                              
+                              <p class="p">That signature can be created with</p>
+                              <pre class="pre codeblock language-bash">$ salt-key --gen-signature</pre>
+                              <p class="p">This will create a default signature file in the master pki-directory</p>
+                              <pre class="pre codeblock language-bash">/etc/salt/pki/master/master_pubkey_signature</pre>
+                              <p class="p">It is a simple text-file with the binary-signature converted to base64.</p>
+                              
+                              <p class="p">If no signing-pair is present yet, this will auto-create the signing pair and
+                                 the signature file in one call
+                              </p>
+                              <pre class="pre codeblock language-bash">$ salt-key --gen-signature --auto-create</pre>
+                              <p class="p">Telling the master to use the pre-created signature is done with</p>
+                              <pre class="pre codeblock language-yaml">master_use_pubkey_signature: True</pre>
+                              <p class="p">That requires the file 'master_pubkey_signature' to be present in the masters
+                                 pki-directory with the correct signature.
+                              </p>
+                              
+                              <p class="p">If the signature file is named differently, its name can be set with</p>
+                              <pre class="pre codeblock language-yaml">master_pubkey_signature: &lt;filename&gt;</pre>
+                              <p class="p">With many masters and many public-keys (default and signing), it is advised to
+                                 use the salt-masters hostname for the signature-files name. Signatures can be
+                                 easily confused because they do not provide any information about the key the
+                                 signature was created from.
+                              </p>
+                              
+                              <p class="p">Verifying that everything works is done the same way as above.</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="multi-master-pki-tutorial-with-failover__how-the-signing-and-verification-works">
+                              <h2 class="title sectiontitle">How the signing and verification works</h2>
+                              <p class="p">The default key-pair of the salt-master is</p>
+                              <pre class="pre codeblock language-yaml">/etc/salt/pki/master/master.pem
+/etc/salt/pki/master/master.pub</pre>
+                              <p class="p">To be able to create a signature of a message (in this case a public-key),
+                                 another key-pair has to be added to the setup. Its default name is:
+                              </p>
+                              <pre class="pre codeblock language-yaml">master_sign.pem
+master_sign.pub</pre>
+                              <p class="p">The combination of the master.* and master_sign.* key-pairs give the
+                                 possibility of generating signatures. The signature of a given message
+                                 is unique and can be verified, if the public-key of the signing-key-pair
+                                 is available to the recipient (the minion).
+                              </p>
+                              
+                              <p class="p">The signature of the masters public-key in master.pub is computed with</p>
+                              <pre class="pre codeblock language-yaml">master_sign.pem
+master.pub
+M2Crypto.EVP.sign_update()</pre>
+                              <p class="p">This results in a binary signature which is converted to base64 and attached
+                                 to the auth-reply send to the minion.
+                              </p>
+                              
+                              <p class="p">With the signing-pairs public-key available to the minion, the attached
+                                 signature can be verified with
+                              </p>
+                              <pre class="pre codeblock language-yaml">master_sign.pub
+master.pub
+M2Cryptos EVP.verify_update().</pre>
+                              <p class="p">When running multiple masters, either the signing key-pair has to be present
+                                 on all of them, or the master_pubkey_signature has to be pre-computed for
+                                 each master individually (because they all have different public-keys).
+                              </p>
+                              
+                              <blockquote class="lq">
+                                 <p class="p">DO NOT PUT THE SAME master.pub ON ALL MASTERS FOR EASE OF USE.</p>
+                                 
+                              </blockquote>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

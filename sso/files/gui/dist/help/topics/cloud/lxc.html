@@ -1,0 +1,263 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Getting Started With LXC</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Getting Started With LXC">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/cloud-providers.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="config-lxc">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="config-lxc">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Getting Started With LXC</h1>
+                        <div class="body conbody">
+                           <p class="p ids"><span class="ph" id="config-lxc__getting-started-with-lxc"></span></p>
+                           
+                           <p class="p">The LXC module is designed to install Salt in an LXC container on a controlled
+                              and possibly remote minion.
+                           </p>
+                           
+                           <p class="p">In other words, Salt will connect to a minion, then from that minion:</p>
+                           
+                           <ul class="ul">
+                              <li class="li">
+                                 <p class="p">Provision and configure a container for networking access</p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">Use 
+                                    		
+                                    			&nbsp;<a class="xref" href="config.html#core-configuration__config-saltify">saltify</a> to deploy salt and re-attach to master
+                                 </p>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                           <div class="section" id="config-lxc__limitations">
+                              <h2 class="title sectiontitle">Limitations</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">You can only act on one minion and one provider at a time.</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Listing images must be targeted to a particular LXC provider (nothing will be
+                                       outputted with <tt class="ph tt">all</tt>)
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="config-lxc__operation">
+                              <h2 class="title sectiontitle">Operation</h2>
+                              <p class="p">Salt's LXC support does not use lxc.init.  This enables it to tie minions
+                                 to a master in a more generic fashion (if any masters are defined)
+                                 and allows other custom association code.
+                              </p>
+                              
+                              <p class="p">Order of operation:</p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Create the LXC container using 
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.lxc.html#salt.modules.lxc">the LXC execution module</a> on the desired minion (clone or template)
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Change LXC config options (if any need to be changed)</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Start container</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Change base passwords if any</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Change base DNS configuration if necessary</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Wait for LXC container to be up and ready for ssh</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Test SSH connection and bailout in error</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Via SSH (with the help of saltify), upload deploy script and seeds,
+                                       then re-attach the minion.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="config-lxc__provider-configuration">
+                              <h2 class="title sectiontitle">Provider configuration</h2>
+                              <p class="p">Here is a simple provider configuration:</p>
+                              <pre class="pre codeblock language-yaml"># Note: This example goes in /etc/salt/cloud.providers or any file in the
+# /etc/salt/cloud.providers.d/ directory.
+devhost10-lxc:
+  target: devhost10
+  provider: lxc</pre>
+                              </div>
+                           
+                           <div class="section" id="config-lxc__profile-configuration">
+                              <h2 class="title sectiontitle">Profile configuration</h2>
+                              <p class="p">Here are the options to configure your containers:</p>
+                              <pre class="pre codeblock language-text">``target``
+    Host minion id to install the lxc Container into
+``profile``
+    Name of the profile containing the LXC configuration
+
+Container creation/clone options:
+    Create a container by cloning:
+        ``from_container``
+            Name of an original container using clone
+        ``snapshot``
+            Do we use snapshots on cloned filesystems
+    Create a container from scratch using an LXC template:
+        image
+            template to use
+        backing
+            Backing store type (None, lvm, brtfs)
+        lvname
+            LVM logical volume name, if any
+        fstype
+            Type of filesystem
+size
+    Size of the containera (for brtfs, or lvm)
+vgname
+    LVM Volume Group name, if any
+users
+    Names of the users to be pre-created inside the container
+ssh_username
+    Username of the SSH systems administrator inside the container
+sudo
+    Do we use sudo
+ssh_gateway
+    if the minion is not in your 'topmaster' network, use
+    that gateway to connect to the lxc container.
+    This may be the public ip of the hosting minion
+ssh_gateway_key
+    When using gateway, the ssh key of the gateway user (passed to saltify)
+ssh_gateway_port
+    When using gateway, the ssh port of the gateway (passed to saltify)
+ssh_gateway_user
+    When using gateway, user to login as via SSH (passed to saltify)
+password
+    password for root and sysadmin (see "users" parameter above)
+mac
+    mac address to assign to the container's network interface
+ip
+    IP address to assign to the container's network interface
+netmask
+    netmask for the network interface's IP
+bridge
+    bridge under which the container's network interface will be enslaved
+dnsservers
+    List of DNS servers to use--this is optional.  If present, DNS
+    servers will be restricted to that list if used
+lxc_conf_unset
+    Configuration variables to unset in this container's LXC configuration
+lxc_conf
+    LXC configuration variables to add in this container's LXC configuration
+minion
+    minion configuration (see :doc:`Minion Configuration in Salt Cloud &lt;/topics/cloud/config&gt;`)</pre>
+                              <pre class="pre codeblock language-yaml"># Note: This example would go in /etc/salt/cloud.profile or any file in the
+# /etc/salt/cloud.profile.d/ directory.
+devhost10-lxc:
+  provider: devhost10-lxc
+  from_container: ubuntu
+  backing: lvm
+  sudo: True
+  size: 3g
+  ip: 10.0.3.9
+  minion:
+    master: 10.5.0.1
+    master_port: 4506
+  lxc_conf:
+    - lxc.utsname: superlxc</pre>
+                              </div>
+                           
+                           <div class="section" id="config-lxc__driver-support">
+                              <h2 class="title sectiontitle">Driver Support</h2>
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Container creation</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Image listing (LXC templates)</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Running container information (IP addresses, etc.)</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

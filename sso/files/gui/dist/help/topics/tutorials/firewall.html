@@ -1,0 +1,198 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Opening the Firewall up for Salt</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Opening the Firewall up for Salt">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/dep-process.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="opening-the-firewall-up-for-salt">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/bootstrap/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/bootstrap/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/bootstrap/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="opening-the-firewall-up-for-salt">
+                        <a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><h1 class="title topictitle1">Opening the Firewall up for Salt</h1>
+                        <div class="body conbody">
+                           <p class="p">The Salt master communicates with the minions using an AES-encrypted ZeroMQ
+                              connection. These communications are done over TCP ports <strong class="ph b">4505</strong> and <strong class="ph b">4506</strong>,
+                              which need to be accessible on the master only. This document outlines suggested
+                              firewall rules for allowing these incoming connections to the master.
+                           </p>
+                           
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">No firewall configuration needs to be done on Salt minions. These changes
+                                 refer to the master only.
+                              </p>
+                              
+                           </aside>
+                           
+                           <p class="p">There are situations where you want to selectively allow Minion traffic
+                              from specific hosts or networks into your Salt Master. The first
+                              scenario which comes to mind is to prevent unwanted traffic to your
+                              Master out of security concerns, but another scenario is to handle
+                              Minion upgrades when there are backwards incompatible changes between
+                              the installed Salt versions in your environment.
+                           </p>
+                           
+                           <p class="p">Here is an example <a class="xref" href="firewall.html#opening-the-firewall-up-for-salt__linux-iptables">Linux iptables</a> ruleset to
+                              be set on the Master:
+                           </p>
+                           <pre class="pre codeblock language-bash"># Allow Minions from these networks
+-I INPUT -s 10.1.2.0/24 -p tcp -m multiport --dports 4505,4506 -j ACCEPT
+-I INPUT -s 10.1.3.0/24 -p tcp -m multiport --dports 4505,4506 -j ACCEPT
+# Allow Salt to communicate with Master on the loopback interface
+-A INPUT -i lo -p tcp -m multiport --dports 4505,4506 -j ACCEPT
+# Reject everything else
+-A INPUT -p tcp -m multiport --dports 4505,4506 -j REJECT</pre>
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">The important thing to note here is that the <tt class="ph tt">salt</tt> command
+                                 needs to communicate with the listening network socket of
+                                 <tt class="ph tt">salt-master</tt> on the <em class="ph i">loopback</em> interface. Without this you will
+                                 see no outgoing Salt traffic from the master, even for a simple
+                                 <tt class="ph tt">salt '*' test.ping</tt>, because the <tt class="ph tt">salt</tt> client never reached
+                                 the <tt class="ph tt">salt-master</tt> to tell it to carry out the execution.
+                              </p>
+                              
+                           </aside>
+                           
+                           <div class="section" id="opening-the-firewall-up-for-salt__fedora-18-and-beyond-rhel-7-centos-7">
+                              <h2 class="title sectiontitle">Fedora 18 and beyond / RHEL 7 / CentOS 7</h2>
+                              <p class="p">Starting with Fedora 18 <a class="xref" href="https://fedoraproject.org/wiki/FirewallD" target="_blank">FirewallD</a> is the tool that is used to dynamically
+                                 manage the firewall rules on a host. It has support for IPv4/6 settings and
+                                 the separation of runtime and permanent configurations. To interact with
+                                 FirewallD use the command line client <tt class="ph tt">firewall-cmd</tt>.
+                              </p>
+                              
+                              <p class="p"><strong class="ph b">firewall-cmd example</strong>:
+                              </p>
+                              <pre class="pre codeblock language-bash">firewall-cmd --permanent --zone=&lt;zone&gt; --add-port=4505-4506/tcp</pre>
+                              <p class="p">Please choose the desired zone according to your setup. Don't forget to reload
+                                 after you made your changes.
+                              </p>
+                              <pre class="pre codeblock language-bash">firewall-cmd --reload</pre>
+                              </div>
+                           
+                           <div class="section" id="opening-the-firewall-up-for-salt__rhel-6-centos-6">
+                              <h2 class="title sectiontitle">RHEL 6 / CentOS 6</h2>
+                              <p class="p">The <tt class="ph tt">lokkit</tt> command packaged with some Linux distributions makes opening
+                                 iptables firewall ports very simple via the command line. Just be careful
+                                 to not lock out access to the server by neglecting to open the ssh port.
+                              </p>
+                              
+                              <p class="p"><strong class="ph b">lokkit example</strong>:
+                              </p>
+                              <pre class="pre codeblock language-bash">lokkit -p 22:tcp -p 4505:tcp -p 4506:tcp</pre>
+                              <p class="p">The <tt class="ph tt">system-config-firewall-tui</tt> command provides a text-based interface to
+                                 modifying the firewall.
+                              </p>
+                              
+                              <p class="p"><strong class="ph b">system-config-firewall-tui</strong>:
+                              </p>
+                              <pre class="pre codeblock language-bash">system-config-firewall-tui</pre>
+                              </div>
+                           
+                           <div class="section" id="opening-the-firewall-up-for-salt__opensuse">
+                              <h2 class="title sectiontitle">openSUSE</h2>
+                              <p class="p">Salt installs firewall rules in <a class="xref" href="https://github.com/saltstack/salt/blob/develop/pkg/suse/salt.SuSEfirewall2" target="_blank">/etc/sysconfig/SuSEfirewall2.d/services/salt</a>.
+                                 Enable with:
+                              </p>
+                              <pre class="pre codeblock language-bash">SuSEfirewall2 open
+SuSEfirewall2 start</pre>
+                              <p class="p">If you have an older package of Salt where the above configuration file is
+                                 not included, the <tt class="ph tt">SuSEfirewall2</tt> command makes opening iptables firewall
+                                 ports very simple via the command line.
+                              </p>
+                              
+                              <p class="p"><strong class="ph b">SuSEfirewall example</strong>:
+                              </p>
+                              <pre class="pre codeblock language-bash">SuSEfirewall2 open EXT TCP 4505
+SuSEfirewall2 open EXT TCP 4506</pre>
+                              <p class="p">The firewall module in YaST2 provides a text-based interface to modifying the
+                                 firewall.
+                              </p>
+                              
+                              <p class="p"><strong class="ph b">YaST2</strong>:
+                              </p>
+                              <pre class="pre codeblock language-bash">yast2 firewall</pre>
+                              </div>
+                           
+                           <div class="section" id="opening-the-firewall-up-for-salt__linux-iptables">
+                              <h2 class="title sectiontitle">iptables</h2>
+                              <p class="p">Different Linux distributions store their <span class="keyword title_reference">iptables</span> (also known as
+                                 <a class="xref" href="http://www.netfilter.org/" target="_blank">netfilter</a>) rules in different places, which makes it difficult to
+                                 standardize firewall documentation. Included are some of the more
+                                 common locations, but your mileage may vary.
+                              </p>
+                              
+                              <p class="p"><strong class="ph b">Fedora / RHEL / CentOS</strong>:
+                              </p>
+                              <pre class="pre codeblock language-bash">/etc/sysconfig/iptables</pre>
+                              <p class="p"><strong class="ph b">Arch Linux</strong>:
+                              </p>
+                              <pre class="pre codeblock language-bash">/etc/iptables/iptables.rules</pre>
+                              <p class="p"><strong class="ph b">Debian</strong></p>
+                              
+                              <p class="p">Follow these instructions: <a class="xref" href="https://wiki.debian.org/iptables" target="_blank">https://wiki.debian.org/iptables</a></p>
+                              
+                              <p class="p">Once you've found your firewall rules, you'll need to add the two lines below
+                                 to allow traffic on <tt class="ph tt">tcp/4505</tt> and <tt class="ph tt">tcp/4506</tt>:
+                              </p>
+                              <pre class="pre codeblock language-bash">-A INPUT -m state --state new -m tcp -p tcp --dport 4505 -j ACCEPT
+-A INPUT -m state --state new -m tcp -p tcp --dport 4506 -j ACCEPT</pre>
+                              <p class="p"><strong class="ph b">Ubuntu</strong></p>
+                              
+                              <p class="p">Salt installs firewall rules in <a class="xref" href="https://github.com/saltstack/salt/blob/develop/pkg/salt.ufw" target="_blank">/etc/ufw/applications.d/salt.ufw</a>. Enable with:
+                              </p>
+                              <pre class="pre codeblock language-bash">ufw allow salt</pre>
+                              </div>
+                           
+                           <div class="section" id="opening-the-firewall-up-for-salt__pf-conf">
+                              <h2 class="title sectiontitle">pf.conf</h2>
+                              <p class="p">The BSD-family of operating systems uses <a class="xref" href="http://openbsd.org/faq/pf/" target="_blank">packet filter (pf)</a>. The following
+                                 example describes the additions to <tt class="ph tt">pf.conf</tt> needed to access the Salt
+                                 master.
+                              </p>
+                              <pre class="pre codeblock language-bash">pass in on $int_if proto tcp from any to $int_if port 4505
+pass in on $int_if proto tcp from any to $int_if port 4506</pre>
+                              <p class="p">Once these additions have been made to the <tt class="ph tt">pf.conf</tt> the rules will need to
+                                 be reloaded. This can be done using the <tt class="ph tt">pfctl</tt> command.
+                              </p>
+                              <pre class="pre codeblock language-bash">pfctl -vf /etc/pf.conf</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+                        <p class="text-muted pull-right"><small>Copyright © 2015 SaltStack.</small></p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

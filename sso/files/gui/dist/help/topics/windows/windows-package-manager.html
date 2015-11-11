@@ -1,0 +1,385 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Windows Software Repository</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Windows Software Repository">
+      
+      <meta name="DC.Relation" scheme="URI" content="../installation/windows.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="windows-software-repository">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="windows-software-repository">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Windows Software Repository</h1>
+                        <div class="body conbody">
+                           <p class="p">The Salt Windows Software Repository provides a package manager and software
+                              repository similar to what is provided by yum and apt on Linux.
+                           </p>
+                           
+                           <p class="p">It permits the installation of software using the installers on remote
+                              windows machines. In many senses, the operation is similar to that of
+                              the other package managers salt is aware of:
+                           </p>
+                           
+                           <ul class="ul">
+                              <li class="li">
+                                 <p class="p">the <tt class="ph tt">pkg.installed</tt> and similar states work on Windows.
+                                 </p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">the <tt class="ph tt">pkg.install</tt> and similar module functions work on Windows.
+                                 </p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">each windows machine needs to have <tt class="ph tt">pkg.refresh_db</tt> executed
+                                    against it to pick up the latest version of the package database.
+                                 </p>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                           <p class="p">High level differences to yum and apt are:</p>
+                           
+                           <ul class="ul">
+                              <li class="li">
+                                 <p class="p">The repository metadata (sls files) is hosted through either salt or
+                                    git.
+                                 </p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">Packages can be downloaded from within the salt repository, a git
+                                    repository or from http(s) or ftp urls.
+                                 </p>
+                                 
+                              </li>
+                              
+                              <li class="li">
+                                 <p class="p">No dependencies are managed. Dependencies between packages needs to
+                                    be managed manually.
+                                 </p>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                           <div class="section" id="windows-software-repository__operation">
+                              <h2 class="title sectiontitle">Operation</h2>
+                              <p class="p">The install state/module function of the windows package manager works
+                                 roughly as follows:
+                              </p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">Execute <tt class="ph tt">pkg.list_pkgs</tt> and store the result
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Check if any action needs to be taken. (i.e. compare required package
+                                       and version against <tt class="ph tt">pkg.list_pkgs</tt> results)
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">If so, run the installer command.</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Execute <tt class="ph tt">pkg.list_pkgs</tt> and compare to the result stored from
+                                       before installation.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Success/Failure/Changes will be reported based on the differences
+                                       between the original and final <tt class="ph tt">pkg.list_pkgs</tt> results.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                              <p class="p">If there are any problems in using the package manager it is likely to
+                                 be due to the data in your sls files not matching the difference
+                                 between the pre and post <tt class="ph tt">pkg.list_pkgs</tt> results.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="windows-software-repository__usage">
+                              <h2 class="title sectiontitle">Usage</h2>
+                              <p class="p">By default, the Windows software repository is found at <tt class="ph tt">/srv/salt/win/repo</tt>
+                                 This can be changed in the master config file (default location is
+                                 <tt class="ph tt">/etc/salt/master</tt>) by modifying the  <tt class="ph tt">win_repo</tt> variable.  Each piece of
+                                 software should have its own directory which contains the installers and a
+                                 package definition file. This package definition file is a YAML file named
+                                 <tt class="ph tt">init.sls</tt>.
+                              </p>
+                              
+                              <p class="p">The package definition file should look similar to this example for Firefox:
+                                 <tt class="ph tt">/srv/salt/win/repo/firefox/init.sls</tt></p>
+                              <pre class="pre codeblock language-yaml">Firefox:
+  17.0.1:
+    installer: 'salt://win/repo/firefox/English/Firefox Setup 17.0.1.exe'
+    full_name: Mozilla Firefox 17.0.1 (x86 en-US)
+    locale: en_US
+    reboot: False
+    install_flags: ' -ms'
+    uninstaller: '%ProgramFiles(x86)%/Mozilla Firefox/uninstall/helper.exe'
+    uninstall_flags: ' /S'
+  16.0.2:
+    installer: 'salt://win/repo/firefox/English/Firefox Setup 16.0.2.exe'
+    full_name: Mozilla Firefox 16.0.2 (x86 en-US)
+    locale: en_US
+    reboot: False
+    install_flags: ' -ms'
+    uninstaller: '%ProgramFiles(x86)%/Mozilla Firefox/uninstall/helper.exe'
+    uninstall_flags: ' /S'
+  15.0.1:
+    installer: 'salt://win/repo/firefox/English/Firefox Setup 15.0.1.exe'
+    full_name: Mozilla Firefox 15.0.1 (x86 en-US)
+    locale: en_US
+    reboot: False
+    install_flags: ' -ms'
+    uninstaller: '%ProgramFiles(x86)%/Mozilla Firefox/uninstall/helper.exe'
+    uninstall_flags: ' /S'</pre>
+                              <p class="p">More examples can be found here: <a class="xref" href="https://github.com/saltstack/salt-winrepo" target="_blank">https://github.com/saltstack/salt-winrepo</a></p>
+                              
+                              <p class="p">The version number and <tt class="ph tt">full_name</tt> need to match the output from <tt class="ph tt">pkg.list_pkgs</tt>
+                                 so that the status can be verified when running highstate.
+                                 Note: It is still possible to successfully install packages using <tt class="ph tt">pkg.install</tt>
+                                 even if they don't match which can make this hard to troubleshoot.
+                              </p>
+                              <pre class="pre codeblock language-bash">salt 'test-2008' pkg.list_pkgs
+test-2008
+    ----------
+    7-Zip 9.20 (x64 edition):
+        9.20.00.0
+    Microsoft .NET Framework 4 Client Profile:
+        4.0.30319,4.0.30319
+    Microsoft .NET Framework 4 Extended:
+        4.0.30319,4.0.30319
+    Microsoft Visual C++ 2008 Redistributable - x64 9.0.21022:
+        9.0.21022
+    Mozilla Firefox 17.0.1 (x86 en-US):
+        17.0.1
+    Mozilla Maintenance Service:
+        17.0.1
+    NSClient++ (x64):
+        0.3.8.76
+    Notepad++:
+        6.4.2
+    Salt Minion 0.16.0:
+        0.16.0</pre>
+                              <p class="p">If any of these preinstalled packages already exist in winrepo the full_name
+                                 will be automatically renamed to their package name during the next update
+                                 (running highstate or installing another package).
+                              </p>
+                              <pre class="pre codeblock language-bash">test-2008:
+    ----------
+    7zip:
+        9.20.00.0
+    Microsoft .NET Framework 4 Client Profile:
+        4.0.30319,4.0.30319
+    Microsoft .NET Framework 4 Extended:
+        4.0.30319,4.0.30319
+    Microsoft Visual C++ 2008 Redistributable - x64 9.0.21022:
+        9.0.21022
+    Mozilla Maintenance Service:
+        17.0.1
+    Notepad++:
+        6.4.2
+    Salt Minion 0.16.0:
+        0.16.0
+    firefox:
+        17.0.1
+    nsclient:
+        0.3.9.328</pre>
+                              <p class="p">Add <tt class="ph tt">msiexec: True</tt> if using an MSI installer requiring the use of <tt class="ph tt">msiexec
+                                    /i</tt> to install and <tt class="ph tt">msiexec /x</tt> to uninstall.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">install_flags</tt> and <tt class="ph tt">uninstall_flags</tt> are flags passed to the software
+                                 installer to cause it to perform a silent install. These can often be found by
+                                 adding <tt class="ph tt">/?</tt> or <tt class="ph tt">/h</tt> when running the installer from the command line. A
+                                 great resource for finding these silent install flags can be found on the WPKG
+                                 project's <a class="xref" href="http://wpkg.org/Category:Silent_Installers" target="_blank">wiki</a>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">7zip:
+  9.20.00.0:
+    installer: salt://win/repo/7zip/7z920-x64.msi
+    full_name: 7-Zip 9.20 (x64 edition)
+    reboot: False
+    install_flags: ' /q '
+    msiexec: True
+    uninstaller: salt://win/repo/7zip/7z920-x64.msi
+    uninstall_flags: ' /qn'</pre>
+                              </div>
+                           
+                           <div class="section" id="windows-software-repository__generate-repo-cache-file">
+                              <h2 class="title sectiontitle">Generate Repo Cache File</h2>
+                              <p class="p">Once the sls file has been created, generate the repository cache file with the winrepo
+                                 runner:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-run winrepo.genrepo</pre>
+                              <p class="p">Then update the repository cache file on your minions, exactly how it's done for the
+                                 Linux package managers:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' pkg.refresh_db</pre>
+                              </div>
+                           
+                           <div class="section" id="windows-software-repository__install-windows-software">
+                              <h2 class="title sectiontitle">Install Windows Software</h2>
+                              <p class="p">Now you can query the available version of Firefox using the Salt pkg module.</p>
+                              <pre class="pre codeblock language-bash">salt '*' pkg.available_version Firefox
+
+{'Firefox': {'15.0.1': 'Mozilla Firefox 15.0.1 (x86 en-US)',
+                 '16.0.2': 'Mozilla Firefox 16.0.2 (x86 en-US)',
+                 '17.0.1': 'Mozilla Firefox 17.0.1 (x86 en-US)'}}</pre>
+                              <p class="p">As you can see, there are three versions of Firefox available for installation.
+                                 You can refer a software package by its <tt class="ph tt">name</tt> or its <tt class="ph tt">full_name</tt> surround
+                                 by single quotes.
+                              </p>
+                              <pre class="pre codeblock language-bash">salt '*' pkg.install 'Firefox'</pre>
+                              <p class="p">The above line will install the latest version of Firefox.</p>
+                              <pre class="pre codeblock language-bash">salt '*' pkg.install 'Firefox' version=16.0.2</pre>
+                              <p class="p">The above line will install version 16.0.2 of Firefox.</p>
+                              
+                              <p class="p">If a different version of the package is already installed it will
+                                 be replaced with the version in winrepo (only if the package itself supports
+                                 live updating).
+                              </p>
+                              
+                              <p class="p">You can also specify the full name:</p>
+                              <pre class="pre codeblock language-bash">salt '*' pkg.install 'Mozilla Firefox 17.0.1 (x86 en-US)'</pre>
+                              </div>
+                           
+                           <div class="section" id="windows-software-repository__uninstall-windows-software">
+                              <h2 class="title sectiontitle">Uninstall Windows Software</h2>
+                              <p class="p">Uninstall software using the pkg module:</p>
+                              <pre class="pre codeblock language-bash">salt '*' pkg.remove 'Firefox'
+
+salt '*' pkg.purge 'Firefox'</pre>
+                              <p class="p"><tt class="ph tt">pkg.purge</tt> just executes <tt class="ph tt">pkg.remove</tt> on Windows. At some point in the
+                                 future <tt class="ph tt">pkg.purge</tt> may direct the installer to remove all configs and
+                                 settings for software packages that support that option.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="windows-software-repository__standalone-minion-salt-windows-repo-module">
+                              <h2 class="title sectiontitle">Standalone Minion Salt Windows Repo Module</h2>
+                              <p class="p">In order to facilitate managing a Salt Windows software repo with Salt on a
+                                 Standalone Minion on Windows, a new module named winrepo has been added to
+                                 Salt. winrepo matches what is available in the salt runner and allows you to
+                                 manage the Windows software repo contents. Example: <tt class="ph tt">salt '*'
+                                    winrepo.genrepo</tt></p>
+                              
+                           </div>
+                           
+                           <div class="section" id="windows-software-repository__git-hosted-repo">
+                              <h2 class="title sectiontitle">Git Hosted Repo</h2>
+                              <p class="p">Windows software package definitions can also be hosted in one or more git
+                                 repositories. The default repo is one hosted on Github.com by SaltStack,Inc., which
+                                 includes package definitions for open source software. This repo points to the
+                                 HTTP or ftp locations of the installer files. Anyone is welcome to send a pull
+                                 request to this repo to add new package definitions. Browse the repo
+                                 here: <a class="xref" href="https://github.com/saltstack/salt-winrepo" target="_blank">https://github.com/saltstack/salt-winrepo</a> .
+                              </p>
+                              
+                              <p class="p">Configure which git repos the master can search for package definitions by
+                                 modifying or extending the <tt class="ph tt">win_gitrepos</tt> configuration option list in the
+                                 master config.
+                              </p>
+                              
+                              <p class="p">Checkout each git repo in <tt class="ph tt">win_gitrepos</tt>, compile your package repository
+                                 cache and then refresh each minion's package cache:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-run winrepo.update_git_repos
+salt-run winrepo.genrepo
+salt '*' pkg.refresh_db</pre>
+                              </div>
+                           
+                           <div class="section" id="windows-software-repository__troubleshooting">
+                              <h2 class="title sectiontitle">Troubleshooting</h2>
+                           </div>
+                           
+                           <div class="section head3" id="windows-software-repository__incorrect-name-version">
+                              <h2 class="title sectiontitle">Incorrect name/version</h2>
+                              <p class="p">If the package seems to install properly, but salt reports a failure
+                                 then it is likely you have a version or <tt class="ph tt">full_name</tt> mismatch.
+                              </p>
+                              
+                              <p class="p">Check the exact <tt class="ph tt">full_name</tt> and version used by the package. Use
+                                 <tt class="ph tt">pkg.list_pkgs</tt> to check that the names and version exactly match
+                                 what is installed.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="windows-software-repository__changes-to-sls-files-not-being-picked-up">
+                              <h2 class="title sectiontitle">Changes to sls files not being picked up</h2>
+                              <p class="p">Ensure you have (re)generated the repository cache file and then
+                                 updated the repository cache on the relevant minions:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-run winrepo.genrepo
+salt 'MINION' pkg.refresh_db</pre>
+                              </div>
+                           
+                           <div class="section head3" id="windows-software-repository__packages-management-under-windows-2003">
+                              <h2 class="title sectiontitle">Packages management under Windows 2003</h2>
+                              <p class="p">On windows server 2003, you need to install optional windows component
+                                 "wmi windows installer provider" to have full list of installed packages.
+                                 If you don't have this, salt-minion can't report some installed software.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

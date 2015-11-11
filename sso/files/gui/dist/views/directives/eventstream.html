@@ -1,0 +1,28 @@
+<div>
+    <div class="row">
+        <div class="col-xs-3">
+            <h3>Event Stream</h3>
+        </div>
+        <div class="col-xs-3 col-xs-offset-6">
+            <input type="text" class="form-control" placeholder="Filter by tag" ng-model="tag_filter">
+        </div>
+    </div>
+    <div class="row">
+        <div ng-if="events.length == 0">
+            <div class="col-xs-12">
+                <h3 style="text-align:center">No Events</h3>
+            </div>
+        </div>
+        <div class="col-xs-12" ng-repeat="event in events | filter:tag_filter">
+            <div class="event-header">
+                <span>ID: {{ event.id }}</span>
+                <span>Tag: {{ event.tag }}</span>
+                <span>Alter Time: {{ event.alter_time }}</span>
+                <span>Master ID: {{ event.master_id }}</span>
+            </div>
+            <div class="event-data">
+                <pre>{{ event.data }}</pre>
+            </div>
+        </div>
+    </div>
+</div>

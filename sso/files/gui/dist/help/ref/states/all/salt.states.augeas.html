@@ -1,0 +1,261 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.states.augeas</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.states.augeas">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../state-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-states-augeas">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-states-augeas">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.states.augeas</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-states-augeas__module-salt.states.augeas"></span></p>
+                              
+                              <p class="p">Configuration management using Augeas</p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                              
+                              <p class="p">This state requires the <tt class="ph tt">augeas</tt> Python module.
+                              </p>
+                              
+                              <p class="p"><a class="xref" href="http://augeas.net/" target="_blank">Augeas</a> can be used to manage configuration files.
+                              </p>
+                              
+                              <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                 <p class="p">Minimal installations of Debian and Ubuntu have been seen to have packaging
+                                    bugs with python-augeas, causing the augeas module to fail to import. If
+                                    the minion has the augeas module installed, and the state fails with a
+                                    comment saying that the state is unavailable, first restart the salt-minion
+                                    service. If the problem persists past that, the following command can be
+                                    run from the master to determine what is causing the import to fail:
+                                 </p>
+                                 <pre class="pre codeblock language-bash">salt minion-id cmd.run 'python -c "from augeas import Augeas"'</pre>
+                                 <p class="p">For affected Debian/Ubuntu hosts, installing <tt class="ph tt">libpython2.7</tt> has been
+                                    known to resolve the issue.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.states.augeas.change">
+                           <h2 class="title topictitle2">change</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.states.augeas.change(
+								name,
+								context=None,
+								changes=None,
+								lens=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                                 
+                                 <p class="p">This state replaces <tt class="ph tt">setvalue()</tt>.
+                                 </p>
+                                 
+                                 <p class="p">Issue changes to Augeas, optionally for a specific context, with a
+                                    specific lens.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d354449e78" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d354449e80" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d354449e78" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d354449e80" class="stentry propdesc">
+                                       <p class="p">State name</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d354449e78" class="stentry propvalue">context</td>
+                                    
+                                    <td valign="top" headers="d354449e80" class="stentry propdesc">
+                                       <p class="p">The context to use. Set this to a file path, prefixed by <tt class="ph tt">/files</tt>, to
+                                          avoid redundancy, e.g.:
+                                       </p>
+                                       <pre class="pre codeblock language-yaml">redis-conf:
+  augeas.change:
+    - context: /files/etc/redis/redis.conf
+    - changes:
+      - set bind 0.0.0.0
+      - set maxmemory 1G</pre>
+                                       </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d354449e78" class="stentry propvalue">changes</td>
+                                    
+                                    <td valign="top" headers="d354449e80" class="stentry propdesc">
+                                       <p class="p">List of changes that are issued to Augeas. Available commands are
+                                          <tt class="ph tt">set</tt>, <tt class="ph tt">mv</tt>/<tt class="ph tt">move</tt>, <tt class="ph tt">ins</tt>/<tt class="ph tt">insert</tt>, and <tt class="ph tt">rm</tt>/<tt class="ph tt">remove</tt>.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d354449e78" class="stentry propvalue">lens</td>
+                                    
+                                    <td valign="top" headers="d354449e80" class="stentry propdesc">
+                                       <p class="p">The lens to use, needs to be suffixed with <span class="keyword title_reference">.lns</span>, e.g.: <span class="keyword title_reference">Nginx.lns</span>. See
+                                          the <a class="xref" href="http://augeas.net/stock_lenses.html" target="_blank">list of stock lenses</a>
+                                          shipped with Augeas.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Usage examples:</p>
+                                 
+                                 <p class="p">Set the <tt class="ph tt">bind</tt> parameter in <tt class="ph tt">/etc/redis/redis.conf</tt>:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">redis-conf:
+  augeas.change:
+    - changes:
+      - set /files/etc/redis/redis.conf/bind 0.0.0.0</pre>
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p">Use the <tt class="ph tt">context</tt> parameter to specify the file you want to
+                                       manipulate. This way you don't have to include this in the changes
+                                       every time:
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">redis-conf:
+  augeas.change:
+    - context: /files/etc/redis/redis.conf
+    - changes:
+      - set bind 0.0.0.0
+      - set databases 4
+      - set maxmemory 1G</pre>
+                                    </aside>
+                                 
+                                 <p class="p">Augeas is aware of a lot of common configuration files and their syntax.
+                                    It knows the difference between for example ini and yaml files, but also
+                                    files with very specific syntax, like the hosts file. This is done with
+                                    <em class="ph i">lenses</em>, which provide mappings between the Augeas tree and the file.
+                                 </p>
+                                 
+                                 <p class="p">There are many <a class="xref" href="http://augeas.net/stock_lenses.html" target="_blank">preconfigured lenses</a> that come with Augeas by default,
+                                    and they specify the common locations for configuration files. So most
+                                    of the time Augeas will know how to manipulate a file. In the event that
+                                    you need to manipulate a file that Augeas doesn't know about, you can
+                                    specify the lens to use like this:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">redis-conf:
+  augeas.change:
+    - lens: redis
+    - context: /files/etc/redis/redis.conf
+    - changes:
+      - set bind 0.0.0.0</pre>
+                                 <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                    <p class="p">Even though Augeas knows that <tt class="ph tt">/etc/redis/redis.conf</tt> is a Redis
+                                       configuration file and knows how to parse it, it is recommended to
+                                       specify the lens anyway. This is because by default, Augeas loads all
+                                       known lenses and their associated file paths. All these files are
+                                       parsed when Augeas is loaded, which can take some time. When specifying
+                                       a lens, Augeas is loaded with only that lens, which speeds things up
+                                       quite a bit.
+                                    </p>
+                                    
+                                 </aside>
+                                 
+                                 <p class="p">A more complex example, this adds an entry to the services file for Zabbix,
+                                    and removes an obsolete service:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">zabbix-service:
+  augeas.change:
+    - lens: services
+    - context: /files/etc/services
+    - changes:
+      - ins service-name after service-name[last()]
+      - set service-name[last()] zabbix-agent
+      - set service-name[. = 'zabbix-agent']/#comment "Zabbix Agent service"
+      - set service-name[. = 'zabbix-agent']/port 10050
+      - set service-name[. = 'zabbix-agent']/protocol tcp
+      - rm service-name[. = 'im-obsolete']
+    - unless: grep "zabbix-agent" /etc/services</pre>
+                                 <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                    <p class="p">Don't forget the <tt class="ph tt">unless</tt> here, otherwise a new entry will be added
+                                       every time this state is run.
+                                    </p>
+                                    
+                                 </aside>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

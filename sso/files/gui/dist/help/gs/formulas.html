@@ -1,0 +1,248 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>SaltStack Formulas - QuickStart Guide</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="SaltStack Enterprise Help Center">
+      
+      <meta name="abstract" content="">
+      
+      <meta name="description" content="">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="concept_z5t_tpb_gq">
+
+       <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/gui/css/core.min.css">
+       <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/gui/css/getstarted.min.css">
+
+       <script type="text/javascript" src="../themes/gui/js/webhelp.min.js"></script>
+
+      </head>
+   <body>
+   <a id="ss-logo-jumbotron" href="/help/ent/gui.html"></a>
+      <div class="jumbotron active_texture">
+          <div class="container">
+              <h1><!--<i class="glyphicon glyphicon-question-sign"></i>-->SaltStack Fundamentals</h1>
+              <h3>Get Started Guide</h3>
+          </div>
+      </div>
+      <div id="wrapper" class="intro">
+
+
+              <div class="container-fluid">
+                  <div class="row">
+                      <div class="col-lg-12">
+                          <ol class="progtrckr" data-progtrckr-steps="7">
+                              <!--<li class="progtrckr-done"><a href="overview.html">Overview</a></li>-->
+                              <li class="progtrckr-done"><a href="index.html">Demo Environment</a></li>
+                              <li class="progtrckr-done"><a href="install.html">Install SaltStack</a></li>
+                              <li class="progtrckr-done"><a href="remotex.html">Execute Commands</a></li>
+                              <li class="progtrckr-done"><a href="targeting.html">Target Systems</a></li>
+                              <li class="progtrckr-done">Create a Salt Formula</li>
+                              <li class="progtrckr-todo"><a href="top.html">Apply and Target Formulas</a></li>
+
+                              <li class="progtrckr-todo"><a href="next.html">Next Steps</a></li>
+                          </ol>
+                      </div>
+                      </div>
+
+                <!--<div class="row">
+                    <div class="col-lg-12"></div>
+                </div>-->
+<div class="row">
+
+</div>
+
+
+              <div class="row">
+                  <div class="col-lg-1"></div>
+                  <div class="col-lg-10">
+
+
+                          <h1 class="title topictitle1">Create A Salt Formula</h1>
+                          <div class="body conbody">
+                              <p class="shortdesc"></p>
+
+                              <div class="section gs-overview" id="concept_ivf_bcn_vp__section_EF69791A73AB411AA070F467095A5130">
+                                  <p class="p gs-overview-sub"><span class="ph">You'll learn how to:</span></p>
+
+                                  <ul class="ul" id="concept_ivf_bcn_vp__ul_qjt_rhn_tp">
+                                      <li class="li" id="concept_ivf_bcn_vp__li_B7E78094456C4DC19C4B6133FC46D104">Define a repeatable, customized definition of an application configuration.
+                                      </li>
+
+                                      <!--<li class="li" id="concept_ivf_bcn_vp__li_FB2FDC1241D542D6AE9BF6349D7E374F">Insert system specific variables to simplify re-use.
+                                      </li>
+
+                                      <li>Insert simple conditions using requisites.</li>-->
+
+
+                                  </ul>
+
+                                  <p class="p gs-overview-sub gs-time"><span class="ph">Estimated time: 15
+                                    			 minutes</span>&nbsp;<i class="glyphicon glyphicon-time"></i></p>
+
+                                  <p class="p gs-overview-sub gs-difficulty-2"><span class="ph">Difficulty</span>:
+                                      &nbsp;<i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star-empty"></i><i class="glyphicon glyphicon-star-empty"></i><i class="glyphicon glyphicon-star-empty"></i>
+                                  </p>
+
+                              </div>
+
+
+                              <div class="section gs-mainbody" id="concept_ivf_bcn_vp__section_D6F77362DCE342D9B67DE9E631A365C6">
+                                  <div class="section gs-terms gs-sidebar" id="concept_ivf_bcn_vp__section_043E1272A3E94500934501DFABE4DCF9">
+
+                                      <h4 class="sidebar">States or Formulas?</h4>
+
+                                      <p>These two terms are often used interchangeably in the wild. In this guide, state refers to a specific <samp class="ph codeph">salt.state</samp> module, while Formula refers to the collection of calls to different state modules that, as a whole, define a configuration.</p>
+                                      <h4>Formulas are Custom</h4>
+                                      <p>Salt Formulas are completely custom. You define the name, the commands to run, and any possible dependencies. This can be a bit overwhelming when you are getting started, so start small and work your way up to more complex Formulas. After some practice you'll be defining configurations like a boss, and there is <a href="https://groups.google.com/forum/#!forum/salt-users" target="_blank">help</a> out there if you get stuck.</p>
+
+                                      <h4>YAML Ain't Markup Language</h4>
+                                      <p>Salt uses a simple format, called YAML, to describe configurations. This is what you need to know:</p>
+                                      <ul>
+                                          <li>YAML uses a fixed indentation scheme to represent relationships between data layers. Salt requires that the indentation for each level consists of exactly two spaces. Do not use tabs.</li>
+
+                                          <li>A dash represents an item in a list.</li>
+
+                                          <li>Key value pairs are represented by <i>key</i>:<i>value</i></li>
+                                          <!--<li>Any line that contains a newline will not be parsed by YAML.</li>-->
+                                      </ul>
+
+
+                                  </div>
+
+
+                                  <p>Remote execution is a big time saver, but it has some shortcomings. Most tasks you perform are a combination of many commands, tests, and operations, each with their own nuances and points-of-failure. Often an attempt is made to combine all of these steps into a central shell script, but these quickly get unwieldy and introduce their own headaches.</p>
+
+                                  <p>To solve this, SaltStack configuration management lets you create a re-usable configuration template, called a Formula, that describes everything required to put an application into a known configuration.</p>
+
+                                <p>Formulas are much easier to understand when you see them in action, so let's make one. Formulas are described using YAML, and are simple to create and read.</p>
+
+                                  <p>To simplify things, our Vagrant file maps the <samp class="ph codeph">/srv/salt</samp> folder on your Salt Master to the local <samp class="ph codeph">salt-vagrant-demo-master/saltstack</samp> folder. This means that you can use a local text editor and save the file to the local file system, and Vagrant makes it appear as if it were on the Salt Master. </p>
+                                  <p>Using any plain text editor, create a new text file and add the following:</p>
+
+                                  <pre class="pre codeblock language-yaml">install_network_packages:
+  pkg.installed:
+    - pkgs:
+      - rsync
+      - lftp
+      - curl</pre>
+
+                                  <p>This Formula calls the <samp class="ph codeph">pkg.installed</samp> state module, and passes a list of three package names for the <samp class="ph codeph">pkgs</samp> argument.</p>
+
+                                  <p>Save this Formula as <samp class="ph codeph">salt-vagrant-demo-master/saltstack/salt/nettools.sls</samp>:</p>
+
+                                  <p><img class="imgcenter" width="50%" src="images/vagrant-nettools.png"></p>
+
+
+
+<p>If you are paying close attention, you'll notice that we called the <samp class="ph codeph">pkg.install</samp> module from the command line in the <a href="remotex.html">previous section</a>, but we are calling the <samp class="ph codeph">pkg.install<b>ed</b></samp> module in our Formula. The execution modules we called from the command line are different from the state modules that we use when writing Formulas. Many execution modules are wrapped by state modules and are nearly identical, but there are some syntax differences. When writing Formulas, make sure you are calling the <samp class="ph codeph">salt.state</samp> modules and not the <samp class="ph codeph">salt.modules</samp> execution modules.</p>
+
+                                  <p>The following diagram shows a simple representation of how state module functions are called in Salt Formulas:</p>
+                                  <img class="imgcenter" width="50%" src="images/state-file-described.png">
+
+
+
+
+
+
+
+
+
+
+                                  <h2>Managing Files in Salt Formulas</h2>
+
+                                  <p>Getting packages installed typically isn't as complicated as getting those packages into a functional state. SaltStack provides a wide range of tools to manage configuration files and to copy entire directories of supplemental files to managed systems.</p>
+
+                                  <p>For example, if we want to distribute a global configuration file for <samp class="ph codeph">lftp</samp> that includes a custom setting that limits download rates, we can do this using <samp class="ph codeph">file.managed</samp>:</p>
+
+                                  <pre class="pre codeblock language-yaml">install_network_packages:
+  pkg.installed:
+    - pkgs:
+      - rsync
+      - lftp
+      - curl
+
+copy_lftp_conf:
+  file.managed:
+    - name: /etc/lftp.conf
+    - source: salt://_tmpl_lftp.conf</pre>
+
+                                  <p>In this case, since our configuration change is a single line, we can use <samp class="ph codeph">file.append</samp> to simply insert the new line we want to add:</p>
+
+                                  <pre class="pre codeblock language-yaml">install_network_packages:
+  pkg.installed:
+    - pkgs:
+      - rsync
+      - lftp
+      - curl
+
+update_lftp_conf:
+  file.append:
+    - name: /etc/lftp.conf
+    - text: set net:limit-rate 100000:500000</pre>
+
+
+                                  <div class="section gs-terms gs-sidebar" id="concept_ivf_bcn_vp__section_043E1272A3E94500934501DFABE4DCF7">
+
+                                      <h4 class="sidebar">Execution Order</h4>
+                                      <p>Commands in Formulas are executed in the order that they appear in the file. In this example, the packages are installed before the configuration file is updated because that section appears first in the file. SaltStack also provides a powerful requisite system that lets you explicitly determine order, which you can use if you prefer.</p>
+
+                                      <h4>salt.modules.state</h4>
+                                      <p>When we applied our Formula from the command line using <samp class="ph codeph">state.apply</samp>, hopefully you realized that we called an <i>execution</i> module even though the module is named 'state' (remember that execution modules are called from the command line, and state modules are called in Formulas). </p><p>This distinction between execution modules and state modules is very important to avoid confusion as you get started, so hopefully you've got it down. Salt has a bunch of other modules, but for now understanding these two types is enough.</p>
+
+                                  </div>
+
+                                  <p>Lets go ahead and test our Formula. We'll learn about a more powerful method to apply Formulas in the next section, but for now you can use the <samp class="ph codeph">state.apply</samp> command to apply a Formula directly from the command line.</p>
+
+                                  <p>On your Salt Master, run the following command to apply the nettools Formula:</p>
+
+                                  <pre class="pre codeblock language-bash">salt minion2 state.apply nettools
+#state.apply is new in 2015.2, so if you are using an earlier version call state.sls instead.</pre>
+
+                                  <p>As you might have guessed, you can use the targeting mechanism to apply this Formula to any set of Salt Minions. For now just pick one or all of your Salt Minions. If everything goes well, you'll get output similar to this (click to enlarge):</p>
+
+
+                                  <img class="imgcenter" height="300px" src="images/vagrant-state-apply.png">
+
+                                  <p>If that is not cool enough, apply the Formula again to the same Salt Minion(s), and look at the output:</p>
+
+                                  <img class="imgcenter" height="300px" src="images/vagrant-state-apply2.png">
+
+                                  <p>Salt determines that the system is already in the correct state, so nothing is changed (this is called idempotent in academic circles). Nice.</p>
+
+
+                                  <h2>Restarting Services, Variables, and more</h2>
+
+                                  <p>There is a lot more to the state system and Formulas than we'll be able to cover here. Formulas can restart services when changes are made, copy entire directories, explicitly require that other states run first, use variables, and much more. </p>
+
+                                  <p>For now this basic understanding of Formulas is enough to get started. Remember the powerful method we mentioned earlier to apply Formulas? Let's tackle that.</p>
+
+                                  <a href="top.html"><button id="next-button" type="button" class="btn btn-primary">
+                                      Next <span class="glyphicon glyphicon-chevron-right"></span></button></a>
+                                  <div class="footer"></div>
+                              </div>
+
+                  </div>
+                  <div class="col-lg-1"></div>
+
+
+              </div>
+              <div class="row">
+                  <div class="col-lg-12">
+
+                  </div>
+              </div>
+
+                  </div>
+              </div>
+</div>
+   </body>
+</html>

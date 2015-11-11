@@ -1,0 +1,949 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Git Fileserver Backend Walkthrough</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Git Fileserver Backend Walkthrough">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ref/file_server/index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="tutorial-gitfs">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="tutorial-gitfs">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Git Fileserver Backend Walkthrough</h1>
+                        <div class="body conbody">
+                           <p class="p ids"><span class="ph" id="tutorial-gitfs__git-fileserver-backend-walkthrough"></span></p>
+                           
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">This walkthrough assumes basic knowledge of Salt. To get up to speed, check
+                                 out the 
+                                 		
+                                 			&nbsp;<a class="xref" href="walkthrough.html#saltstack-walk-through">Salt Walkthrough</a>.
+                              </p>
+                              
+                           </aside>
+                           
+                           <p class="p">The gitfs backend allows Salt to serve files from git repositories. It can be
+                              enabled by adding <tt class="ph tt">git</tt> to the 
+                              		
+                              			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__fileserver_backend">fileserver_backend</a> list, and
+                              configuring one or more repositories in 
+                              		
+                              			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_remotes">gitfs_remotes</a>.
+                           </p>
+                           
+                           <p class="p">Branches and tags become Salt fileserver environments.</p>
+                           
+                           <div class="section" id="tutorial-gitfs__gitfs-dependencies">
+                              <h2 class="title sectiontitle">Installing Dependencies</h2>
+                              <p class="p">Beginning with version 2014.7.0, both <a class="xref" href="https://github.com/libgit2/pygit2" target="_blank">pygit2</a> and <a class="xref" href="https://www.samba.org/~jelmer/dulwich/" target="_blank">Dulwich</a> are supported as
+                                 alternatives to <a class="xref" href="https://github.com/gitpython-developers/GitPython" target="_blank">GitPython</a>. The desired provider can be configured using the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_provider">gitfs_provider</a> parameter in the master config file.
+                              </p>
+                              
+                              <p class="p">If 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_provider">gitfs_provider</a> is not configured, then Salt will prefer
+                                 <a class="xref" href="https://github.com/libgit2/pygit2" target="_blank">pygit2</a> if a suitable version is available, followed by <a class="xref" href="https://github.com/gitpython-developers/GitPython" target="_blank">GitPython</a> and
+                                 <a class="xref" href="https://www.samba.org/~jelmer/dulwich/" target="_blank">Dulwich</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="tutorial-gitfs__id1">
+                              <h2 class="title sectiontitle">pygit2</h2>
+                              <p class="p">The minimum supported version of <a class="xref" href="https://github.com/libgit2/pygit2" target="_blank">pygit2</a> is 0.20.3. Availability for this
+                                 version of <a class="xref" href="https://github.com/libgit2/pygit2" target="_blank">pygit2</a> is still limited, though the SaltStack team is working to
+                                 get compatible versions available for as many platforms as possible.
+                              </p>
+                              
+                              <p class="p">For the Fedora/EPEL versions which have a new enough version packaged, the
+                                 following command would be used to install <a class="xref" href="https://github.com/libgit2/pygit2" target="_blank">pygit2</a>:
+                              </p>
+                              <pre class="pre codeblock language-bash"># yum install python-pygit2</pre>
+                              <p class="p">Provided a valid version is packaged for Debian/Ubuntu (which is not currently
+                                 the case), the package name would be the same, and the following command would
+                                 be used to install it:
+                              </p>
+                              <pre class="pre codeblock language-bash"># apt-get install python-pygit2</pre>
+                              <p class="p">If <a class="xref" href="https://github.com/libgit2/pygit2" target="_blank">pygit2</a> is not packaged for the platform on which the Master is running, the
+                                 <a class="xref" href="https://github.com/libgit2/pygit2" target="_blank">pygit2</a> website has installation instructions <a class="xref" href="http://www.pygit2.org/install.html" target="_blank">here</a>. Keep in mind however that
+                                 following these instructions will install libgit2 and <a class="xref" href="https://github.com/libgit2/pygit2" target="_blank">pygit2</a> without system
+                                 packages. Additionally, keep in mind that <a class="xref" href="gitfs.html#tutorial-gitfs__pygit2-authentication-ssh">SSH authentication in pygit2</a> requires <a class="xref" href="http://www.libssh2.org/" target="_blank">libssh2</a> (<em class="ph i">not</em> libssh) development
+                                 libraries to be present before libgit2 is built.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="tutorial-gitfs__id3">
+                              <h2 class="title sectiontitle">GitPython</h2>
+                              <p class="p"><a class="xref" href="https://github.com/gitpython-developers/GitPython" target="_blank">GitPython</a> 0.3.0 or newer is required to use GitPython for gitfs. For
+                                 RHEL-based Linux distros, a compatible version is available in EPEL, and can be
+                                 easily installed on the master using yum:
+                              </p>
+                              <pre class="pre codeblock language-bash"># yum install GitPython</pre>
+                              <p class="p">Ubuntu 14.04 LTS and Debian Wheezy (7.x) also have a compatible version packaged:</p>
+                              <pre class="pre codeblock language-bash"># apt-get install python-git</pre>
+                              <p class="p">If your master is running an older version (such as Ubuntu 12.04 LTS or Debian
+                                 Squeeze), then you will need to install GitPython using either <a class="xref" href="http://www.pip-installer.org/" target="_blank">pip</a> or
+                                 easy_install (it is recommended to use pip). Version 0.3.2.RC1 is now marked as
+                                 the stable release in PyPI, so it should be a simple matter of running <tt class="ph tt">pip
+                                    install GitPython</tt> (or <tt class="ph tt">easy_install GitPython</tt>) as root.
+                              </p>
+                              
+                              <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                 <p class="p">Keep in mind that if GitPython has been previously installed on the master
+                                    using pip (even if it was subsequently uninstalled), then it may still
+                                    exist in the build cache (typically <tt class="ph tt">/tmp/pip-build-root/GitPython</tt>) if
+                                    the cache is not cleared after installation. The package in the build cache
+                                    will override any requirement specifiers, so if you try upgrading to
+                                    version 0.3.2.RC1 by running <tt class="ph tt">pip install 'GitPython==0.3.2.RC1'</tt> then it
+                                    will ignore this and simply install the version from the cache directory.
+                                    Therefore, it may be necessary to delete the GitPython directory from the
+                                    build cache in order to ensure that the specified version is installed.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="tutorial-gitfs__id4">
+                              <h2 class="title sectiontitle">Dulwich</h2>
+                              <p class="p">Dulwich 0.9.4 or newer is required to use Dulwich as backend for gitfs.</p>
+                              
+                              <p class="p">Dulwich is available in EPEL, and can be easily installed on the master using
+                                 yum:
+                              </p>
+                              <pre class="pre codeblock language-bash"># yum install python-dulwich</pre>
+                              <p class="p">For APT-based distros such as Ubuntu and Debian:</p>
+                              <pre class="pre codeblock language-bash"># apt-get install python-dulwich</pre>
+                              <p class="p">If switching to Dulwich from GitPython/pygit2, or switching from
+                                 GitPython/pygit2 to Dulwich, it is necessary to clear the gitfs cache to
+                                 avoid unpredictable behavior. This is probably a good idea whenever
+                                 switching to a new 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_provider">gitfs_provider</a>, but it is less important
+                                 when switching between GitPython and pygit2.
+                              </p>
+                              
+                              <p class="p">Beginning in version 2015.2.0, the gitfs cache can be easily cleared using
+                                 the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/runners/all/salt.runners.fileserver.html#salt.runners.fileserver.clear_cache">fileserver.clear_cache</a>
+                                 runner.
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-run fileserver.clear_cache backend=git</pre>
+                              <p class="p">If the Master is running an earlier version, then the cache can be cleared
+                                 by removing the <tt class="ph tt">gitfs</tt> and <tt class="ph tt">file_lists/gitfs</tt> directories (both paths
+                                 relative to the master cache directory, usually
+                                 <tt class="ph tt">/var/cache/salt/master</tt>).
+                              </p>
+                              <pre class="pre codeblock language-bash">rm -rf /var/cache/salt/master{,/file_lists}/gitfs</pre>
+                              </div>
+                           
+                           <div class="section" id="tutorial-gitfs__simple-configuration">
+                              <h2 class="title sectiontitle">Simple Configuration</h2>
+                              <p class="p">To use the gitfs backend, only two configuration changes are required on the
+                                 master:
+                              </p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">Include <tt class="ph tt">git</tt> in the 
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__fileserver_backend">fileserver_backend</a> list in the master
+                                       config file:
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">fileserver_backend:
+  - git</pre>
+                                    </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Specify one or more <tt class="ph tt">git://</tt>, <tt class="ph tt">https://</tt>, <tt class="ph tt">file://</tt>, or <tt class="ph tt">ssh://</tt>
+                                       URLs in 
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_remotes">gitfs_remotes</a> to configure which repositories to
+                                       cache and search for requested files:
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">gitfs_remotes:
+  - https://github.com/saltstack-formulas/salt-formula.git</pre>
+                                    <p class="p">SSH remotes can also be configured using scp-like syntax:</p>
+                                    <pre class="pre codeblock language-yaml">gitfs_remotes:
+  - git@github.com:user/repo.git
+  - ssh://user@domain.tld/path/to/repo.git</pre>
+                                    <p class="p">Information on how to authenticate to SSH remotes can be found <a class="xref" href="gitfs.html#tutorial-gitfs__gitfs-authentication">here</a>.
+                                    </p>
+                                    
+                                    <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                       <p class="p">Dulwich does not recognize <tt class="ph tt">ssh://</tt> URLs, <tt class="ph tt">git+ssh://</tt> must be used
+                                          instead. Salt version 2015.2.0 and later will automatically add the
+                                          <tt class="ph tt">git+</tt> to the beginning of these URLs before fetching, but earlier
+                                          Salt versions will fail to fetch unless the URL is specified using
+                                          <tt class="ph tt">git+ssh://</tt>.
+                                       </p>
+                                       
+                                    </aside>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Restart the master to load the new configuration.</p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">In a master/minion setup, files from a gitfs remote are cached once by the
+                                    master, so minions do not need direct access to the git repository.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="tutorial-gitfs__multiple-remotes">
+                              <h2 class="title sectiontitle">Multiple Remotes</h2>
+                              <p class="p">The <tt class="ph tt">gitfs_remotes</tt> option accepts an ordered list of git remotes to
+                                 cache and search, in listed order, for requested files.
+                              </p>
+                              
+                              <p class="p">A simple scenario illustrates this cascading lookup behavior:</p>
+                              
+                              <p class="p">If the <tt class="ph tt">gitfs_remotes</tt> option specifies three remotes:
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_remotes:
+  - git://github.com/example/first.git
+  - https://github.com/example/second.git
+  - file:///root/third</pre>
+                              <p class="p">And each repository contains some files:</p>
+                              <pre class="pre codeblock language-yaml">first.git:
+    top.sls
+    edit/vim.sls
+    edit/vimrc
+    nginx/init.sls
+
+second.git:
+    edit/dev_vimrc
+    haproxy/init.sls
+
+third:
+    haproxy/haproxy.conf
+    edit/dev_vimrc</pre>
+                              <p class="p">Salt will attempt to lookup the requested file from each gitfs remote
+                                 repository in the order in which they are defined in the configuration. The
+                                 <strong class="ph b">git://github.com/example/first.git</strong> remote will be searched first.
+                                 If the requested file is found, then it is served and no further searching
+                                 is executed. For example:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">A request for the file <strong class="ph b">salt://haproxy/init.sls</strong> will be served from
+                                       the <strong class="ph b">https://github.com/example/second.git</strong> git repo.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">A request for the file <strong class="ph b">salt://haproxy/haproxy.conf</strong> will be served from the
+                                       <strong class="ph b">file:///root/third</strong> repo.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">This example is purposefully contrived to illustrate the behavior of the
+                                    gitfs backend. This example should not be read as a recommended way to lay
+                                    out files and git repos.
+                                 </p>
+                                 
+                                 <p class="p">The <strong class="ph b">file://</strong> prefix denotes a git repository in a local directory.
+                                    However, it will still use the given <strong class="ph b">file://</strong> URL as a remote,
+                                    rather than copying the git repo to the salt cache.  This means that any
+                                    refs you want accessible must exist as <em class="ph i">local</em> refs in the specified repo.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                 <p class="p">Salt versions prior to 2014.1.0 are not tolerant of changing the
+                                    order of remotes or modifying the URI of existing remotes. In those
+                                    versions, when modifying remotes it is a good idea to remove the gitfs
+                                    cache directory (<tt class="ph tt">/var/cache/salt/master/gitfs</tt>) before restarting the
+                                    salt-master service.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="tutorial-gitfs__gitfs-per-remote-config">
+                              <h2 class="title sectiontitle">Per-remote Configuration Parameters</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">The following master config parameters are global (that is, they apply to all
+                                 configured gitfs remotes):
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_base">gitfs_base</a></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_root">gitfs_root</a></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_mountpoint">gitfs_mountpoint</a> (new in 2014.7.0)
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_user">gitfs_user</a> (<strong class="ph b">pygit2 only</strong>, new in 2014.7.0)
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_password">gitfs_password</a> (<strong class="ph b">pygit2 only</strong>, new in 2014.7.0)
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_insecure_auth">gitfs_insecure_auth</a> (<strong class="ph b">pygit2 only</strong>, new in 2014.7.0)
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_pubkey">gitfs_pubkey</a> (<strong class="ph b">pygit2 only</strong>, new in 2014.7.0)
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_privkey">gitfs_privkey</a> (<strong class="ph b">pygit2 only</strong>, new in 2014.7.0)
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_passphrase">gitfs_passphrase</a> (<strong class="ph b">pygit2 only</strong>, new in 2014.7.0)
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <p class="p">These parameters can now be overridden on a per-remote basis. This allows for a
+                                 tremendous amount of customization. Here's some example usage:
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_provider: pygit2
+gitfs_base: develop
+
+gitfs_remotes:
+  - https://foo.com/foo.git
+  - https://foo.com/bar.git:
+    - root: salt
+    - mountpoint: salt://foo/bar/baz
+    - base: salt-base
+  - http://foo.com/baz.git:
+    - root: salt/states
+    - user: joe
+    - password: mysupersecretpassword
+    - insecure_auth: True</pre>
+                              <p class="p">There are two important distinctions which should be noted for per-remote
+                                 configuration:
+                              </p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">The URL of a remote which has per-remote configuration must be suffixed
+                                       with a colon.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Per-remote configuration parameters are named like the global versions,
+                                       with the <tt class="ph tt">gitfs_</tt> removed from the beginning.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                              <p class="p">In the example configuration above, the following is true:</p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">The first and third gitfs remotes will use the <tt class="ph tt">develop</tt> branch/tag as the
+                                       <tt class="ph tt">base</tt> environment, while the second one will use the <tt class="ph tt">salt-base</tt>
+                                       branch/tag as the <tt class="ph tt">base</tt> environment.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">The first remote will serve all files in the repository. The second
+                                       remote will only serve files from the <tt class="ph tt">salt</tt> directory (and its
+                                       subdirectories), while the third remote will only serve files from the
+                                       <tt class="ph tt">salt/states</tt> directory (and its subdirectories).
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">The files from the second remote will be located under
+                                       <tt class="ph tt">salt://foo/bar/baz</tt>, while the files from the first and third remotes
+                                       will be located under the root of the Salt fileserver namespace
+                                       (<tt class="ph tt">salt://</tt>).
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">The third remote overrides the default behavior of <a class="xref" href="gitfs.html#tutorial-gitfs__gitfs-insecure-auth">not authenticating to
+                                          insecure (non-HTTPS) remotes</a>.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                           </div>
+                           
+                           <div class="section" id="tutorial-gitfs__serving-from-a-subdirectory">
+                              <h2 class="title sectiontitle">Serving from a Subdirectory</h2>
+                              <p class="p">The 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_root">gitfs_root</a> parameter allows files to be served from a
+                                 subdirectory within the repository. This allows for only part of a repository
+                                 to be exposed to the Salt fileserver.
+                              </p>
+                              
+                              <p class="p">Assume the below layout:</p>
+                              <pre class="pre codeblock language-text">.gitignore
+README.txt
+foo/
+foo/bar/
+foo/bar/one.txt
+foo/bar/two.txt
+foo/bar/three.txt
+foo/baz/
+foo/baz/top.sls
+foo/baz/edit/vim.sls
+foo/baz/edit/vimrc
+foo/baz/nginx/init.sls</pre>
+                              <p class="p">The below configuration would serve only the files under <tt class="ph tt">foo/baz</tt>, ignoring
+                                 the other files in the repository:
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_remotes:
+  - git://mydomain.com/stuff.git
+
+gitfs_root: foo/baz</pre>
+                              <p class="p">The root can also be configured on a <a class="xref" href="gitfs.html#tutorial-gitfs__gitfs-per-remote-config">per-remote basis</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="tutorial-gitfs__mountpoints">
+                              <h2 class="title sectiontitle">Mountpoints</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">The 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_mountpoint">gitfs_mountpoint</a> parameter will prepend the specified path
+                                 to the files served from gitfs. This allows an existing repository to be used,
+                                 rather than needing to reorganize a repository or design it around the layout
+                                 of the Salt fileserver.
+                              </p>
+                              
+                              <p class="p">Before the addition of this feature, if a file being served up via gitfs was
+                                 deeply nested within the root directory (for example,
+                                 <tt class="ph tt">salt://webapps/foo/files/foo.conf</tt>, it would be necessary to ensure that the
+                                 file was properly located in the remote repository, and that all of the the
+                                 parent directories were present (for example, the directories
+                                 <tt class="ph tt">webapps/foo/files/</tt> would need to exist at the root of the repository).
+                              </p>
+                              
+                              <p class="p">The below example would allow for a file <tt class="ph tt">foo.conf</tt> at the root of the
+                                 repository to be served up from the Salt fileserver path
+                                 <tt class="ph tt">salt://webapps/foo/files/foo.conf</tt>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_remotes:
+  - https://mydomain.com/stuff.git
+
+gitfs_mountpoint: salt://webapps/foo/files</pre>
+                              <p class="p">Mountpoints can also be configured on a <a class="xref" href="gitfs.html#tutorial-gitfs__gitfs-per-remote-config">per-remote basis</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="tutorial-gitfs__using-gitfs-alongside-other-backends">
+                              <h2 class="title sectiontitle">Using gitfs Alongside Other Backends</h2>
+                              <p class="p">Sometimes it may make sense to use multiple backends; for instance, if <tt class="ph tt">sls</tt>
+                                 files are stored in git but larger files are stored directly on the master.
+                              </p>
+                              
+                              <p class="p">The cascading lookup logic used for multiple remotes is also used with
+                                 multiple backends. If the <tt class="ph tt">fileserver_backend</tt> option contains
+                                 multiple backends:
+                              </p>
+                              <pre class="pre codeblock language-yaml">fileserver_backend:
+  - roots
+  - git</pre>
+                              <p class="p">Then the <tt class="ph tt">roots</tt> backend (the default backend of files in <tt class="ph tt">/srv/salt</tt>) will
+                                 be searched first for the requested file; then, if it is not found on the
+                                 master, each configured git remote will be searched.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="tutorial-gitfs__branches-environments-and-top-files">
+                              <h2 class="title sectiontitle">Branches, Environments, and Top Files</h2>
+                              <p class="p">When using the gitfs backend, branches, and tags will be mapped to environments
+                                 using the branch/tag name as an identifier.
+                              </p>
+                              
+                              <p class="p">There is one exception to this rule: the <tt class="ph tt">master</tt> branch is implicitly mapped
+                                 to the <tt class="ph tt">base</tt> environment.
+                              </p>
+                              
+                              <p class="p">So, for a typical <tt class="ph tt">base</tt>, <tt class="ph tt">qa</tt>, <tt class="ph tt">dev</tt> setup, the following branches could
+                                 be used:
+                              </p>
+                              <pre class="pre codeblock language-yaml">master
+qa
+dev</pre>
+                              <p class="p"><tt class="ph tt">top.sls</tt> files from different branches will be merged into one at runtime.
+                                 Since this can lead to overly complex configurations, the recommended setup is
+                                 to have the <tt class="ph tt">top.sls</tt> file only in the master branch and use
+                                 environment-specific branches for state definitions.
+                              </p>
+                              
+                              <p class="p">To map a branch other than <tt class="ph tt">master</tt> as the <tt class="ph tt">base</tt> environment, use the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_base">gitfs_base</a> parameter.
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_base: salt-base</pre>
+                              <p class="p">The base can also be configured on a <a class="xref" href="gitfs.html#tutorial-gitfs__gitfs-per-remote-config">per-remote basis</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="tutorial-gitfs__gitfs-whitelist-blacklist">
+                              <h2 class="title sectiontitle">Environment Whitelist/Blacklist</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">The 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_env_whitelist">gitfs_env_whitelist</a> and 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_env_blacklist">gitfs_env_blacklist</a>
+                                 parameters allow for greater control over which branches/tags are exposed as
+                                 fileserver environments. Exact matches, globs, and regular expressions are
+                                 supported, and are evaluated in that order. If using a regular expression,
+                                 <tt class="ph tt">^</tt> and <tt class="ph tt">$</tt> must be omitted, and the expression must match the entire
+                                 branch/tag.
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_env_whitelist:
+  - base
+  - v1.*
+  - 'mybranch\d+'</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p"><tt class="ph tt">v1.*</tt>, in this example, will match as both a glob and a regular
+                                    expression (though it will have been matched as a glob, since globs are
+                                    evaluated before regular expressions).
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">The behavior of the blacklist/whitelist will differ depending on which
+                                 combination of the two options is used:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">If only 
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_env_whitelist">gitfs_env_whitelist</a> is used, then <strong class="ph b">only</strong> branches/tags
+                                       which match the whitelist will be available as environments
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">If only 
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_env_blacklist">gitfs_env_blacklist</a> is used, then the branches/tags
+                                       which match the blacklist will <strong class="ph b">not</strong> be available as environments
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">If both are used, then the branches/tags which match the whitelist, but do
+                                       <strong class="ph b">not</strong> match the blacklist, will be available as environments.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="tutorial-gitfs__gitfs-authentication">
+                              <h2 class="title sectiontitle">Authentication</h2>
+                           </div>
+                           
+                           <div class="section head3" id="tutorial-gitfs__id5">
+                              <h2 class="title sectiontitle">pygit2</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Both HTTPS and SSH authentication are supported as of version 0.20.3, which is
+                                 the earliest version of <a class="xref" href="https://github.com/libgit2/pygit2" target="_blank">pygit2</a> supported by Salt for gitfs.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The examples below make use of per-remote configuration parameters, a
+                                    feature new to Salt 2014.7.0. More information on these can be found
+                                    <a class="xref" href="gitfs.html#tutorial-gitfs__gitfs-per-remote-config">here</a>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="tutorial-gitfs__https">
+                              <h2 class="title sectiontitle">HTTPS</h2>
+                              <p class="p">For HTTPS repositories which require authentication, the username and password
+                                 can be provided like so:
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_remotes:
+  - https://domain.tld/myrepo.git:
+    - user: git
+    - password: mypassword</pre>
+                              <p class="p">If the repository is served over HTTP instead of HTTPS, then Salt will by
+                                 default refuse to authenticate to it. This behavior can be overridden by adding
+                                 an <tt class="ph tt">insecure_auth</tt> parameter:
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_remotes:
+  - http://domain.tld/insecure_repo.git:
+    - user: git
+    - password: mypassword
+    - insecure_auth: True</pre>
+                              </div>
+                           
+                           <div class="section head4" id="tutorial-gitfs__pygit2-authentication-ssh">
+                              <h2 class="title sectiontitle">SSH</h2>
+                              <p class="p">SSH repositories can be configured using the <tt class="ph tt">ssh://</tt> protocol designation,
+                                 or using scp-like syntax. So, the following two configurations are equivalent:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">ssh://git@github.com/user/repo.git</tt></p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">git@github.com:user/repo.git</tt></p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <p class="p">Both 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_pubkey">gitfs_pubkey</a> and 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_privkey">gitfs_privkey</a> (or their
+                                 <a class="xref" href="gitfs.html#tutorial-gitfs__gitfs-per-remote-config">per-remote counterparts</a>) must be configured in
+                                 order to authenticate to SSH-based repos. If the private key is protected with
+                                 a passphrase, it can be configured using 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__gitfs_passphrase">gitfs_passphrase</a> (or
+                                 simply <tt class="ph tt">passphrase</tt> if being configured <a class="xref" href="gitfs.html#tutorial-gitfs__gitfs-per-remote-config">per-remote</a>). For example:
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_remotes:
+  - git@github.com:user/repo.git:
+    - pubkey: /root/.ssh/id_rsa.pub
+    - privkey: /root/.ssh/id_rsa
+    - passphrase: myawesomepassphrase</pre>
+                              <p class="p">Finally, the SSH host key must be <a class="xref" href="gitfs.html#tutorial-gitfs__gitfs-ssh-fingerprint">added to the known_hosts file</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="tutorial-gitfs__id6">
+                              <h2 class="title sectiontitle">GitPython</h2>
+                              <p class="p">With <a class="xref" href="https://github.com/gitpython-developers/GitPython" target="_blank">GitPython</a>, only passphrase-less SSH public key authentication is
+                                 supported. <strong class="ph b">The auth parameters (pubkey, privkey, etc.) shown in the pygit2
+                                    authentication examples above do not work with GitPython.</strong></p>
+                              <pre class="pre codeblock language-yaml">gitfs_remotes:
+  - ssh://git@github.com/example/salt-states.git</pre>
+                              <p class="p">Since <a class="xref" href="https://github.com/gitpython-developers/GitPython" target="_blank">GitPython</a> wraps the git CLI, the private key must be located in
+                                 <tt class="ph tt">~/.ssh/id_rsa</tt> for the user under which the Master is running, and should
+                                 have permissions of <tt class="ph tt">0600</tt>. Also, in the absence of a user in the repo URL,
+                                 <a class="xref" href="https://github.com/gitpython-developers/GitPython" target="_blank">GitPython</a> will (just as SSH does) attempt to login as the current user (in
+                                 other words, the user under which the Master is running, usually <tt class="ph tt">root</tt>).
+                              </p>
+                              
+                              <p class="p">If a key needs to be used, then <tt class="ph tt">~/.ssh/config</tt> can be configured to use
+                                 the desired key. Information on how to do this can be found by viewing the
+                                 manpage for <tt class="ph tt">ssh_config</tt>. Here's an example entry which can be added to the
+                                 <tt class="ph tt">~/.ssh/config</tt> to use an alternate key for gitfs:
+                              </p>
+                              <pre class="pre codeblock language-text">Host github.com
+    IdentityFile /root/.ssh/id_rsa_gitfs</pre>
+                              <p class="p">The <tt class="ph tt">Host</tt> parameter should be a hostname (or hostname glob) that matches the
+                                 domain name of the git repository.
+                              </p>
+                              
+                              <p class="p">It is also necessary to <a class="xref" href="gitfs.html#tutorial-gitfs__gitfs-ssh-fingerprint">add the SSH host key to the known_hosts file</a>. The exception to this would be if strict host key
+                                 checking is disabled, which can be done by adding <tt class="ph tt">StrictHostKeyChecking no</tt>
+                                 to the entry in <tt class="ph tt">~/.ssh/config</tt></p>
+                              <pre class="pre codeblock language-text">Host github.com
+    IdentityFile /root/.ssh/id_rsa_gitfs
+    StrictHostKeyChecking no</pre>
+                              <p class="p">However, this is generally regarded as insecure, and is not recommended.</p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="tutorial-gitfs__gitfs-ssh-fingerprint">
+                              <h2 class="title sectiontitle">Adding the SSH Host Key to the known_hosts File</h2>
+                              <p class="p">To use SSH authentication, it is necessary to have the remote repository's SSH
+                                 host key in the <tt class="ph tt">~/.ssh/known_hosts</tt> file. If the master is also a minion,
+                                 this can be done using the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.ssh.html#salt.modules.ssh.set_known_host">ssh.set_known_host</a> function:
+                              </p>
+                              <pre class="pre codeblock language-bash"># salt mymaster ssh.set_known_host user=root hostname=github.com
+mymaster:
+    ----------
+    new:
+        ----------
+        enc:
+            ssh-rsa
+        fingerprint:
+            16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48
+        hostname:
+            |1|OiefWWqOD4kwO3BhoIGa0loR5AA=|BIXVtmcTbPER+68HvXmceodDcfI=
+        key:
+            AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+    old:
+        None
+    status:
+        updated</pre>
+                              <p class="p">If not, then the easiest way to add the key is to su to the user (usually
+                                 <tt class="ph tt">root</tt>) under which the salt-master runs and attempt to login to the
+                                 server via SSH:
+                              </p>
+                              <pre class="pre codeblock language-bash">$ su
+Password:
+# ssh github.com
+The authenticity of host 'github.com (192.30.252.128)' can't be established.
+RSA key fingerprint is 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'github.com,192.30.252.128' (RSA) to the list of known hosts.
+Permission denied (publickey).</pre>
+                              <p class="p">It doesn't matter if the login was successful, as answering <tt class="ph tt">yes</tt> will write
+                                 the fingerprint to the known_hosts file.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="tutorial-gitfs__verifying-the-fingerprint">
+                              <h2 class="title sectiontitle">Verifying the Fingerprint</h2>
+                              <p class="p">To verify that the correct fingerprint was added, it is a good idea to look it
+                                 up. One way to do this is to use nmap:
+                              </p>
+                              <pre class="pre codeblock language-bash">$ nmap github.com --script ssh-hostkey
+
+Starting Nmap 5.51 ( http://nmap.org ) at 2014-08-18 17:47 CDT
+Nmap scan report for github.com (192.30.252.129)
+Host is up (0.17s latency).
+Not shown: 996 filtered ports
+PORT     STATE SERVICE
+22/tcp   open  ssh
+| ssh-hostkey: 1024 ad:1c:08:a4:40:e3:6f:9c:f5:66:26:5d:4b:33:5d:8c (DSA)
+|_2048 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48 (RSA)
+80/tcp   open  http
+443/tcp  open  https
+9418/tcp open  git
+
+Nmap done: 1 IP address (1 host up) scanned in 28.78 seconds</pre>
+                              <p class="p">Another way is to check one's own known_hosts file, using this one-liner:</p>
+                              <pre class="pre codeblock language-bash">$ ssh-keygen -l -f /dev/stdin &lt;&lt;&lt;`ssh-keyscan -t rsa github.com 2&gt;/dev/null` | awk '{print $2}'
+16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48</pre>
+                              </div>
+                           
+                           <div class="section" id="tutorial-gitfs__refreshing-gitfs-upon-push">
+                              <h2 class="title sectiontitle">Refreshing gitfs Upon Push</h2>
+                              <p class="p">By default, Salt updates the remote fileserver backends every 60 seconds.
+                                 However, if it is desirable to refresh quicker than that, the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../reactor/index.html#index-0__reactor">Reactor
+                                    System</a> can be used to signal the master to update the fileserver on
+                                 each push, provided that the git server is also a Salt minion. There are three
+                                 steps to this process:
+                              </p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">On the master, create a file <strong class="ph b">/srv/reactor/update_fileserver.sls</strong>, with
+                                       the following contents:
+                                    </p>
+                                    <pre class="pre codeblock language-yaml">update_fileserver:
+  runner.fileserver.update</pre>
+                                    </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Add the following reactor configuration to the master config file:</p>
+                                    <pre class="pre codeblock language-yaml">reactor:
+  - 'salt/fileserver/gitfs/update':
+    - /srv/reactor/update_fileserver.sls</pre>
+                                    </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">On the git server, add a <a class="xref" href="http://www.git-scm.com/book/en/Customizing-Git-Git-Hooks#Server-Side-Hooks" target="_blank">post-receive hook</a> with the following contents:
+                                    </p>
+                                    <pre class="pre codeblock language-bash">#!/usr/bin/env sh
+
+salt-call event.fire_master update salt/fileserver/gitfs/update</pre>
+                                    </li>
+                                 
+                              </ol>
+                              
+                              <p class="p">The <tt class="ph tt">update</tt> argument right after 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.event.html#salt.modules.event.fire_master">event.fire_master</a> in this example can really be anything, as it
+                                 represents the data being passed in the event, and the passed data is ignored
+                                 by this reactor.
+                              </p>
+                              
+                              <p class="p">Similarly, the tag name <tt class="ph tt">salt/fileserver/gitfs/update</tt> can be replaced by
+                                 anything, so long as the usage is consistent.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="tutorial-gitfs__using-git-as-an-external-pillar-source">
+                              <h2 class="title sectiontitle">Using Git as an External Pillar Source</h2>
+                              <p class="p">Git repositories can also be used to provide 
+                                 		
+                                 			&nbsp;<a class="xref" href="../pillar/index.html#pillar">Pillar</a> data, using the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../development/external_pillars.html#external-pillars">External Pillar</a> system. Note that this is different
+                                 from gitfs, and is not yet at feature parity with it.
+                              </p>
+                              
+                              <p class="p">To define a git external pillar, add a section like the following to the salt
+                                 master config file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">ext_pillar:
+  - git: &lt;branch&gt; &lt;repo&gt; [root=&lt;gitroot&gt;]</pre>
+                              <p class="p"><span class="keyword versionmodified">Changed in version 2014.7.0: </span>The optional <tt class="ph tt">root</tt> parameter was added
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">&lt;branch&gt;</tt> param is the branch containing the pillar SLS tree. The
+                                 <tt class="ph tt">&lt;repo&gt;</tt> param is the URI for the repository. To add the
+                                 <tt class="ph tt">master</tt> branch of the specified repo as an external pillar source:
+                              </p>
+                              <pre class="pre codeblock language-yaml">ext_pillar:
+  - git: master https://domain.com/pillar.git</pre>
+                              <p class="p">Use the <tt class="ph tt">root</tt> parameter to use pillars from a subdirectory of a git
+                                 repository:
+                              </p>
+                              <pre class="pre codeblock language-yaml">ext_pillar:
+  - git: master https://domain.com/pillar.git root=subdirectory</pre>
+                              <p class="p">More information on the git external pillar can be found in the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/pillar/all/salt.pillar.git_pillar.html#salt.pillar.git_pillar">salt.pillar.get_pillar docs</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="tutorial-gitfs__faq-gitfs-bug">
+                              <h2 class="title sectiontitle">Why aren't my custom modules/states/etc. syncing to my Minions?</h2>
+                              <p class="p">In versions 0.16.3 and older, when using the git fileserver backend, certain versions
+                                 of GitPython may generate errors
+                                 when fetching, which Salt fails to catch. While not fatal to the fetch process,
+                                 these interrupt the fileserver update that takes place before custom types are
+                                 synced, and thus interrupt the sync itself. Try disabling the git fileserver
+                                 backend in the master config, restarting the master, and attempting the sync
+                                 again.
+                              </p>
+                              
+                              <p class="p">This issue is worked around in Salt 0.16.4 and newer.</p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,432 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>States tutorial, part 1 - Basic Usage</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="States tutorial, part 1 - Basic Usage">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="states-tutorial-part-1-basic-usage">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/bootstrap.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/fonts.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/prism.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/lightbox.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/bootstrap/css/webhelp.css">
+      <script type="text/javascript" src="../../../themes/bootstrap/js/jquery-1.11.0.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/jquery-ui-1.9.1.custom.min.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/jquery.slimscroll.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/jquery.tocify.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/prism.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/lightbox.min.js"></script>
+      <script type="text/javascript" src="../../../themes/bootstrap/js/webhelp.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <div id="sidebar-wrapper"><a class="ss-logo" href="/help/home.html"></a><div id="search-form" class="inner-addon left-addon"><i class="glyphicon glyphicon-search"></i><input type="text" class="form-control"></div>
+            <div id="guide-links">
+               <div class="well">
+                  <ul class="nav nav-pills nav-stacked">
+                     <li><a href="/help/gs/index.html"><span class="glyphicon glyphicon glyphicon-th-list"></span> Get Started</a></li>
+                     <li><a href="/help/home.html"><span class="glyphicon glyphicon-home"></span>  Home</a></li>
+                     <li><a href="/help/enterprise/user-guide.html"><span class="glyphicon glyphicon-user"></span> User Guide</a></li>
+                  </ul>
+               </div>
+               <p id="guide-title">Enterprise Help</p>
+            </div>
+            <div class="sidebar-nav">
+               <ul id="gen-links">
+                  <li class=" collapsible  collapsed"><a href="../../../enterprise/use-cases.html">Use Cases</a><ul>
+                        <li class=" no-child "><a href="../../../enterprise/continuous-deployment.html">Continuous Deployment</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/app-stacks.html">Application Stacks</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../../enterprise/cloud.html">Cloud Management</a><ul>
+                              <li class=" no-child "><a href="../../../enterprise/orchestrate.html">Orchestration</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../../enterprise/security-bp.html">Security Best Practices</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/components.html">SaltStack Components</a></li>
+                     </ul>
+                  </li>
+                  <li class=" collapsible  collapsed"><a href="../../../enterprise/deployment.html">Deployment</a><ul>
+                        <li class=" no-child "><a href="../../../enterprise/t_ops_prepare.html">Preparing the SaltStack Ops System</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/t_master_prepare.html">Preparing Masters for SaltStack Ops Integration</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/requirements.html">System Requirements</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/faq.html">Frequently Asked Questions</a></li>
+                     </ul>
+                  </li>
+                  <li class=" no-child "><a href="../../../enterprise/masters.html">View Masters</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/minions.html">View Minions</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/jobs.html">Jobs</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/targets.html">Targets</a></li>
+                  <li class=" collapsible  collapsed"><a href="../../../enterprise/management.html">Admin Management</a><ul>
+                        <li class=" no-child "><a href="../../../enterprise/cfg-masters.html">Manage Masters</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/jobs-all.html">Manage Jobs</a></li>
+                        <li class=" no-child "><a href="../../../enterprise/cfg-users.html">User Accounts</a></li>
+                     </ul>
+                  </li>
+                  <li class=" no-child "><a href="../../../enterprise/web-console-overview.html">Console Overview</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/reports.html">View Reports</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/architecture.html">Architecture Reference</a></li>
+                  <li class=" no-child "><a href="../../../enterprise/glossary.html">Glossary</a></li>
+                  <li class=" collapsible  active"><a href="../../../enterprise/user-guide.html">SaltStack User Guide</a><ul>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/installation/index.html">Installation</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/installation/debian.html">Debian Installation</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/freebsd.html">FreeBSD</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/gentoo.html">Gentoo</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/solaris.html">Solaris</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/ubuntu.html">Ubuntu Installation</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/installation/windows.html">Windows</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  active"><a href="../../../user/topics/tutorials/index.html">Tutorials</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/standalone_minion.html">Standalone Minion</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/cron.html">Using cron with Salt</a></li>
+                              <li class=" no-child  active">
+                                 <div id="toc"></div>
+                              </li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/states_pt2.html">States tutorial, part 2 - More Complex States, Requisites</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/states_pt4.html">States tutorial, part 4</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/minionfs.html">MinionFS Backend Walkthrough</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/multimaster_pki.html">Multi-Master-PKI Tutorial With Failover</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/writing_tests.html">Writing Salt Tests</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/tutorials/halite.html">Installing and Configuring Halite</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/targeting/index.html">Targeting Minions</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/globbing.html">Matching the minion id</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/grains.html">Grains</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/ipcidr.html">Subnet/IP Address Matching</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/compound.html">Compound matchers</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/nodegroups.html">Node groups</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/batch.html">Batch Size</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/targeting/range.html">SECO Range</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../../user/topics/pillar/index.html">Storing Static Data in the Pillar</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/reactor/index.html">Reactor System</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/eauth/index.html">External Authentication System</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/eauth/access_control.html">Access Control System</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/event/index.html">Salt Event System</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/event/master_events.html">Salt Master Events</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../../user/topics/topology/syndic.html">Salt Syndic</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/topology/proxyminion/index.html">Proxy Minion</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/windows/windows-specific-behavior.html">Windows-specific Behaviour</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/cloud/index.html">Salt Cloud</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/basic.html">Salt Cloud basic usage</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/profiles.html">VM Profiles</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/map.html">Cloud Map File</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/action.html">Cloud Actions</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/function.html">Cloud Functions</a></li>
+                              <li class=" collapsible  collapsed"><a href="../../../user/topics/cloud/provider-specifics.html">Cloud Provider Specifics</a><ul>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/parallels.html">Getting Started With Parallels</a></li>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/proxmox.html">Getting Started With Proxmox</a></li>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/lxc.html">Getting Started With LXC</a></li>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/hpcloud.html">Getting Started With HP Cloud</a></li>
+                                    <li class=" no-child "><a href="../../../user/topics/cloud/vexxhost.html">Getting Started with VEXXHOST</a></li>
+                                 </ul>
+                              </li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/deploy.html">OS Support for Cloud VMs</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/features.html">Feature Matrix</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/cloud/windows.html">Spinning up Windows Minions</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/netapi/index.html">netapi modules</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/netapi/writing.html">Writing netapi modules</a></li>
+                           </ul>
+                        </li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/virt/index.html">Salt Virt</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/virt/disk.html">Virtual Machine Disk Profiles</a></li>
+                              <li class=" no-child "><a href="../../../user/topics/virt/nic.html">Virtual Machine Network Profiles</a></li>
+                           </ul>
+                        </li>
+                        <li class=" no-child "><a href="../../../user/topics/yaml/index.html">Understanding YAML</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/master_tops/index.html">Master Tops System</a></li>
+                        <li class=" no-child "><a href="../../../user/topics/best_practices.html">Salt Best Practices</a></li>
+                        <li class=" collapsible  collapsed"><a href="../../../user/topics/troubleshooting/index.html">Troubleshooting</a><ul>
+                              <li class=" no-child "><a href="../../../user/topics/troubleshooting/minion.html">Troubleshooting the Salt Minion</a></li>
+                           </ul>
+                        </li>
+                     </ul>
+                  </li>
+               </ul>
+            </div>
+         </div>
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="states-tutorial-part-1-basic-usage">
+                        
+                        <h1 class="title topictitle1">States tutorial, part 1 - Basic Usage</h1>
+                        <div class="body conbody">
+                           <p class="p">The purpose of this tutorial is to demonstrate how quickly you can configure a
+                              system to be managed by Salt States. For detailed information about the state
+                              system please refer to the full <a class="xref" href="unresolvable-reference.html#__">states reference</a>.
+                           </p>
+                           
+                           <p class="p">This tutorial will walk you through using Salt to configure a minion to run the
+                              Apache HTTP server and to ensure the server is running.
+                           </p>
+                           
+                           <p class="p"><strong class="ph b">Before continuing</strong> make sure you have a working Salt installation by
+                              following the <a class="xref" href="unresolvable-reference.html#__">installation</a> and the
+                              <a class="xref" href="unresolvable-reference.html#__">configuration</a> instructions.
+                           </p>
+                           
+                           <p class="p">There are many ways to <a class="xref" href="unresolvable-reference.html#introduction-to-salt__salt-community">get help from the Salt community</a> including our
+                              <a class="xref" href="https://groups.google.com/forum/#!forum/salt-users" target="_blank">mailing list</a>
+                              and our <a class="xref" href="http://webchat.freenode.net/?channels=salt" target="_blank">IRC channel</a> #salt.
+                           </p>
+                           
+                           <div class="section" id="states-tutorial-part-1-basic-usage__setting-up-the-salt-state-tree">
+                              <h2 class="title sectiontitle">Setting up the Salt State Tree</h2>
+                              <p class="p">States are stored in text files on the master and transferred to the minions on
+                                 demand via the master's File Server. The collection of state files make up the
+                                 <tt class="ph tt">State Tree</tt>.
+                              </p>
+                              
+                              <p class="p">To start using a central state system in Salt, the Salt File Server must first
+                                 be set up. Edit the master config file (<a class="xref" href="unresolvable-reference.html#configuring-the-salt-master__std:conf_master-file_roots">file_roots</a>) and
+                                 uncomment the following lines:
+                              </p>
+                              <pre class="pre codeblock language-yaml">file_roots:
+  base:
+    - /srv/salt</pre>
+                              <aside class="note "><span class="title">Note:</span> 
+                                 <p class="p">If you are deploying on FreeBSD via ports, the <tt class="ph tt">file_roots</tt> path defaults
+                                    to <tt class="ph tt">/usr/local/etc/salt/states</tt>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Restart the Salt master in order to pick up this change:</p>
+                              <pre class="pre codeblock language-bash">pkill salt-master
+salt-master -d</pre>
+                              </div>
+                           
+                           <div class="section" id="states-tutorial-part-1-basic-usage__preparing-the-top-file">
+                              <h2 class="title sectiontitle">Preparing the Top File</h2>
+                              <p class="p">On the master, in the directory uncommented in the previous step,
+                                 (<tt class="ph tt">/srv/salt</tt> by default), create a new file called
+                                 <a class="xref" href="unresolvable-reference.html#configuring-the-salt-master__std:conf_master-state_top">top.sls</a> and add the following:
+                              </p>
+                              <pre class="pre codeblock language-yaml">base:
+  '*':
+    - webserver</pre>
+                              <p class="p">The <a class="xref" href="unresolvable-reference.html#the-top-file__states-top">top file</a> is separated into environments (discussed
+                                 later). The default environment is <tt class="ph tt">base</tt>. Under the <tt class="ph tt">base</tt> environment a
+                                 collection of minion matches is defined; for now simply specify all hosts
+                                 (<tt class="ph tt">*</tt>).
+                              </p>
+                              
+                              <p class="p">The expressions can use any of the targeting mechanisms used by Salt —
+                                 minions can be matched by glob, PCRE regular expression, or by <a class="xref" href="unresolvable-reference.html#__">grains</a>. For example:
+                              </p>
+                              <pre class="pre codeblock language-yaml">base:
+  'os:Fedora':
+    - match: grain
+    - webserver</pre>
+                              </div>
+                           
+                           <div class="section" id="states-tutorial-part-1-basic-usage__create-an-sls-file">
+                              <h2 class="title sectiontitle">Create an <tt class="ph tt">sls</tt> file
+                              </h2>
+                              <p class="p">In the same directory as the <a class="xref" href="unresolvable-reference.html#the-top-file__states-top">top file</a>, create a file
+                                 named <tt class="ph tt">webserver.sls</tt>, containing the following:
+                              </p>
+                              <pre class="pre codeblock language-yaml">apache:                 # ID declaration
+  pkg:                  # state declaration
+    - installed         # function declaration</pre>
+                              <p class="p">The first line, called the <a class="xref" href="unresolvable-reference.html#highstate-data-structure-definitions__id-declaration">ID declaration</a>, is an arbitrary identifier.
+                                 In this case it defines the name of the package to be installed.
+                              </p>
+                              
+                              <aside class="note "><span class="title">Note:</span> 
+                                 <p class="p">The package name for the Apache httpd web server may differ depending on
+                                    OS or distro — for example, on Fedora it is <tt class="ph tt">httpd</tt> but on
+                                    Debian/Ubuntu it is <tt class="ph tt">apache2</tt>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">The second line, called the <a class="xref" href="unresolvable-reference.html#highstate-data-structure-definitions__state-declaration">State declaration</a>, defines which of the Salt
+                                 States we are using. In this example, we are using the <a class="xref" href="unresolvable-reference.html#module-salt.states.pkg__module-salt.states.pkg">pkg state</a> to ensure that a given package is installed.
+                              </p>
+                              
+                              <p class="p">The third line, called the <a class="xref" href="unresolvable-reference.html#highstate-data-structure-definitions__function-declaration">Function declaration</a>, defines which function
+                                 in the <a class="xref" href="unresolvable-reference.html#module-salt.states.pkg__module-salt.states.pkg">pkg state</a> module to call.
+                              </p>
+                              
+                              <p class="p">States <tt class="ph tt">sls</tt> files can be written in many formats. Salt requires only
+                                 a simple data structure and is not concerned with how that data structure
+                                 is built. Templating languages and <a class="xref" href="http://en.wikipedia.org/wiki/Domain-specific_language" target="_blank">DSLs</a> are a dime-a-dozen and everyone
+                                 has a favorite.
+                              </p>
+                              
+                              <p class="p">Building the expected data structure is the job of Salt <a class="xref" href="unresolvable-reference.html#__">renderers</a> and they are dead-simple to write.
+                              </p>
+                              
+                              <p class="p">In this tutorial we will be using YAML in Jinja2 templates, which is the
+                                 default format. The default can be changed by editing
+                                 <a class="xref" href="unresolvable-reference.html#configuring-the-salt-master__std:conf_master-renderer">renderer</a> in the master configuration file.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-tutorial-part-1-basic-usage__install-the-package">
+                              <h2 class="title sectiontitle">Install the package</h2>
+                              <p class="p">Next, let's run the state we created. Open a terminal on the master and run:</p>
+                              <pre class="pre codeblock language-bash">% salt '*' state.highstate</pre>
+                              <p class="p">Our master is instructing all targeted minions to run <a class="xref" href="unresolvable-reference.html#module-salt.modules.state__salt.modules.state.highstate">state.highstate</a>. When a minion executes a highstate call it
+                                 will download the <a class="xref" href="unresolvable-reference.html#the-top-file__states-top">top file</a> and attempt to match the
+                                 expressions. When it does match an expression the modules listed for it will be
+                                 downloaded, compiled, and executed.
+                              </p>
+                              
+                              <p class="p">Once completed, the minion will report back with a summary of all actions taken
+                                 and all changes made.
+                              </p>
+                              
+                              <p class="p">If you have created <a class="xref" href="../targeting/grains.html#grains__writing-grains">custom grain modules</a>, they will
+                                 not be available in the top file until after the first <a class="xref" href="unresolvable-reference.html#__">highstate</a>. To make custom grains available on a minion's first
+                                 highstate, it is recommended to use <a class="xref" href="../reactor/index.html#reactor-system__minion-start-reactor">this example</a> to ensure that the custom grains are synced when
+                                 the minion starts.
+                              </p>
+                              
+                              <p class="p">Note that in the <a class="xref" href="unresolvable-reference.html#__">example</a> above, the SLS file
+                                 <tt class="ph tt">webserver.sls</tt> was referred to simply as <tt class="ph tt">webserver</tt>. The namespace
+                                 for SLS files when referenced in <a class="xref" href="unresolvable-reference.html#configuring-the-salt-master__std:conf_master-state_top">top.sls</a> or an <a class="xref" href="unresolvable-reference.html#highstate-data-structure-definitions__include-declaration">Include declaration</a>
+                                 follows a few simple rules:
+                              </p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">The <tt class="ph tt">.sls</tt> is discarded (i.e. <tt class="ph tt">webserver.sls</tt> becomes
+                                       <tt class="ph tt">webserver</tt>).
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <dl class="dl definition_list">
+                                       <dt class="dt dlterm">Subdirectories can be used for better organization.</dt>
+                                       
+                                       <dd class="dd">
+                                          <ol class="ol" type="a">
+                                             <li class="li">
+                                                <p class="p">Each subdirectory can be represented with a dot (following the python
+                                                   import model) or a slash.  <tt class="ph tt">webserver/dev.sls</tt> can also be referred to
+                                                   as <tt class="ph tt">webserver.dev</tt></p>
+                                                
+                                             </li>
+                                             
+                                             <li class="li">
+                                                <p class="p">Because slashes can be represented as dots, SLS files can not contain
+                                                   dots in the name besides the dot for the SLS suffix.  The SLS file
+                                                   webserver_1.0.sls can not be matched, and webserver_1.0 would match
+                                                   the directory/file webserver_1/0.sls
+                                                </p>
+                                                
+                                             </li>
+                                             
+                                          </ol>
+                                          
+                                       </dd>
+                                       
+                                    </dl>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">A file called <tt class="ph tt">init.sls</tt> in a subdirectory is referred to by the path
+                                       of the directory. So, <tt class="ph tt">webserver/init.sls</tt> is referred to as
+                                       <tt class="ph tt">webserver</tt>.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">If both <tt class="ph tt">webserver.sls</tt> and <tt class="ph tt">webserver/init.sls</tt> happen to exist,
+                                       <tt class="ph tt">webserver/init.sls</tt> will be ignored and <tt class="ph tt">webserver.sls</tt> will be the
+                                       file referred to as <tt class="ph tt">webserver</tt>.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                              <p class="p">If the expected output isn't seen, the following tips can help to
+                                 narrow down the problem.
+                              </p>
+                              
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm">Turn up logging</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Salt can be quite chatty when you change the logging setting to
+                                       <tt class="ph tt">debug</tt>:
+                                    </p>
+                                    <pre class="pre codeblock language-bash">salt-minion -l debug</pre>
+                                    </dd>
+                                 
+                                 <dt class="dt dlterm">Run the minion in the foreground</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">By not starting the minion in daemon mode (<tt class="ph tt">-d</tt>) one can view any output from the minion as it works:
+                                    </p>
+                                    <pre class="pre codeblock language-bash">salt-minion &amp;</pre>
+                                    </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">Increase the default timeout value when running salt. For
+                                 example, to change the default timeout to 60 seconds:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt -t 60</pre>
+                              <p class="p">For best results, combine all three:</p>
+                              <pre class="pre codeblock language-bash">salt-minion -l debug &amp;          # On the minion
+salt '*' state.highstate -t 60  # On the master</pre>
+                              </div>
+                           
+                           <div class="section" id="states-tutorial-part-1-basic-usage__next-steps">
+                              <h2 class="title sectiontitle">Next steps</h2>
+                              <p class="p">This tutorial focused on getting a simple Salt States configuration working.
+                                 <a class="xref" href="unresolvable-reference.html#__">Part 2</a> will build on this example to cover more advanced
+                                 <tt class="ph tt">sls</tt> syntax and will explore more of the states that ship with Salt.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+                        <p class="text-muted pull-right"><small>Copyright © 2015 SaltStack.</small></p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

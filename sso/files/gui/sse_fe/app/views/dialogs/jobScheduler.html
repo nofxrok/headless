@@ -1,0 +1,171 @@
+    <div class="modal-header">
+    <h3 class="modal-title">Salt Scheduler: <span>{{job.name}}</span></h3>
+    </div>
+<div id="job-scheduler-module-body" class="modal-body">
+    <div ng-hide="true" id="job-scheduler-top-navs"class="row">
+        <ul class="nav nav-tabs pull-left" ng-init="tab ='schedular'">
+            <li ng-class="{'active': tab === 'schedular'}"><a href="" ng-click="tab = 'schedular'">Schedule</a></li>
+            <li ng-class="{'active': tab === 'jobdetails'}"><a href="" ng-click="tab = 'jobdetails';showJobDetails()">Job details</a></li>
+        </ul>
+    </div>
+    <div ng-show="tab === 'schedular'" id="schdular-content" >
+        <form role="form" name="scheduleJob" ng-submit="scheduleJob(job)" novalidate>
+            <div class="row">
+                <div class="col-xs-12" ng-class="job.startDate = date">
+                    <div ng-if="job.execute == 'future'"><label class="scheduler-checkboxtext">Selected execution time is local to each minion</label></div>
+                    <time-date-picker ng-model="date" default-mode="time"></time-date-picker>
+                    <div id="radio-option-container1">
+                    <div class="row">
+                        <div class="pull-left">
+                            <label class="scheduler-checkboxtext"><input class="scheduler-checkbox" name="runnow" type="radio" ng-model="job.execute" value = "now" ></input> Run Now</label>
+                        </div>
+                        <div class="pull-left">
+                            <label class="scheduler-checkboxtext">
+                                <input class="scheduler-checkbox" name="runnow" type="radio" ng-disabled="job.file_type == 'orchestrate'" ng-model="job.execute" value="future"></input> Future Run
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <label class="scheduler-checkboxtext"><input class="scheduler-checkbox" name="optradio" type="radio" ng-model="job.runOnce" value = "runonce" ></input> Run Once</label>
+                    </div>
+                    <div class="row">
+                        <label class="scheduler-checkboxtext"><input class="scheduler-checkbox" name="optradio" type="radio" ng-model="job.runOnce" value="retry"></input> Retry on Fail</label>
+                    </div>
+                    <div class="row">
+                    	<div class="pull-left">
+                        	<label class="scheduler-checkboxtext pull-left"><input class="scheduler-checkbox"  ng-disabled="job.runOnce == 'runonce'" ng-model="job.retry_option" value="retry_count" name="optretry" type="radio" ></input> End After</label>
+                            <div id="attempts-input-holder" class="pull-left">
+                                <label class="scheduler-checkboxtext"><input id="attempts-input-box" type="number" min="1" max="99" ng-model="job.retry_count" ng-disabled="job.runOnce == 'runonce' || job.retryOption == 'end_after'" ></input>  Attempts</label>
+                            </div>
+                         </div>   
+                    </div>
+                    <div class="radio">
+                        <label class="scheduler-checkboxtext"><input class="scheduler-checkbox" name="optretry" type="radio" ng-model="job.retry_option" value="end_after" ng-disabled="job.runOnce == 'runonce'" ></input> End After</label>
+                    </div>
+                    <div class="row">
+                        <div id="dropdown-calender" class="dropdown col-xs-11">
+                            <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="#" ng-disabled="job.runOnce == 'runonce' || job.retry_option == 'retry_count'">
+                                <div class="input-group"><input type="text" class="form-control" data-ng-model="data.dateDropDownInput" ng-class="job.endDate = data.dateDropDownInput"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <datetimepicker data-ng-model="data.dateDropDownInput" data-datetimepicker-config="{ dropdownSelector: '#dropdown-calender' }" data-before-render="disablePast($view, $dates);"/>
+                            </ul>
+                        </div>
+                    <p id="end-after-error" class="error" ng-show="job.endDate == null && (job.retry_option == 'end_after')">Please select End Date and Time</p>
+                    </div>
+                </div>
+                </div>
+        </div>
+        <div id="job-scheduler-options">
+            <div class="scheduler-option-container">
+                <div class="row">
+                    <div class="pull-left scheduler-option-container-icon">
+                        <span class="glyphicon glyphicon-cog"></span>
+                    </div>
+                    <div class="pull-left">
+                        <label class="scheduler-checkboxtext"><input class="scheduler-checkbox" name="optradio1" type="radio" ng-model="job.run_type" value="run" ></input> Run Job</label>
+                    </div>
+                    <div class="pull-left">
+                        <label class="scheduler-checkboxtext"><input class="scheduler-checkbox" name="optradio1" type="radio" ng-model="job.run_type" value="simulate" ></input> Simulate</label>
+                    </div>
+                </div>
+                <div class="row scheduler-options-row2">
+                    <div class="pull-left">
+                        <label class="scheduler-checkboxtext"><input class="scheduler-checkbox" name="optradio2" type="radio" ng-model="job.action_on_error" value="ignore" ></input> Ignore Errors</label>
+                    </div>
+                    <div class="pull-left">
+                        <label class="scheduler-checkboxtext"><input class="scheduler-checkbox" name="optradio2" type="radio" ng-model="job.action_on_error" value="pause"></input> Pause on Fail</label>
+                    </div>
+                </div>
+            </div>
+            <div ng-hide="true" class="scheduler-option-container">
+                <div class="row">
+                    <div class="pull-left scheduler-option-container-icon">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </div>
+                    <div class="pull-left">
+                        <label class="scheduler-checkboxtext"><input class="scheduler-checkbox" name="optradio3" type="radio" ng-model="job.priority" value="none" ></input> None</label>
+                    </div>
+                    <div class="pull-left">
+                        <label class="scheduler-checkboxtext"><input class="scheduler-checkbox" name="optradio3" type="radio" ng-model="job.priority" value="normal" ></input> Normal</label>
+                    </div>
+                    <div class="pull-left">
+                        <label class="scheduler-checkboxtext"><input class="scheduler-checkbox" name="optradio3" type="radio" ng-model="job.priority" value="medium" ></input> Medium</label>
+                    </div>
+                    <div class="pull-left">
+                        <label class="scheduler-checkboxtext"><input class="scheduler-checkbox" name="optradio3" type="radio" ng-model="job.priority" value="high"></input> High</label>
+                    </div>
+                </div>
+                <div class="row scheduler-options-row2">
+                    <div class="pull-left">
+                        <label id="scheduler-location-text"> Location</label>
+                    </div>
+                    <div class="pull-left">
+                        <input type="text" placeholder="default" ></input>
+                    </div>
+                </div>
+            </div>
+            <div ng-hide="true" class="scheduler-option-container">
+                <div class="row">
+                    <div class="pull-left scheduler-option-container-icon">
+                        <span class="glyphicon glyphicon-envelope"></span>
+                    </div>
+                    <div class="pull-left">
+                        <label class="scheduler-checkboxtext"><input class="scheduler-checkbox" name="optradio4" type="radio" ng-model="job.mailOn" value="none" ></input> None</label>
+                    </div>
+                    <div class="pull-left">
+                        <label class="scheduler-checkboxtext"><input class="scheduler-checkbox" name="optradio4" type="radio" ng-model="job.mailOn" value="completion"></input> Completion</label>
+                    </div>
+                    <div class="pull-left">
+                        <label class="scheduler-checkboxtext"><input class="scheduler-checkbox" name="optradio4" type="radio" ng-model="job.mailOn" value="failure"></input> On Failure</label>
+                    </div>
+                </div>
+                <div class="row scheduler-options-row2">
+                    <div class="pull-left">
+                        <label id="scheduler-notify-text"> Notify</label>
+                    </div>
+                    <div class="pull-left">
+                        
+                        <div class="dropdown" ng-disabled="job.mailOn == 'none'">
+                            <a class="dropdown-toggle" href="" ng-disabled="job.mailOn == 'none'">
+                                <input id="#schedule-user-names" name="emailusername" class="form-control" ng-model="selectedUser" placeholder="Please select a users" readonly required />
+                                <span id="schedule-user-mail-icon"><b class="caret"></b></span>
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <div id="target-action-menu">
+                                    <ul class="nav" ng-repeat="user in users">
+                                        <li ng-click="$event.stopPropagation()">
+                                            <label class="target-action-checkbox"><input type="checkbox" ng-model="job.selectedUser[$index]" ng-change="selectUser(user)"></input>{{user.name}}</label>
+                                        </li>
+                                       
+                                    </ul>
+                                </div>
+                                
+                            </ul>
+                        </div>
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+     </form>
+     </div>
+     <div ng-show="tab === 'jobdetails'" id="job-details-contnet">
+        <div>
+            <h4 style="text-align:center">{{job.name}}</h4>
+        </div>
+     </div>
+
+</div>
+
+<div class="modal-footer">
+    <button ng-hide="tab === 'jobdetails'" class="btn btn-primary site-btn-form" ng-click="jobSchedularModalOk(job)" ng-disabled="(job.endDate == null && job.retry_option == 'end_after')">Run Job</button>
+    <button ng-show="tab === 'jobdetails'" class="btn btn-primary site-btn-form" ng-click="save();" ng-disabled="(job.endDate == null && job.retry_option == 'end_after')">Save</button>
+    <button class="btn btn-primary site-btn-form" ng-click="jobSchedularModalCancel()">Close</button>
+</div>
+
+
+

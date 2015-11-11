@@ -1,0 +1,382 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>States Tutorial, Part 5 - Orchestration with Salt</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="States Tutorial, Part 5 - Orchestration with Salt">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/configuration-management.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="states-tutorial-part-5-orchestration-with-salt">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="states-tutorial-part-5-orchestration-with-salt">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">States Tutorial, Part 5 - Orchestration with Salt</h1>
+                        <div class="body conbody">
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">This tutorial builds on some of the topics covered in the earlier
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="states_pt1.html#states-tutorial-part-1-basic-usage">States Walkthrough</a> pages. It is recommended to start with
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="states_pt1.html#states-tutorial-part-1-basic-usage">Part 1</a> if you are not familiar with how to use states.
+                              </p>
+                              
+                           </aside>
+                           
+                           <p class="p">Orchestration is accomplished in salt primarily through the <a class="xref" href="states_pt5.html#states-tutorial-part-5-orchestration-with-salt__orchestrate-runner">Orchestrate
+                                 Runner</a>. Added in version 0.17.0, this Salt 
+                              		
+                              			&nbsp;<a class="xref" href="../../ref/runners/index.html#salt-runners">Runner</a> can use the full suite of 
+                              		
+                              			&nbsp;<a class="xref" href="../../ref/states/requisites.html#requisites">requisites</a> available in states, and can also execute
+                              states/functions using salt-ssh. This runner replaces the <a class="xref" href="states_pt5.html#states-tutorial-part-5-orchestration-with-salt__states-overstate">OverState</a>.
+                           </p>
+                           
+                           <div class="section" id="states-tutorial-part-5-orchestration-with-salt__orchestrate-runner">
+                              <h2 class="title sectiontitle">The Orchestrate Runner</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                              
+                              <p class="p">As noted above in the introduction, the Orchestrate Runner (originally called
+                                 the state.sls runner) offers all the functionality of the OverState, but with a
+                                 couple advantages:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">All 
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/states/requisites.html#requisites">requisites</a> available in states can be
+                                       used.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">The states/functions can be executed using salt-ssh.</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <p class="p">The Orchestrate Runner was added with the intent to eventually deprecate the
+                                 OverState system, however the OverState will still be maintained for the
+                                 foreseeable future.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="states-tutorial-part-5-orchestration-with-salt__configuration-syntax">
+                              <h2 class="title sectiontitle">Configuration Syntax</h2>
+                              <p class="p">The configuration differs slightly from that of the OverState, and more closely
+                                 resembles the configuration schema used for states.
+                              </p>
+                              
+                              <p class="p">To execute a state, use 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/all/salt.states.saltmod.html#salt.states.saltmod.state">salt.state</a>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">install_nginx:
+  salt.state:
+    - tgt: 'web*'
+    - sls:
+      - nginx</pre>
+                              <p class="p">To execute a function, use 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/all/salt.states.saltmod.html#salt.states.saltmod.function">salt.function</a>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">cmd.run:
+  salt.function:
+    - tgt: '*'
+    - arg:
+      - rm -rf /tmp/foo</pre>
+                              </div>
+                           
+                           <div class="section head3" id="states-tutorial-part-5-orchestration-with-salt__triggering-a-highstate">
+                              <h2 class="title sectiontitle">Triggering a Highstate</h2>
+                              <p class="p">Whereas with the OverState, a Highstate is run by simply omitting an <tt class="ph tt">sls</tt> or
+                                 <tt class="ph tt">function</tt> argument, with the Orchestrate Runner the Highstate must
+                                 explicitly be requested by using <tt class="ph tt">highstate: True</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">webserver_setup:
+  salt.state:
+    - tgt: 'web*'
+    - highstate: True</pre>
+                              </div>
+                           
+                           <div class="section head3" id="states-tutorial-part-5-orchestration-with-salt__executing-the-orchestrate-runner">
+                              <h2 class="title sectiontitle">Executing the Orchestrate Runner</h2>
+                              <p class="p">The Orchestrate Runner can be executed using the <tt class="ph tt">state.orchestrate</tt> runner
+                                 function. <tt class="ph tt">state.orch</tt> also works, for those that would like to type less.
+                              </p>
+                              
+                              <p class="p">Assuming that your <tt class="ph tt">base</tt> environment is located at <tt class="ph tt">/srv/salt</tt>, and you
+                                 have placed a configuration file in <tt class="ph tt">/srv/salt/orchestration/webserver.sls</tt>,
+                                 then the following could both be used:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-run state.orchestrate orchestration.webserver
+salt-run state.orch orchestration.webserver</pre>
+                              <p class="p"><span class="keyword versionmodified">Changed in version 2014.1.1: </span>The runner function was renamed to <tt class="ph tt">state.orchestrate</tt>. In versions
+                                 0.17.0 through 2014.1.0, <tt class="ph tt">state.sls</tt> must be used. This was renamed to
+                                 avoid confusion with the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.state.html#salt.modules.state.sls">state.sls</a>
+                                 execution function.
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-run state.sls orchestration.webserver</pre>
+                              </div>
+                           
+                           <div class="section head3" id="states-tutorial-part-5-orchestration-with-salt__more-complex-orchestration">
+                              <h2 class="title sectiontitle">More Complex Orchestration</h2>
+                              <p class="p">Many states/functions can be configured in a single file, which when combined
+                                 with the full suite of 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/requisites.html#requisites">requisites</a>, can be used
+                                 to easily configure complex orchestration tasks. Additionally, the
+                                 states/functions will be executed in the order in which they are defined,
+                                 unless prevented from doing so by any 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/requisites.html#requisites">requisites</a>, as is the default in SLS files since 0.17.0.
+                              </p>
+                              <pre class="pre codeblock language-yaml">cmd.run:
+  salt.function:
+    - tgt: 10.0.0.0/24
+    - tgt_type: ipcidr
+    - arg:
+      - bootstrap
+
+storage_setup:
+  salt.state:
+    - tgt: 'role:storage'
+    - tgt_type: grain
+    - sls: ceph
+    - require:
+      - salt: webserver_setup
+
+webserver_setup:
+  salt.state:
+    - tgt: 'web*'
+    - highstate: True</pre>
+                              <p class="p">Given the above setup, the orchestration will be carried out as follows:</p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">The shell command <tt class="ph tt">bootstrap</tt> will be executed on all minions in the
+                                       10.0.0.0/24 subnet.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">A Highstate will be run on all minions whose ID starts with "web", since
+                                       the <tt class="ph tt">storage_setup</tt> state requires it.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Finally, the <tt class="ph tt">ceph</tt> SLS target will be executed on all minions which have
+                                       a grain called <tt class="ph tt">role</tt> with a value of <tt class="ph tt">storage</tt>.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                           </div>
+                           
+                           <div class="section" id="states-tutorial-part-5-orchestration-with-salt__states-overstate">
+                              <h2 class="title sectiontitle">The OverState System</h2>
+                              <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                 <p class="p">The OverState runner is deprecated, and will be removed in the feature
+                                    release of Salt codenamed Boron. (Three feature releases after 2014.7.0,
+                                    which is codenamed Helium)
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Often, servers need to be set up and configured in a specific order, and systems
+                                 should only be set up if systems earlier in the sequence have been set up
+                                 without any issues.
+                              </p>
+                              
+                              <p class="p">The OverState system can be used to orchestrate deployment in a smooth and
+                                 reliable way across multiple systems in small to large environments.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="states-tutorial-part-5-orchestration-with-salt__the-overstate-sls">
+                              <h2 class="title sectiontitle">The OverState SLS</h2>
+                              <p class="p">The OverState system is managed by an SLS file named <tt class="ph tt">overstate.sls</tt>, located
+                                 in the root of a Salt fileserver environment.
+                              </p>
+                              
+                              <p class="p">The overstate.sls configures an unordered list of stages, each stage defines
+                                 the minions on which to execute the state, and can define what sls files to
+                                 run, execute a 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.state.html#salt.modules.state.highstate">state.highstate</a>, or
+                                 execute a function. Here's a sample <tt class="ph tt">overstate.sls</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">mysql:
+  match: 'db*'
+  sls:
+    - mysql.server
+    - drbd
+webservers:
+  match: 'web*'
+  require:
+    - mysql
+all:
+  match: '*'
+  require:
+    - mysql
+    - webservers</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The <tt class="ph tt">match</tt> argument uses 
+                                    		
+                                    			&nbsp;<a class="xref" href="../targeting/compound.html#targeting-compound">compound matching</a></p>
+                                 
+                              </aside>
+                              
+                              <p class="p">Given the above setup, the OverState will be carried out as follows:</p>
+                              
+                              <ol class="ol">
+                                 <li class="li">
+                                    <p class="p">The <tt class="ph tt">mysql</tt> stage will be executed first because it is required by the
+                                       <tt class="ph tt">webservers</tt> and <tt class="ph tt">all</tt> stages.  It will execute 
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.state.html#salt.modules.state.sls">state.sls</a> once for each of the two listed SLS targets
+                                       (<tt class="ph tt">mysql.server</tt> and <tt class="ph tt">drbd</tt>).  These states will be executed on all
+                                       minions whose minion ID starts with "db".
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">The <tt class="ph tt">webservers</tt> stage will then be executed, but only if the <tt class="ph tt">mysql</tt>
+                                       stage executes without any failures. The <tt class="ph tt">webservers</tt> stage will execute a
+                                       
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.state.html#salt.modules.state.highstate">state.highstate</a> on all minions whose
+                                       minion IDs start with "web".
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Finally, the <tt class="ph tt">all</tt> stage will execute, running 
+                                       		
+                                       			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.state.html#salt.modules.state.highstate">state.highstate</a> on all systems, if, and only if the <tt class="ph tt">mysql</tt>
+                                       and <tt class="ph tt">webservers</tt> stages completed without any failures.
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ol>
+                              
+                              <p class="p">Any failure in the above steps would cause the requires to fail, preventing the
+                                 dependent stages from executing.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="states-tutorial-part-5-orchestration-with-salt__using-functions-with-overstate">
+                              <h2 class="title sectiontitle">Using Functions with OverState</h2>
+                              <p class="p">In the above example, you'll notice that the stages lacking an <tt class="ph tt">sls</tt> entry
+                                 run a 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.state.html#salt.modules.state.highstate">state.highstate</a>. As mentioned
+                                 earlier, it is also possible to execute other functions in a stage. This
+                                 functionality was added in version 0.15.0.
+                              </p>
+                              
+                              <p class="p">Running a function is easy:</p>
+                              <pre class="pre codeblock language-yaml">http:
+  function:
+    pkg.install:
+      - httpd</pre>
+                              <p class="p">The list of function arguments are defined after the declared function. So, the
+                                 above stage would run <tt class="ph tt">pkg.install http</tt>. Requisites only function properly
+                                 if the given function supports returning a custom return code.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="states-tutorial-part-5-orchestration-with-salt__executing-an-overstate">
+                              <h2 class="title sectiontitle">Executing an OverState</h2>
+                              <p class="p">Since the OverState is a 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/runners/index.html#salt-runners">Runner</a>, it is executed
+                                 using the <tt class="ph tt">salt-run</tt> command. The runner function for the OverState is
+                                 <tt class="ph tt">state.over</tt>.
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-run state.over</pre>
+                              <p class="p">The function will by default look in the root of the <tt class="ph tt">base</tt> environment (as
+                                 defined in 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/configuration/master.html#configuration-salt-master__file_roots">file_roots</a>) for a file called <tt class="ph tt">overstate.sls</tt>, and
+                                 then execute the stages defined within that file.
+                              </p>
+                              
+                              <p class="p">Different environments and paths can be used as well, by adding them as
+                                 positional arguments:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-run state.over dev /root/other-overstate.sls</pre>
+                              <p class="p">The above would run an OverState using the <tt class="ph tt">dev</tt> fileserver environment, with
+                                 the stages defined in <tt class="ph tt">/root/other-overstate.sls</tt>.
+                              </p>
+                              
+                              <aside class="important "><span class="glyphicon glyphicon-exclamation-sign"></span><span class="title">Important:</span> 
+                                 <p class="p">Since these are positional arguments, when defining the path to the
+                                    overstate file the environment must also be specified, even if it is the
+                                    <tt class="ph tt">base</tt> environment.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Remember, salt-run is always executed on the master.</p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

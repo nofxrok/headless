@@ -1,0 +1,106 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Virtual Machine Disk Profiles</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Virtual Machine Disk Profiles">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="virtual-machine-disk-profiles">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="virtual-machine-disk-profiles">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Virtual Machine Disk Profiles</h1>
+                        <div class="body conbody">
+                           <p class="p">Salt Virt allows for the disks created for deployed virtual machines
+                              to be finely configured. The configuration is a simple data structure which is
+                              read from the <tt class="ph tt">config.option</tt> function, meaning that the configuration can be
+                              stored in the minion config file, the master config file, or the minion's
+                              pillar.
+                           </p>
+                           
+                           <p class="p">This configuration option is called <tt class="ph tt">virt.disk</tt>. The default <tt class="ph tt">virt.disk</tt>
+                              data structure looks like this:
+                           </p>
+                           <pre class="pre codeblock language-yaml">virt.disk:
+  default:
+    - system:
+      size: 8192
+      format: qcow2
+      model: virtio</pre>
+                           <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                              <p class="p">The format and model does not need to be defined, Salt will
+                                 default to the optimal format used by the underlying hypervisor,
+                                 in the case of kvm this it is <strong class="ph b">qcow2</strong> and
+                                 <strong class="ph b">virtio</strong>.
+                              </p>
+                              
+                           </aside>
+                           
+                           <p class="p">This configuration sets up a disk profile called default. The default
+                              profile creates a single system disk on the virtual machine.
+                           </p>
+                           
+                           <div class="section" id="virtual-machine-disk-profiles__define-more-profiles">
+                              <h2 class="title sectiontitle">Define More Profiles</h2>
+                              <p class="p">Many environments will require more complex disk profiles and may require
+                                 more than one profile, this can be easily accomplished:
+                              </p>
+                              <pre class="pre codeblock language-yaml">virt.disk:
+  default:
+    - system:
+        size: 8192
+  database:
+    - system:
+        size: 8192
+    - data:
+        size: 30720
+  web:
+    - system:
+        size: 1024
+    - logs:
+        size: 5120</pre>
+                              <p class="p">This configuration allows for one of three profiles to be selected,
+                                 allowing virtual machines to be created with different storage needs
+                                 of the deployed vm.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

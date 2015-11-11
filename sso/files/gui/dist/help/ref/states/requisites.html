@@ -1,0 +1,607 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Requisites and Other Global State Arguments</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Requisites and Other Global State Arguments">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="requisites">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="requisites">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Requisites and Other Global State Arguments</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="requisites__requisites-and-other-global-state-arguments"></span></p>
+                              
+                           </div>
+                           
+                           <div class="section" id="requisites__id1">
+                              <h2 class="title sectiontitle">Requisites</h2>
+                              <p class="p">The Salt requisite system is used to create relationships between states. The
+                                 core idea being that, when one state is dependent somehow on another, that
+                                 inter-dependency can be easily defined.
+                              </p>
+                              
+                              <p class="p">Requisites come in two types: Direct requisites (such as <tt class="ph tt">require</tt>),
+                                 and requisite_ins (such as <tt class="ph tt">require_in</tt>). The relationships are
+                                 directional: a direct requisite requires something from another state.
+                                 However, a requisite_in inserts a requisite into the targeted state pointing to
+                                 the targeting state.  The following example demonstrates a direct requisite:
+                              </p>
+                              <pre class="pre codeblock language-yaml">vim:
+  pkg.installed: []
+
+/etc/vimrc:
+  file.managed:
+    - source: salt://edit/vimrc
+    - require:
+      - pkg: vim</pre>
+                              <p class="p">In the example above, the file <tt class="ph tt">/etc/vimrc</tt> depends on the vim package.
+                              </p>
+                              
+                              <p class="p">Requisite_in statements are the opposite. Instead of saying "I depend on
+                                 something", requisite_ins say "Someone depends on me":
+                              </p>
+                              <pre class="pre codeblock language-yaml">vim:
+  pkg.installed:
+    - require_in:
+      - file: /etc/vimrc
+
+/etc/vimrc:
+  file.managed:
+    - source: salt://edit/vimrc</pre>
+                              <p class="p">So here, with a requisite_in, the same thing is accomplished as in the first
+                                 example, but the other way around. The vim package is saying "/etc/vimrc depends
+                                 on me".  This will result in a <tt class="ph tt">require</tt> being inserted into the
+                                 <tt class="ph tt">/etc/vimrc</tt> state which  targets the <tt class="ph tt">vim</tt> state.
+                              </p>
+                              
+                              <p class="p">In the end, a single dependency map is created and everything is executed in a
+                                 finite and predictable order.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Requisite matching</p>
+                                 
+                                 <p class="p">Requisites match on both the ID Declaration and the <tt class="ph tt">name</tt> parameter.
+                                    This means that, in the example above, the <tt class="ph tt">require_in</tt> requisite would
+                                    also have been matched if the <tt class="ph tt">/etc/vimrc</tt> state was written as follows:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">vimrc:
+  file.managed:
+    - name: /etc/vimrc
+    - source: salt://edit/vimrc</pre>
+                                 </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="requisites__direct-requisite-and-requisite-in-types">
+                              <h2 class="title sectiontitle">Direct Requisite and Requisite_in types</h2>
+                              <p class="p">There are six direct requisite statements that can be used in Salt:
+                                 <tt class="ph tt">require</tt>, <tt class="ph tt">watch</tt>, <tt class="ph tt">prereq</tt>, <tt class="ph tt">use</tt>, <tt class="ph tt">onchanges</tt>, and <tt class="ph tt">onfail</tt>.
+                                 Each direct requisite also has a corresponding requisite_in: <tt class="ph tt">require_in</tt>,
+                                 <tt class="ph tt">watch_in</tt>, <tt class="ph tt">prereq_in</tt>, <tt class="ph tt">use_in</tt>, <tt class="ph tt">onchanges_in</tt>, and <tt class="ph tt">onfail_in</tt>.
+                                 All of the requisites define specific relationships and always work with the
+                                 dependency logic defined above.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="requisites__requisites-require">
+                              <h2 class="title sectiontitle">require</h2>
+                              <p class="p">The use of <tt class="ph tt">require</tt> demands that the dependent state executes before the
+                                 depending state. The state containing the <tt class="ph tt">require</tt> requisite is defined as the
+                                 depending state. The state specified in the <tt class="ph tt">require</tt> statement is defined as the
+                                 dependent state. If the dependent state's execution succeeds, the depending state
+                                 will then execute. If the dependent state's execution fails, the depending state
+                                 will not execute. In the first example above, the file <tt class="ph tt">/etc/vimrc</tt> will only
+                                 execute after the vim package is installed successfully.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="requisites__require-an-entire-sls-file">
+                              <h2 class="title sectiontitle">Require an entire sls file</h2>
+                              <p class="p">As of Salt 0.16.0, it is possible to require an entire sls file. Do this first by
+                                 including the sls file and then setting a state to <tt class="ph tt">require</tt> the included sls file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">include:
+  - foo
+
+bar:
+  pkg.installed:
+    - require:
+      - sls: foo</pre>
+                              </div>
+                           
+                           <div class="section" id="requisites__requisites-watch">
+                              <h2 class="title sectiontitle">watch</h2>
+                              <p class="p"><tt class="ph tt">watch</tt> statements are used to add additional behavior when there are changes
+                                 in other states.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">If a state should only execute when another state has changes, and
+                                    otherwise do nothing, the new <tt class="ph tt">onchanges</tt> requisite should be used
+                                    instead of <tt class="ph tt">watch</tt>.  <tt class="ph tt">watch</tt> is designed to add <em class="ph i">additional</em> behavior
+                                    when there are changes, but otherwise execute normally.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">The state containing the <tt class="ph tt">watch</tt> requisite is defined as the watching
+                                 state. The state specified in the <tt class="ph tt">watch</tt> statement is defined as the watched
+                                 state. When the watched state executes, it will return a dictionary containing
+                                 a key named "changes". Here are two examples of state return dictionaries,
+                                 shown in json for clarity:
+                              </p>
+                              <pre class="pre codeblock language-javascript">"local": {
+    "file_|-/tmp/foo_|-/tmp/foo_|-directory": {
+        "comment": "Directory /tmp/foo updated",
+        "__run_num__": 0,
+        "changes": {
+            "user": "bar"
+        },
+        "name": "/tmp/foo",
+        "result": true
+    }
+}
+
+"local": {
+    "pkgrepo_|-salt-minion_|-salt-minion_|-managed": {
+        "comment": "Package repo 'salt-minion' already configured",
+        "__run_num__": 0,
+        "changes": {},
+        "name": "salt-minion",
+        "result": true
+    }
+}</pre>
+                              <p class="p">If the "result" of the watched state is <tt class="ph tt">True</tt>, the watching state <em class="ph i">will
+                                    execute normally</em>.  This part of <tt class="ph tt">watch</tt> mirrors the functionality of the
+                                 <tt class="ph tt">require</tt> requisite.  If the "result" of the watched state is <tt class="ph tt">False</tt>, the
+                                 watching state will never run, nor will the watching state's <tt class="ph tt">mod_watch</tt>
+                                 function execute.
+                              </p>
+                              
+                              <p class="p">However, if the "result" of the watched state is <tt class="ph tt">True</tt>, and the "changes"
+                                 key contains a populated dictionary (changes occurred in the watched state),
+                                 then the <tt class="ph tt">watch</tt> requisite can add additional behavior.  This additional
+                                 behavior is defined by the <tt class="ph tt">mod_watch</tt> function within the watching state
+                                 module.  If the <tt class="ph tt">mod_watch</tt> function exists in the watching state module, it
+                                 will be called <em class="ph i">in addition to</em> the normal watching state.  The return data
+                                 from the <tt class="ph tt">mod_watch</tt> function is what will be returned to the master in this
+                                 case; the return data from the main watching function is discarded.
+                              </p>
+                              
+                              <p class="p">If the "changes" key contains an empty dictionary, the <tt class="ph tt">watch</tt> requisite acts
+                                 exactly like the <tt class="ph tt">require</tt> requisite (the watching state will execute if
+                                 "result" is <tt class="ph tt">True</tt>, and fail if "result" is <tt class="ph tt">False</tt> in the watched state).
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Not all state modules contain <tt class="ph tt">mod_watch</tt>. If <tt class="ph tt">mod_watch</tt> is absent
+                                    from the watching state module, the <tt class="ph tt">watch</tt> requisite behaves exactly
+                                    like a <tt class="ph tt">require</tt> requisite.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">A good example of using <tt class="ph tt">watch</tt> is with a 
+                                 		
+                                 			&nbsp;<a class="xref" href="all/salt.states.service.html#salt.states.service.running">service.running</a> state. When a service watches a state, then
+                                 the service is reloaded/restarted when the watched state changes, in addition
+                                 to Salt ensuring that the service is running.
+                              </p>
+                              <pre class="pre codeblock language-yaml">ntpd:
+  service.running:
+    - watch:
+      - file: /etc/ntp.conf
+  file.managed:
+    - name: /etc/ntp.conf
+    - source: salt://ntp/files/ntp.conf</pre>
+                              </div>
+                           
+                           <div class="section" id="requisites__requisites-prereq">
+                              <h2 class="title sectiontitle">prereq</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 0.16.0.</span></p>
+                              
+                              <p class="p"><tt class="ph tt">prereq</tt> allows for actions to be taken based on the expected results of
+                                 a state that has not yet been executed. The state containing the <tt class="ph tt">prereq</tt>
+                                 requisite is defined as the pre-requiring state. The state specified in the
+                                 <tt class="ph tt">prereq</tt> statement is defined as the pre-required state.
+                              </p>
+                              
+                              <p class="p">When a <tt class="ph tt">prereq</tt> requisite is evaluated, the pre-required state reports if it
+                                 expects to have any changes. It does this by running the pre-required single
+                                 state as a test-run by enabling <tt class="ph tt">test=True</tt>. This test-run will return a
+                                 dictionary containing a key named "changes". (See the <tt class="ph tt">watch</tt> section above
+                                 for examples of "changes" dictionaries.)
+                              </p>
+                              
+                              <p class="p">If the "changes" key contains a populated dictionary, it means that the
+                                 pre-required state expects changes to occur when the state is actually
+                                 executed, as opposed to the test-run. The pre-requiring state will now
+                                 actually run. If the pre-requiring state executes successfully, the
+                                 pre-required state will then execute. If the pre-requiring state fails, the
+                                 pre-required state will not execute.
+                              </p>
+                              
+                              <p class="p">If the "changes" key contains an empty dictionary, this means that changes are
+                                 not expected by the pre-required state. Neither the pre-required state nor the
+                                 pre-requiring state will run.
+                              </p>
+                              
+                              <p class="p">The best way to define how <tt class="ph tt">prereq</tt> operates is displayed in the following
+                                 practical example: When a service should be shut down because underlying code
+                                 is going to change, the service should be off-line while the update occurs. In
+                                 this example, <tt class="ph tt">graceful-down</tt> is the pre-requiring state and <tt class="ph tt">site-code</tt>
+                                 is the pre-required state.
+                              </p>
+                              <pre class="pre codeblock language-yaml">graceful-down:
+  cmd.run:
+    - name: service apache graceful
+    - prereq:
+      - file: site-code
+
+site-code:
+  file.recurse:
+    - name: /opt/site_code
+    - source: salt://site/code</pre>
+                              <p class="p">In this case the apache server will only be shutdown if the site-code state
+                                 expects to deploy fresh code via the file.recurse call. The site-code
+                                 deployment will only be executed if the graceful-down run completes
+                                 successfully.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="requisites__onfail">
+                              <h2 class="title sectiontitle">onfail</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">The <tt class="ph tt">onfail</tt> requisite allows for reactions to happen strictly as a response
+                                 to the failure of another state. This can be used in a number of ways, such as
+                                 executing a second attempt to set up a service or begin to execute a separate
+                                 thread of states because of a failure.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">onfail</tt> requisite is applied in the same way as <tt class="ph tt">require</tt> as <tt class="ph tt">watch</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">primary_mount:
+  mount.mounted:
+    - name: /mnt/share
+    - device: 10.0.0.45:/share
+    - fstype: nfs
+
+backup_mount:
+  mount.mounted:
+    - name: /mnt/share
+    - device: 192.168.40.34:/share
+    - fstype: nfs
+    - onfail:
+      - mount: primary_mount</pre>
+                              </div>
+                           
+                           <div class="section" id="requisites__onchanges">
+                              <h2 class="title sectiontitle">onchanges</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">The <tt class="ph tt">onchanges</tt> requisite makes a state only apply if the required states
+                                 generate changes, and if the watched state's "result" is <tt class="ph tt">True</tt>. This can be
+                                 a useful way to execute a post hook after changing aspects of a system.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="requisites__use">
+                              <h2 class="title sectiontitle">use</h2>
+                              <p class="p">The <tt class="ph tt">use</tt> requisite is used to inherit the arguments passed in another
+                                 id declaration. This is useful when many files need to have the same defaults.
+                              </p>
+                              <pre class="pre codeblock language-yaml">/etc/foo.conf:
+  file.managed:
+    - source: salt://foo.conf
+    - template: jinja
+    - mkdirs: True
+    - user: apache
+    - group: apache
+    - mode: 755
+
+/etc/bar.conf
+  file.managed:
+    - source: salt://bar.conf
+    - use:
+      - file: /etc/foo.conf</pre>
+                              <p class="p">The <tt class="ph tt">use</tt> statement was developed primarily for the networking states but
+                                 can be used on any states in Salt. This makes sense for the networking state
+                                 because it can define a long list of options that need to be applied to
+                                 multiple network interfaces.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">use</tt> statement does not inherit the requisites arguments of the
+                                 targeted state. This means also a chain of <tt class="ph tt">use</tt> requisites would not
+                                 inherit inherited options.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="requisites__requisites-require-in">
+                              <h2 class="title sectiontitle">The _in versions of requisites</h2>
+                              <p class="p">All of the requisites also have corresponding requisite_in versions, which do
+                                 the reverse of their normal counterparts.  The examples below all use
+                                 <tt class="ph tt">require_in</tt> as the example, but note that all of the <tt class="ph tt">_in</tt> requisites work
+                                 the same way:  They result in a normal requisite in the targeted state, which
+                                 targets the state which has defines the requisite_in.  Thus, a <tt class="ph tt">require_in</tt>
+                                 causes the target state to <tt class="ph tt">require</tt> the targeting state.  Similarly, a
+                                 <tt class="ph tt">watch_in</tt> causes the target state to <tt class="ph tt">watch</tt> the targeting state.  This
+                                 pattern continues for the rest of the requisites.
+                              </p>
+                              
+                              <p class="p">If a state declaration needs to be required by another state declaration then
+                                 <tt class="ph tt">require_in</tt> can accommodate it. Therefore, these two sls files would be the
+                                 same in the end:
+                              </p>
+                              
+                              <p class="p">Using <tt class="ph tt">require</tt></p>
+                              <pre class="pre codeblock language-yaml">httpd:
+  pkg.installed: []
+  service.running:
+    - require:
+      - pkg: httpd</pre>
+                              <p class="p">Using <tt class="ph tt">require_in</tt></p>
+                              <pre class="pre codeblock language-yaml">httpd:
+  pkg.installed:
+    - require_in:
+      - service: httpd
+  service.running: []</pre>
+                              <p class="p">The <tt class="ph tt">require_in</tt> statement is particularly useful when assigning a require
+                                 in a separate sls file. For instance it may be common for httpd to require
+                                 components used to set up PHP or mod_python, but the HTTP state does not need
+                                 to be aware of the additional components that require it when it is set up:
+                              </p>
+                              
+                              <p class="p">http.sls</p>
+                              <pre class="pre codeblock language-yaml">httpd:
+  pkg.installed: []
+  service.running:
+    - require:
+      - pkg: httpd</pre>
+                              <p class="p">php.sls</p>
+                              <pre class="pre codeblock language-yaml">include:
+  - http
+
+php:
+  pkg.installed:
+    - require_in:
+      - service: httpd</pre>
+                              <p class="p">mod_python.sls</p>
+                              <pre class="pre codeblock language-yaml">include:
+  - http
+
+mod_python:
+  pkg.installed:
+    - require_in:
+      - service: httpd</pre>
+                              <p class="p">Now the httpd server will only start if php or mod_python are first verified to
+                                 be installed. Thus allowing for a requisite to be defined "after the fact".
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="requisites__altering-states">
+                              <h2 class="title sectiontitle">Altering States</h2>
+                              <p class="p">The state altering system is used to make sure that states are evaluated exactly
+                                 as the user expects.  It can be used to double check that a state preformed
+                                 exactly how it was expected to, or to make 100% sure that a state only runs
+                                 under certain conditions.  The use of unless or onlyif options help make states
+                                 even more stateful.  The check_cmds option helps ensure that the result of a
+                                 state is evaluated correctly.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="requisites__unless">
+                              <h2 class="title sectiontitle">Unless</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">The <tt class="ph tt">unless</tt> requisite specifies that a state should only run when any of
+                                 the specified commands return <tt class="ph tt">False</tt>. The <tt class="ph tt">unless</tt> requisite operates
+                                 as NOR and is useful in giving more granular control over when a state should
+                                 execute.
+                              </p>
+                              
+                              <p class="p"><strong class="ph b">NOTE</strong>: Under the hood <tt class="ph tt">unless</tt> calls <tt class="ph tt">cmd.retcode</tt> with
+                                 <tt class="ph tt">python_shell=True</tt>.  This means the commands referenced by unless will be
+                                 parsed by a shell, so beware of side-effects as this shell will be run with the
+                                 same privileges as the salt-minion.
+                              </p>
+                              <pre class="pre codeblock language-yaml">vim:
+  pkg.installed:
+    - unless:
+      - rpm -q vim-enhanced
+      - ls /usr/bin/vim</pre>
+                              <p class="p">In the example above, the state will only run if either the vim-enhanced
+                                 package is not installed (returns <tt class="ph tt">False</tt>) or if /usr/bin/vim does not
+                                 exist (returns <tt class="ph tt">False</tt>). The state will run if both commands return
+                                 <tt class="ph tt">False</tt>.
+                              </p>
+                              
+                              <p class="p">However, the state will not run if both commands return <tt class="ph tt">True</tt>.
+                              </p>
+                              
+                              <p class="p">Unless checks are resolved for each name to which they are associated.</p>
+                              
+                              <p class="p">For example:</p>
+                              <pre class="pre codeblock language-yaml">deploy_app:
+  cmd.run:
+    - names:
+      - first_deploy_cmd
+      - second_deploy_cmd
+  - unless: ls /usr/bin/vim</pre>
+                              <p class="p">In the above case, <tt class="ph tt">some_check</tt> will be run prior to _each_ name -- once for
+                                 <tt class="ph tt">first_deploy_cmd</tt> and a second time for <tt class="ph tt">second_deploy_cmd</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="requisites__onlyif">
+                              <h2 class="title sectiontitle">Onlyif</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p"><tt class="ph tt">onlyif</tt> is the opposite of <tt class="ph tt">unless</tt>. If all of the commands in <tt class="ph tt">onlyif</tt>
+                                 return <tt class="ph tt">True</tt>, then the state is run. If any of the specified commands
+                                 return <tt class="ph tt">False</tt>, the state will not run.
+                              </p>
+                              
+                              <p class="p"><strong class="ph b">NOTE</strong>: Under the hood <tt class="ph tt">onlyif</tt> calls <tt class="ph tt">cmd.retcode</tt> with
+                                 <tt class="ph tt">python_shell=True</tt>.  This means the commands referenced by unless will be
+                                 parsed by a shell, so beware of side-effects as this shell will be run with the
+                                 same privileges as the salt-minion.
+                              </p>
+                              <pre class="pre codeblock language-yaml">stop-volume:
+  module.run:
+    - name: glusterfs.stop_volume
+    - m_name: work
+    - onlyif:
+      - gluster volume status work
+    - order: 1
+
+remove-volume:
+  module.run:
+    - name: glusterfs.delete
+    - m_name: work
+    - onlyif:
+      - gluster volume info work
+    - watch:
+      - cmd: stop-volume</pre>
+                              <p class="p">The above example ensures that the stop_volume and delete modules only run
+                                 if the gluster commands return a 0 ret value.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="requisites__listen-listen-in">
+                              <h2 class="title sectiontitle">Listen/Listen_in</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">listen and its counterpart listen_in trigger mod_wait functions for states,
+                                 when those states succeed and result in changes, similar to how watch its
+                                 counterpart watch_in. Unlike watch and watch_in, listen, and listen_in will
+                                 not modify the order of states and can be used to ensure your states are
+                                 executed in the order they are defined. All listen/listen_in actions will occur
+                                 at the end of a state run, after all states have completed.
+                              </p>
+                              <pre class="pre codeblock language-yaml">restart-apache2:
+  service.running:
+    - name: apache2
+    - listen:
+      - file: /etc/apache2/apache2.conf
+
+configure-apache2:
+  file.managed:
+    - path: /etc/apache2/apache2.conf
+    - source: salt://apache2/apache2.conf</pre>
+                              <p class="p">This example will cause apache2 to be restarted when the apache2.conf file is
+                                 changed, but the apache2 restart will happen at the end of the state run.
+                              </p>
+                              <pre class="pre codeblock language-yaml">restart-apache2:
+  service.running:
+    - name: apache2
+
+configure-apache2:
+  file.managed:
+    - path: /etc/apache2/apache2.conf
+    - source: salt://apache2/apache2.conf
+    - listen_in:
+      - service: apache2</pre>
+                              <p class="p">This example does the same as the above example, but puts the state argument
+                                 on the file resource, rather than the service resource.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="requisites__check-cmd">
+                              <h2 class="title sectiontitle">check_cmd</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Check Command is used for determining that a state did or did not run as
+                                 expected.
+                              </p>
+                              
+                              <p class="p"><strong class="ph b">NOTE</strong>: Under the hood <tt class="ph tt">check_cmd</tt> calls <tt class="ph tt">cmd.retcode</tt> with
+                                 <tt class="ph tt">python_shell=True</tt>.  This means the commands referenced by unless will be
+                                 parsed by a shell, so beware of side-effects as this shell will be run with the
+                                 same privileges as the salt-minion.
+                              </p>
+                              <pre class="pre codeblock language-yaml">comment-repo:
+  file.replace:
+    - path: /etc/yum.repos.d/fedora.repo
+    - pattern: ^enabled=0
+    - repl: enabled=1
+    - check_cmd:
+      - grep 'enabled=0' /etc/yum.repos.d/fedora.repo &amp;&amp; return 1 || return 0</pre>
+                              <p class="p">This will attempt to do a replace on all enabled=0 in the .repo file, and
+                                 replace them with enabled=1.  The check_cmd is just a bash command.  It will do
+                                 a grep for enabled=0 in the file, and if it finds any, it will return a 0, which
+                                 will prompt the &amp;&amp; portion of the command to return a 1, causing check_cmd to
+                                 set the state as failed.  If it returns a 1, meaning it didn't find any
+                                 'enabled=0' it will hit the || portion of the command, returning a 0, and
+                                 declaring the function succeeded.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="requisites__overriding-checks">
+                              <h2 class="title sectiontitle">Overriding Checks</h2>
+                              <p class="p">There are two commands used for the above checks.</p>
+                              
+                              <p class="p"><tt class="ph tt">mod_run_check</tt> is used to check for <tt class="ph tt">onlyif</tt> and <tt class="ph tt">unless</tt>.  If the goal is to
+                                 override the global check for these to variables, include a <tt class="ph tt">mod_run_check</tt> in the
+                                 salt/states/ file.
+                              </p>
+                              
+                              <p class="p"><tt class="ph tt">mod_run_check_cmd</tt> is used to check for the check_cmd options.  To override
+                                 this one, include a <tt class="ph tt">mod_run_check_cmd</tt> in the states file for the state.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

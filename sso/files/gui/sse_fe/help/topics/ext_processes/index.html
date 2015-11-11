@@ -1,0 +1,103 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Running Custom Master Processes</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Running Custom Master Processes">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/administration.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="ext-processes">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="ext-processes">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Running Custom Master Processes</h1>
+                        <div class="body conbody">
+                           <p class="p ids"><span class="ph" id="ext-processes__running-custom-master-processes"></span></p>
+                           
+                           <p class="p">In addition to the processes that the Salt Master automatically spawns,
+                              it is possible to configure it to start additional custom processes.
+                           </p>
+                           
+                           <p class="p">This is useful if a dedicated process is needed that should run throughout
+                              the life of the Salt Master. For periodic independent tasks, a
+                              <tt class="ph tt">scheduled runner</tt> may be more appropriate.
+                           </p>
+                           
+                           <p class="p">Processes started in this way will be restarted if they die and will be
+                              killed when the Salt Master is shut down.
+                           </p>
+                           
+                           <div class="section" id="ext-processes__example-configureation">
+                              <h2 class="title sectiontitle">Example Configureation</h2>
+                              <p class="p">Processes are declared in the master config file with the <span class="keyword title_reference">ext_processes</span>
+                                 option. Processes will be started in the order they are declared.
+                              </p>
+                              <pre class="pre codeblock language-yaml">ext_processes:
+  - mymodule.TestProcess
+  - mymodule.AnotherProcess</pre>
+                              </div>
+                           
+                           <div class="section" id="ext-processes__example-process-class">
+                              <h2 class="title sectiontitle">Example Process Class</h2><pre class="pre codeblock language-python"># Import python libs
+import time
+import logging
+from multiprocessing import Process
+
+# Import Salt libs
+from salt.utils.event import SaltEvent
+
+
+log = logging.getLogger(__name__)
+
+
+class TestProcess(Process):
+    def __init__(self, opts):
+        Process.__init__(self)
+        self.opts = opts
+
+    def run(self):
+        self.event = SaltEvent('master', self.opts['sock_dir'])
+        i = 0
+
+        while True:
+            self.event.fire_event({'iteration': i}, 'ext_processes/test{0}')
+            time.sleep(60)</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

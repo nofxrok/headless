@@ -1,0 +1,262 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.s3</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.s3">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-s3">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-s3">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.s3</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-s3__module-salt.modules.s3"></span></p>
+                              
+                              <p class="p">Connection module for Amazon S3</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">configuration</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">This module accepts explicit s3 credentials but can also utilize
+                                       IAM roles assigned to the instance trough Instance Profiles. Dynamic
+                                       credentials are then automatically obtained from AWS API and no further
+                                       configuration is necessary. More Information available at:
+                                    </p>
+                                    <pre class="pre codeblock language-">http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html</pre>
+                                    <p class="p">If IAM roles are not used you need to specify them either in a pillar or
+                                       in the minion's config file:
+                                    </p>
+                                    <pre class="pre codeblock language-">s3.keyid: GKTADJGHEIQSXMKKRBJ08H
+s3.key: askdjghsdfjkghWupUjasdflkdfklgjsdfjajkghs</pre>
+                                    <p class="p">A service_url may also be specified in the configuration:</p>
+                                    <pre class="pre codeblock language-">s3.service_url: s3.amazonaws.com</pre>
+                                    <p class="p">If a service_url is not specified, the default is s3.amazonaws.com. This
+                                       may appear in various documentation as an "endpoint". A comprehensive list
+                                       for Amazon S3 may be found at:
+                                    </p>
+                                    <pre class="pre codeblock language-">http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region</pre>
+                                    <p class="p">The service_url will form the basis for the final endpoint that is used to
+                                       query the service.
+                                    </p>
+                                    
+                                    <p class="p">SSL verification may also be turned off in the configuration:</p>
+                                    
+                                    <p class="p">s3.verify_ssl: False</p>
+                                    
+                                    <p class="p">This is required if using S3 bucket names that contain a period, as
+                                       these will not match Amazon's S3 wildcard certificates. Certificate
+                                       verification is enabled by default.
+                                    </p>
+                                    
+                                    <p class="p">This module should be usable to query other S3-like services, such as
+                                       Eucalyptus.
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">requests</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.s3.delete">
+                           <h2 class="title topictitle2">delete</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.s3.delete(
+								bucket,
+								path=None,
+								action=None,
+								key=None,
+								keyid=None,
+								service_url=None,
+								verify_ssl=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Delete a bucket, or delete an object from a bucket.</p>
+                                 
+                                 <p class="p">CLI Example to delete a bucket:</p>
+                                 <pre class="pre codeblock language-">salt myminion s3.delete mybucket</pre>
+                                 <p class="p">CLI Example to delete an object from a bucket:</p>
+                                 <pre class="pre codeblock language-">salt myminion s3.delete mybucket remoteobject</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.s3.get">
+                           <h2 class="title topictitle2">get</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.s3.get(
+								bucket=None,
+								path=None,
+								return_bin=False,
+								action=None,
+								local_file=None,
+								key=None,
+								keyid=None,
+								service_url=None,
+								verify_ssl=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List the contents of a bucket, or return an object from a bucket. Set
+                                    return_bin to True in order to retrieve an object wholesale. Otherwise,
+                                    Salt will attempt to parse an XML response.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example to list buckets:</p>
+                                 <pre class="pre codeblock language-bash">salt myminion s3.get</pre>
+                                 <p class="p">CLI Example to list the contents of a bucket:</p>
+                                 <pre class="pre codeblock language-bash">salt myminion s3.get mybucket</pre>
+                                 <p class="p">CLI Example to return the binary contents of an object:</p>
+                                 <pre class="pre codeblock language-bash">salt myminion s3.get mybucket myfile.png return_bin=True</pre>
+                                 <p class="p">CLI Example to save the binary contents of an object to a local file:</p>
+                                 <pre class="pre codeblock language-bash">salt myminion s3.get mybucket myfile.png local_file=/tmp/myfile.png</pre>
+                                 <p class="p">It is also possible to perform an action on a bucket. Currently, S3
+                                    supports the following actions:
+                                 </p>
+                                 <pre class="pre codeblock language-">acl
+cors
+lifecycle
+policy
+location
+logging
+notification
+tagging
+versions
+requestPayment
+versioning
+website</pre>
+                                 <p class="p">To perform an action on a bucket:</p>
+                                 <pre class="pre codeblock language-bash">salt myminion s3.get mybucket myfile.png action=acl</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.s3.head">
+                           <h2 class="title topictitle2">head</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.s3.head(
+								bucket,
+								path=None,
+								key=None,
+								keyid=None,
+								service_url=None,
+								verify_ssl=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the metadata for a bucket, or an object in a bucket.</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt myminion s3.head mybucket
+salt myminion s3.head mybucket myfile.png</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.s3.put">
+                           <h2 class="title topictitle2">put</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.s3.put(
+								bucket,
+								path=None,
+								return_bin=False,
+								action=None,
+								local_file=None,
+								key=None,
+								keyid=None,
+								service_url=None,
+								verify_ssl=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Create a new bucket, or upload an object to a bucket.</p>
+                                 
+                                 <p class="p">CLI Example to create a bucket:</p>
+                                 <pre class="pre codeblock language-bash">salt myminion s3.put mybucket</pre>
+                                 <p class="p">CLI Example to upload an object to a bucket:</p>
+                                 <pre class="pre codeblock language-bash">salt myminion s3.put mybucket remotepath local_file=/path/to/file</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

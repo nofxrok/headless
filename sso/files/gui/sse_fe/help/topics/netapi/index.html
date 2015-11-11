@@ -1,0 +1,290 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>netapi modules</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="netapi modules">
+      
+      <meta name="DC.Relation" scheme="URI" content="writing.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="netapi-introduction">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="netapi-introduction">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">netapi modules</h1>
+                        <div class="body conbody">
+                           <p class="p ids"><span class="ph" id="netapi-introduction__netapi-modules"></span></p>
+                           
+                           <ul class="ul">
+                              <li class="li">
+                                 		
+                                 			&nbsp;<a class="xref" href="writing.html#writing-netapi-modules">Writing netapi modules</a><ul class="ul">
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="writing.html#writing-netapi-modules__configuration">Configuration</a></li>
+                                    
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="writing.html#writing-netapi-modules__the-virtual-function">The __virtual__ function</a></li>
+                                    
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="writing.html#writing-netapi-modules__the-start-function">The start function</a></li>
+                                    
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="writing.html#writing-netapi-modules__inline-documentation">Inline documentation</a></li>
+                                    
+                                    <li class="li">
+                                       		
+                                       			&nbsp;<a class="xref" href="writing.html#writing-netapi-modules__loader-magic-methods">Loader “magic” methods</a></li>
+                                    
+                                 </ul>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                           <div class="section" id="netapi-introduction__introduction-to-netapi-modules">
+                              <h2 class="title sectiontitle">Introduction to netapi modules</h2>
+                              <p class="p">netapi modules provide API-centric access to Salt. Usually externally-facing
+                                 services such as REST or WebSockets, XMPP, XMLRPC, etc.
+                              </p>
+                              
+                              <p class="p">In general netapi modules bind to a port and start a service. They are
+                                 purposefully open-ended. A single module can be configured to run as well as
+                                 multiple modules simultaneously.
+                              </p>
+                              
+                              <p class="p">netapi modules are enabled by adding configuration to your Salt Master config
+                                 file and then starting the salt-api daemon. Check the docs for each
+                                 module to see external requirements and configuration settings.
+                              </p>
+                              
+                              <p class="p">Communication with Salt and Salt satellite projects is done using Salt's own
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/clients/index.html#client-apis__python-api">Python API</a>. A list of available client interfaces is below.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">salt-api</strong><p class="p">Prior to Salt's 2014.7.0 release, netapi modules lived in the separate sister
+                                    projected <tt class="ph tt">salt-api</tt>. That project has been merged into the main Salt
+                                    project.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="../../ref/netapi/all/index.html#all-netapi-modules">The full list of netapi modules</a></p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="netapi-introduction__client-interfaces">
+                              <h2 class="title sectiontitle">Client interfaces</h2>
+                              <p class="p">Salt's client interfaces expose executing functions by crafting a dictionary of
+                                 values that are mapped to function arguments. This allows calling functions
+                                 simply by creating a data structure. (And this is exactly how much of Salt's
+                                 own internals work!)
+                              </p>
+                              
+                              class salt.netapi.
+                              <p class="p"><strong class="ph b">NetapiClient</strong></p>
+                              opts
+                              
+                              
+                              <p class="p">Provide a uniform method of accessing the various client interfaces in Salt
+                                 in the form of low-data data structures. For example:
+                              </p>
+                              
+                              &gt;&gt;&gt; client = NetapiClient(__opts__)
+                              &gt;&gt;&gt; lowstate = {'client': 'local', 'tgt': '*', 'fun': 'test.ping', 'arg': ''}
+                              &gt;&gt;&gt; client.run(lowstate)
+                              
+                              
+                              
+                              <p class="p"><strong class="ph b">local</strong></p>
+                              *args**kwargs
+                              
+                              
+                              <p class="p">Run 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/index.html#all-salt-modules">execution modules</a> synchronously
+                              </p>
+                              
+                              <p class="p">See 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/clients/index.html#salt.client.LocalClient.cmd">salt.client.LocalClient.cmd()</a> for all available
+                                 parameters.
+                              </p>
+                              
+                              <p class="p">Sends a command from the master to the targeted minions. This is the
+                                 same interface that Salt's own CLI uses. Note the <tt class="ph tt">arg</tt> and <tt class="ph tt">kwarg</tt>
+                                 parameters are sent down to the minion(s) and the given function,
+                                 <tt class="ph tt">fun</tt>, is called with those parameters.
+                              </p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Returns</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Returns the result from the execution module</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><strong class="ph b">local_async</strong></p>
+                              *args**kwargs
+                              
+                              
+                              <p class="p">Run 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/index.html#all-salt-modules">execution modules</a> asynchronously
+                              </p>
+                              
+                              <p class="p">Wraps 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/clients/index.html#salt.client.LocalClient.run_job">salt.client.LocalClient.run_job()</a>.
+                              </p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Returns</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">job ID</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><strong class="ph b">local_batch</strong></p>
+                              *args**kwargs
+                              
+                              
+                              <p class="p">Run 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/index.html#all-salt-modules">execution modules</a> against batches of minions
+                              </p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 0.8.4.</span></p>
+                              
+                              <p class="p">Wraps 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/clients/index.html#salt.client.LocalClient.cmd_batch">salt.client.LocalClient.cmd_batch()</a></p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Returns</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Returns the result from the exeuction module for each batch of
+                                       returns
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><strong class="ph b">runner</strong></p>
+                              funtimeout=None**kwargs
+                              
+                              
+                              <p class="p">Run <span class="keyword title_reference">runner modules &lt;all-salt.runners&gt;</span> synchronously
+                              </p>
+                              
+                              <p class="p">Wraps 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/clients/index.html#salt.runner.RunnerClient.cmd_sync">salt.runner.RunnerClient.cmd_sync()</a>.
+                              </p>
+                              
+                              <p class="p">Note that runner functions must be called using keyword arguments.
+                                 Positional arguments are not supported.
+                              </p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Returns</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Returns the result from the runner module</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p"><strong class="ph b">wheel</strong></p>
+                              fun**kwargs
+                              
+                              
+                              <p class="p">Run 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/wheel/all/index.html#all-salt-wheel">wheel modules</a> synchronously
+                              </p>
+                              
+                              <p class="p">Wraps <tt class="ph tt">salt.wheel.WheelClient.master_call()</tt>.
+                              </p>
+                              
+                              <p class="p">Note that wheel functions must be called using keyword arguments.
+                                 Positional arguments are not supported.
+                              </p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">Returns</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Returns the result from the wheel module</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links">
+                           
+                           <ul class="ullinks">
+                              
+                              <li class="link ulchildlink"><strong><a href="writing.html">Writing netapi modules</a></strong><br>
+                                 
+                              </li>
+                              
+                           </ul>
+                           
+                        </div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

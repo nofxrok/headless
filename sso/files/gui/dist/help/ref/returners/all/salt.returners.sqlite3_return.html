@@ -1,0 +1,312 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.returners.sqlite3</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.returners.sqlite3">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../returners.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-returners-sqlite3">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-returners-sqlite3">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.returners.sqlite3</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-returners-sqlite3__module-salt.returners.sqlite3_return"></span></p>
+                              
+                              <p class="p">Insert minion return data into a sqlite3 database</p>
+                              
+                              <dl class="dl field_list">
+                                 <dt class="dt dlterm">maintainer</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">Mickey Malone &lt;<a class="xref" href="mailto:mickey.malone@gmail.com" target="_blank">mickey.malone@gmail.com</a>&gt;
+                                    </p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">maturity</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">New</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">depends</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">None</p>
+                                    
+                                 </dd>
+                                 
+                                 <dt class="dt dlterm">platform</dt>
+                                 
+                                 <dd class="dd">
+                                    <p class="p">All</p>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">Sqlite3 is a serverless database that lives in a single file.
+                                 In order to use this returner the database file must exist,
+                                 have the appropriate schema defined, and be accessible to the
+                                 user whom the minion process is running as. This returner
+                                 requires the following values configured in the master or
+                                 minion config:
+                              </p>
+                              <pre class="pre codeblock language-yaml">returner.sqlite3.database: /usr/lib/salt/salt.db
+returner.sqlite3.timeout: 5.0</pre>
+                              <p class="p">Alternative configuration values can be used by prefacing the configuration.
+                                 Any values not found in the alternative configuration will be pulled from
+                                 the default location:
+                              </p>
+                              <pre class="pre codeblock language-yaml">alternative.returner.sqlite3.database: /usr/lib/salt/salt.db
+alternative.returner.sqlite3.timeout: 5.0</pre>
+                              <p class="p">Use the commands to create the sqlite3 database and tables:</p>
+                              <pre class="pre codeblock language-sql">sqlite3 /usr/lib/salt/salt.db &lt;&lt; EOF
+--
+-- Table structure for table 'jids'
+--
+
+CREATE TABLE jids (
+  jid TEXT PRIMARY KEY,
+  load TEXT NOT NULL
+  );
+
+--
+-- Table structure for table 'salt_returns'
+--
+
+CREATE TABLE salt_returns (
+  fun TEXT KEY,
+  jid TEXT KEY,
+  id TEXT KEY,
+  fun_args TEXT,
+  date TEXT NOT NULL,
+  full_ret TEXT NOT NULL,
+  success TEXT NOT NULL
+  );
+EOF</pre>
+                              <p class="p">To use the sqlite returner, append '--return sqlite3' to the salt command.</p>
+                              <pre class="pre codeblock language-bash">salt '*' test.ping --return sqlite3</pre>
+                              <p class="p">To use the alternative configuration, append '--return_config alternative' to the
+                                 salt command.
+                              </p>
+                              
+                              <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                              <pre class="pre codeblock language-bash">salt '*' test.ping --return sqlite3 --return_config alternative</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.returners.sqlite3_return.get_fun">
+                           <h2 class="title topictitle2">get_fun</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.sqlite3_return.get_fun(
+								fun
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a dict of the last function called for all minions</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.sqlite3_return.get_jid">
+                           <h2 class="title topictitle2">get_jid</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.sqlite3_return.get_jid(
+								jid
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the information returned from a specified jid</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.sqlite3_return.get_jids">
+                           <h2 class="title topictitle2">get_jids</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.sqlite3_return.get_jids( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of all job ids</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.sqlite3_return.get_load">
+                           <h2 class="title topictitle2">get_load</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.sqlite3_return.get_load(
+								jid
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the load from a specified jid</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.sqlite3_return.get_minions">
+                           <h2 class="title topictitle2">get_minions</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.sqlite3_return.get_minions( )</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a list of minions</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.sqlite3_return.prep_jid">
+                           <h2 class="title topictitle2">prep_jid</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.sqlite3_return.prep_jid(
+								nocache=False,
+								passed_jid=None
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Do any work necessary to prepare a JID, including sending a custom id</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.sqlite3_return.returner">
+                           <h2 class="title topictitle2">returner</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.sqlite3_return.returner(
+								ret
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Insert minion return data into the sqlite3 database</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.returners.sqlite3_return.save_load">
+                           <h2 class="title topictitle2">save_load</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.returners.sqlite3_return.save_load(
+								jid,
+								load
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Save the load to the specified jid</p>
+                                 
+                              </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

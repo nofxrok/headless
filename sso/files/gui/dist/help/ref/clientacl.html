@@ -1,0 +1,94 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Client ACL system</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Client ACL system">
+      
+      <meta name="DC.Relation" scheme="URI" content="../ent/user-auth.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="client-acl-system">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="client-acl-system">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Client ACL system</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p">The salt client ACL system is a means to allow system users other than root to
+                                 have access to execute select salt commands on minions from the master.
+                              </p>
+                              
+                              <p class="p">The client ACL system is configured in the master configuration file via the
+                                 <tt class="ph tt">client_acl</tt> configuration option. Under the <tt class="ph tt">client_acl</tt> configuration
+                                 option the users open to send commands are specified and then a list of regular
+                                 expressions which specify the minion functions which will be made available to
+                                 specified user. This configuration is much like the <tt class="ph tt">peer</tt> configuration:
+                              </p>
+                              <pre class="pre codeblock language-yaml"># Allow thatch to execute anything and allow fred to use ping and pkg
+client_acl:
+  thatch:
+    - .*
+  fred:
+    - test.*
+    - pkg.*</pre>
+                              </div>
+                           
+                           <div class="section" id="client-acl-system__permission-issues">
+                              <h2 class="title sectiontitle">Permission Issues</h2>
+                              <p class="p">Directories required for <tt class="ph tt">client_acl</tt> must be modified to be readable by the
+                                 users specified:
+                              </p>
+                              <pre class="pre codeblock language-bash">chmod 755 /var/cache/salt /var/cache/salt/master /var/cache/salt/master/jobs /var/run/salt /var/run/salt/master</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">In addition to the changes above you will also need to modify the
+                                    permissions of /var/log/salt and the existing log file to be writable by
+                                    the user(s) which will be running the commands. If you do not wish to do
+                                    this then you must disable logging or Salt will generate errors as it
+                                    cannot write to the logs as the system users.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">If you are upgrading from earlier versions of salt you must also remove any
+                                 existing user keys and re-start the Salt master:
+                              </p>
+                              <pre class="pre codeblock language-bash">rm /var/cache/salt/.*key
+service salt-master restart</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

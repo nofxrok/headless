@@ -1,0 +1,231 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>External Authentication System</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="External Authentication System">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/user-auth.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="acl-eauth">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="acl-eauth">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">External Authentication System</h1>
+                        <div class="body conbody">
+                           <p class="p ids"><span class="ph" id="acl-eauth__external-authentication-system"></span></p>
+                           
+                           <p class="p">Salt's External Authentication System (eAuth) allows for Salt to  pass through
+                              command authorization to any external authentication system, such as PAM or LDAP.
+                           </p>
+                           
+                           <div class="section" id="acl-eauth__access-control-system">
+                              <h2 class="title sectiontitle">Access Control System</h2>
+                              <p class="p">The external authentication system allows for specific users to be granted
+                                 access to execute specific functions on specific minions. Access is configured
+                                 in the master configuration file and uses the 
+                                 		
+                                 			&nbsp;<a class="xref" href="access_control.html#acl">access control system</a>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">external_auth:
+  pam:
+    thatch:
+      - 'web*':
+        - test.*
+        - network.*
+    steve:
+      - .*</pre>
+                              <p class="p">The above configuration allows the user <tt class="ph tt">thatch</tt> to execute functions
+                                 in the test and network modules on the minions that match the web* target.
+                                 User <tt class="ph tt">steve</tt> is given unrestricted access to minion commands.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The PAM module does not allow authenticating as <tt class="ph tt">root</tt>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">To allow access to 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/wheel/all/index.html#all-salt-wheel">wheel modules</a> or 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/runners/all/index.html#all-salt-runners">runner
+                                    modules</a> the following <tt class="ph tt">@</tt> syntax must be used:
+                              </p>
+                              <pre class="pre codeblock language-yaml">external_auth:
+  pam:
+    thatch:
+      - '@wheel'   # to allow access to all wheel modules
+      - '@runner'  # to allow access to all runner modules
+      - '@jobs'    # to allow access to the jobs runner and/or wheel module</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The runner/wheel markup is different, since there are no minions to scope the
+                                    acl to.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Globs will not match wheel or runners! They must be explicitly
+                                    allowed with @wheel or @runner.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">The external authentication system can then be used from the command-line by
+                                 any user on the same system as the master with the <tt class="ph tt">-a</tt> option:
+                              </p>
+                              <pre class="pre codeblock language-bash">$ salt -a pam web\* test.ping</pre>
+                              <p class="p">The system will ask the user for the credentials required by the
+                                 authentication system and then publish the command.
+                              </p>
+                              
+                              <p class="p">To apply permissions to a group of users in an external authentication system,
+                                 append a <tt class="ph tt">%</tt> to the ID:
+                              </p>
+                              <pre class="pre codeblock language-yaml">external_auth:
+  pam:
+    admins%:
+      - '*':
+        - 'pkg.*'</pre>
+                              </div>
+                           
+                           <div class="section" id="acl-eauth__salt-token-generation">
+                              <h2 class="title sectiontitle">Tokens</h2>
+                              <p class="p">With external authentication alone, the authentication credentials will be
+                                 required with every call to Salt. This can be alleviated with Salt tokens.
+                              </p>
+                              
+                              <p class="p">Tokens are short term authorizations and can be easily created by just
+                                 adding a <tt class="ph tt">-T</tt> option when authenticating:
+                              </p>
+                              <pre class="pre codeblock language-bash">$ salt -T -a pam web\* test.ping</pre>
+                              <p class="p">Now a token will be created that has a expiration of 12 hours (by default).
+                                 This token is stored in a file named <tt class="ph tt">.salt_token</tt> in the active user's home
+                                 directory.
+                              </p>
+                              
+                              <p class="p">Once the token is created, it is sent with all subsequent communications.
+                                 User authentication does not need to be entered again until the token expires.
+                              </p>
+                              
+                              <p class="p">Token expiration time can be set in the Salt master config file.</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="acl-eauth__ldap-and-active-directory">
+                              <h2 class="title sectiontitle">LDAP and Active Directory</h2>
+                              <p class="p">Salt supports both user and group authentication for LDAP (and Active Directory
+                                 accessed via its LDAP interface)
+                              </p>
+                              
+                              <p class="p">LDAP configuration happens in the Salt master configuration file.</p>
+                              
+                              <p class="p">Server configuration values and their defaults:</p>
+                              <pre class="pre codeblock language-yaml">auth.ldap.server: localhost
+auth.ldap.port: 389
+auth.ldap.tls: False
+auth.ldap.scope: 2
+auth.ldap.uri: ''
+auth.ldap.tls: False
+auth.ldap.no_verify: False
+auth.ldap.anonymous: False
+auth.ldap.groupou: 'Groups'
+auth.ldap.groupclass: 'posixGroup'
+auth.ldap.accountattributename: 'memberUid'
+
+# These are only for Active Directory
+auth.ldap.activedirectory: False
+auth.ldap.persontype: 'person'</pre>
+                              <p class="p">Salt also needs to know which Base DN to search for users and groups and
+                                 the DN to bind to:
+                              </p>
+                              <pre class="pre codeblock language-yaml">auth.ldap.basedn: dc=saltstack,dc=com
+auth.ldap.binddn: cn=admin,dc=saltstack,dc=com</pre>
+                              <p class="p">To bind to a DN, a password is required</p>
+                              <pre class="pre codeblock language-yaml">auth.ldap.bindpw: mypassword</pre>
+                              <p class="p">Salt uses a filter to find the DN associated with a user. Salt
+                                 substitutes the <tt class="ph tt">{{ username }}</tt> value for the username when querying LDAP
+                              </p>
+                              <pre class="pre codeblock language-yaml">auth.ldap.filter: uid={{ username }}</pre>
+                              <p class="p">For OpenLDAP, to determine group membership, one can specify an OU that contains
+                                 group data. This is prepended to the basedn to create a search path.  Then
+                                 the results are filtered against <tt class="ph tt">auth.ldap.groupclass</tt>, default
+                                 <tt class="ph tt">posixGroup</tt>, and the account's 'name' attribute, <tt class="ph tt">memberUid</tt> by default.
+                              </p>
+                              <pre class="pre codeblock language-yaml">auth.ldap.groupou: Groups</pre>
+                              <p class="p">Active Directory handles group membership differently, and does not utilize the
+                                 <tt class="ph tt">groupou</tt> configuration variable.  AD needs the following options in
+                                 the master config:
+                              </p>
+                              <pre class="pre codeblock language-yaml">auth.ldap.activedirectory: True
+auth.ldap.filter: sAMAccountName={{username}}
+auth.ldap.accountattributename: sAMAccountName
+auth.ldap.groupclass: group
+auth.ldap.persontype: person</pre>
+                              <p class="p">To determine group membership in AD, the username and password that is entered
+                                 when LDAP is requested as the eAuth mechanism on the command line is used to
+                                 bind to AD's LDAP interface.  If this fails, then it doesn't matter what groups
+                                 the user belongs to, he or she is denied access.  Next, the distinguishedName
+                                 of the user is looked up with the following LDAP search:
+                              </p>
+                              <pre class="pre codeblock language-text">(&amp;(&lt;value of auth.ldap.accountattributename&gt;={{username}})
+  (objectClass=&lt;value of auth.ldap.persontype&gt;)
+)</pre>
+                              <p class="p">This should return a distinguishedName that we can use to filter for group
+                                 membership.  Then the following LDAP quey is executed:
+                              </p>
+                              <pre class="pre codeblock language-text">(&amp;(member=&lt;distinguishedName from search above&gt;)
+  (objectClass=&lt;value of auth.ldap.groupclass&gt;)
+)</pre>
+                              <pre class="pre codeblock language-yaml">external_auth:
+  ldap:
+    test_ldap_user:
+      - '*':
+        - test.ping</pre>
+                              <p class="p">To configure an LDAP group, append a <tt class="ph tt">%</tt> to the ID:
+                              </p>
+                              <pre class="pre codeblock language-yaml">external_auth:
+ldap:
+    test_ldap_group%:
+      - '*':
+        - test.echo</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

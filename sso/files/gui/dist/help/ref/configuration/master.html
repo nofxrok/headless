@@ -1,0 +1,2042 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Configuring the Salt Master</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Configuring the Salt Master">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="configuration-salt-master">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="configuration-salt-master">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Configuring the Salt Master</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="configuration-salt-master__configuring-the-salt-master"></span></p>
+                              
+                              <p class="p">The Salt system is amazingly simple and easy to configure, the two components
+                                 of the Salt system each have a respective configuration file. The
+                                 salt-master is configured via the master configuration file, and the
+                                 salt-minion is configured via the minion configuration file.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">
+                                    		
+                                    			&nbsp;<a class="xref" href="examples.html#configuration-file-examples__configuration-examples-master">example master configuration file</a></p>
+                                 
+                              </aside>
+                              
+                              <p class="p">The configuration file for the salt-master is located at
+                                 <tt class="ph tt">/etc/salt/master</tt> by default.  A notable exception is FreeBSD, where the
+                                 configuration file is located at <tt class="ph tt">/usr/local/etc/salt</tt>.  The available
+                                 options are as follows:
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__primary-master-configuration">
+                              <h2 class="title sectiontitle">Primary Master Configuration</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__interface">
+                              <h2 class="title sectiontitle">interface</h2>
+                              <p class="p">Default: <tt class="ph tt">0.0.0.0</tt> (all interfaces)
+                              </p>
+                              
+                              <p class="p">The local interface to bind to.</p>
+                              <pre class="pre codeblock language-yaml">interface: 192.168.0.1</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__ipv6">
+                              <h2 class="title sectiontitle">ipv6</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">Whether the master should listen for IPv6 connections. If this is set to True,
+                                 the interface option must be adjusted too (for example: "interface: '::'")
+                              </p>
+                              <pre class="pre codeblock language-yaml">ipv6: True</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__publish_port">
+                              <h2 class="title sectiontitle">publish_port</h2>
+                              <p class="p">Default: <tt class="ph tt">4505</tt></p>
+                              
+                              <p class="p">The network port to set up the publication interface.</p>
+                              <pre class="pre codeblock language-yaml">publish_port: 4505</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__master_id">
+                              <h2 class="title sectiontitle">master_id</h2>
+                              <p class="p">Default: <tt class="ph tt">None</tt></p>
+                              
+                              <p class="p">The id to be passed in the publish job to minions. This is used for MultiSyndics
+                                 to return the job to the requesting master.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">This must be the same string as the syndic is configured with.</p>
+                                 
+                              </aside>
+                              <pre class="pre codeblock language-yaml">master_id: MasterOfMaster</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__user">
+                              <h2 class="title sectiontitle">user</h2>
+                              <p class="p">Default: <tt class="ph tt">root</tt></p>
+                              
+                              <p class="p">The user to run the Salt processes</p>
+                              <pre class="pre codeblock language-yaml">user: root</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__max_open_files">
+                              <h2 class="title sectiontitle">max_open_files</h2>
+                              <p class="p">Default: <tt class="ph tt">100000</tt></p>
+                              
+                              <p class="p">Each minion connecting to the master uses AT LEAST one file descriptor, the
+                                 master subscription connection. If enough minions connect you might start
+                                 seeing on the console(and then salt-master crashes):
+                              </p>
+                              <pre class="pre codeblock language-bash">Too many open files (tcp_listener.cpp:335)
+Aborted (core dumped)</pre>
+                              <pre class="pre codeblock language-yaml">max_open_files: 100000</pre>
+                              <p class="p">By default this value will be the one of <span class="keyword title_reference">ulimit -Hn</span>, i.e., the hard limit for
+                                 max open files.
+                              </p>
+                              
+                              <p class="p">To set a different value than the default one, uncomment, and configure this
+                                 setting. Remember that this value CANNOT be higher than the hard limit. Raising
+                                 the hard limit depends on the OS and/or distribution, a good way to find the
+                                 limit is to search the internet for something like this:
+                              </p>
+                              <pre class="pre codeblock language-text">raise max open files hard limit debian</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__worker_threads">
+                              <h2 class="title sectiontitle">worker_threads</h2>
+                              <p class="p">Default: <tt class="ph tt">5</tt></p>
+                              
+                              <p class="p">The number of threads to start for receiving commands and replies from minions.
+                                 If minions are stalling on replies because you have many minions, raise the
+                                 worker_threads value.
+                              </p>
+                              
+                              <p class="p">Worker threads should not be put below 3 when using the peer system, but can
+                                 drop down to 1 worker otherwise.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">When the master daemon starts, it is expected behaviour to see
+                                    multiple salt-master processes, even if 'worker_threads' is set to '1'. At
+                                    a minimum, a controlling process will start along with a Publisher, an
+                                    EventPublisher, and a number of MWorker processes will be started. The
+                                    number of MWorker processes is tuneable by the 'worker_threads'
+                                    configuration value while the others are not.
+                                 </p>
+                                 
+                              </aside>
+                              <pre class="pre codeblock language-yaml">worker_threads: 5</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__ret_port">
+                              <h2 class="title sectiontitle">ret_port</h2>
+                              <p class="p">Default: <tt class="ph tt">4506</tt></p>
+                              
+                              <p class="p">The port used by the return server, this is the server used by Salt to receive
+                                 execution returns and command executions.
+                              </p>
+                              <pre class="pre codeblock language-yaml">ret_port: 4506</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__pidfile">
+                              <h2 class="title sectiontitle">pidfile</h2>
+                              <p class="p">Default: <tt class="ph tt">/var/run/salt-master.pid</tt></p>
+                              
+                              <p class="p">Specify the location of the master pidfile.</p>
+                              <pre class="pre codeblock language-yaml">pidfile: /var/run/salt-master.pid</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__root_dir">
+                              <h2 class="title sectiontitle">root_dir</h2>
+                              <p class="p">Default: <tt class="ph tt">/</tt></p>
+                              
+                              <p class="p">The system root directory to operate from, change this to make Salt run from
+                                 an alternative root.
+                              </p>
+                              <pre class="pre codeblock language-yaml">root_dir: /</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">This directory is prepended to the following options:
+                                    <a class="xref" href="master.html#configuration-salt-master__pki_dir">pki_dir</a>, <a class="xref" href="master.html#configuration-salt-master__cachedir">cachedir</a>, <a class="xref" href="master.html#configuration-salt-master__sock_dir">sock_dir</a>,
+                                    <a class="xref" href="master.html#configuration-salt-master__log_file">log_file</a>, <a class="xref" href="master.html#configuration-salt-master__autosign_file">autosign_file</a>,
+                                    <a class="xref" href="master.html#configuration-salt-master__autoreject_file">autoreject_file</a>, <a class="xref" href="master.html#configuration-salt-master__pidfile">pidfile</a>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__pki_dir">
+                              <h2 class="title sectiontitle">pki_dir</h2>
+                              <p class="p">Default: <tt class="ph tt">/etc/salt/pki</tt></p>
+                              
+                              <p class="p">The directory to store the pki authentication keys.</p>
+                              <pre class="pre codeblock language-yaml">pki_dir: /etc/salt/pki</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__extension_modules">
+                              <h2 class="title sectiontitle">extension_modules</h2>
+                              <p class="p">Directory for custom modules. This directory can contain subdirectories for
+                                 each of Salt's module types such as "runners", "output", "wheel", "modules",
+                                 "states", "returners", etc. This path is appended to <a class="xref" href="master.html#configuration-salt-master__root_dir">root_dir</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">extension_modules: srv/modules</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__cachedir">
+                              <h2 class="title sectiontitle">cachedir</h2>
+                              <p class="p">Default: <tt class="ph tt">/var/cache/salt</tt></p>
+                              
+                              <p class="p">The location used to store cache information, particularly the job information
+                                 for executed salt commands.
+                              </p>
+                              <pre class="pre codeblock language-yaml">cachedir: /var/cache/salt</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__verify_env">
+                              <h2 class="title sectiontitle">verify_env</h2>
+                              <p class="p">Default: <tt class="ph tt">True</tt></p>
+                              
+                              <p class="p">Verify and set permissions on configuration directories at startup.</p>
+                              <pre class="pre codeblock language-yaml">verify_env: True</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__keep_jobs">
+                              <h2 class="title sectiontitle">keep_jobs</h2>
+                              <p class="p">Default: <tt class="ph tt">24</tt></p>
+                              
+                              <p class="p">Set the number of hours to keep old job information.</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__timeout">
+                              <h2 class="title sectiontitle">timeout</h2>
+                              <p class="p">Default: <tt class="ph tt">5</tt></p>
+                              
+                              <p class="p">Set the default timeout for the salt command and api.</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__loop_interval">
+                              <h2 class="title sectiontitle">loop_interval</h2>
+                              <p class="p">Default: <tt class="ph tt">60</tt></p>
+                              
+                              <p class="p">The loop_interval option controls the seconds for the master's maintenance
+                                 process check cycle. This process updates file server backends, cleans the
+                                 job cache and executes the scheduler.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__output">
+                              <h2 class="title sectiontitle">output</h2>
+                              <p class="p">Default: <tt class="ph tt">nested</tt></p>
+                              
+                              <p class="p">Set the default outputter used by the salt command.</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__color">
+                              <h2 class="title sectiontitle">color</h2>
+                              <p class="p">Default: <tt class="ph tt">True</tt></p>
+                              
+                              <p class="p">By default output is colored, to disable colored output set the color value
+                                 to False.
+                              </p>
+                              <pre class="pre codeblock language-yaml">color: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__sock_dir">
+                              <h2 class="title sectiontitle">sock_dir</h2>
+                              <p class="p">Default: <tt class="ph tt">/var/run/salt/master</tt></p>
+                              
+                              <p class="p">Set the location to use for creating Unix sockets for master process
+                                 communication.
+                              </p>
+                              <pre class="pre codeblock language-yaml">sock_dir: /var/run/salt/master</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__enable_gpu_grains">
+                              <h2 class="title sectiontitle">enable_gpu_grains</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">The master can take a while to start up when lspci and/or dmidecode is used
+                                 to populate the grains for the master. Enable if you want to see GPU hardware
+                                 data for your master.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__job_cache">
+                              <h2 class="title sectiontitle">job_cache</h2>
+                              <p class="p">Default: <tt class="ph tt">True</tt></p>
+                              
+                              <p class="p">The master maintains a job cache, while this is a great addition it can be
+                                 a burden on the master for larger deployments (over 5000 minions).
+                                 Disabling the job cache will make previously executed jobs unavailable to
+                                 the jobs system and is not generally recommended. Normally it is wise to make
+                                 sure the master has access to a faster IO system or a tmpfs is mounted to the
+                                 jobs dir.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__minion_data_cache">
+                              <h2 class="title sectiontitle">minion_data_cache</h2>
+                              <p class="p">Default: <tt class="ph tt">True</tt></p>
+                              
+                              <p class="p">The minion data cache is a cache of information about the minions stored on the
+                                 master, this information is primarily the pillar and grains data. The data is
+                                 cached in the Master cachedir under the name of the minion and used to
+                                 predetermine what minions are expected to reply from executions.
+                              </p>
+                              <pre class="pre codeblock language-yaml">minion_data_cache: True</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__ext_job_cache">
+                              <h2 class="title sectiontitle">ext_job_cache</h2>
+                              <p class="p">Default: <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">Used to specify a default returner for all minions, when this option is set
+                                 the specified returner needs to be properly configured and the minions will
+                                 always default to sending returns to this returner. This will also disable the
+                                 local job cache on the master.
+                              </p>
+                              <pre class="pre codeblock language-yaml">ext_job_cache: redis</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__event_return">
+                              <h2 class="title sectiontitle">event_return</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">Specify the returner to use to log events. A returner may have installation and
+                                 configuration requirements. Read the returner's documentation.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Not all returners support event returns. Verify that a returner has an
+                                    <tt class="ph tt">event_return()</tt> function before configuring this option with a returner.
+                                 </p>
+                                 
+                              </aside>
+                              <pre class="pre codeblock language-yaml">event_return: cassandra_cql</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__master_job_cache">
+                              <h2 class="title sectiontitle">master_job_cache</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.</span></p>
+                              
+                              <p class="p">Default: 'local_cache'</p>
+                              
+                              <p class="p">Specify the returner to use for the job cache. The job cache will only be
+                                 interacted with from the salt master and therefore does not need to be
+                                 accessible from the minions.
+                              </p>
+                              <pre class="pre codeblock language-yaml">master_job_cache: redis</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__enforce_mine_cache">
+                              <h2 class="title sectiontitle">enforce_mine_cache</h2>
+                              <p class="p">Default: False</p>
+                              
+                              <p class="p">By-default when disabling the minion_data_cache mine will stop working since
+                                 it is based on cached data, by enabling this option we explicitly enabling
+                                 only the cache for the mine system.
+                              </p>
+                              <pre class="pre codeblock language-yaml">enforce_mine_cache: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__max_minions">
+                              <h2 class="title sectiontitle">max_minions</h2>
+                              <p class="p">Default: 0</p>
+                              
+                              <p class="p">The number of minions the master should allow to connect. Use this to accommodate
+                                 the number of minions per master if you have different types of hardware serving
+                                 your minions. The default of <tt class="ph tt">0</tt> means unlimited connections. Please note, that
+                                 this can slow down the authentication process a bit in large setups.
+                              </p>
+                              <pre class="pre codeblock language-yaml">max_minions: 100</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__con-cache">
+                              <h2 class="title sectiontitle">con_cache</h2>
+                              <p class="p">Default: False</p>
+                              
+                              <p class="p">If max_minions is used in large installations, the master might experience
+                                 high-load situations because of having to check the number of connected
+                                 minions for every authentication. This cache provides the minion-ids of
+                                 all connected minions to all MWorker-processes and greatly improves the
+                                 performance of max_minions.
+                              </p>
+                              <pre class="pre codeblock language-yaml">con_cache: True</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__presence_events">
+                              <h2 class="title sectiontitle">presence_events</h2>
+                              <p class="p">Default: False</p>
+                              
+                              <p class="p">Causes the master to periodically look for actively connected minions.
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/event/master_events.html#event-master-events__event-master-presence">Presence events</a> are fired on the event bus on a
+                                 regular interval with a list of connected minions, as well as events with lists
+                                 of newly connected or disconnected minions. This is a master-only operation
+                                 that does not send executions to minions. Note, this does not detect minions
+                                 that connect to a master via localhost.
+                              </p>
+                              <pre class="pre codeblock language-yaml">presence_events: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__roster_file">
+                              <h2 class="title sectiontitle">roster_file</h2>
+                              <p class="p">Default: '/etc/salt/roster'</p>
+                              
+                              <p class="p">Pass in an alternative location for the salt-ssh roster file.</p>
+                              <pre class="pre codeblock language-yaml">roster_file: /root/roster</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__master-security-settings">
+                              <h2 class="title sectiontitle">Master Security Settings</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__open_mode">
+                              <h2 class="title sectiontitle">open_mode</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">Open mode is a dangerous security feature. One problem encountered with pki
+                                 authentication systems is that keys can become "mixed up" and authentication
+                                 begins to fail. Open mode turns off authentication and tells the master to
+                                 accept all authentication. This will clean up the pki keys received from the
+                                 minions. Open mode should not be turned on for general use. Open mode should
+                                 only be used for a short period of time to clean up pki keys. To turn on open
+                                 mode set this value to <tt class="ph tt">True</tt>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">open_mode: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__auto_accept">
+                              <h2 class="title sectiontitle">auto_accept</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">Enable auto_accept. This setting will automatically accept all incoming
+                                 public keys from minions.
+                              </p>
+                              <pre class="pre codeblock language-yaml">auto_accept: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__autosign_timeout">
+                              <h2 class="title sectiontitle">autosign_timeout</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">120</tt></p>
+                              
+                              <p class="p">Time in minutes that a incoming public key with a matching name found in
+                                 pki_dir/minion_autosign/keyid is automatically accepted. Expired autosign keys
+                                 are removed when the master checks the minion_autosign directory. This method
+                                 to auto accept minions can be safer than an autosign_file because the
+                                 keyid record can expire and is limited to being an exact name match.
+                                 This should still be considered a less than secure option, due to the fact
+                                 that trust is based on just the requesting minion id.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__autosign_file">
+                              <h2 class="title sectiontitle">autosign_file</h2>
+                              <p class="p">Default: <tt class="ph tt">not defined</tt></p>
+                              
+                              <p class="p">If the <tt class="ph tt">autosign_file</tt> is specified incoming keys specified in the autosign_file
+                                 will be automatically accepted. Matches will be searched for first by string
+                                 comparison, then by globbing, then by full-string regex matching.
+                                 This should still be considered a less than secure option, due to the fact
+                                 that trust is based on just the requesting minion id.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__autoreject_file">
+                              <h2 class="title sectiontitle">autoreject_file</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">not defined</tt></p>
+                              
+                              <p class="p">Works like <a class="xref" href="master.html#configuration-salt-master__autosign_file">autosign_file</a>, but instead allows you to specify
+                                 minion IDs for which keys will automatically be rejected. Will override both
+                                 membership in the <a class="xref" href="master.html#configuration-salt-master__autosign_file">autosign_file</a> and the
+                                 <a class="xref" href="master.html#configuration-salt-master__auto_accept">auto_accept</a> setting.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__client_acl">
+                              <h2 class="title sectiontitle">client_acl</h2>
+                              <p class="p">Default: <tt class="ph tt">{}</tt></p>
+                              
+                              <p class="p">Enable user accounts on the master to execute specific modules. These modules
+                                 can be expressed as regular expressions.
+                              </p>
+                              <pre class="pre codeblock language-yaml">client_acl:
+  fred:
+    - test.ping
+    - pkg.*</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__client_acl_blacklist">
+                              <h2 class="title sectiontitle">client_acl_blacklist</h2>
+                              <p class="p">Default: <tt class="ph tt">{}</tt></p>
+                              
+                              <p class="p">Blacklist users or modules</p>
+                              
+                              <p class="p">This example would blacklist all non sudo users, including root from
+                                 running any commands. It would also blacklist any use of the "cmd"
+                                 module.
+                              </p>
+                              
+                              <p class="p">This is completely disabled by default.</p>
+                              <pre class="pre codeblock language-yaml">client_acl_blacklist:
+  users:
+    - root
+    - '^(?!sudo_).*$'   #  all non sudo users
+  modules:
+    - cmd</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__external_auth">
+                              <h2 class="title sectiontitle">external_auth</h2>
+                              <p class="p">Default: <tt class="ph tt">{}</tt></p>
+                              
+                              <p class="p">The external auth system uses the Salt auth modules to authenticate and
+                                 validate users to access areas of the Salt system.
+                              </p>
+                              <pre class="pre codeblock language-yaml">external_auth:
+  pam:
+    fred:
+      - test.*</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__token_expire">
+                              <h2 class="title sectiontitle">token_expire</h2>
+                              <p class="p">Default: <tt class="ph tt">43200</tt></p>
+                              
+                              <p class="p">Time (in seconds) for a newly generated token to live.</p>
+                              
+                              <p class="p">Default: 12 hours</p>
+                              <pre class="pre codeblock language-yaml">token_expire: 43200</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__file_recv">
+                              <h2 class="title sectiontitle">file_recv</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">Allow minions to push files to the master. This is disabled by default, for
+                                 security purposes.
+                              </p>
+                              <pre class="pre codeblock language-yaml">file_recv: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__master_sign_pubkey">
+                              <h2 class="title sectiontitle">master_sign_pubkey</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">Sign the master auth-replies with a cryptographic signature of the masters
+                                 public key. Please see the tutorial how to use these settings in the
+                                 <a class="xref" href="http://docs.saltstack.com/en/latest/topics/tutorials/multimaster_pki.html" target="_blank">Multimaster-PKI with Failover Tutorial</a></p>
+                              <pre class="pre codeblock language-yaml">master_sign_pubkey: True</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__master_sign_key_name">
+                              <h2 class="title sectiontitle">master_sign_key_name</h2>
+                              <p class="p">Default: <tt class="ph tt">master_sign</tt></p>
+                              
+                              <p class="p">The customizable name of the signing-key-pair without suffix.</p>
+                              <pre class="pre codeblock language-yaml">master_sign_key_name: &lt;filename_without_suffix&gt;</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__master_pubkey_signature">
+                              <h2 class="title sectiontitle">master_pubkey_signature</h2>
+                              <p class="p">Default: <tt class="ph tt">master_pubkey_signature</tt></p>
+                              
+                              <p class="p">The name of the file in the masters pki-directory that holds the pre-calculated
+                                 signature of the masters public-key.
+                              </p>
+                              <pre class="pre codeblock language-yaml">master_pubkey_signature: &lt;filename&gt;</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__master_use_pubkey_signature">
+                              <h2 class="title sectiontitle">master_use_pubkey_signature</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">Instead of computing the signature for each auth-reply, use a pre-calculated
+                                 signature. The <a class="xref" href="master.html#configuration-salt-master__master_pubkey_signature">master_pubkey_signature</a> must also be set for this.
+                              </p>
+                              <pre class="pre codeblock language-yaml">master_use_pubkey_signature: True</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__rotate_aes_key">
+                              <h2 class="title sectiontitle">rotate_aes_key</h2>
+                              <p class="p">Default: <tt class="ph tt">True</tt></p>
+                              
+                              <p class="p">Rotate the salt-masters AES-key when a minion-public is deleted with salt-key.
+                                 This is a very important security-setting. Disabling it will enable deleted
+                                 minions to still listen in on the messages published by the salt-master.
+                                 Do not disable this unless it is absolutely clear what this does.
+                              </p>
+                              <pre class="pre codeblock language-yaml">rotate_aes_key: True</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__master-module-management">
+                              <h2 class="title sectiontitle">Master Module Management</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__runner_dirs">
+                              <h2 class="title sectiontitle">runner_dirs</h2>
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">Set additional directories to search for runner modules.</p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__cython_enable">
+                              <h2 class="title sectiontitle">cython_enable</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">Set to true to enable Cython modules (.pyx files) to be compiled on the fly on
+                                 the Salt master.
+                              </p>
+                              <pre class="pre codeblock language-yaml">cython_enable: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__master-state-system-settings">
+                              <h2 class="title sectiontitle">Master State System Settings</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__state_top">
+                              <h2 class="title sectiontitle">state_top</h2>
+                              <p class="p">Default: <tt class="ph tt">top.sls</tt></p>
+                              
+                              <p class="p">The state system uses a "top" file to tell the minions what environment to
+                                 use and what modules to use. The state_top file is defined relative to the
+                                 root of the base environment.
+                              </p>
+                              <pre class="pre codeblock language-yaml">state_top: top.sls</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__master_tops">
+                              <h2 class="title sectiontitle">master_tops</h2>
+                              <p class="p">Default: <tt class="ph tt">{}</tt></p>
+                              
+                              <p class="p">The master_tops option replaces the external_nodes option by creating
+                                 a pluggable system for the generation of external top data. The external_nodes
+                                 option is deprecated by the master_tops option.
+                                 To gain the capabilities of the classic external_nodes system, use the
+                                 following configuration:
+                              </p>
+                              <pre class="pre codeblock language-yaml">master_tops:
+  ext_nodes: &lt;Shell command which returns yaml&gt;</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__external_nodes">
+                              <h2 class="title sectiontitle">external_nodes</h2>
+                              <p class="p">Default: None</p>
+                              
+                              <p class="p">The external_nodes option allows Salt to gather data that would normally be
+                                 placed in a top file from and external node controller. The external_nodes
+                                 option is the executable that will return the ENC data. Remember that Salt
+                                 will look for external nodes AND top files and combine the results if both
+                                 are enabled and available!
+                              </p>
+                              <pre class="pre codeblock language-yaml">external_nodes: cobbler-ext-nodes</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__renderer">
+                              <h2 class="title sectiontitle">renderer</h2>
+                              <p class="p">Default: <tt class="ph tt">yaml_jinja</tt></p>
+                              
+                              <p class="p">The renderer to use on the minions to render the state data.</p>
+                              <pre class="pre codeblock language-yaml">renderer: yaml_jinja</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__failhard">
+                              <h2 class="title sectiontitle">failhard</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">Set the global failhard flag, this informs all states to stop running states
+                                 at the moment a single state fails.
+                              </p>
+                              <pre class="pre codeblock language-yaml">failhard: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__state_verbose">
+                              <h2 class="title sectiontitle">state_verbose</h2>
+                              <p class="p">Default: <tt class="ph tt">True</tt></p>
+                              
+                              <p class="p">Controls the verbosity of state runs. By default, the results of all states are
+                                 returned, but setting this value to <tt class="ph tt">False</tt> will cause salt to only display
+                                 output for states which either failed, or succeeded without making any changes
+                                 to the minion.
+                              </p>
+                              <pre class="pre codeblock language-yaml">state_verbose: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__state_output">
+                              <h2 class="title sectiontitle">state_output</h2>
+                              <p class="p">Default: <tt class="ph tt">full</tt></p>
+                              
+                              <p class="p">The state_output setting changes if the output is the full multi line
+                                 output for each changed state if set to 'full', but if set to 'terse'
+                                 the output will be shortened to a single line.  If set to 'mixed', the output
+                                 will be terse unless a state failed, in which case that output will be full.
+                                 If set to 'changes', the output will be full unless the state didn't change.
+                              </p>
+                              <pre class="pre codeblock language-yaml">state_output: full</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__yaml_utf8">
+                              <h2 class="title sectiontitle">yaml_utf8</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">Enable extra routines for YAML renderer used states containing UTF characters.</p>
+                              <pre class="pre codeblock language-yaml">yaml_utf8: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__test">
+                              <h2 class="title sectiontitle">test</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">Set all state calls to only test if they are going to actually make changes
+                                 or just post what changes are going to be made.
+                              </p>
+                              <pre class="pre codeblock language-yaml">test: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__master-file-server-settings">
+                              <h2 class="title sectiontitle">Master File Server Settings</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__fileserver_backend">
+                              <h2 class="title sectiontitle">fileserver_backend</h2>
+                              <p class="p">Default: <tt class="ph tt">['roots']</tt></p>
+                              
+                              <p class="p">Salt supports a modular fileserver backend system, this system allows the salt
+                                 master to link directly to third party systems to gather and manage the files
+                                 available to minions. Multiple backends can be configured and will be searched
+                                 for the requested file in the order in which they are defined here. The default
+                                 setting only enables the standard backend <tt class="ph tt">roots</tt>, which is configured using
+                                 the <a class="xref" href="master.html#configuration-salt-master__file_roots">file_roots</a> option.
+                              </p>
+                              
+                              <p class="p">Example:</p>
+                              <pre class="pre codeblock language-yaml">fileserver_backend:
+  - roots
+  - git</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__hash_type">
+                              <h2 class="title sectiontitle">hash_type</h2>
+                              <p class="p">Default: <tt class="ph tt">md5</tt></p>
+                              
+                              <p class="p">The hash_type is the hash to use when discovering the hash of a file on
+                                 the master server. The default is md5, but sha1, sha224, sha256, sha384, and
+                                 sha512 are also supported.
+                              </p>
+                              <pre class="pre codeblock language-yaml">hash_type: md5</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__file_buffer_size">
+                              <h2 class="title sectiontitle">file_buffer_size</h2>
+                              <p class="p">Default: <tt class="ph tt">1048576</tt></p>
+                              
+                              <p class="p">The buffer size in the file server in bytes.</p>
+                              <pre class="pre codeblock language-yaml">file_buffer_size: 1048576</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__file_ignore_regex">
+                              <h2 class="title sectiontitle">file_ignore_regex</h2>
+                              <p class="p">Default: <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">A regular expression (or a list of expressions) that will be matched
+                                 against the file path before syncing the modules and states to the minions.
+                                 This includes files affected by the file.recurse state.
+                                 For example, if you manage your custom modules and states in subversion
+                                 and don't want all the '.svn' folders and content synced to your minions,
+                                 you could set this to '/.svn($|/)'. By default nothing is ignored.
+                              </p>
+                              <pre class="pre codeblock language-yaml">file_ignore_regex:
+  - '/\.svn($|/)'
+  - '/\.git($|/)'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__file_ignore_glob">
+                              <h2 class="title sectiontitle">file_ignore_glob</h2>
+                              <p class="p">Default <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">A file glob (or list of file globs) that will be matched against the file
+                                 path before syncing the modules and states to the minions. This is similar
+                                 to file_ignore_regex above, but works on globs instead of regex. By default
+                                 nothing is ignored.
+                              </p>
+                              <pre class="pre codeblock language-yaml">file_ignore_glob:
+  - '\*.pyc'
+  - '\*/somefolder/\*.bak'
+  - '\*.swp'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__roots-master-s-local-file-server">
+                              <h2 class="title sectiontitle">roots: Master's Local File Server</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__file_roots">
+                              <h2 class="title sectiontitle">file_roots</h2>
+                              <p class="p">Default:</p>
+                              <pre class="pre codeblock language-yaml">base:
+  - /srv/salt</pre>
+                              <p class="p">Salt runs a lightweight file server written in ZeroMQ to deliver files to
+                                 minions. This file server is built into the master daemon and does not
+                                 require a dedicated port.
+                              </p>
+                              
+                              <p class="p">The file server works on environments passed to the master. Each environment
+                                 can have multiple root directories. The subdirectories in the multiple file
+                                 roots cannot match, otherwise the downloaded files will not be able to be
+                                 reliably ensured. A base environment is required to house the top file.
+                              </p>
+                              
+                              <p class="p">Example:</p>
+                              <pre class="pre codeblock language-yaml">file_roots:
+  base:
+    - /srv/salt
+  dev:
+    - /srv/salt/dev/services
+    - /srv/salt/dev/states
+  prod:
+    - /srv/salt/prod/services
+    - /srv/salt/prod/states</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__git-git-remote-file-server-backend">
+                              <h2 class="title sectiontitle">git: Git Remote File Server Backend</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__gitfs_remotes">
+                              <h2 class="title sectiontitle">gitfs_remotes</h2>
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">When using the <tt class="ph tt">git</tt> fileserver backend at least one git remote needs to be
+                                 defined. The user running the salt master will need read access to the repo.
+                              </p>
+                              
+                              <p class="p">The repos will be searched in order to find the file requested by a client and
+                                 the first repo to have the file will return it. Branches and tags are
+                                 translated into salt environments.
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_remotes:
+  - git://github.com/saltstack/salt-states.git
+  - file:///var/git/saltmaster</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p"><tt class="ph tt">file://</tt> repos will be treated as a remote and copied into the master's
+                                    gitfs cache, so only the <em class="ph i">local</em> refs for those repos will be exposed as
+                                    fileserver environments.
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">As of 2014.7.0, it is possible to have per-repo versions of several of the
+                                 gitfs configuration parameters. For more information, see the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/tutorials/gitfs.html#tutorial-gitfs__gitfs-per-remote-config">GitFS
+                                    Walkthrough</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__gitfs_provider">
+                              <h2 class="title sectiontitle">gitfs_provider</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Specify the provider to be used for gitfs. More information can be found in the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/tutorials/gitfs.html#tutorial-gitfs__gitfs-dependencies">GitFS Walkthrough</a>.
+                              </p>
+                              
+                              <p class="p">Specify one value among valid values: <tt class="ph tt">gitpython</tt>, <tt class="ph tt">pygit2</tt>, <tt class="ph tt">dulwich</tt></p>
+                              <pre class="pre codeblock language-yaml">gitfs_provider: dulwich</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__gitfs_ssl_verify">
+                              <h2 class="title sectiontitle">gitfs_ssl_verify</h2>
+                              <p class="p">Default: <tt class="ph tt">True</tt></p>
+                              
+                              <p class="p">The <tt class="ph tt">gitfs_ssl_verify</tt> option specifies whether to ignore SSL certificate
+                                 errors when contacting the gitfs backend. You might want to set this to false
+                                 if you're using a git backend that uses a self-signed certificate but keep in
+                                 mind that setting this flag to anything other than the default of <tt class="ph tt">True</tt> is a
+                                 security concern, you may want to try using the ssh transport.
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_ssl_verify: True</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__gitfs_mountpoint">
+                              <h2 class="title sectiontitle">gitfs_mountpoint</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">Specifies a path on the salt fileserver from which gitfs remotes are served.
+                                 Can be used in conjunction with <a class="xref" href="master.html#configuration-salt-master__gitfs_root">gitfs_root</a>. Can also be
+                                 configured on a per-remote basis, see 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/tutorials/gitfs.html#tutorial-gitfs__gitfs-per-remote-config">here</a> for
+                                 more info.
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_mountpoint: salt://foo/bar</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The <tt class="ph tt">salt://</tt> protocol designation can be left off (in other words,
+                                    <tt class="ph tt">foo/bar</tt> and <tt class="ph tt">salt://foo/bar</tt> are equivalent).
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__gitfs_root">
+                              <h2 class="title sectiontitle">gitfs_root</h2>
+                              <p class="p">Default: <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">Serve files from a subdirectory within the repository, instead of the root.
+                                 This is useful when there are files in the repository that should not be
+                                 available to the Salt fileserver. Can be used in conjunction with
+                                 <a class="xref" href="master.html#configuration-salt-master__gitfs_mountpoint">gitfs_mountpoint</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_root: somefolder/otherfolder</pre>
+                              <p class="p"><span class="keyword versionmodified">Changed in version 2014.7.0: </span>Ability to specify gitfs roots on a per-remote basis was added. See
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/tutorials/gitfs.html#tutorial-gitfs__gitfs-per-remote-config">here</a> for more info.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__gitfs_base">
+                              <h2 class="title sectiontitle">gitfs_base</h2>
+                              <p class="p">Default: <tt class="ph tt">master</tt></p>
+                              
+                              <p class="p">Defines which branch/tag should be used as the <tt class="ph tt">base</tt> environment.
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_base: salt</pre>
+                              <p class="p"><span class="keyword versionmodified">Changed in version 2014.7.0: </span>Ability to specify the base on a per-remote basis was added. See 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/tutorials/gitfs.html#tutorial-gitfs__gitfs-per-remote-config">here</a> for more info.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__gitfs_env_whitelist">
+                              <h2 class="title sectiontitle">gitfs_env_whitelist</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">Used to restrict which environments are made available. Can speed up state runs
+                                 if the repos in <a class="xref" href="master.html#configuration-salt-master__gitfs_remotes">gitfs_remotes</a> contain many branches/tags.  More
+                                 information can be found in the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/tutorials/gitfs.html#tutorial-gitfs__gitfs-whitelist-blacklist">GitFS Walkthrough</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_env_whitelist:
+  - base
+  - v1.*
+  - 'mybranch\d+'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__gitfs_env_blacklist">
+                              <h2 class="title sectiontitle">gitfs_env_blacklist</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">Used to restrict which environments are made available. Can speed up state runs
+                                 if the repos in <a class="xref" href="master.html#configuration-salt-master__gitfs_remotes">gitfs_remotes</a> contain many branches/tags. More
+                                 information can be found in the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/tutorials/gitfs.html#tutorial-gitfs__gitfs-whitelist-blacklist">GitFS Walkthrough</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_env_blacklist:
+  - base
+  - v1.*
+  - 'mybranch\d+'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__gitfs-authentication-options">
+                              <h2 class="title sectiontitle">GitFS Authentication Options</h2>
+                              <p class="p">These parameters only currently apply to the pygit2 gitfs provider. Examples of
+                                 how to use these can be found in the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/tutorials/gitfs.html#tutorial-gitfs__gitfs-authentication">GitFS Walkthrough</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__gitfs_user">
+                              <h2 class="title sectiontitle">gitfs_user</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">Along with <a class="xref" href="master.html#configuration-salt-master__gitfs_password">gitfs_password</a>, is used to authenticate to HTTPS
+                                 remotes.
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_user: git</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__gitfs_password">
+                              <h2 class="title sectiontitle">gitfs_password</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">Along with <a class="xref" href="master.html#configuration-salt-master__gitfs_user">gitfs_user</a>, is used to authenticate to HTTPS remotes.
+                                 This parameter is not required if the repository does not use authentication.
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_password: mypassword</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__gitfs_insecure_auth">
+                              <h2 class="title sectiontitle">gitfs_insecure_auth</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">By default, Salt will not authenticate to an HTTP (non-HTTPS) remote. This
+                                 parameter enables authentication over HTTP. <strong class="ph b">Enable this at your own risk.</strong></p>
+                              <pre class="pre codeblock language-yaml">gitfs_insecure_auth: True</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__gitfs_pubkey">
+                              <h2 class="title sectiontitle">gitfs_pubkey</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">Along with <a class="xref" href="master.html#configuration-salt-master__gitfs_privkey">gitfs_privkey</a> (and optionally
+                                 <a class="xref" href="master.html#configuration-salt-master__gitfs_passphrase">gitfs_passphrase</a>), is used to authenticate to SSH remotes. This
+                                 parameter (or its 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/tutorials/gitfs.html#tutorial-gitfs__gitfs-per-remote-config">per-remote counterpart</a>) is
+                                 required for SSH remotes.
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_pubkey: /path/to/key.pub</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__gitfs_privkey">
+                              <h2 class="title sectiontitle">gitfs_privkey</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">Along with <a class="xref" href="master.html#configuration-salt-master__gitfs_pubkey">gitfs_pubkey</a> (and optionally
+                                 <a class="xref" href="master.html#configuration-salt-master__gitfs_passphrase">gitfs_passphrase</a>), is used to authenticate to SSH remotes. This
+                                 parameter (or its 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/tutorials/gitfs.html#tutorial-gitfs__gitfs-per-remote-config">per-remote counterpart</a>) is
+                                 required for SSH remotes.
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_privkey: /path/to/key</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__gitfs_passphrase">
+                              <h2 class="title sectiontitle">gitfs_passphrase</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">This parameter is optional, required only when the SSH key being used to
+                                 authenticate is protected by a passphrase.
+                              </p>
+                              <pre class="pre codeblock language-yaml">gitfs_passphrase: mypassphrase</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__hg-mercurial-remote-file-server-backend">
+                              <h2 class="title sectiontitle">hg: Mercurial Remote File Server Backend</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__hgfs_remotes">
+                              <h2 class="title sectiontitle">hgfs_remotes</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">When using the <tt class="ph tt">hg</tt> fileserver backend at least one mercurial remote needs to
+                                 be defined. The user running the salt master will need read access to the repo.
+                              </p>
+                              
+                              <p class="p">The repos will be searched in order to find the file requested by a client and
+                                 the first repo to have the file will return it. Branches and/or bookmarks are
+                                 translated into salt environments, as defined by the
+                                 <a class="xref" href="master.html#configuration-salt-master__hgfs_branch_method">hgfs_branch_method</a> parameter.
+                              </p>
+                              <pre class="pre codeblock language-yaml">hgfs_remotes:
+  - https://username@bitbucket.org/username/reponame</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">As of 2014.7.0, it is possible to have per-repo versions of the
+                                    <a class="xref" href="master.html#configuration-salt-master__hgfs_root">hgfs_root</a>, <a class="xref" href="master.html#configuration-salt-master__hgfs_mountpoint">hgfs_mountpoint</a>,
+                                    <a class="xref" href="master.html#configuration-salt-master__hgfs_base">hgfs_base</a>, and <a class="xref" href="master.html#configuration-salt-master__hgfs_branch_method">hgfs_branch_method</a> parameters.
+                                    For example:
+                                 </p>
+                                 <pre class="pre codeblock language-yaml">hgfs_remotes:
+  - https://username@bitbucket.org/username/repo1
+    - base: saltstates
+  - https://username@bitbucket.org/username/repo2:
+    - root: salt
+    - mountpoint: salt://foo/bar/baz
+  - https://username@bitbucket.org/username/repo3:
+    - root: salt/states
+    - branch_method: mixed</pre>
+                                 </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__hgfs_branch_method">
+                              <h2 class="title sectiontitle">hgfs_branch_method</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">branches</tt></p>
+                              
+                              <p class="p">Defines the objects that will be used as fileserver environments.</p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">branches</tt> - Only branches and tags will be used
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">bookmarks</tt> - Only bookmarks and tags will be used
+                                    </p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p"><tt class="ph tt">mixed</tt> - Branches, bookmarks, and tags will be used
+                                    </p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              <pre class="pre codeblock language-yaml">hgfs_branch_method: mixed</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Starting in version 2014.1.0, the value of the <a class="xref" href="master.html#configuration-salt-master__hgfs_base">hgfs_base</a>
+                                    parameter defines which branch is used as the <tt class="ph tt">base</tt> environment,
+                                    allowing for a <tt class="ph tt">base</tt> environment to be used with an
+                                    <a class="xref" href="master.html#configuration-salt-master__hgfs_branch_method">hgfs_branch_method</a> of <tt class="ph tt">bookmarks</tt>.
+                                 </p>
+                                 
+                                 <p class="p">Prior to this release, the <tt class="ph tt">default</tt> branch will be used as the <tt class="ph tt">base</tt>
+                                    environment.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__hgfs_mountpoint">
+                              <h2 class="title sectiontitle">hgfs_mountpoint</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">Specifies a path on the salt fileserver from which hgfs remotes are served.
+                                 Can be used in conjunction with <a class="xref" href="master.html#configuration-salt-master__hgfs_root">hgfs_root</a>. Can also be
+                                 configured on a per-remote basis, see <a class="xref" href="master.html#configuration-salt-master__hgfs_remotes">here</a> for
+                                 more info.
+                              </p>
+                              <pre class="pre codeblock language-yaml">hgfs_mountpoint: salt://foo/bar</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The <tt class="ph tt">salt://</tt> protocol designation can be left off (in other words,
+                                    <tt class="ph tt">foo/bar</tt> and <tt class="ph tt">salt://foo/bar</tt> are equivalent).
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__hgfs_root">
+                              <h2 class="title sectiontitle">hgfs_root</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">Serve files from a subdirectory within the repository, instead of the root.
+                                 This is useful when there are files in the repository that should not be
+                                 available to the Salt fileserver. Can be used in conjunction with
+                                 <a class="xref" href="master.html#configuration-salt-master__hgfs_mountpoint">hgfs_mountpoint</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">hgfs_root: somefolder/otherfolder</pre>
+                              <p class="p"><span class="keyword versionmodified">Changed in version 2014.7.0: </span>Ability to specify hgfs roots on a per-remote basis was added. See
+                                 <a class="xref" href="master.html#configuration-salt-master__hgfs_remotes">here</a> for more info.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__hgfs_base">
+                              <h2 class="title sectiontitle">hgfs_base</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">default</tt></p>
+                              
+                              <p class="p">Defines which branch should be used as the <tt class="ph tt">base</tt> environment. Change this if
+                                 <a class="xref" href="master.html#configuration-salt-master__hgfs_branch_method">hgfs_branch_method</a> is set to <tt class="ph tt">bookmarks</tt> to specify which
+                                 bookmark should be used as the <tt class="ph tt">base</tt> environment.
+                              </p>
+                              <pre class="pre codeblock language-yaml">hgfs_base: salt</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__hgfs_env_whitelist">
+                              <h2 class="title sectiontitle">hgfs_env_whitelist</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">Used to restrict which environments are made available. Can speed up state runs
+                                 if your hgfs remotes contain many branches/bookmarks/tags. Full names, globs,
+                                 and regular expressions are supported. If using a regular expression, the
+                                 expression must match the entire minion ID.
+                              </p>
+                              
+                              <p class="p">If used, only branches/bookmarks/tags which match one of the specified
+                                 expressions will be exposed as fileserver environments.
+                              </p>
+                              
+                              <p class="p">If used in conjunction with <a class="xref" href="master.html#configuration-salt-master__hgfs_env_blacklist">hgfs_env_blacklist</a>, then the subset
+                                 of branches/bookmarks/tags which match the whitelist but do <em class="ph i">not</em> match the
+                                 blacklist will be exposed as fileserver environments.
+                              </p>
+                              <pre class="pre codeblock language-yaml">hgfs_env_whitelist:
+  - base
+  - v1.*
+  - 'mybranch\d+'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__hgfs_env_blacklist">
+                              <h2 class="title sectiontitle">hgfs_env_blacklist</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">Used to restrict which environments are made available. Can speed up state runs
+                                 if your hgfs remotes contain many branches/bookmarks/tags. Full names, globs,
+                                 and regular expressions are supported. If using a regular expression, the
+                                 expression must match the entire minion ID.
+                              </p>
+                              
+                              <p class="p">If used, branches/bookmarks/tags which match one of the specified expressions
+                                 will <em class="ph i">not</em> be exposed as fileserver environments.
+                              </p>
+                              
+                              <p class="p">If used in conjunction with <a class="xref" href="master.html#configuration-salt-master__hgfs_env_whitelist">hgfs_env_whitelist</a>, then the subset
+                                 of branches/bookmarks/tags which match the whitelist but do <em class="ph i">not</em> match the
+                                 blacklist will be exposed as fileserver environments.
+                              </p>
+                              <pre class="pre codeblock language-yaml">hgfs_env_blacklist:
+  - base
+  - v1.*
+  - 'mybranch\d+'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__svn-subversion-remote-file-server-backend">
+                              <h2 class="title sectiontitle">svn: Subversion Remote File Server Backend</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__svnfs_remotes">
+                              <h2 class="title sectiontitle">svnfs_remotes</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">When using the <tt class="ph tt">svn</tt> fileserver backend at least one subversion remote needs
+                                 to be defined. The user running the salt master will need read access to the
+                                 repo.
+                              </p>
+                              
+                              <p class="p">The repos will be searched in order to find the file requested by a client and
+                                 the first repo to have the file will return it. The trunk, branches, and tags
+                                 become environments, with the trunk being the <tt class="ph tt">base</tt> environment.
+                              </p>
+                              <pre class="pre codeblock language-yaml">svnfs_remotes:
+  - svn://foo.com/svn/myproject</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">As of 2014.7.0, it is possible to have per-repo versions of the following
+                                    configuration parameters:
+                                 </p>
+                                 
+                                 <ul class="ul">
+                                    <li class="li">
+                                       <p class="p"><a class="xref" href="master.html#configuration-salt-master__svnfs_root">svnfs_root</a></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><a class="xref" href="master.html#configuration-salt-master__svnfs_mountpoint">svnfs_mountpoint</a></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><a class="xref" href="master.html#configuration-salt-master__svnfs_trunk">svnfs_trunk</a></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><a class="xref" href="master.html#configuration-salt-master__svnfs_branches">svnfs_branches</a></p>
+                                       
+                                    </li>
+                                    
+                                    <li class="li">
+                                       <p class="p"><a class="xref" href="master.html#configuration-salt-master__svnfs_tags">svnfs_tags</a></p>
+                                       
+                                    </li>
+                                    
+                                 </ul>
+                                 
+                                 <p class="p">For example:</p>
+                                 <pre class="pre codeblock language-yaml">svnfs_remotes:
+  - svn://foo.com/svn/project1
+  - svn://foo.com/svn/project2:
+    - root: salt
+    - mountpoint: salt://foo/bar/baz
+  - svn//foo.com/svn/project3:
+    - root: salt/states
+    - branches: branch
+    - tags: tag</pre>
+                                 </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__svnfs_mountpoint">
+                              <h2 class="title sectiontitle">svnfs_mountpoint</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">Specifies a path on the salt fileserver from which svnfs remotes are served.
+                                 Can be used in conjunction with <a class="xref" href="master.html#configuration-salt-master__svnfs_root">svnfs_root</a>. Can also be
+                                 configured on a per-remote basis, see <a class="xref" href="master.html#configuration-salt-master__svnfs_remotes">here</a> for
+                                 more info.
+                              </p>
+                              <pre class="pre codeblock language-yaml">svnfs_mountpoint: salt://foo/bar</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The <tt class="ph tt">salt://</tt> protocol designation can be left off (in other words,
+                                    <tt class="ph tt">foo/bar</tt> and <tt class="ph tt">salt://foo/bar</tt> are equivalent).
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__svnfs_root">
+                              <h2 class="title sectiontitle">svnfs_root</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">Serve files from a subdirectory within the repository, instead of the root.
+                                 This is useful when there are files in the repository that should not be
+                                 available to the Salt fileserver. Can be used in conjunction with
+                                 <a class="xref" href="master.html#configuration-salt-master__svnfs_mountpoint">svnfs_mountpoint</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">svnfs_root: somefolder/otherfolder</pre>
+                              <p class="p"><span class="keyword versionmodified">Changed in version 2014.7.0: </span>Ability to specify svnfs roots on a per-remote basis was added. See
+                                 <a class="xref" href="master.html#configuration-salt-master__svnfs_remotes">here</a> for more info.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__svnfs_trunk">
+                              <h2 class="title sectiontitle">svnfs_trunk</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">trunk</tt></p>
+                              
+                              <p class="p">Path relative to the root of the repository where the trunk is located. Can
+                                 also be configured on a per-remote basis, see <a class="xref" href="master.html#configuration-salt-master__svnfs_remotes">here</a> for more info.
+                              </p>
+                              <pre class="pre codeblock language-yaml">svnfs_trunk: trunk</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__svnfs_branches">
+                              <h2 class="title sectiontitle">svnfs_branches</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">branches</tt></p>
+                              
+                              <p class="p">Path relative to the root of the repository where the branches are located. Can
+                                 also be configured on a per-remote basis, see <a class="xref" href="master.html#configuration-salt-master__svnfs_remotes">here</a> for more info.
+                              </p>
+                              <pre class="pre codeblock language-yaml">svnfs_branches: branches</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__svnfs_tags">
+                              <h2 class="title sectiontitle">svnfs_tags</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">tags</tt></p>
+                              
+                              <p class="p">Path relative to the root of the repository where the tags are located. Can
+                                 also be configured on a per-remote basis, see <a class="xref" href="master.html#configuration-salt-master__svnfs_remotes">here</a> for more info.
+                              </p>
+                              <pre class="pre codeblock language-yaml">svnfs_tags: tags</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__svnfs_env_whitelist">
+                              <h2 class="title sectiontitle">svnfs_env_whitelist</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">Used to restrict which environments are made available. Can speed up state runs
+                                 if your svnfs remotes contain many branches/tags. Full names, globs, and
+                                 regular expressions are supported. If using a regular expression, the expression
+                                 must match the entire minion ID.
+                              </p>
+                              
+                              <p class="p">If used, only branches/tags which match one of the specified expressions will
+                                 be exposed as fileserver environments.
+                              </p>
+                              
+                              <p class="p">If used in conjunction with <a class="xref" href="master.html#configuration-salt-master__svnfs_env_blacklist">svnfs_env_blacklist</a>, then the subset
+                                 of branches/tags which match the whitelist but do <em class="ph i">not</em> match the blacklist
+                                 will be exposed as fileserver environments.
+                              </p>
+                              <pre class="pre codeblock language-yaml">svnfs_env_whitelist:
+  - base
+  - v1.*
+  - 'mybranch\d+'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__svnfs_env_blacklist">
+                              <h2 class="title sectiontitle">svnfs_env_blacklist</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">Used to restrict which environments are made available. Can speed up state runs
+                                 if your svnfs remotes contain many branches/tags. Full names, globs, and
+                                 regular expressions are supported. If using a regular expression, the
+                                 expression must match the entire minion ID.
+                              </p>
+                              
+                              <p class="p">If used, branches/tags which match one of the specified expressions will <em class="ph i">not</em>
+                                 be exposed as fileserver environments.
+                              </p>
+                              
+                              <p class="p">If used in conjunction with <a class="xref" href="master.html#configuration-salt-master__svnfs_env_whitelist">svnfs_env_whitelist</a>, then the subset
+                                 of branches/tags which match the whitelist but do <em class="ph i">not</em> match the blacklist
+                                 will be exposed as fileserver environments.
+                              </p>
+                              <pre class="pre codeblock language-yaml">svnfs_env_blacklist:
+  - base
+  - v1.*
+  - 'mybranch\d+'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__minion-minionfs-remote-file-server-backend">
+                              <h2 class="title sectiontitle">minion: MinionFS Remote File Server Backend</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__minionfs_env">
+                              <h2 class="title sectiontitle">minionfs_env</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">base</tt></p>
+                              
+                              <p class="p">Environment from which MinionFS files are made available.</p>
+                              <pre class="pre codeblock language-yaml">minionfs_env: minionfs</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__minionfs_mountpoint">
+                              <h2 class="title sectiontitle">minionfs_mountpoint</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">Specifies a path on the salt fileserver from which minionfs files are served.</p>
+                              <pre class="pre codeblock language-yaml">minionfs_mountpoint: salt://foo/bar</pre>
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">The <tt class="ph tt">salt://</tt> protocol designation can be left off (in other words,
+                                    <tt class="ph tt">foo/bar</tt> and <tt class="ph tt">salt://foo/bar</tt> are equivalent).
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__minionfs_whitelist">
+                              <h2 class="title sectiontitle">minionfs_whitelist</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">Used to restrict which minions' pushed files are exposed via minionfs. If using
+                                 a regular expression, the expression must match the entire minion ID.
+                              </p>
+                              
+                              <p class="p">If used, only the pushed files from minions which match one of the specified
+                                 expressions will be exposed.
+                              </p>
+                              
+                              <p class="p">If used in conjunction with <a class="xref" href="master.html#configuration-salt-master__minionfs_blacklist">minionfs_blacklist</a>, then the subset
+                                 of hosts which match the whitelist but do <em class="ph i">not</em> match the blacklist will be
+                                 exposed.
+                              </p>
+                              <pre class="pre codeblock language-yaml">minionfs_whitelist:
+  - base
+  - v1.*
+  - 'mybranch\d+'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__minionfs_blacklist">
+                              <h2 class="title sectiontitle">minionfs_blacklist</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">[]</tt></p>
+                              
+                              <p class="p">Used to restrict which minions' pushed files are exposed via minionfs. If using
+                                 a regular expression, the expression must match the entire minion ID.
+                              </p>
+                              
+                              <p class="p">If used, only the pushed files from minions which match one of the specified
+                                 expressions will <em class="ph i">not</em> be exposed.
+                              </p>
+                              
+                              <p class="p">If used in conjunction with <a class="xref" href="master.html#configuration-salt-master__minionfs_whitelist">minionfs_whitelist</a>, then the subset
+                                 of hosts which match the whitelist but do <em class="ph i">not</em> match the blacklist will be
+                                 exposed.
+                              </p>
+                              <pre class="pre codeblock language-yaml">minionfs_blacklist:
+  - base
+  - v1.*
+  - 'mybranch\d+'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__pillar-configuration">
+                              <h2 class="title sectiontitle">Pillar Configuration</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__pillar_roots">
+                              <h2 class="title sectiontitle">pillar_roots</h2>
+                              <p class="p">Default:</p>
+                              <pre class="pre codeblock language-yaml">base:
+  - /srv/pillar</pre>
+                              <p class="p">Set the environments and directories used to hold pillar sls data. This
+                                 configuration is the same as <a class="xref" href="master.html#configuration-salt-master__file_roots">file_roots</a>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">pillar_roots:
+  base:
+    - /srv/pillar
+  dev:
+    - /srv/pillar/dev
+  prod:
+    - /srv/pillar/prod</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__ext_pillar">
+                              <h2 class="title sectiontitle">ext_pillar</h2>
+                              <p class="p">The ext_pillar option allows for any number of external pillar interfaces to be
+                                 called when populating pillar data. The configuration is based on ext_pillar
+                                 functions. The available ext_pillar functions can be found herein:
+                              </p>
+                              
+                              <p class="p"><a class="xref" href="https://github.com/saltstack/salt/blob/develop/salt/pillar" target="_blank">https://github.com/saltstack/salt/blob/develop/salt/pillar</a></p>
+                              
+                              <p class="p">By default, the ext_pillar interface is not configured to run.</p>
+                              
+                              <p class="p">Default: <tt class="ph tt">None</tt></p>
+                              <pre class="pre codeblock language-yaml">ext_pillar:
+  - hiera: /etc/hiera.yaml
+  - cmd_yaml: cat /etc/salt/yaml
+  - reclass:
+      inventory_base_uri: /etc/reclass</pre>
+                              <p class="p">There are additional details at 
+                                 		
+                                 			&nbsp;<a class="xref" href="../pillar/index.html#salt-pillars">Pillars</a></p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__ext_pillar_first">
+                              <h2 class="title sectiontitle">ext_pillar_first</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                              
+                              <p class="p">The ext_pillar_first option allows for external pillar sources to populate
+                                 before file system pillar. This allows for targeting file system pillar from
+                                 ext_pillar.
+                              </p>
+                              
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              <pre class="pre codeblock language-yaml">ext_pillar_first: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__pillar_source_merging_strategy">
+                              <h2 class="title sectiontitle">pillar_source_merging_strategy</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">Default: <tt class="ph tt">smart</tt></p>
+                              
+                              <p class="p">The pillar_source_merging_strategy option allows you to configure merging
+                                 strategy between different sources. It accepts 4 values:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">recurse:</p>
+                                    
+                                    <p class="p">it will merge recursively mapping of data. For example, theses 2 sources:</p>
+                                    <pre class="pre codeblock language-yaml">foo: 42
+bar:
+    element1: True</pre>
+                                    <pre class="pre codeblock language-yaml">bar:
+    element2: True
+baz: quux</pre>
+                                    <p class="p">will be merged as:</p>
+                                    <pre class="pre codeblock language-yaml">foo: 42
+bar:
+    element1: True
+    element2: True
+baz: quux</pre>
+                                    </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">aggregate:</p>
+                                    
+                                    <p class="p">instructs aggregation of elements between sources that use the #!yamlex renderer.</p>
+                                    
+                                    <p class="p">For example, these two documents:</p>
+                                    <pre class="pre codeblock language-yaml">#!yamlex
+foo: 42
+bar: !aggregate {
+  element1: True
+}
+baz: !aggregate quux</pre>
+                                    <pre class="pre codeblock language-yaml">#!yamlex
+bar: !aggregate {
+  element2: True
+}
+baz: !aggregate quux2</pre>
+                                    <p class="p">will be merged as:</p>
+                                    <pre class="pre codeblock language-yaml">foo: 42
+bar:
+  element1: True
+  element2: True
+baz:
+  - quux
+  - quux2</pre>
+                                    </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">overwrite:</p>
+                                    
+                                    <p class="p">Will use the behaviour of the 2014.1 branch and earlier.</p>
+                                    
+                                    <p class="p">Overwrites elements according the order in which they are processed.</p>
+                                    
+                                    <p class="p">First pillar processed:</p>
+                                    <pre class="pre codeblock language-yaml">A:
+  first_key: blah
+  second_key: blah</pre>
+                                    <p class="p">Second pillar processed:</p>
+                                    <pre class="pre codeblock language-yaml">A:
+  third_key: blah
+  fourth_key: blah</pre>
+                                    <p class="p">will be merged as:</p>
+                                    <pre class="pre codeblock language-yaml">A:
+  third_key: blah
+  fourth_key: blah</pre>
+                                    </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">smart (default):</p>
+                                    
+                                    <p class="p">Guesses the best strategy based on the "renderer" setting.</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__syndic-server-settings">
+                              <h2 class="title sectiontitle">Syndic Server Settings</h2>
+                              <p class="p">A Salt syndic is a Salt master used to pass commands from a higher Salt master to
+                                 minions below the syndic. Using the syndic is simple. If this is a master that
+                                 will have syndic servers(s) below it, set the "order_masters" setting to True.
+                              </p>
+                              
+                              <p class="p">If this is a master that will be running a syndic daemon for passthrough the
+                                 "syndic_master" setting needs to be set to the location of the master server.
+                              </p>
+                              
+                              <p class="p">Do not not forget that, in other words, it means that it shares with the local minion
+                                 its ID and PKI_DIR.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__order_masters">
+                              <h2 class="title sectiontitle">order_masters</h2>
+                              <p class="p">Default: <tt class="ph tt">False</tt></p>
+                              
+                              <p class="p">Extra data needs to be sent with publications if the master is controlling a
+                                 lower level master via a syndic minion. If this is the case the order_masters
+                                 value must be set to True
+                              </p>
+                              <pre class="pre codeblock language-yaml">order_masters: False</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__syndic_master">
+                              <h2 class="title sectiontitle">syndic_master</h2>
+                              <p class="p">Default: <tt class="ph tt">None</tt></p>
+                              
+                              <p class="p">If this master will be running a salt-syndic to connect to a higher level
+                                 master, specify the higher level master with this configuration value.
+                              </p>
+                              <pre class="pre codeblock language-yaml">syndic_master: masterofmasters</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__syndic_master_port">
+                              <h2 class="title sectiontitle">syndic_master_port</h2>
+                              <p class="p">Default: <tt class="ph tt">4506</tt></p>
+                              
+                              <p class="p">If this master will be running a salt-syndic to connect to a higher level
+                                 master, specify the higher level master port with this configuration value.
+                              </p>
+                              <pre class="pre codeblock language-yaml">syndic_master_port: 4506</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__syndic_master_log_file">
+                              <h2 class="title sectiontitle">syndic_pidfile</h2>
+                              <p class="p">Default: <tt class="ph tt">salt-syndic.pid</tt></p>
+                              
+                              <p class="p">If this master will be running a salt-syndic to connect to a higher level
+                                 master, specify the pidfile of the syndic daemon.
+                              </p>
+                              <pre class="pre codeblock language-yaml">syndic_pidfile: syndic.pid</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__syndic-log-file">
+                              <h2 class="title sectiontitle">syndic_log_file</h2>
+                              <p class="p">Default: <tt class="ph tt">syndic.log</tt></p>
+                              
+                              <p class="p">If this master will be running a salt-syndic to connect to a higher level
+                                 master, specify the log_file of the syndic daemon.
+                              </p>
+                              <pre class="pre codeblock language-yaml">syndic_log_file: salt-syndic.log</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__peer-publish-settings">
+                              <h2 class="title sectiontitle">Peer Publish Settings</h2>
+                              <p class="p">Salt minions can send commands to other minions, but only if the minion is
+                                 allowed to. By default "Peer Publication" is disabled, and when enabled it
+                                 is enabled for specific minions and specific commands. This allows secure
+                                 compartmentalization of commands based on individual minions.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__peer">
+                              <h2 class="title sectiontitle">peer</h2>
+                              <p class="p">Default: <tt class="ph tt">{}</tt></p>
+                              
+                              <p class="p">The configuration uses regular expressions to match minions and then a list
+                                 of regular expressions to match functions. The following will allow the
+                                 minion authenticated as foo.example.com to execute functions from the test
+                                 and pkg modules.
+                              </p>
+                              <pre class="pre codeblock language-yaml">peer:
+  foo.example.com:
+      - test.*
+      - pkg.*</pre>
+                              <p class="p">This will allow all minions to execute all commands:</p>
+                              <pre class="pre codeblock language-yaml">peer:
+  .*:
+      - .*</pre>
+                              <p class="p">This is not recommended, since it would allow anyone who gets root on any
+                                 single minion to instantly have root on all of the minions!
+                              </p>
+                              
+                              <p class="p">By adding an additional layer you can limit the target hosts in addition to the
+                                 accessible commands:
+                              </p>
+                              <pre class="pre codeblock language-yaml">peer:
+  foo.example.com:
+    'db*':
+      - test.*
+      - pkg.*</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__peer_run">
+                              <h2 class="title sectiontitle">peer_run</h2>
+                              <p class="p">Default: <tt class="ph tt">{}</tt></p>
+                              
+                              <p class="p">The peer_run option is used to open up runners on the master to access from the
+                                 minions. The peer_run configuration matches the format of the peer
+                                 configuration.
+                              </p>
+                              
+                              <p class="p">The following example would allow foo.example.com to execute the manage.up
+                                 runner:
+                              </p>
+                              <pre class="pre codeblock language-yaml">peer_run:
+  foo.example.com:
+      - manage.up</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__master-logging-settings">
+                              <h2 class="title sectiontitle">Master Logging Settings</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__log_file">
+                              <h2 class="title sectiontitle">log_file</h2>
+                              <p class="p">Default: <tt class="ph tt">/var/log/salt/master</tt></p>
+                              
+                              <p class="p">The master log can be sent to a regular file, local path name, or network
+                                 location. See also 
+                                 		
+                                 			&nbsp;<a class="xref" href="logging/index.html#logging__log_file">log_file</a>.
+                              </p>
+                              
+                              <p class="p">Examples:</p>
+                              <pre class="pre codeblock language-yaml">log_file: /var/log/salt/master</pre>
+                              <pre class="pre codeblock language-yaml">log_file: file:///dev/log</pre>
+                              <pre class="pre codeblock language-yaml">log_file: udp://loghost:10514</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__log_level">
+                              <h2 class="title sectiontitle">log_level</h2>
+                              <p class="p">Default: <tt class="ph tt">warning</tt></p>
+                              
+                              <p class="p">The level of messages to send to the console. See also 
+                                 		
+                                 			&nbsp;<a class="xref" href="logging/index.html#logging__log_level">log_level</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_level: warning</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__log_level_logfile">
+                              <h2 class="title sectiontitle">log_level_logfile</h2>
+                              <p class="p">Default: <tt class="ph tt">warning</tt></p>
+                              
+                              <p class="p">The level of messages to send to the log file. See also
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="logging/index.html#logging__log_level_logfile">log_level_logfile</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_level_logfile: warning</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__log_datefmt">
+                              <h2 class="title sectiontitle">log_datefmt</h2>
+                              <p class="p">Default: <tt class="ph tt">%H:%M:%S</tt></p>
+                              
+                              <p class="p">The date and time format used in console log messages. See also
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="logging/index.html#logging__log_datefmt">log_datefmt</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_datefmt: '%H:%M:%S'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__log_datefmt_logfile">
+                              <h2 class="title sectiontitle">log_datefmt_logfile</h2>
+                              <p class="p">Default: <tt class="ph tt">%Y-%m-%d %H:%M:%S</tt></p>
+                              
+                              <p class="p">The date and time format used in log file messages. See also
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="logging/index.html#logging__log_datefmt_logfile">log_datefmt_logfile</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_datefmt_logfile: '%Y-%m-%d %H:%M:%S'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__log_fmt_console">
+                              <h2 class="title sectiontitle">log_fmt_console</h2>
+                              <p class="p">Default: <tt class="ph tt">[%(levelname)-8s] %(message)s</tt></p>
+                              
+                              <p class="p">The format of the console logging messages. See also
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="logging/index.html#logging__log_fmt_console">log_fmt_console</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_fmt_console: '[%(levelname)-8s] %(message)s'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__log_fmt_logfile">
+                              <h2 class="title sectiontitle">log_fmt_logfile</h2>
+                              <p class="p">Default: <tt class="ph tt">%(asctime)s,%(msecs)03.0f [%(name)-17s][%(levelname)-8s] %(message)s</tt></p>
+                              
+                              <p class="p">The format of the log file logging messages. See also
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="logging/index.html#logging__log_fmt_logfile">log_fmt_logfile</a>.
+                              </p>
+                              <pre class="pre codeblock language-yaml">log_fmt_logfile: '%(asctime)s,%(msecs)03.0f [%(name)-17s][%(levelname)-8s] %(message)s'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__log_granular_levels">
+                              <h2 class="title sectiontitle">log_granular_levels</h2>
+                              <p class="p">Default: <tt class="ph tt">{}</tt></p>
+                              
+                              <p class="p">This can be used to control logging levels more specifically. See also
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="logging/index.html#logging__log_granular_levels">log_granular_levels</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__node-groups">
+                              <h2 class="title sectiontitle">Node Groups</h2>
+                              <p class="p">Default: <tt class="ph tt">{}</tt></p>
+                              
+                              <p class="p">Node groups allow for logical groupings of minion nodes.
+                                 A group consists of a group name and a compound target.
+                              </p>
+                              <pre class="pre codeblock language-yaml">nodegroups:
+  group1: 'L@foo.domain.com,bar.domain.com,baz.domain.com or bl*.domain.com'
+  group2: 'G@os:Debian and foo.domain.com'
+  group3: 'G@os:Debian and N@group1'</pre>
+                              <p class="p">More information on using nodegroups can be found 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../topics/targeting/nodegroups.html#targeting-nodegroups">here</a>.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__range-cluster-settings">
+                              <h2 class="title sectiontitle">Range Cluster Settings</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__range_server">
+                              <h2 class="title sectiontitle">range_server</h2>
+                              <p class="p">Default: <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">The range server (and optional port) that serves your cluster information
+                                 <a class="xref" href="https://github.com/ytoolshed/range/wiki/%22yamlfile%22-module-file-spec" target="_blank">https://github.com/ytoolshed/range/wiki/%22yamlfile%22-module-file-spec</a></p>
+                              <pre class="pre codeblock language-yaml">range_server: range:80</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__include-configuration">
+                              <h2 class="title sectiontitle">Include Configuration</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__default_include">
+                              <h2 class="title sectiontitle">default_include</h2>
+                              <p class="p">Default: <tt class="ph tt">master.d/*.conf</tt></p>
+                              
+                              <p class="p">The master can include configuration from other files. Per default the
+                                 master will automatically include all config files from <tt class="ph tt">master.d/*.conf</tt>
+                                 where <tt class="ph tt">master.d</tt> is relative to the directory of the master configuration
+                                 file.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__include">
+                              <h2 class="title sectiontitle">include</h2>
+                              <p class="p">Default: <tt class="ph tt">not defined</tt></p>
+                              
+                              <p class="p">The master can include configuration from other files. To enable this,
+                                 pass a list of paths to this option. The paths can be either relative or
+                                 absolute; if relative, they are considered to be relative to the directory
+                                 the main minion configuration file lives in. Paths can make use of
+                                 shell-style globbing. If no files are matched by a path passed to this
+                                 option then the master will log a warning message.
+                              </p>
+                              <pre class="pre codeblock language-yaml"># Include files from a master.d directory in the same
+# directory as the master config file
+include: master.d/*
+
+# Include a single extra file into the configuration
+include: /etc/roles/webserver
+
+# Include several files and the master.d directory
+include:
+  - extra_config
+  - master.d/*
+  - /etc/roles/webserver</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__windows-software-repo-settings">
+                              <h2 class="title sectiontitle">Windows Software Repo Settings</h2>
+                           </div>
+                           
+                           <div class="section" id="configuration-salt-master__win_repo">
+                              <h2 class="title sectiontitle">win_repo</h2>
+                              <p class="p">Default: <tt class="ph tt">/srv/salt/win/repo</tt></p>
+                              
+                              <p class="p">Location of the repo on the master</p>
+                              <pre class="pre codeblock language-yaml">win_repo: '/srv/salt/win/repo'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__win_repo_mastercachefile">
+                              <h2 class="title sectiontitle">win_repo_mastercachefile</h2>
+                              <p class="p">Default: <tt class="ph tt">/srv/salt/win/repo/winrepo.p</tt></p>
+                              <pre class="pre codeblock language-yaml">win_repo_mastercachefile: '/srv/salt/win/repo/winrepo.p'</pre>
+                              </div>
+                           
+                           <div class="section" id="configuration-salt-master__win_gitrepos">
+                              <h2 class="title sectiontitle">win_gitrepos</h2>
+                              <p class="p">Default: <tt class="ph tt">''</tt></p>
+                              
+                              <p class="p">List of git repositories to include with the local repo.</p>
+                              <pre class="pre codeblock language-yaml">win_gitrepos:
+  - 'https://github.com/saltstack/salt-winrepo.git'</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

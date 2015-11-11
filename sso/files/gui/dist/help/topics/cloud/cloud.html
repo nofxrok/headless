@@ -1,0 +1,551 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Writing Cloud Provider Modules</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Writing Cloud Provider Modules">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="writing-cloud-provider-modules">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="writing-cloud-provider-modules">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Writing Cloud Provider Modules</h1>
+                        <div class="body conbody">
+                           <p class="p">Salt Cloud runs on a module system similar to the main Salt project. The
+                              modules inside saltcloud exist in the <tt class="ph tt">salt/cloud/clouds</tt> directory of the
+                              salt source.
+                           </p>
+                           
+                           <p class="p">There are two basic types of cloud modules. If a cloud provider is supported by
+                              libcloud, then using it is the fastest route to getting a module written. The
+                              Apache Libcloud project is located at:
+                           </p>
+                           
+                           <p class="p"><a class="xref" href="http://libcloud.apache.org/" target="_blank">http://libcloud.apache.org/</a></p>
+                           
+                           <p class="p">Not every cloud provider is supported by libcloud. Additionally, not every
+                              feature in a supported cloud provider is necessary supported by libcloud. In
+                              either of these cases, a module can be created which does not rely on libcloud.
+                           </p>
+                           
+                           <div class="section" id="writing-cloud-provider-modules__all-modules">
+                              <h2 class="title sectiontitle">All Modules</h2>
+                              <p class="p">The following functions are required by all modules, whether or not they are
+                                 based on libcloud.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__the-virtual-function">
+                              <h2 class="title sectiontitle">The __virtual__() Function</h2>
+                              <p class="p">This function determines whether or not to make this cloud module available
+                                 upon execution. Most often, it uses <tt class="ph tt">get_configured_provider()</tt> to determine
+                                 if the necessary configuration has been set up. It may also check for necessary
+                                 imports, to decide whether to load the module. In most cases, it will return a
+                                 <tt class="ph tt">True</tt> or <tt class="ph tt">False</tt> value. If the name of the driver used does not match the
+                                 filename, then that name should be returned instead of <tt class="ph tt">True</tt>. An example of
+                                 this may be seen in the Azure module:
+                              </p>
+                              
+                              <p class="p"><a class="xref" href="https://github.com/saltstack/salt/tree/develop/salt/cloud/clouds/msazure.py" target="_blank">https://github.com/saltstack/salt/tree/develop/salt/cloud/clouds/msazure.py</a></p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__the-get-configured-provider-function">
+                              <h2 class="title sectiontitle">The get_configured_provider() Function</h2>
+                              <p class="p">This function uses <tt class="ph tt">config.is_provider_configured()</tt> to determine wither
+                                 all required information for this driver has been configured. The last value
+                                 in the list of required settings should be followed by a comma.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="writing-cloud-provider-modules__libcloud-based-modules">
+                              <h2 class="title sectiontitle">Libcloud Based Modules</h2>
+                              <p class="p">Writing a cloud module based on libcloud has two major advantages. First of all,
+                                 much of the work has already been done by the libcloud project. Second, most of
+                                 the functions necessary to Salt have already been added to the Salt Cloud
+                                 project.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__the-create-function">
+                              <h2 class="title sectiontitle">The create() Function</h2>
+                              <p class="p">The most important function that does need to be manually written is the
+                                 <tt class="ph tt">create()</tt> function. This is what is used to request a virtual machine to be
+                                 created by the cloud provider, wait for it to become available, and then
+                                 (optionally) log in and install Salt on it.
+                              </p>
+                              
+                              <p class="p">A good example to follow for writing a cloud provider module based on libcloud
+                                 is the module provided for Linode:
+                              </p>
+                              
+                              <p class="p"><a class="xref" href="https://github.com/saltstack/salt/tree/develop/salt/cloud/clouds/linode.py" target="_blank">https://github.com/saltstack/salt/tree/develop/salt/cloud/clouds/linode.py</a></p>
+                              
+                              <p class="p">The basic flow of a <tt class="ph tt">create()</tt> function is as follows:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">Send a request to the cloud provider to create a virtual machine.</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Wait for the virtual machine to become available.</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Generate kwargs to be used to deploy Salt.</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Log into the virtual machine and deploy Salt.</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">Return a data structure that describes the newly-created virtual machine.</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <p class="p">At various points throughout this function, events may be fired on the Salt
+                                 event bus. Four of these events, which are described below, are required. Other
+                                 events may be added by the user, where appropriate.
+                              </p>
+                              
+                              <p class="p">When the <tt class="ph tt">create()</tt> function is called, it is passed a data structure called
+                                 <tt class="ph tt">vm_</tt>. This dict contains a composite of information describing the virtual
+                                 machine to be created. A dict called <tt class="ph tt">__opts__</tt> is also provided by Salt,
+                                 which contains the options used to run Salt Cloud, as well as a set of
+                                 configuration and environment variables.
+                              </p>
+                              
+                              <p class="p">The first thing the <tt class="ph tt">create()</tt> function must do is fire an event stating that
+                                 it has started the create process. This event is tagged
+                                 <tt class="ph tt">salt/cloud/&lt;vm name&gt;/creating</tt>. The payload contains the names of the VM,
+                                 profile and provider.
+                              </p>
+                              
+                              <p class="p">A set of kwargs is then usually created, to describe the parameters required
+                                 by the cloud provider to request the virtual machine.
+                              </p>
+                              
+                              <p class="p">An event is then fired to state that a virtual machine is about to be requested.
+                                 It is tagged as <tt class="ph tt">salt/cloud/&lt;vm name&gt;/requesting</tt>. The payload contains most
+                                 or all of the parameters that will be sent to the cloud provider. Any private
+                                 information (such as passwords) should not be sent in the event.
+                              </p>
+                              
+                              <p class="p">After a request is made, a set of deploy kwargs will be generated. These will
+                                 be used to install Salt on the target machine. Windows options are supported
+                                 at this point, and should be generated, even if the cloud provider does not
+                                 currently support Windows. This will save time in the future if the provider
+                                 does eventually decide to support Windows.
+                              </p>
+                              
+                              <p class="p">An event is then fired to state that the deploy process is about to begin. This
+                                 event is tagged <tt class="ph tt">salt/cloud/&lt;vm name&gt;/deploying</tt>. The payload for the event
+                                 will contain a set of deploy kwargs, useful for debugging purposed. Any private
+                                 data, including passwords and keys (including public keys) should be stripped
+                                 from the deploy kwargs before the event is fired.
+                              </p>
+                              
+                              <p class="p">If any Windows options have been passed in, the
+                                 <tt class="ph tt">salt.utils.cloud.deploy_windows()</tt> function will be called. Otherwise, it
+                                 will be assumed that the target is a Linux or Unix machine, and the
+                                 <tt class="ph tt">salt.utils.cloud.deploy_script()</tt> will be called.
+                              </p>
+                              
+                              <p class="p">Both of these functions will wait for the target machine to become available,
+                                 then the necessary port to log in, then a successful login that can be used to
+                                 install Salt. Minion configuration and keys will then be uploaded to a temporary
+                                 directory on the target by the appropriate function. On a Windows target, the
+                                 Windows Minion Installer will be run in silent mode. On a Linux/Unix target, a
+                                 deploy script (bootstrap-salt.sh, by default) will be run, which will
+                                 auto-detect the operating system, and install Salt using its native package
+                                 manager. These do not need to be handled by the developer in the cloud module.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">salt.utils.cloud.validate_windows_cred()</tt> function has been extended to
+                                 take the number of retries and retry_delay parameters in case a specific cloud
+                                 provider has a delay between providing the Windows credentials and the
+                                 credentials being available for use.  In their <tt class="ph tt">create()</tt> function, or as a
+                                 a sub-function called during the creation process, developers should use the
+                                 <tt class="ph tt">win_deploy_auth_retries</tt> and <tt class="ph tt">win_deploy_auth_retry_delay</tt> parameters from
+                                 the provider configuration to allow the end-user the ability to customize the
+                                 number of tries and delay between tries for their particular provider.
+                              </p>
+                              
+                              <p class="p">After the appropriate deploy function completes, a final event is fired
+                                 which describes the virtual machine that has just been created. This event is
+                                 tagged <tt class="ph tt">salt/cloud/&lt;vm name&gt;/created</tt>. The payload contains the names of the
+                                 VM, profile, and provider.
+                              </p>
+                              
+                              <p class="p">Finally, a dict (queried from the provider) which describes the new virtual
+                                 machine is returned to the user. Because this data is not fired on the event
+                                 bus it can, and should, return any passwords that were returned by the cloud
+                                 provider. In some cases (for example, Rackspace), this is the only time that
+                                 the password can be queried by the user; post-creation queries may not contain
+                                 password information (depending upon the provider).
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__the-libcloudfuncs-functions">
+                              <h2 class="title sectiontitle">The libcloudfuncs Functions</h2>
+                              <p class="p">A number of other functions are required for all cloud providers. However, with
+                                 libcloud-based modules, these are all provided for free by the libcloudfuncs
+                                 library. The following two lines set up the imports:
+                              </p>
+                              <pre class="pre codeblock language-python">from salt.cloud.libcloudfuncs import *   # pylint: disable=W0614,W0401
+from salt.utils import namespaced_function</pre>
+                              <p class="p">And then a series of declarations will make the necessary functions available
+                                 within the cloud module.
+                              </p>
+                              <pre class="pre codeblock language-python">get_size = namespaced_function(get_size, globals())
+get_image = namespaced_function(get_image, globals())
+avail_locations = namespaced_function(avail_locations, globals())
+avail_images = namespaced_function(avail_images, globals())
+avail_sizes = namespaced_function(avail_sizes, globals())
+script = namespaced_function(script, globals())
+destroy = namespaced_function(destroy, globals())
+list_nodes = namespaced_function(list_nodes, globals())
+list_nodes_full = namespaced_function(list_nodes_full, globals())
+list_nodes_select = namespaced_function(list_nodes_select, globals())
+show_instance = namespaced_function(show_instance, globals())</pre>
+                              <p class="p">If necessary, these functions may be replaced by removing the appropriate
+                                 declaration line, and then adding the function as normal.
+                              </p>
+                              
+                              <p class="p">These functions are required for all cloud modules, and are described in detail
+                                 in the next section.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="writing-cloud-provider-modules__non-libcloud-based-modules">
+                              <h2 class="title sectiontitle">Non-Libcloud Based Modules</h2>
+                              <p class="p">In some cases, using libcloud is not an option. This may be because libcloud has
+                                 not yet included the necessary driver itself, or it may be that the driver that
+                                 is included with libcloud does not contain all of the necessary features
+                                 required by the developer. When this is the case, some or all of the functions
+                                 in <tt class="ph tt">libcloudfuncs</tt> may be replaced. If they are all replaced, the libcloud
+                                 imports should be absent from the Salt Cloud module.
+                              </p>
+                              
+                              <p class="p">A good example of a non-libcloud provider is the DigitalOcean module:</p>
+                              
+                              <p class="p"><a class="xref" href="https://github.com/saltstack/salt/tree/develop/salt/cloud/clouds/digital_ocean.py" target="_blank">https://github.com/saltstack/salt/tree/develop/salt/cloud/clouds/digital_ocean.py</a></p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__id1">
+                              <h2 class="title sectiontitle">The create() Function</h2>
+                              <p class="p">The <tt class="ph tt">create()</tt> function must be created as described in the libcloud-based
+                                 module documentation.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__the-get-size-function">
+                              <h2 class="title sectiontitle">The get_size() Function</h2>
+                              <p class="p">This function is only necessary for libcloud-based modules, and does not need
+                                 to exist otherwise.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__the-get-image-function">
+                              <h2 class="title sectiontitle">The get_image() Function</h2>
+                              <p class="p">This function is only necessary for libcloud-based modules, and does not need
+                                 to exist otherwise.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__the-avail-locations-function">
+                              <h2 class="title sectiontitle">The avail_locations() Function</h2>
+                              <p class="p">This function returns a list of locations available, if the cloud provider uses
+                                 multiple data centers. It is not necessary if the cloud provider only uses one
+                                 data center. It is normally called using the <tt class="ph tt">--list-locations</tt> option.
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-cloud --list-locations my-cloud-provider</pre>
+                              </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__the-avail-images-function">
+                              <h2 class="title sectiontitle">The avail_images() Function</h2>
+                              <p class="p">This function returns a list of images available for this cloud provider. There
+                                 are not currently any known cloud providers that do not provide this
+                                 functionality, though they may refer to images by a different name (for example,
+                                 "templates"). It is normally called using the <tt class="ph tt">--list-images</tt> option.
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-cloud --list-images my-cloud-provider</pre>
+                              </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__the-avail-sizes-function">
+                              <h2 class="title sectiontitle">The avail_sizes() Function</h2>
+                              <p class="p">This function returns a list of sizes available for this cloud provider.
+                                 Generally, this refers to a combination of RAM, CPU, and/or disk space. This
+                                 functionality may not be present on some cloud providers. For example, the
+                                 Parallels module breaks down RAM, CPU, and disk space into separate options,
+                                 whereas in other providers, these options are baked into the image. It is
+                                 normally called using the <tt class="ph tt">--list-sizes</tt> option.
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-cloud --list-sizes my-cloud-provider</pre>
+                              </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__the-script-function">
+                              <h2 class="title sectiontitle">The script() Function</h2>
+                              <p class="p">This function builds the deploy script to be used on the remote machine.  It is
+                                 likely to be moved into the <tt class="ph tt">salt.utils.cloud</tt> library in the near future, as
+                                 it is very generic and can usually be copied wholesale from another module. An
+                                 excellent example is in the Azure driver.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__the-destroy-function">
+                              <h2 class="title sectiontitle">The destroy() Function</h2>
+                              <p class="p">This function irreversibly destroys a virtual machine on the cloud provider.
+                                 Before doing so, it should fire an event on the Salt event bus. The tag for this
+                                 event is <tt class="ph tt">salt/cloud/&lt;vm name&gt;/destroying</tt>. Once the virtual machine has been
+                                 destroyed, another event is fired. The tag for that event is
+                                 <tt class="ph tt">salt/cloud/&lt;vm name&gt;/destroyed</tt>.
+                              </p>
+                              
+                              <p class="p">This function is normally called with the <tt class="ph tt">-d</tt> options:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-cloud -d myinstance</pre>
+                              </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__the-list-nodes-function">
+                              <h2 class="title sectiontitle">The list_nodes() Function</h2>
+                              <p class="p">This function returns a list of nodes available on this cloud provider, using
+                                 the following fields:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">id (str)</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">image (str)</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">size (str)</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">state (str)</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">private_ips (list)</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">public_ips (list)</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <p class="p">No other fields should be returned in this function, and all of these fields
+                                 should be returned, even if empty. The private_ips and public_ips fields should
+                                 always be of a list type, even if empty, and the other fields should always be
+                                 of a str type. This function is normally called with the <tt class="ph tt">-Q</tt> option:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-cloud -Q</pre>
+                              </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__the-list-nodes-full-function">
+                              <h2 class="title sectiontitle">The list_nodes_full() Function</h2>
+                              <p class="p">All information available about all nodes should be returned in this function.
+                                 The fields in the list_nodes() function should also be returned, even if they
+                                 would not normally be provided by the cloud provider. This is because some
+                                 functions both within Salt and 3rd party will break if an expected field is not
+                                 present. This function is normally called with the <tt class="ph tt">-F</tt> option:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-cloud -F</pre>
+                              </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__the-list-nodes-select-function">
+                              <h2 class="title sectiontitle">The list_nodes_select() Function</h2>
+                              <p class="p">This function returns only the fields specified in the <tt class="ph tt">query.selection</tt>
+                                 option in <tt class="ph tt">/etc/salt/cloud</tt>. Because this function is so generic, all of the
+                                 heavy lifting has been moved into the <tt class="ph tt">salt.utils.cloud</tt> library.
+                              </p>
+                              
+                              <p class="p">A function to call <tt class="ph tt">list_nodes_select()</tt> still needs to be present. In
+                                 general, the following code can be used as-is:
+                              </p>
+                              <pre class="pre codeblock language-python">def list_nodes_select(call=None):
+    '''
+    Return a list of the VMs that are on the provider, with select fields
+    '''
+    return salt.utils.cloud.list_nodes_select(
+        list_nodes_full('function'), __opts__['query.selection'], call,
+    )</pre>
+                              <p class="p">However, depending on the cloud provider, additional variables may be required.
+                                 For instance, some modules use a <tt class="ph tt">conn</tt> object, or may need to pass other
+                                 options into <tt class="ph tt">list_nodes_full()</tt>. In this case, be sure to update the function
+                                 appropriately:
+                              </p>
+                              <pre class="pre codeblock language-python">def list_nodes_select(conn=None, call=None):
+    '''
+    Return a list of the VMs that are on the provider, with select fields
+    '''
+    if not conn:
+        conn = get_conn()   # pylint: disable=E0602
+
+    return salt.utils.cloud.list_nodes_select(
+        list_nodes_full(conn, 'function'),
+        __opts__['query.selection'],
+        call,
+    )</pre>
+                              <p class="p">This function is normally called with the <tt class="ph tt">-S</tt> option:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-cloud -S</pre>
+                              </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__the-show-instance-function">
+                              <h2 class="title sectiontitle">The show_instance() Function</h2>
+                              <p class="p">This function is used to display all of the information about a single node
+                                 that is available from the cloud provider. The simplest way to provide this is
+                                 usually to call <tt class="ph tt">list_nodes_full()</tt>, and return just the data for the
+                                 requested node. It is normally called as an action:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-cloud -a show_instance myinstance</pre>
+                              </div>
+                           
+                           <div class="section" id="writing-cloud-provider-modules__actions-and-functions">
+                              <h2 class="title sectiontitle">Actions and Functions</h2>
+                              <p class="p">Extra functionality may be added to a cloud provider in the form of an
+                                 <tt class="ph tt">--action</tt> or a <tt class="ph tt">--function</tt>. Actions are performed against a cloud
+                                 instance/virtual machine, and functions are performed against a cloud provider.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__actions">
+                              <h2 class="title sectiontitle">Actions</h2>
+                              <p class="p">Actions are calls that are performed against a specific instance or virtual
+                                 machine. The <tt class="ph tt">show_instance</tt> action should be available in all cloud modules.
+                                 Actions are normally called with the <tt class="ph tt">-a</tt> option:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-cloud -a show_instance myinstance</pre>
+                              <p class="p">Actions must accept a <tt class="ph tt">name</tt> as a first argument, may optionally support any
+                                 number of kwargs as appropriate, and must accept an argument of <tt class="ph tt">call</tt>, with
+                                 a default of <tt class="ph tt">None</tt>.
+                              </p>
+                              
+                              <p class="p">Before performing any other work, an action should normally verify that it has
+                                 been called correctly. It may then perform the desired feature, and return
+                                 useful information to the user. A basic action looks like:
+                              </p>
+                              <pre class="pre codeblock language-python">def show_instance(name, call=None):
+'''
+Show the details from EC2 concerning an AMI
+'''
+if call != 'action':
+    raise SaltCloudSystemExit(
+        'The show_instance action must be called with -a or --action.'
+    )
+
+return _get_node(name)</pre>
+                              <p class="p">Please note that generic kwargs, if used, are passed through to actions as
+                                 <tt class="ph tt">kwargs</tt> and not <tt class="ph tt">**kwargs</tt>. An example of this is seen in the Functions
+                                 section.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="writing-cloud-provider-modules__functions">
+                              <h2 class="title sectiontitle">Functions</h2>
+                              <p class="p">Functions are called that are performed against a specific cloud provider. An
+                                 optional function that is often useful is <tt class="ph tt">show_image</tt>, which describes an
+                                 image in detail. Functions are normally called with the <tt class="ph tt">-f</tt> option:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-cloud -f show_image my-cloud-provider image='Ubuntu 13.10 64-bit'</pre>
+                              <p class="p">A function may accept any number of kwargs as appropriate, and must accept an
+                                 argument of <tt class="ph tt">call</tt> with a default of <tt class="ph tt">None</tt>.
+                              </p>
+                              
+                              <p class="p">Before performing any other work, a function should normally verify that it has
+                                 been called correctly. It may then perform the desired feature, and return
+                                 useful information to the user. A basic function looks like:
+                              </p>
+                              <pre class="pre codeblock language-python">def show_image(kwargs, call=None):
+    '''
+    Show the details from EC2 concerning an AMI
+    '''
+    if call != 'function':
+        raise SaltCloudSystemExit(
+            'The show_image action must be called with -f or --function.'
+        )
+
+    params = {'ImageId.1': kwargs['image'],
+              'Action': 'DescribeImages'}
+    result = query(params)
+    log.info(result)
+
+    return result</pre>
+                              <p class="p">Take note that generic kwargs are passed through to functions as <tt class="ph tt">kwargs</tt> and
+                                 not <tt class="ph tt">**kwargs</tt>.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

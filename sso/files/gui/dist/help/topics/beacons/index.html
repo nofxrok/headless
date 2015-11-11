@@ -1,0 +1,108 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Beacons</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Beacons">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ent/events-reactors.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="id1">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="id1">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Beacons</h1>
+                        <div class="body conbody">
+                           <p class="p ids"><span class="ph" id="id1__beacons"></span></p>
+                           
+                           <p class="p">The beacon system allows the minion to hook into system processes and
+                              continually translate external events into the salt event bus. The
+                              primary example of this is the 
+                              		
+                              			&nbsp;<a class="xref" href="../../ref/beacons/all/salt.beacons.inotify.html#salt.beacons.inotify">inotify</a> beacon. This
+                              beacon uses inotify to watch configured files or directories on the minion for
+                              changes, creation, deletion etc.
+                           </p>
+                           
+                           <p class="p">This allows for the changes to be sent up to the master where the
+                              reactor can respond to changes.
+                           </p>
+                           
+                           <div class="section" id="id1__configuring-the-beacons">
+                              <h2 class="title sectiontitle">Configuring The Beacons</h2>
+                              <p class="p">The beacon system, like many others in Salt, can be configured via the
+                                 minion pillar, grains, or local config file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">beacons:
+  inotify:
+    /etc/httpd/conf.d: {}
+    /opt: {}</pre>
+                              <p class="p">Optionally, a beacon can be run on an interval other than the default
+                                 <tt class="ph tt">loop_interval</tt>, which is typically set to 1 second.
+                              </p>
+                              
+                              <p class="p">To run a beacon every 5 seconds, for example, provide an <tt class="ph tt">interval</tt> argument
+                                 to a beacon.
+                              </p>
+                              <pre class="pre codeblock language-yaml">beacons:
+  load:
+    - interval: 5</pre>
+                              </div>
+                           
+                           <div class="section" id="id1__writing-beacon-plugins">
+                              <h2 class="title sectiontitle">Writing Beacon Plugins</h2>
+                              <p class="p">Beacon plugins use the standard Salt loader system, meaning that many of the
+                                 constructs from other plugin systems holds true, such as the <tt class="ph tt">__virtual__</tt>
+                                 function.
+                              </p>
+                              
+                              <p class="p">The important function in the Beacon Plugin is the <tt class="ph tt">beacon</tt> function. When
+                                 the beacon is configured to run, this function will be executed repeatedly
+                                 by the minion. The <tt class="ph tt">beacon</tt> function therefore cannot block and should be
+                                 as lightweight as possible. The <tt class="ph tt">beacon</tt> also must return a list of dicts,
+                                 each dict in the list will be translated into an event on the master.
+                              </p>
+                              
+                              <p class="p">Please see the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/beacons/all/salt.beacons.inotify.html#salt.beacons.inotify">inotify</a> beacon as an example.
+                              </p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

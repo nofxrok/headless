@@ -1,0 +1,49 @@
+<div class="col-xs-2 nav-container col-height">
+    <accordion id="salt-jobs" class="sidebar-accordion" close-others="oneAtATime">
+        <accordion-group id="jobs-panel" ng-init="isopenjobs = true" is-open="isopenjobs">
+            <accordion-heading ng-click="isopenjobs=!isopenjobs"><i class="pull-left glyphicon" ng-class="{ 'ssIcons-icon_close1': isopenjobs,'ssIcons-icon_open1': !isopenjobs}"></i> States</accordion-heading>
+            <div>
+                <ul class="nav nav-respane">
+                    <li ui-sref-active="active"><a ui-sref="salt.dashboard.jobs.list">Jobs-All</a></li>
+                </ul>
+            </div>
+            <div id="job-tree-container">
+                    <div>
+                      <!-- Public TREE -->
+                      <div  
+                      data-angular-treeview="true"
+                      data-tree-id="publicJobTree"
+                      data-tree-model="jobPublicFolderStructure"
+                      data-node-id="id"
+                      data-node-label="name"
+                      data-node-count="sls_count"
+                      data-node-root="is_root"
+                      data-node-children="children"
+                      data-tree-type="all">
+                      </div>
+                  </div>
+                  
+                   <div>
+                      <!-- Private TREE -->
+                      <div 
+                      data-angular-treeview="true"
+                      data-tree-id="privateJobTree"
+                      data-tree-model="jobPrivateFolderStructure"
+                      data-node-id="id"
+                      data-node-label="name"
+                      data-node-count="sls_count"
+                      data-node-root="is_root"
+                      data-node-children="children"
+                      data-tree-type="all">
+                      </div>
+                  </div>
+
+            </div>
+        </accordion-group>
+
+
+	</accordion>
+</div>
+<div class="col-xs-10 padding-zero col-height state-container">
+	<ui-view>
+</div>

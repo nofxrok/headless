@@ -1,0 +1,174 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Logstash Logging Handler</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="Logstash Logging Handler">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../../log.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="logstash-logging-handler">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="logstash-logging-handler">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Logstash Logging Handler</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p"><span class="keyword versionmodified">New in version 0.17.0.</span></p>
+                              
+                              <p class="p">This module provides some <a class="xref" href="http://logstash.net" target="_blank">Logstash</a> logging handlers.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="logstash-logging-handler__udp-logging-handler">
+                              <h2 class="title sectiontitle">UDP Logging Handler</h2>
+                              <p class="p">For versions of <a class="xref" href="http://logstash.net" target="_blank">Logstash</a> before 1.2.0:
+                              </p>
+                              
+                              <p class="p">In the salt configuration file:</p>
+                              <pre class="pre codeblock language-yaml">logstash_udp_handler:
+  host: 127.0.0.1
+  port: 9999
+  version: 0</pre>
+                              <p class="p">In the <a class="xref" href="http://logstash.net" target="_blank">Logstash</a> configuration file:
+                              </p>
+                              <pre class="pre codeblock language-text">input {
+  udp {
+    type =&gt; "udp-type"
+    format =&gt; "json_event"
+  }
+}</pre>
+                              <p class="p">For version 1.2.0 of <a class="xref" href="http://logstash.net" target="_blank">Logstash</a> and newer:
+                              </p>
+                              
+                              <p class="p">In the salt configuration file:</p>
+                              <pre class="pre codeblock language-yaml">logstash_udp_handler:
+  host: 127.0.0.1
+  port: 9999
+  version: 1</pre>
+                              <p class="p">In the <a class="xref" href="http://logstash.net" target="_blank">Logstash</a> configuration file:
+                              </p>
+                              <pre class="pre codeblock language-text">input {
+  udp {
+    port =&gt; 9999
+    codec =&gt; json
+  }
+}</pre>
+                              <p class="p">Please read the <a class="xref" href="http://logstash.net/docs/latest/inputs/udp" target="_blank">UDP input</a> configuration page for additional information.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="logstash-logging-handler__zeromq-logging-handler">
+                              <h2 class="title sectiontitle">ZeroMQ Logging Handler</h2>
+                              <p class="p">For versions of <a class="xref" href="http://logstash.net" target="_blank">Logstash</a> before 1.2.0:
+                              </p>
+                              
+                              <p class="p">In the salt configuration file:</p>
+                              <pre class="pre codeblock language-yaml">logstash_zmq_handler:
+  address: tcp://127.0.0.1:2021
+  version: 0</pre>
+                              <p class="p">In the <a class="xref" href="http://logstash.net" target="_blank">Logstash</a> configuration file:
+                              </p>
+                              <pre class="pre codeblock language-text">input {
+  zeromq {
+    type =&gt; "zeromq-type"
+    mode =&gt; "server"
+    topology =&gt; "pubsub"
+    address =&gt; "tcp://0.0.0.0:2021"
+    charset =&gt; "UTF-8"
+    format =&gt; "json_event"
+  }
+}</pre>
+                              <p class="p">For version 1.2.0 of <a class="xref" href="http://logstash.net" target="_blank">Logstash</a> and newer:
+                              </p>
+                              
+                              <p class="p">In the salt configuration file:</p>
+                              <pre class="pre codeblock language-yaml">logstash_zmq_handler:
+  address: tcp://127.0.0.1:2021
+  version: 1</pre>
+                              <p class="p">In the <a class="xref" href="http://logstash.net" target="_blank">Logstash</a> configuration file:
+                              </p>
+                              <pre class="pre codeblock language-text">input {
+  zeromq {
+    topology =&gt; "pubsub"
+    address =&gt; "tcp://0.0.0.0:2021"
+    codec =&gt; json
+  }
+}</pre>
+                              <p class="p">Please read the <a class="xref" href="http://logstash.net/docs/latest/inputs/zeromq" target="_blank">ZeroMQ input</a> configuration page for additional
+                                 information.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">Important Logstash Setting</strong><p class="p">One of the most important settings that you should not forget on your
+                                    <a class="xref" href="http://logstash.net" target="_blank">Logstash</a> configuration file regarding these logging handlers is
+                                    <tt class="ph tt">format</tt>.
+                                    Both the <span class="keyword title_reference">UDP</span> and <span class="keyword title_reference">ZeroMQ</span> inputs need to have <tt class="ph tt">format</tt> as
+                                    <tt class="ph tt">json_event</tt> which is what we send over the wire.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                           <div class="section" id="logstash-logging-handler__log-level">
+                              <h2 class="title sectiontitle">Log Level</h2>
+                              <p class="p">Both the <tt class="ph tt">logstash_udp_handler</tt> and the <tt class="ph tt">logstash_zmq_handler</tt>
+                                 configuration sections accept an additional setting <tt class="ph tt">log_level</tt>. If not
+                                 set, the logging level used will be the one defined for <tt class="ph tt">log_level</tt> in
+                                 the global configuration file section.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="logstash-logging-handler__hwm">
+                              <h2 class="title sectiontitle">HWM</h2>
+                              <p class="p">The <a class="xref" href="http://api.zeromq.org/3-2:zmq-setsockopt" target="_blank">high water mark</a> for the ZMQ socket setting. Only applicable for the
+                                 <tt class="ph tt">logstash_zmq_handler</tt>.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">Inspiration</strong><p class="p">This work was inspired in <a class="xref" href="https://github.com/turtlebender/pylogstash" target="_blank">pylogstash</a>, <a class="xref" href="https://github.com/vklochan/python-logstash" target="_blank">python-logstash</a>, <a class="xref" href="https://github.com/ryanpetrello/canary" target="_blank">canary</a>
+                                    and the <a class="xref" href="https://github.com/zeromq/pyzmq/blob/master/zmq/log/handlers.py" target="_blank">PyZMQ logging handler</a>.
+                                 </p>
+                                 
+                              </aside>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

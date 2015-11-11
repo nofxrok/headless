@@ -1,0 +1,492 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Syslog-ng usage</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Syslog-ng usage">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../ref/configuration/logging/index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="syslog-ng-usage">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="syslog-ng-usage">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Syslog-ng usage</h1>
+                        <div class="body conbody">
+                           <div class="section" id="syslog-ng-usage__overview">
+                              <h2 class="title sectiontitle">Overview</h2>
+                              <p class="p">Syslog_ng state module is for generating syslog-ng
+                                 configurations. You can do the following things:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p">generate syslog-ng configuration from YAML,</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">use non-YAML configuration,</p>
+                                    
+                                 </li>
+                                 
+                                 <li class="li">
+                                    <p class="p">start, stop or reload syslog-ng.</p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <p class="p">There is also an execution module, which can check the syntax of the
+                                 configuration, get the version and other information about syslog-ng.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="syslog-ng-usage__configuration">
+                              <h2 class="title sectiontitle">Configuration</h2>
+                              <p class="p">Users can create syslog-ng configuration statements with the
+                                 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/all/salt.states.syslog_ng.html#salt.states.syslog_ng.config">syslog_ng.config</a> function. It requires
+                                 a <span class="keyword title_reference">name</span> and a <span class="keyword title_reference">config</span> parameter. The <span class="keyword title_reference">name</span> parameter determines the name of
+                                 the generated statement and the <span class="keyword title_reference">config</span> parameter holds a parsed YAML structure.
+                              </p>
+                              
+                              <p class="p">A statement can be declared in the following forms (both are equivalent):</p>
+                              <pre class="pre codeblock language-yaml">source.s_localhost:
+  syslog_ng.config:
+    - config:
+        - tcp:
+          - ip: "127.0.0.1"
+          - port: 1233</pre>
+                              <pre class="pre codeblock language-yaml">s_localhost:
+  syslog_ng.config:
+    - config:
+        source:
+          - tcp:
+            - ip: "127.0.0.1"
+            - port: 1233</pre>
+                              <p class="p">The first one is called short form, because it needs less typing. Users can use lists
+                                 and dictionaries to specify their configuration. The format is quite self describing
+                                 and
+                                 there are more examples [at the end](#examples) of this document.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="syslog-ng-usage__quotation">
+                              <h2 class="title sectiontitle">Quotation</h2>
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm">The quotation can be tricky sometimes but here are some rules to follow:</dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">when a string meant to be <tt class="ph tt">"string"</tt> in the generated configuration, it should be like <tt class="ph tt">'"string"'</tt> in the YAML document
+                                          </p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">similarly, users should write <tt class="ph tt">"'string'"</tt> to get <tt class="ph tt">'string'</tt> in the generated configuration
+                                          </p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                           </div>
+                           
+                           <div class="section" id="syslog-ng-usage__full-example">
+                              <h2 class="title sectiontitle">Full example</h2>
+                              <p class="p">The following configuration is an example, how a complete syslog-ng configuration
+                                 looks like:
+                              </p>
+                              <pre class="pre codeblock language-yaml"># Set the location of the configuration file
+set_location:
+  module.run:
+    - name: syslog_ng.set_config_file
+    - m_name: "/home/tibi/install/syslog-ng/etc/syslog-ng.conf"
+
+# The syslog-ng and syslog-ng-ctl binaries are here. You needn't use
+# this method if these binaries can be found in a directory in your PATH.
+set_bin_path:
+  module.run:
+    - name: syslog_ng.set_binary_path
+    - m_name: "/home/tibi/install/syslog-ng/sbin"
+
+# Writes the first lines into the config file, also erases its previous
+# content
+write_version:
+  module.run:
+    - name: syslog_ng.write_version
+    - m_name: "3.6"
+
+# There is a shorter form to set the above variables
+set_variables:
+  module.run:
+    - name: syslog_ng.set_parameters
+    - version: "3.6"
+    - binary_path: "/home/tibi/install/syslog-ng/sbin"
+    - config_file: "/home/tibi/install/syslog-ng/etc/syslog-ng.conf"
+
+
+# Some global options
+options.global_options:
+  syslog_ng.config:
+    - config:
+        - time_reap: 30
+        - mark_freq: 10
+        - keep_hostname: "yes"
+
+source.s_localhost:
+  syslog_ng.config:
+    - config:
+        - tcp:
+          - ip: "127.0.0.1"
+          - port: 1233
+
+destination.d_log_server:
+  syslog_ng.config:
+    - config:
+        - tcp:
+          - "127.0.0.1"
+          - port: 1234
+
+log.l_log_to_central_server:
+  syslog_ng.config:
+    - config:
+        - source: s_localhost
+        - destination: d_log_server
+
+some_comment:
+  module.run:
+    - name: syslog_ng.write_config
+    - config: |
+        # Multi line
+        # comment
+
+# An other mode to use comments or existing configuration snippets
+config.other_comment_form:
+  syslog_ng.config:
+    - config: |
+        # Multi line
+        # comment</pre>
+                              <p class="p">The 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/states/all/salt.states.syslog_ng.html#salt.states.syslog_ng.reloaded">syslog_ng.reloaded</a> function can generate syslog-ng configuration from YAML. If the statement (source,
+                                 destination, parser,
+                                 etc.) has a name, this function uses the id as the name, otherwise (log
+                                 statement) it's purpose is like a mandatory comment.
+                              </p>
+                              
+                              <p class="p">After execution this example the syslog_ng state will generate this
+                                 file:
+                              </p>
+                              <pre class="pre codeblock language-text">#Generated by Salt on 2014-08-18 00:11:11
+@version: 3.6
+
+options {
+    time_reap(
+        30
+    );
+    mark_freq(
+        10
+    );
+    keep_hostname(
+        yes
+    );
+};
+
+
+source s_localhost {
+    tcp(
+        ip(
+            127.0.0.1
+        ),
+        port(
+            1233
+        )
+    );
+};
+
+
+destination d_log_server {
+    tcp(
+        127.0.0.1,
+        port(
+            1234
+        )
+    );
+};
+
+
+log {
+    source(
+        s_localhost
+    );
+    destination(
+        d_log_server
+    );
+};
+
+
+# Multi line
+# comment
+
+
+# Multi line
+# comment</pre>
+                              <p class="p">Users can include arbitrary texts in the generated configuration with
+                                 using the <tt class="ph tt">config</tt> statement (see the example above).
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="syslog-ng-usage__syslog-ng-module-functions">
+                              <h2 class="title sectiontitle">Syslog_ng module functions</h2>
+                              <p class="p">You can use 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.syslog_ng.html#salt.modules.syslog_ng.set_binary_path">syslog_ng.set_binary_path</a>
+                                 to set the directory which contains the
+                                 syslog-ng and syslog-ng-ctl binaries. If this directory is in your PATH,
+                                 you don't need to use this function. There is also a  
+                                 		
+                                 			&nbsp;<a class="xref" href="../../ref/modules/all/salt.modules.syslog_ng.html#salt.modules.syslog_ng.set_config_file">syslog_ng.set_config_file</a>
+                                 function to set the location of the configuration file.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="syslog-ng-usage__examples">
+                              <h2 class="title sectiontitle">Examples</h2>
+                           </div>
+                           
+                           <div class="section head3" id="syslog-ng-usage__simple-source">
+                              <h2 class="title sectiontitle">Simple source</h2><pre class="pre codeblock language-text">source s_tail {
+ file(
+   "/var/log/apache/access.log",
+   follow_freq(1),
+   flags(no-parse, validate-utf8)
+ );
+};</pre>
+                              <pre class="pre codeblock language-yaml">s_tail:
+  # Salt will call the source function of syslog_ng module
+  syslog_ng.config:
+    - config:
+        source:
+          - file:
+            - file: ''"/var/log/apache/access.log"''
+            - follow_freq : 1
+            - flags:
+              - no-parse
+              - validate-utf8</pre>
+                              <p class="p">OR</p>
+                              <pre class="pre codeblock language-yaml">s_tail:
+  syslog_ng.config:
+    - config:
+        source:
+            - file:
+              - ''"/var/log/apache/access.log"''
+              - follow_freq : 1
+              - flags:
+                - no-parse
+                - validate-utf8</pre>
+                              <p class="p">OR</p>
+                              <pre class="pre codeblock language-yaml">source.s_tail:
+  syslog_ng.config:
+    - config:
+        - file:
+          - ''"/var/log/apache/access.log"''
+          - follow_freq : 1
+          - flags:
+            - no-parse
+            - validate-utf8</pre>
+                              </div>
+                           
+                           <div class="section head3" id="syslog-ng-usage__complex-source">
+                              <h2 class="title sectiontitle">Complex source</h2><pre class="pre codeblock language-text">source s_gsoc2014 {
+ tcp(
+   ip("0.0.0.0"),
+   port(1234),
+   flags(no-parse)
+ );
+};</pre>
+                              <pre class="pre codeblock language-yaml">s_gsoc2014:
+  syslog_ng.config:
+    - config:
+        source:
+          - tcp:
+            - ip: 0.0.0.0
+            - port: 1234
+            - flags: no-parse</pre>
+                              </div>
+                           
+                           <div class="section head3" id="syslog-ng-usage__filter">
+                              <h2 class="title sectiontitle">Filter</h2><pre class="pre codeblock language-text">filter f_json {
+ match(
+   "@json:"
+ );
+};</pre>
+                              <pre class="pre codeblock language-yaml">f_json:
+  syslog_ng.config:
+    - config:
+        filter:
+          - match:
+            - ''"@json:"''</pre>
+                              </div>
+                           
+                           <div class="section head3" id="syslog-ng-usage__template">
+                              <h2 class="title sectiontitle">Template</h2><pre class="pre codeblock language-text">template t_demo_filetemplate {
+ template(
+   "$ISODATE $HOST $MSG "
+ );
+ template_escape(
+   no
+ );
+};</pre>
+                              <pre class="pre codeblock language-yaml">t_demo_filetemplate:
+  syslog_ng.config:
+    -config:
+        template:
+          - template:
+            - '"$ISODATE $HOST $MSG\n"'
+          - template_escape:
+            - "no"</pre>
+                              </div>
+                           
+                           <div class="section head3" id="syslog-ng-usage__rewrite">
+                              <h2 class="title sectiontitle">Rewrite</h2><pre class="pre codeblock language-text">rewrite r_set_message_to_MESSAGE {
+ set(
+   "${.json.message}",
+   value("$MESSAGE")
+ );
+};</pre>
+                              <pre class="pre codeblock language-yaml">r_set_message_to_MESSAGE:
+  syslog_ng.config:
+    - config:
+        rewrite:
+          - set:
+            - '"${.json.message}"'
+            - value : '"$MESSAGE"'</pre>
+                              </div>
+                           
+                           <div class="section head3" id="syslog-ng-usage__global-options">
+                              <h2 class="title sectiontitle">Global options</h2><pre class="pre codeblock language-text">options {
+   time_reap(30);
+   mark_freq(10);
+   keep_hostname(yes);
+};</pre>
+                              <pre class="pre codeblock language-yaml">global_options:
+  syslog_ng.config:
+    - config:
+        options:
+          - time_reap: 30
+          - mark_freq: 10
+          - keep_hostname: "yes"</pre>
+                              </div>
+                           
+                           <div class="section head3" id="syslog-ng-usage__log">
+                              <h2 class="title sectiontitle">Log</h2><pre class="pre codeblock language-text">log {
+ source(s_gsoc2014);
+ junction {
+  channel {
+   filter(f_json);
+   parser(p_json);
+   rewrite(r_set_json_tag);
+   rewrite(r_set_message_to_MESSAGE);
+   destination {
+    file(
+      "/tmp/json-input.log",
+      template(t_gsoc2014)
+    );
+   };
+   flags(final);
+  };
+  channel {
+   filter(f_not_json);
+   parser {
+    syslog-parser(
+
+    );
+   };
+   rewrite(r_set_syslog_tag);
+   flags(final);
+  };
+ };
+ destination {
+  file(
+    "/tmp/all.log",
+    template(t_gsoc2014)
+  );
+ };
+};</pre>
+                              <pre class="pre codeblock language-yaml">l_gsoc2014:
+  syslog_ng.config:
+    - config:
+        log:
+          - source: s_gsoc2014
+          - junction:
+            - channel:
+              - filter: f_json
+              - parser: p_json
+              - rewrite: r_set_json_tag
+              - rewrite: r_set_message_to_MESSAGE
+              - destination:
+                - file:
+                  - '"/tmp/json-input.log"'
+                  - template: t_gsoc2014
+              - flags: final
+            - channel:
+              - filter: f_not_json
+              - parser:
+                - syslog-parser: []
+              - rewrite: r_set_syslog_tag
+              - flags: final
+          - destination:
+            - file:
+              - "/tmp/all.log"
+              - template: t_gsoc2014</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

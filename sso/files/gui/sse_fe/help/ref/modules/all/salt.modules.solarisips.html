@@ -1,0 +1,620 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.solarisips</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.solarisips">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-solarisips">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-solarisips">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.solarisips</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-solarisips__module-salt.modules.solarisips"></span></p>
+                              
+                              <p class="p">IPS pkg support for Solaris</p>
+                              
+                              <p class="p">This module provides support for Solaris 11 new package management - IPS (Image Packaging
+                                 System).
+                                 In order to manage the IPS packages using salt, you need to override the <tt class="ph tt">pkg</tt> provider
+                                 by setting the 
+                                 		
+                                 			&nbsp;<a class="xref" href="../../configuration/minion.html#configuration-salt-minion__providers">providers</a> parameter in your Minion config file like this:
+                              </p>
+                              <pre class="pre codeblock language-yaml">providers:
+  pkg: solarisips</pre>
+                              <p class="p">Or you can set the provider in sls for each pkg:
+                                 .. code-block:: yaml
+                              </p>
+                              
+                              <blockquote class="lq">
+                                 <dl class="dl definition_list">
+                                    <dt class="dt dlterm">mypackage:</dt>
+                                    
+                                    <dd class="dd">
+                                       <dl class="dl definition_list">
+                                          <dt class="dt dlterm">pkg.installed:</dt>
+                                          
+                                          <dd class="dd">
+                                             <ul class="ul">
+                                                <li class="li">
+                                                   <p class="p">provider: solarisips</p>
+                                                   
+                                                </li>
+                                                
+                                             </ul>
+                                             
+                                          </dd>
+                                          
+                                       </dl>
+                                       
+                                    </dd>
+                                    
+                                 </dl>
+                                 
+                              </blockquote>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.solarisips.available_version">
+                           <h2 class="title topictitle2">available_version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarisips.available_version(
+								name,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">The available version of the package in the repository.
+                                    In case of multiple match, it returns list of all matched packages.
+                                    Accepts full or partial FMRI.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.latest_version pkg://solaris/entire</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarisips.get_fmri">
+                           <h2 class="title topictitle2">get_fmri</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarisips.get_fmri(
+								name,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Returns FMRI from partial name. Returns '' if not found.
+                                    In case of multiple match, the function returns list of all matched packages.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.get_fmri bash</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarisips.install">
+                           <h2 class="title topictitle2">install</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarisips.install(
+								name=None,
+								refresh=False,
+								pkgs=None,
+								version=None,
+								test=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Install the named package using the IPS pkg command.
+                                    Accepts full or partial FMRI.
+                                 </p>
+                                 
+                                 <p class="p">Returns a dict containing the new package names and versions:</p>
+                                 <pre class="pre codeblock language-">{'&lt;package&gt;': {'old': '&lt;old-version&gt;',
+               'new': '&lt;new-version&gt;'}}</pre>
+                                 <p class="p">Multiple Package Installation Options:</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d247878e139" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d247878e141" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d247878e139" class="stentry propvalue">pkgs</td>
+                                    
+                                    <td valign="top" headers="d247878e141" class="stentry propdesc">
+                                       <p class="p">A list of packages to install. Must be passed as a python list.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.install vim
+salt '*' pkg.install pkg://solaris/editor/vim
+salt '*' pkg.install pkg://solaris/editor/vim refresh=True</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarisips.is_installed">
+                           <h2 class="title topictitle2">is_installed</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarisips.is_installed(
+								name,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Returns True if the package is installed. Otherwise returns False.
+                                    Name can be full or partial FMRI.
+                                    In case of multiple match from partial FMRI name, it returns True.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.is_installed bash</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarisips.latest_version">
+                           <h2 class="title topictitle2">latest_version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarisips.latest_version(
+								name,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">The available version of the package in the repository.
+                                    In case of multiple match, it returns list of all matched packages.
+                                    Accepts full or partial FMRI.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.latest_version pkg://solaris/entire</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarisips.list_pkgs">
+                           <h2 class="title topictitle2">list_pkgs</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarisips.list_pkgs(
+								versions_as_list=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">List the currently installed packages as a dict:</p>
+                                 <pre class="pre codeblock language-">{'&lt;package_name&gt;': '&lt;version&gt;'}</pre>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.list_pkgs</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarisips.list_upgrades">
+                           <h2 class="title topictitle2">list_upgrades</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarisips.list_upgrades(
+								refresh=False
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Lists all packages available for update.
+                                    When run in global zone, it reports only upgradable packages for the global zone.
+                                    When run in non-global zone, it can report more upgradable packages than "pkg update
+                                    -vn" because "pkg update" hides packages that require newer version of pkg://solaris/entire
+                                    (which means that they can be upgraded only from global zone). Simply said: if you
+                                    see pkg://solaris/entire in the list of upgrades, you should upgrade the global zone
+                                    to get all possible updates.
+                                    You can force full pkg DB refresh before listing.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.list_upgrades
+salt '*' pkg.list_upgrades refresh=True</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarisips.normalize_name">
+                           <h2 class="title topictitle2">normalize_name</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarisips.normalize_name(
+								name,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Normalizes pkg name to full FMRI before running pkg.install.
+                                    In case of multiple match or no match, it returns the name without modifications and
+                                    lets the "pkg install" to decide what to do.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' pkg.normalize_name vim</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarisips.purge">
+                           <h2 class="title topictitle2">purge</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarisips.purge(
+								name,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Remove specified package. Accepts full or partial FMRI.</p>
+                                 
+                                 <p class="p">Returns a list containing the removed packages.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.purge &lt;package name&gt;</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarisips.refresh_db">
+                           <h2 class="title topictitle2">refresh_db</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarisips.refresh_db(
+								full=False
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Updates the remote repos database. You can force the full pkg DB refresh from all
+                                    publishers regardless the last refresh time.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.refresh_db
+salt '*' pkg.refresh_db full=True</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarisips.remove">
+                           <h2 class="title topictitle2">remove</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarisips.remove(
+								name=None,
+								pkgs=None,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Remove specified package. Accepts full or partial FMRI.
+                                    In case of multiple match, the command fails and won't modify the OS.
+                                 </p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d247878e392" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d247878e394" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d247878e392" class="stentry propvalue">name</td>
+                                    
+                                    <td valign="top" headers="d247878e394" class="stentry propdesc">
+                                       <p class="p">The name of the package to be deleted.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <p class="p">Multiple Package Options:</p>
+                                 
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d247878e407" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d247878e409" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d247878e407" class="stentry propvalue">pkgs</td>
+                                    
+                                    <td valign="top" headers="d247878e409" class="stentry propdesc">
+                                       <p class="p">A list of packages to delete. Must be passed as a python list. The
+                                          <tt class="ph tt">name</tt> parameter will be ignored if this option is passed.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Returns a list containing the removed packages.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.remove &lt;package name&gt;
+salt '*' pkg.remove tcsh
+salt '*' pkg.remove pkg://solaris/shell/tcsh
+salt '*' pkg.remove pkgs='["foo", "bar"]'</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarisips.search">
+                           <h2 class="title topictitle2">search</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarisips.search(
+								name,
+								versions_as_list=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Searches the repository for given pkg name.
+                                    The name can be full or partial FMRI. All matches are printed. Globs are also supported.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.is_installed bash</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarisips.upgrade">
+                           <h2 class="title topictitle2">upgrade</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarisips.upgrade(
+								refresh=False,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Upgrade all packages to the latest possible version.
+                                    When run in global zone, it updates also all non-global zones.
+                                    In non-global zones upgrade is limited by dependency constrains linked to the version
+                                    of pkg://solaris/entire.
+                                 </p>
+                                 
+                                 <p class="p">Returns also a raw output of "pkg update" command (because if update creates a new
+                                    boot environment, no immediate changes are visible in "pkg list").
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.upgrade</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarisips.upgrade_available">
+                           <h2 class="title topictitle2">upgrade_available</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarisips.upgrade_available(
+								name
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Check if there is an upgrade available for a certain package
+                                    Accepts full or partial FMRI. Returns all matches found.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.upgrade_available apache-22</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.solarisips.version">
+                           <h2 class="title topictitle2">version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.solarisips.version(
+								*names,
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Common interface for obtaining the version of installed packages.
+                                    Accepts full or partial FMRI. If called using pkg_resource, full FMRI is required.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-">salt '*' pkg.version vim
+salt '*' pkg.version foo bar baz
+salt '*' pkg_resource.version pkg://solaris/entire</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

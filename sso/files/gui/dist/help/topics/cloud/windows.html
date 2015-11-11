@@ -1,0 +1,185 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Spinning up Windows Minions</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Spinning up Windows Minions">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="spinning-up-windows-minions">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="spinning-up-windows-minions">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Spinning up Windows Minions</h1>
+                        <div class="body conbody">
+                           <p class="p">It is possible to use Salt Cloud to spin up Windows instances, and then install
+                              Salt on them. This functionality is available on all cloud providers that are
+                              supported by Salt Cloud. However, it may not necessarily be available on all
+                              Windows images.
+                           </p>
+                           
+                           <div class="section" id="spinning-up-windows-minions__requirements">
+                              <h2 class="title sectiontitle">Requirements</h2>
+                              <p class="p">Salt Cloud makes use of <span class="keyword title_reference">impacket</span> and <span class="keyword title_reference">winexe</span> to set up the Windows Salt
+                                 Minion installer.
+                              </p>
+                              
+                              <p class="p"><span class="keyword title_reference">impacket</span> is usually available as either the <span class="keyword title_reference">impacket</span> or the
+                                 <span class="keyword title_reference">python-impacket</span> package, depending on the distribution. More information on
+                                 <span class="keyword title_reference">impacket</span> can be found at the project home:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p"><a class="xref" href="https://code.google.com/p/impacket/" target="_blank">impacket project home</a></p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <p class="p"><span class="keyword title_reference">winexe</span> is less commonly available in distribution-specific repositories.
+                                 However, it is currently being built for various distributions in 3rd party
+                                 channels:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p"><a class="xref" href="http://rpm.pbone.net/index.php3?stat=3&amp;search=winexe" target="_blank">RPMs at pbone.net</a></p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p"><a class="xref" href="http://software.opensuse.org/package/winexe" target="_blank">OpenSuse Build Service</a></p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                              <p class="p">Additionally, a copy of the Salt Minion Windows installer must be present on
+                                 the system on which Salt Cloud is running. This installer may be downloaded
+                                 from saltstack.com:
+                              </p>
+                              
+                              <ul class="ul">
+                                 <li class="li">
+                                    <p class="p"><a class="xref" href="http://docs.saltstack.com/downloads/" target="_blank">SaltStack Download Area</a></p>
+                                    
+                                 </li>
+                                 
+                              </ul>
+                              
+                           </div>
+                           
+                           <div class="section" id="spinning-up-windows-minions__firewall-settings">
+                              <h2 class="title sectiontitle">Firewall Settings</h2>
+                              <p class="p">Because Salt Cloud makes use of <span class="keyword title_reference">smbclient</span> and <span class="keyword title_reference">winexe</span>, port 445 must be open
+                                 on the target image. This port is not generally open by default on a standard
+                                 Windows distribution, and care must be taken to use an image in which this port
+                                 is open, or the Windows firewall is disabled.
+                              </p>
+                              
+                              <p class="p">If supported by the cloud provider, a PowerShell script may be used to open up
+                                 this port automatically, using the cloud provider's <span class="keyword title_reference">userdata</span>. The following
+                                 script would open up port 445, and apply the changes:
+                              </p>
+                              <pre class="pre codeblock language-other">&lt;powershell&gt;
+New-NetFirewallRule -Name "SMB445" -DisplayName "SMB445" -Protocol TCP -LocalPort 445
+Set-Item (dir wsman:\localhost\Listener\*\Port -Recurse).pspath 445 -Force
+Restart-Service winrm
+&lt;/powershell&gt;</pre>
+                              <p class="p">For EC2, this script may be saved as a file, and specified in the provider or
+                                 profile configuration as <span class="keyword title_reference">userdata_file</span>. For instance:
+                              </p>
+                              <pre class="pre codeblock language-yaml">userdata_file: /etc/salt/windows-firewall.ps1</pre>
+                              </div>
+                           
+                           <div class="section" id="spinning-up-windows-minions__configuration">
+                              <h2 class="title sectiontitle">Configuration</h2>
+                              <p class="p">Configuration is set as usual, with some extra configuration settings. The
+                                 location of the Windows installer on the machine that Salt Cloud is running on
+                                 must be specified. This may be done in any of the regular configuration files
+                                 (main, providers, profiles, maps). For example:
+                              </p>
+                              
+                              <p class="p">Setting the installer in <tt class="ph tt">/etc/salt/cloud.providers</tt>:
+                              </p>
+                              <pre class="pre codeblock language-yaml">my-softlayer:
+  provider: softlayer
+  user: MYUSER1138
+  apikey: 'e3b68aa711e6deadc62d5b76355674beef7cc3116062ddbacafe5f7e465bfdc9'
+  minion:
+    master: saltmaster.example.com
+  win_installer: /root/Salt-Minion-2014.7.0-AMD64-Setup.exe
+  win_username: Administrator
+  win_password: letmein</pre>
+                              <p class="p">The default Windows user is <span class="keyword title_reference">Administrator</span>, and the default Windows password
+                                 is blank.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="spinning-up-windows-minions__auto-generated-passwords-on-ec2">
+                              <h2 class="title sectiontitle">Auto-Generated Passwords on EC2</h2>
+                              <p class="p">On EC2, when the <span class="keyword title_reference">win_password</span> is set to <span class="keyword title_reference">auto</span>, Salt Cloud will query EC2 for
+                                 an auto-generated password. This password is expected to take at least 4 minutes
+                                 to generate, adding additional time to the deploy process.
+                              </p>
+                              
+                              <p class="p">When the EC2 API is queried for the auto-generated password, it will be returned
+                                 in a message encrypted with the specified <span class="keyword title_reference">keyname</span>. This requires that the
+                                 appropriate <span class="keyword title_reference">private_key</span> file is also specified. Such a profile configuration
+                                 might look like:
+                              </p>
+                              <pre class="pre codeblock language-yaml">windows-server-2012:
+  provider: my-ec2-config
+  image: ami-c49c0dac
+  size: m1.small
+  securitygroup: windows
+  keyname: mykey
+  private_key: /root/mykey.pem
+  userdata_file: /etc/salt/windows-firewall.ps1
+  win_installer: /root/Salt-Minion-2014.7.0-AMD64-Setup.exe
+  win_username: Administrator
+  win_password: auto</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

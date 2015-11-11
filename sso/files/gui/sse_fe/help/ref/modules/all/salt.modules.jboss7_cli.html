@@ -1,0 +1,295 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.jboss7_cli</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.jboss7_cli">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-jboss7-cli">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-jboss7-cli">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.jboss7_cli</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-jboss7-cli__module-salt.modules.jboss7_cli"></span></p>
+                              
+                              <p class="p">Module for low-level interaction with JbossAS7 through CLI.</p>
+                              
+                              <p class="p">This module exposes two ways of interaction with the CLI, either through commands
+                                 or operations.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> 
+                                 <p class="p">Following JBoss documentation (<a class="xref" href="https://developer.jboss.org/wiki/CommandLineInterface" target="_blank">https://developer.jboss.org/wiki/CommandLineInterface</a>):
+                                    "Operations are considered a low level but comprehensive way to manage the AS controller,
+                                    i.e. if it can't be done with operations it can't be done in any other way.
+                                    Commands, on the other hand, are more user-friendly in syntax,
+                                    although most of them still translate into operation requests and some of them even
+                                    into a few
+                                    composite operation requests, i.e. commands also simplify some management operations
+                                    from the user's point of view."
+                                 </p>
+                                 
+                              </aside>
+                              
+                              <p class="p">The difference between calling a command or operation is in handling the result.
+                                 Commands return a zero return code if operation is successful or return non-zero return
+                                 code and
+                                 print an error to standard output in plain text, in case of an error.
+                              </p>
+                              
+                              <p class="p">Operations return a json-like structure, that contain more information about the result.
+                                 In case of a failure, they also return a specific return code. This module parses
+                                 the output from the operations and
+                                 returns it as a dictionary so that an execution of an operation can then be verified
+                                 against specific errors.
+                              </p>
+                              
+                              <dl class="dl definition_list">
+                                 <dt class="dt dlterm">In order to run each function, jboss_config dictionary with the following properties
+                                    must be passed:
+                                 </dt>
+                                 
+                                 <dd class="dd">
+                                    <ul class="ul">
+                                       <li class="li">
+                                          <p class="p">cli_path: the path to jboss-cli script, for example: '/opt/jboss/jboss-7.0/bin/jboss-cli.sh'</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">controller: the ip addres and port of controller, for example: 10.11.12.13:9999</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">cli_user: username to connect to jboss administration console if necessary</p>
+                                          
+                                       </li>
+                                       
+                                       <li class="li">
+                                          <p class="p">cli_password: password to connect to jboss administration console if necessary</p>
+                                          
+                                       </li>
+                                       
+                                    </ul>
+                                    
+                                 </dd>
+                                 
+                              </dl>
+                              
+                              <p class="p">Example:</p>
+                              <pre class="pre codeblock language-yaml">jboss_config:
+   cli_path: '/opt/jboss/jboss-7.0/bin/jboss-cli.sh'
+   controller: 10.11.12.13:9999
+   cli_user: 'jbossadm'
+   cli_password: 'jbossadm'</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.jboss7_cli.run_command">
+                           <h2 class="title topictitle2">run_command</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.jboss7_cli.run_command(
+								jboss_config,
+								command,
+								fail_on_error=True
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Execute a command against jboss instance through the CLI interface.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d138399e82" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d138399e84" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d138399e82" class="stentry propvalue">jboss_config</td>
+                                    
+                                    <td valign="top" headers="d138399e84" class="stentry propdesc">
+                                       <p class="p">Configuration dictionary with properties specified above.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d138399e82" class="stentry propvalue">command</td>
+                                    
+                                    <td valign="top" headers="d138399e84" class="stentry propdesc">
+                                       <p class="p">Command to execute against jboss instance</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d138399e82" class="stentry propvalue">fail_on_error (default=True)</td>
+                                    
+                                    <td valign="top" headers="d138399e84" class="stentry propdesc">
+                                       <p class="p">Is true, raise CommandExecutionException exception if execution fails.
+                                          If false, 'success' property of the returned dictionary is set to False
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' jboss7_cli.run_command '{"cli_path": "integration.modules.sysmod.SysModuleTest.test_valid_docs", "controller": "10.11.12.13:9999", "cli_user": "jbossadm", "cli_password": "jbossadm"}' my_command</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.jboss7_cli.run_operation">
+                           <h2 class="title topictitle2">run_operation</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.jboss7_cli.run_operation(
+								jboss_config,
+								operation,
+								fail_on_error=True,
+								retries=1
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Execute an operation against jboss instance through the CLI interface.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d138399e139" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d138399e141" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d138399e139" class="stentry propvalue">jboss_config</td>
+                                    
+                                    <td valign="top" headers="d138399e141" class="stentry propdesc">
+                                       <p class="p">Configuration dictionary with properties specified above.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d138399e139" class="stentry propvalue">operation</td>
+                                    
+                                    <td valign="top" headers="d138399e141" class="stentry propdesc">
+                                       <p class="p">An operation to execute against jboss instance</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d138399e139" class="stentry propvalue">fail_on_error (default=True)</td>
+                                    
+                                    <td valign="top" headers="d138399e141" class="stentry propdesc">
+                                       <p class="p">Is true, raise CommandExecutionException exception if execution fails.
+                                          If false, 'success' property of the returned dictionary is set to False
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d138399e139" class="stentry propvalue">retries:</td>
+                                    
+                                    <td valign="top" headers="d138399e141" class="stentry propdesc">
+                                       <p class="p">Number of retries in case of "JBAS012144: Could not connect to remote" error.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' jboss7_cli.run_operation '{"cli_path": "integration.modules.sysmod.SysModuleTest.test_valid_docs", "controller": "10.11.12.13:9999", "cli_user": "jbossadm", "cli_password": "jbossadm"}' my_operation</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

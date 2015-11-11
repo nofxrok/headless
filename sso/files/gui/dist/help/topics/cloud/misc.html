@@ -1,0 +1,367 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Miscellaneous Salt Cloud Options</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="concept">
+      
+      <meta name="DC.Title" content="Miscellaneous Salt Cloud Options">
+      
+      <meta name="DC.Relation" scheme="URI" content="index.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="miscellaneous-salt-cloud-options">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="user dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page concept  - topic-topic concept-concept " id="miscellaneous-salt-cloud-options">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">Miscellaneous Salt Cloud Options</h1>
+                        <div class="body conbody">
+                           <p class="p">This page describes various miscellaneous options available in Salt Cloud</p>
+                           
+                           <div class="section" id="miscellaneous-salt-cloud-options__deploy-script-arguments">
+                              <h2 class="title sectiontitle">Deploy Script Arguments</h2>
+                              <p class="p">Custom deploy scripts are unlikely to need custom arguments to be passed to
+                                 them, but salt-bootstrap has been extended quite a bit, and this may be
+                                 necessary. script_args can be specified in either the profile or the map file,
+                                 to pass arguments to the deploy script:
+                              </p>
+                              <pre class="pre codeblock language-yaml">ec2-amazon:
+    provider: ec2
+    image: ami-1624987f
+    size: t1.micro
+    ssh_username: ec2-user
+    script: bootstrap-salt
+    script_args: -c /tmp/</pre>
+                              <p class="p">This has also been tested to work with pipes, if needed:</p>
+                              <pre class="pre codeblock language-yaml">script_args: | head</pre>
+                              </div>
+                           
+                           <div class="section" id="miscellaneous-salt-cloud-options__use-sftp-to-transfer-files">
+                              <h2 class="title sectiontitle">Use SFTP to transfer files</h2>
+                              <p class="p">Some distributions do not have scp distributed with the ssh package.  The
+                                 solution is to use sftp with the <span class="keyword title_reference">use_sftp</span> flag
+                              </p>
+                              <pre class="pre codeblock language-yaml">use_sftp: True</pre>
+                              </div>
+                           
+                           <div class="section" id="miscellaneous-salt-cloud-options__sync-after-install">
+                              <h2 class="title sectiontitle">Sync After Install</h2>
+                              <p class="p">Salt allows users to create custom modules, grains, and states which can be
+                                 synchronised to minions to extend Salt with further functionality.
+                              </p>
+                              
+                              <p class="p">This option will inform Salt Cloud to synchronise your custom modules, grains,
+                                 states or all these to the minion just after it has been created. For this to
+                                 happen, the following line needs to be added to the main cloud
+                                 configuration file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">sync_after_install: all</pre>
+                              <p class="p">The available options for this setting are:</p>
+                              <pre class="pre codeblock language-yaml">modules
+grains
+states
+all</pre>
+                              </div>
+                           
+                           <div class="section" id="miscellaneous-salt-cloud-options__setting-up-new-salt-masters">
+                              <h2 class="title sectiontitle">Setting up New Salt Masters</h2>
+                              <p class="p">It has become increasingly common for users to set up multi-hierarchal
+                                 infrastructures using Salt Cloud. This sometimes involves setting up an
+                                 instance to be a master in addition to a minion. With that in mind, you can
+                                 now lay down master configuration on a machine by specifying master options
+                                 in the profile or map file.
+                              </p>
+                              <pre class="pre codeblock language-yaml">make_master: True</pre>
+                              <p class="p">This will cause Salt Cloud to generate master keys for the instance, and tell
+                                 salt-bootstrap to install the salt-master package, in addition to the
+                                 salt-minion package.
+                              </p>
+                              
+                              <p class="p">The default master configuration is usually appropriate for most users, and
+                                 will not be changed unless specific master configuration has been added to the
+                                 profile or map:
+                              </p>
+                              <pre class="pre codeblock language-yaml">master:
+    user: root
+    interface: 0.0.0.0</pre>
+                              </div>
+                           
+                           <div class="section" id="miscellaneous-salt-cloud-options__delete-ssh-keys">
+                              <h2 class="title sectiontitle">Delete SSH Keys</h2>
+                              <p class="p">When Salt Cloud deploys an instance, the SSH pub key for the instance is added
+                                 to the known_hosts file for the user that ran the salt-cloud command. When an
+                                 instance is deployed, a cloud provider generally recycles the IP address for
+                                 the instance.  When Salt Cloud attempts to deploy an instance using a recycled
+                                 IP address that has previously been accessed from the same machine, the old key
+                                 in the known_hosts file will cause a conflict.
+                              </p>
+                              
+                              <p class="p">In order to mitigate this issue, Salt Cloud can be configured to remove old
+                                 keys from the known_hosts file when destroying the node. In order to do this,
+                                 the following line needs to be added to the main cloud configuration file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">delete_sshkeys: True</pre>
+                              </div>
+                           
+                           <div class="section" id="miscellaneous-salt-cloud-options__keeping-tmp-files">
+                              <h2 class="title sectiontitle">Keeping /tmp/ Files</h2>
+                              <p class="p">When Salt Cloud deploys an instance, it uploads temporary files to /tmp/ for
+                                 salt-bootstrap to put in place. After the script has run, they are deleted. To
+                                 keep these files around (mostly for debugging purposes), the --keep-tmp option
+                                 can be added:
+                              </p>
+                              <pre class="pre codeblock language-bash">salt-cloud -p myprofile mymachine --keep-tmp</pre>
+                              <p class="p">For those wondering why /tmp/ was used instead of /root/, this had to be done
+                                 for images which require the use of sudo, and therefore do not allow remote
+                                 root logins, even for file transfers (which makes /root/ unavailable).
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="miscellaneous-salt-cloud-options__hide-output-from-minion-install">
+                              <h2 class="title sectiontitle">Hide Output From Minion Install</h2>
+                              <p class="p">By default Salt Cloud will stream the output from the minion deploy script
+                                 directly to STDOUT. Although this can been very useful, in certain cases you
+                                 may wish to switch this off. The following config option is there to enable or
+                                 disable this output:
+                              </p>
+                              <pre class="pre codeblock language-yaml">display_ssh_output: False</pre>
+                              </div>
+                           
+                           <div class="section" id="miscellaneous-salt-cloud-options__connection-timeout">
+                              <h2 class="title sectiontitle">Connection Timeout</h2>
+                              <p class="p">There are several stages when deploying Salt where Salt Cloud needs to wait for
+                                 something to happen. The VM getting it's IP address, the VM's SSH port is
+                                 available, etc.
+                              </p>
+                              
+                              <p class="p">If you find that the Salt Cloud defaults are not enough and your deployment
+                                 fails because Salt Cloud did not wait log enough, there are some settings you
+                                 can tweak.
+                              </p>
+                              
+                              <aside class="note "><span class="glyphicon glyphicon-check"></span><span class="title">Note:</span> <strong class="ph b">Note</strong><p class="p">All values should be provided in seconds</p>
+                                 
+                              </aside>
+                              
+                              <p class="p">You can tweak these settings globally, per cloud provider, or event per profile
+                                 definition.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="miscellaneous-salt-cloud-options__wait-for-ip-timeout">
+                              <h2 class="title sectiontitle">wait_for_ip_timeout</h2>
+                              <p class="p">The amount of time Salt Cloud should wait for a VM to start and get an IP back
+                                 from the cloud provider. Default: 5 minutes.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="miscellaneous-salt-cloud-options__wait-for-ip-interval">
+                              <h2 class="title sectiontitle">wait_for_ip_interval</h2>
+                              <p class="p">The amount of time Salt Cloud should sleep while querying for the VM's IP.
+                                 Default: 5 seconds.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="miscellaneous-salt-cloud-options__ssh-connect-timeout">
+                              <h2 class="title sectiontitle">ssh_connect_timeout</h2>
+                              <p class="p">The amount of time Salt Cloud should wait for a successful SSH connection to
+                                 the VM. Default: 5 minutes.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="miscellaneous-salt-cloud-options__wait-for-passwd-timeout">
+                              <h2 class="title sectiontitle">wait_for_passwd_timeout</h2>
+                              <p class="p">The amount of time until an ssh connection can be established via password or
+                                 ssh key. Default 15 seconds.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="miscellaneous-salt-cloud-options__wait-for-passwd-maxtries">
+                              <h2 class="title sectiontitle">wait_for_passwd_maxtries</h2>
+                              <p class="p">The number of attempts to connect to the VM until we abandon.
+                                 Default 15 attempts
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="miscellaneous-salt-cloud-options__wait-for-fun-timeout">
+                              <h2 class="title sectiontitle">wait_for_fun_timeout</h2>
+                              <p class="p">Some cloud drivers check for an available IP or a successful SSH connection
+                                 using a function, namely, SoftLayer, and SoftLayer-HW. So, the amount of time
+                                 Salt Cloud should retry such functions before failing. Default: 5 minutes.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="miscellaneous-salt-cloud-options__wait-for-spot-timeout">
+                              <h2 class="title sectiontitle">wait_for_spot_timeout</h2>
+                              <p class="p">The amount of time Salt Cloud should wait before an EC2 Spot instance is
+                                 available. This setting is only available for the EC2 cloud driver.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="miscellaneous-salt-cloud-options__salt-cloud-cache">
+                              <h2 class="title sectiontitle">Salt Cloud Cache</h2>
+                              <p class="p">Salt Cloud can maintain a cache of node data, for supported providers. The
+                                 following options manage this functionality.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="miscellaneous-salt-cloud-options__update-cachedir">
+                              <h2 class="title sectiontitle">update_cachedir</h2>
+                              <p class="p">On supported cloud providers, whether or not to maintain a cache of nodes
+                                 returned from a --full-query. The data will be stored in <tt class="ph tt">msgpack</tt> format
+                                 under <tt class="ph tt">&lt;SALT_CACHEDIR&gt;/cloud/active/&lt;DRIVER&gt;/&lt;PROVIDER&gt;/&lt;NODE_NAME&gt;.p</tt>. This
+                                 setting can be True or False.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head3" id="miscellaneous-salt-cloud-options__diff-cache-events">
+                              <h2 class="title sectiontitle">diff_cache_events</h2>
+                              <p class="p">When the cloud cachedir is being managed, if differences are encountered
+                                 between the data that is returned live from the cloud provider and the data in
+                                 the cache, fire events which describe the changes. This setting can be True or
+                                 False.
+                              </p>
+                              
+                              <p class="p">Some of these events will contain data which describe a node. Because some of
+                                 the fields returned may contain sensitive data, the <tt class="ph tt">cache_event_strip_fields</tt>
+                                 configuration option exists to strip those fields from the event return.
+                              </p>
+                              <pre class="pre codeblock language-yaml">cache_event_strip_fields:
+  - password
+  - priv_key</pre>
+                              <p class="p">The following are events that can be fired based on this data.</p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="miscellaneous-salt-cloud-options__salt-cloud-minionid-cache-node-new">
+                              <h2 class="title sectiontitle">salt/cloud/minionid/cache_node_new</h2>
+                              <p class="p">A new node was found on the cloud provider which was not listed in the cloud
+                                 cachedir. A dict describing the new node will be contained in the event.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="miscellaneous-salt-cloud-options__salt-cloud-minionid-cache-node-missing">
+                              <h2 class="title sectiontitle">salt/cloud/minionid/cache_node_missing</h2>
+                              <p class="p">A node that was previously listed in the cloud cachedir is no longer available
+                                 on the cloud provider.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section head4" id="miscellaneous-salt-cloud-options__salt-cloud-minionid-cache-node-diff">
+                              <h2 class="title sectiontitle">salt/cloud/minionid/cache_node_diff</h2>
+                              <p class="p">One or more pieces of data in the cloud cachedir has changed on the cloud
+                                 provider. A dict containing both the old and the new data will be contained in
+                                 the event.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="miscellaneous-salt-cloud-options__ssh-known-hosts">
+                              <h2 class="title sectiontitle">SSH Known Hosts</h2>
+                              <p class="p">Normally when bootstrapping a VM, salt-cloud will ignore the SSH host key. This
+                                 is because it does not know what the host key is before starting (because it
+                                 doesn't exist yet). If strict host key checking is turned on without the key
+                                 in the <tt class="ph tt">known_hosts</tt> file, then the host will never be available, and cannot
+                                 be bootstrapped.
+                              </p>
+                              
+                              <p class="p">If a provider is able to determine the host key before trying to bootstrap it,
+                                 that provider's driver can add it to the <tt class="ph tt">known_hosts</tt> file, and then turn on
+                                 strict host key checking. This can be set up in the main cloud configuration
+                                 file (normally <tt class="ph tt">/etc/salt/cloud</tt>) or in the provider-specific configuration
+                                 file:
+                              </p>
+                              <pre class="pre codeblock language-yaml">known_hosts_file: /path/to/.ssh/known_hosts</pre>
+                              <p class="p">If this is not set, it will default to <tt class="ph tt">/dev/null</tt>, and strict host key
+                                 checking will be turned off.
+                              </p>
+                              
+                              <p class="p">It is highly recommended that this option is <em class="ph i">not</em> set, unless the user has
+                                 verified that the provider supports this functionality, and that the image
+                                 being used is capable of providing the necessary information. At this time,
+                                 only the EC2 driver supports this functionality.
+                              </p>
+                              
+                           </div>
+                           
+                           <div class="section" id="miscellaneous-salt-cloud-options__ssh-agent">
+                              <h2 class="title sectiontitle">SSH Agent</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2015.2.0.</span></p>
+                              
+                              <p class="p">If the ssh key is not stored on the server salt-cloud is being run on, set
+                                 ssh_agent, and salt-cloud will use the forwarded ssh-agent to authenticate.
+                              </p>
+                              <pre class="pre codeblock language-yaml">ssh_agent: True</pre>
+                              </div>
+                           
+                           <div class="section" id="miscellaneous-salt-cloud-options__file-map-upload">
+                              <h2 class="title sectiontitle">File Map Upload</h2>
+                              <p class="p"><span class="keyword versionmodified">New in version 2014.7.0.</span></p>
+                              
+                              <p class="p">The <tt class="ph tt">file_map</tt> option allows an arbitrary group of files to be uploaded to the
+                                 target system before running the deploy script. This functionality requires a
+                                 provider uses salt.utils.cloud.bootstrap(), which is currently limited to the ec2,
+                                 gce, openstack and nova drivers.
+                              </p>
+                              
+                              <p class="p">The <tt class="ph tt">file_map</tt> can be configured globally in <tt class="ph tt">/etc/salt/cloud</tt>, or in any cloud
+                                 provider or profile file. For example, to upload an extra package or a custom deploy
+                                 script, a cloud profile using <tt class="ph tt">file_map</tt> might look like:
+                              </p>
+                              <pre class="pre codeblock language-yaml">ubuntu14:
+  provider: ec2-config
+  image: ami-98aa1cf0
+  size: t1.micro
+  ssh_username: root
+  securitygroup: default
+  file_map:
+    /local/path/to/custom/script: /remote/path/to/use/custom/script
+    /local/path/to/package: /remote/path/to/store/package</pre>
+                              </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

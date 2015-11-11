@@ -1,0 +1,738 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>salt.modules.iptables</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="schema.DC" href="http://purl.org/dc/terms/">
+      <meta name="DC.Type" content="reference">
+      
+      <meta name="DC.Title" content="salt.modules.iptables">
+      
+      <meta name="DC.Relation" scheme="URI" content="../../exe-modules.html">
+      
+      <meta name="DC.Format" content="XHTML">
+      
+      <meta name="DC.Identifier" content="salt-modules-iptables">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/core.min.css">
+      
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="../../../themes/gui/css/webhelp.min.css">
+      <script type="text/javascript" src="../../../themes/gui/js/webhelp.min.js"></script>
+      </head>
+   <body>
+      <div id="wrapper">
+         <!--ZOOMSTOP-->
+         <div id="sidebar-wrapper" class="reference dynamic-toc"></div>
+         <!--ZOOMRESTART-->
+         <div id="page-content-wrapper">
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="page reference  - topic-topic       reference-reference " id="salt-modules-iptables">
+                        <!--ZOOMSTOP--><a href="#menu-toggle" class="btn btn-primary" id="menu-toggle">Toggle Menu</a><!--ZOOMRESTART--><h1 class="title topictitle1">salt.modules.iptables</h1>
+                        <div class="body refbody">
+                           <div class="section">
+                              <p class="p ids"><span class="ph" id="salt-modules-iptables__module-salt.modules.iptables"></span></p>
+                              
+                              <p class="p">Support for iptables</p>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div xmlns:htmlutil="http://dita4publishers.org/functions/htmlutil" class="related-links"></div>
+                        <div class="topic reference nested1" id="salt.modules.iptables.append">
+                           <h2 class="title topictitle2">append</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.iptables.append(
+								table='filter',
+								chain=None,
+								rule=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Append a rule to the specified table/chain.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d136639e47" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d136639e49" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d136639e47" class="stentry propvalue">This function accepts a rule in a standard iptables command format,</td>
+                                    
+                                    <td valign="top" headers="d136639e49" class="stentry propdesc">
+                                       <p class="p">starting with the chain. Trying to force users to adapt to a new
+                                          method of creating rules would be irritating at best, and we
+                                          already have a parser that can handle it.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' iptables.append filter INPUT \
+    rule='-m state --state RELATED,ESTABLISHED -j ACCEPT'
+
+IPv6:
+salt '*' iptables.append filter INPUT \
+    rule='-m state --state RELATED,ESTABLISHED -j ACCEPT' \
+    family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.iptables.build_rule">
+                           <h2 class="title topictitle2">build_rule</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.iptables.build_rule(
+								table=None,
+								chain=None,
+								command=None,
+								position='',
+								full=None,
+								family='ipv4',
+								**kwargs
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Build a well-formatted iptables rule based on kwargs. Long options must be
+                                    used (<span class="keyword title_reference">--jump</span> instead of <span class="keyword title_reference">-j</span>) because they will have the <span class="keyword title_reference">--</span> added to
+                                    them. A <span class="keyword title_reference">table</span> and <span class="keyword title_reference">chain</span> are not required, unless <span class="keyword title_reference">full</span> is True.
+                                 </p>
+                                 
+                                 <p class="p">If <span class="keyword title_reference">full</span> is <span class="keyword title_reference">True</span>, then <span class="keyword title_reference">table</span>, <span class="keyword title_reference">chain</span> and <span class="keyword title_reference">command</span> are required.
+                                    <span class="keyword title_reference">command</span> may be specified as either a short option ('I') or a long option
+                                    (<span class="keyword title_reference">--insert</span>). This will return the iptables command, exactly as it would
+                                    be used from the command line.
+                                 </p>
+                                 
+                                 <p class="p">If a position is required (as with <span class="keyword title_reference">-I</span> or <span class="keyword title_reference">-D</span>), it may be specified as
+                                    <span class="keyword title_reference">position</span>. This will only be useful if <span class="keyword title_reference">full</span> is True.
+                                 </p>
+                                 
+                                 <p class="p">If <span class="keyword title_reference">connstate</span> is passed in, it will automatically be changed to <span class="keyword title_reference">state</span>.
+                                 </p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' iptables.build_rule match=state \
+    connstate=RELATED,ESTABLISHED jump=ACCEPT
+
+salt '*' iptables.build_rule filter INPUT command=I position=3 \
+    full=True match=state state=RELATED,ESTABLISHED jump=ACCEPT
+
+salt '*' iptables.build_rule filter INPUT command=A \
+    full=True match=state state=RELATED,ESTABLISHED \
+    source='127.0.0.1' jump=ACCEPT
+
+.. Invert Rules
+salt '*' iptables.build_rule filter INPUT command=A \
+    full=True match=state state=RELATED,ESTABLISHED \
+    source='! 127.0.0.1' jump=ACCEPT
+
+salt '*' iptables.build_rule filter INPUT command=A \
+    full=True match=state state=RELATED,ESTABLISHED \
+    destination='not 127.0.0.1' jump=ACCEPT
+
+IPv6:
+salt '*' iptables.build_rule match=state \
+    connstate=RELATED,ESTABLISHED jump=ACCEPT \
+    family=ipv6
+salt '*' iptables.build_rule filter INPUT command=I position=3 \
+    full=True match=state state=RELATED,ESTABLISHED jump=ACCEPT \
+    family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.iptables.check">
+                           <h2 class="title topictitle2">check</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.iptables.check(
+								table='filter',
+								chain=None,
+								rule=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Check for the existence of a rule in the table and chain</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d136639e186" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d136639e188" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d136639e186" class="stentry propvalue">This function accepts a rule in a standard iptables command format,</td>
+                                    
+                                    <td valign="top" headers="d136639e188" class="stentry propdesc">
+                                       <p class="p">starting with the chain. Trying to force users to adapt to a new
+                                          method of creating rules would be irritating at best, and we
+                                          already have a parser that can handle it.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' iptables.check filter INPUT \
+    rule='-m state --state RELATED,ESTABLISHED -j ACCEPT'
+
+IPv6:
+salt '*' iptables.check filter INPUT \
+    rule='-m state --state RELATED,ESTABLISHED -j ACCEPT' \
+    family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.iptables.check_chain">
+                           <h2 class="title topictitle2">check_chain</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.iptables.check_chain(
+								table='filter',
+								chain=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                 
+                                 <p class="p">Check for the existence of a chain in the table</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' iptables.check_chain filter INPUT
+
+IPv6:
+salt '*' iptables.check_chain filter INPUT family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.iptables.delete">
+                           <h2 class="title topictitle2">delete</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.iptables.delete(
+								table,
+								chain=None,
+								position=None,
+								rule=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section"></div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d136639e261" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d136639e263" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d136639e261" class="stentry propvalue">Delete a rule from the specified table/chain, specifying either the rule</td>
+                                    
+                                    <td valign="top" headers="d136639e263" class="stentry propdesc">
+                                       <p class="p">in its entirety, or the rule's position in the chain.</p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d136639e261" class="stentry propvalue">This function accepts a rule in a standard iptables command format,</td>
+                                    
+                                    <td valign="top" headers="d136639e263" class="stentry propdesc">
+                                       <p class="p">starting with the chain. Trying to force users to adapt to a new
+                                          method of creating rules would be irritating at best, and we
+                                          already have a parser that can handle it.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' iptables.delete filter INPUT position=3
+salt '*' iptables.delete filter INPUT \
+    rule='-m state --state RELATED,ESTABLISHED -j ACCEPT'
+
+IPv6:
+salt '*' iptables.delete filter INPUT position=3 family=ipv6
+salt '*' iptables.delete filter INPUT \
+    rule='-m state --state RELATED,ESTABLISHED -j ACCEPT' \
+    family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.iptables.delete_chain">
+                           <h2 class="title topictitle2">delete_chain</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.iptables.delete_chain(
+								table='filter',
+								chain=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                 
+                                 <p class="p">Delete custom chain to the specified table.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' iptables.delete_chain filter CUSTOM_CHAIN
+
+IPv6:
+salt '*' iptables.delete_chain filter CUSTOM_CHAIN family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.iptables.flush">
+                           <h2 class="title topictitle2">flush</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.iptables.flush(
+								table='filter',
+								chain='',
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Flush the chain in the specified table, flush all chains in the specified
+                                    table if not specified chain.
+                                 </p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' iptables.flush filter INPUT
+
+IPv6:
+salt '*' iptables.flush filter INPUT family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.iptables.get_policy">
+                           <h2 class="title topictitle2">get_policy</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.iptables.get_policy(
+								table='filter',
+								chain=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the current policy for the specified table/chain</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' iptables.get_policy filter INPUT
+
+IPv6:
+salt '*' iptables.get_policy filter INPUT family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.iptables.get_rules">
+                           <h2 class="title topictitle2">get_rules</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.iptables.get_rules(
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a data structure of the current, in-memory rules</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' iptables.get_rules
+
+IPv6:
+salt '*' iptables.get_rules family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.iptables.get_saved_policy">
+                           <h2 class="title topictitle2">get_saved_policy</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.iptables.get_saved_policy(
+								table='filter',
+								chain=None,
+								conf_file=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return the current policy for the specified table/chain</p>
+                                 
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' iptables.get_saved_policy filter INPUT
+salt '*' iptables.get_saved_policy filter INPUT \
+    conf_file=/etc/iptables.saved
+
+IPv6:
+salt '*' iptables.get_saved_policy filter INPUT family=ipv6
+salt '*' iptables.get_saved_policy filter INPUT \
+    conf_file=/etc/iptables.saved family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.iptables.get_saved_rules">
+                           <h2 class="title topictitle2">get_saved_rules</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.iptables.get_saved_rules(
+								conf_file=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return a data structure of the rules in the conf file</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' iptables.get_saved_rules
+
+IPv6:
+salt '*' iptables.get_saved_rules family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.iptables.insert">
+                           <h2 class="title topictitle2">insert</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.iptables.insert(
+								table='filter',
+								chain=None,
+								position=None,
+								rule=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <p class="p">Insert a rule into the specified table/chain, at the specified position.</p>
+                                 
+                              </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Arguments</h3>
+                              </div>
+                              
+                              <table cellpadding="4" cellspacing="0" summary="" class="simpletable properties">
+                                 <tr class="sthead prophead">
+                                    
+                                    <th valign="bottom" align="left" id="d136639e490" class="stentry propvaluehd">Name</th>
+                                    
+                                    <th valign="bottom" align="left" id="d136639e492" class="stentry propdeschd">Description</th>
+                                    
+                                 </tr>
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d136639e490" class="stentry propvalue">This function accepts a rule in a standard iptables command format,</td>
+                                    
+                                    <td valign="top" headers="d136639e492" class="stentry propdesc">
+                                       <p class="p">starting with the chain. Trying to force users to adapt to a new
+                                          method of creating rules would be irritating at best, and we
+                                          already have a parser that can handle it.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                                 <tr class="strow property">
+                                    
+                                    <td valign="top" headers="d136639e490" class="stentry propvalue">If the position specified is a negative number, then the insert will be</td>
+                                    
+                                    <td valign="top" headers="d136639e492" class="stentry propdesc">
+                                       <p class="p">performed counting from the end of the list. For instance, a position
+                                          of -1 will insert the rule as the second to last rule. To insert a rule
+                                          in the last position, use the append function instead.
+                                       </p>
+                                       
+                                    </td>
+                                    
+                                 </tr>
+                                 
+                              </table>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">CLI Examples:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' iptables.insert filter INPUT position=3 \
+    rule='-m state --state RELATED,ESTABLISHED -j ACCEPT'
+
+IPv6:
+salt '*' iptables.insert filter INPUT position=3 \
+    rule='-m state --state RELATED,ESTABLISHED -j ACCEPT' \
+    family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.iptables.new_chain">
+                           <h2 class="title topictitle2">new_chain</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.iptables.new_chain(
+								table='filter',
+								chain=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p"><span class="keyword versionmodified">New in version 2014.1.0.</span></p>
+                                 
+                                 <p class="p">Create new custom chain to the specified table.</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' iptables.new_chain filter CUSTOM_CHAIN
+
+IPv6:
+salt '*' iptables.new_chain filter CUSTOM_CHAIN family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.iptables.save">
+                           <h2 class="title topictitle2">save</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.iptables.save(
+								filename=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Save the current in-memory rules to disk</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' iptables.save /etc/sysconfig/iptables
+
+IPv6:
+salt '*' iptables.save /etc/sysconfig/iptables family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.iptables.set_policy">
+                           <h2 class="title topictitle2">set_policy</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.iptables.set_policy(
+								table='filter',
+								chain=None,
+								policy=None,
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Set the current policy for the specified table/chain</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' iptables.set_policy filter INPUT ACCEPT
+
+IPv6:
+salt '*' iptables.set_policy filter INPUT ACCEPT family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                        <div class="topic reference nested1" id="salt.modules.iptables.version">
+                           <h2 class="title topictitle2">version</h2>
+                           <div class="body refbody">
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Syntax</h3>
+                              </div>
+                              
+                              <div class="section refsyn"><pre class="pre codeblock language-python" xml:lang="" lang="">salt.modules.iptables.version(
+								family='ipv4'
+								)</pre>
+                                 </div>
+                              
+                              <div class="section">
+                                 <h3 class="title sectiontitle">Details</h3>
+                                 <p class="p">Return version from iptables --version</p>
+                                 
+                                 <p class="p">CLI Example:</p>
+                                 <pre class="pre codeblock language-bash">salt '*' iptables.version
+
+IPv6:
+salt '*' iptables.version family=ipv6</pre>
+                                 </div>
+                              
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+                     <button id="next-button" type="button" class="btn btn-primary">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span></button><div class="footer">
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>
